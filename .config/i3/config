@@ -1,0 +1,166 @@
+# Set mod key
+set $mod Mod4
+
+# Set window title font
+font pango:Iosevka 11
+
+# Align window title
+title_align center
+
+# Window rules
+for_window [class="^.*"] border pixel 0
+for_window [title="Library"] floating enable
+
+# Define gaps between windows
+gaps inner 25
+
+# Drag floating windows (Mouse + $mod)
+floating_modifier $mod
+
+# Kill focused window
+bindsym $mod+Shift+q kill
+
+# Open applications
+bindsym $mod+Return exec termite
+bindsym $mod+Print exec --no-startup-id maim $HOME/Pictures/$(date +%s).png
+bindsym $mod+Shift+Print exec --no-startup-id maim $HOME/Pictures/$(date +%s).png
+bindsym $mod+d exec rofi -show run -theme gruvbox_custom -font "Iosevka 15"
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+z split h
+
+# Split window in vertical
+bindsym $mod+v split v
+
+# Enter fullscreen mode for the focused window
+bindsym $mod+f fullscreen toggle
+
+# Change window layout (Stacked, tabbed or toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# Toggle between tiling and floating
+bindsym $mod+Shift+space floating toggle
+
+# Change focus between tiling and floating windows
+bindsym $mod+space focus mode_toggle
+
+# Focus the parent container
+bindsym $mod+a focus parent
+
+# Focus the child container
+#bindsym $mod+d focus child
+
+# Set names for workspaces
+set $ws1 "Main"
+set $ws2 "Terminal"
+set $ws3 "Web"
+set $ws4 "Program"
+set $ws5 "Design"
+
+# Switch to workspaces
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+
+# Move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+
+# Reload the configuration file
+bindsym $mod+Shift+c reload
+
+# Restart i3 session inplace
+bindsym $mod+Shift+r restart
+
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# Resize window
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+	bindsym Left resize shrink width 10 px or 10 ppt
+	bindsym Down resize grow height 10 px or 10 ppt
+	bindsym Up resize shrink height 10 px or 10 ppt
+	bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+	bindsym $mod+r mode "default"
+}
+
+# Enter resize mode
+bindsym $mod+r mode "resize"
+
+# Customize colors
+client.focused          #b8bb26 #b8bb26 #ebdbb2 #b8bb26 #b8bb26
+client.focused_inactive #282828 #282828 #ebdbb2 #282828 #282828
+client.unfocused        #282828 #282828 #ebdbb2 #282828 #282828
+client.urgent           #282828 #282828 #fb4934 #282828 #282828
+client.placeholder      #282828 #282828 #ebdbb2 #282828 #282828
+
+# Run commands on startup
+exec_always --no-startup-id bash /home/ds/.config/polybar/launch.sh
+exec_always --no-startup-id feh --bg-fill /home/ds/Pictures/wallpaper.png
+exec --no-startup-id compton -b
+
+# Brightness Controls
+bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 5
+bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 5
+
+# Volume Control
+bindsym XF86AudioRaiseVolume exec --no-startup-id amixer set Master 3%+
+bindsym XF86AudioLowerVolume exec --no-startup-id amixer set Master 3%-
+bindsym XF86AudioMute exec --no-startup-id amixer set Master toggle
+
+# Dpi changes
+exec --no-startup-id xrandr --dpi 150
+exec --no-startup-id xrdb ~/.Xresources
+
+# Display
+exec --no-startup-id redshift -O 5000
+
+# Notification
+exec --no-startup-id /usr/bin/dunst
