@@ -5,7 +5,8 @@ red        = #fb4934
 green      = #b8bb26
 yellow     = #fabd2f
 blue       = #83a598
-purple     = #d3869b
+pink       = #d3869b
+purple     = #c186d3
 teal       = #8ec07c
 orange     = #fe8019
 gray       = #a89984
@@ -56,7 +57,7 @@ font-1 = Font Awesome 5 Free Solid:size=11;2
 ; Modlues
 modules-left   = i3
 modules-center = weather time date
-modules-right  = battery temperature pulseaudio lock logout poweroff
+modules-right  = alsa backlight battery temperature lock logout poweroff
 
 ; Cursor actions
 cursor-click  = pointer
@@ -148,6 +149,96 @@ label            =  %date%
 label-foreground = ${colors.foreground}
 label-padding    = 1
 
+[module/alsa]
+type = internal/alsa
+
+; Soundcard to be used
+master-soundcard = default
+speaker-soundcard = default
+headphone-soundcard = default
+
+; Name of the master, speaker and headphone mixers
+; Use the following command to list available mixer controls:
+; $ amixer scontrols | sed -nr "s/.*'([[:alnum:]]+)'.*/\1/p"
+; If master, speaker or headphone-soundcard isn't the default, 
+; use `amixer -c # scontrols` instead where # is the number 
+; of the master, speaker or headphone soundcard respectively
+;
+; Default: Master
+master-mixer = Master
+
+; Optionally define speaker and headphone mixers
+; Default: none
+speaker-mixer = Speaker
+; Default: none
+headphone-mixer = Headphone
+
+; NOTE: This is required if headphone_mixer is defined
+; Use the following command to list available device controls
+; $ amixer controls | sed -r "/CARD/\!d; s/.*=([0-9]+).*name='([^']+)'.*/printf '%3.0f: %s\n' '\1' '\2'/e" | sort
+; You may also need to use `amixer -c # controls` as above for the mixer names
+; Default: none
+headphone-id = 9
+
+; Use volume mapping (similar to amixer -M and alsamixer), where the increase in volume is linear to the ear
+; Default: false
+mapped = true
+
+; Interval for volume increase/decrease (in percent points)
+; Default: 5
+interval = 5
+
+; Available tags:
+;   <label-volume> (default)
+;   <ramp-volume>
+;   <bar-volume>
+format-volume = <ramp-volume> <label-volume>
+format-volume-padding = 2
+format-volume-background = ${colors.blue}
+
+; Available tags:
+;   <label-muted> (default)
+;   <ramp-volume>
+;   <bar-volume>
+format-muted = <label-muted>
+format-muted-background = ${colors.blue}
+
+; Available tokens:
+;   %percentage% (default)
+label-volume = %percentage%%
+
+; Available tokens:
+;   %percentage% (default)
+label-muted =  muted
+label-muted-foreground = ${colors.black}
+label-muted-padding = 2
+
+; Only applies if <ramp-volume> is used
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+
+; If defined, it will replace <ramp-volume> when
+; headphones are plugged in to `headphone_control_numid`
+; If undefined, <ramp-volume> will be used for both
+; Only applies if <ramp-volume> is used
+ramp-headphones-0 = 
+ramp-headphones-1 = 
+
+[module/backlight]
+type = internal/backlight
+
+; Available cards:
+card = intel_backlight
+
+; Format
+format = <label>
+
+; Label
+label =  %percentage%%
+label-background = ${colors.purple}
+label-padding    = 2
+
 [module/battery]
 type = internal/battery
 
@@ -180,31 +271,16 @@ label-full-padding    = 2
 type = internal/temperature
 
 ; Label
-label            =  %temperature%
-label-background = ${colors.purple}
+label            =  %temperature-c%
+label-background = ${colors.pink}
 label-foreground = ${colors.foreground}
 label-padding    = 2
 
 ; Warning label
-label-warn            =  %temperature%
+label-warn            =  %temperature-c%
 label-warn-background = ${colors.red}
 label-warn-foreground = ${colors.foreground}
 label-warn-padding    = 2
-
-[module/pulseaudio]
-type = internal/pulseaudio
-
-; Volume label
-label-volume            =  %percentage%%
-label-volume-background = ${colors.blue}
-label-volume-foreground = ${colors.foreground}
-label-volume-padding    = 2
-
-; Muted label
-label-muted            =  Muted
-label-muted-background = ${colors.red}
-label-muted-foreground = ${colors.foreground}
-label-muted-padding    = 2
 
 [module/lock]
 type = custom/text
