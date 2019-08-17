@@ -164,3 +164,7 @@ exec --no-startup-id redshift -O 5000
 
 # Notification
 exec --no-startup-id /usr/bin/dunst
+
+# flash focus
+exec_always --no-startup-id flashfocus
+bindsym $mod+n exec --no-startup-id flash_window

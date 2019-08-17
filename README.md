@@ -93,6 +93,13 @@ cd pulseaudio-ctl
 makepkg -si
 ```
 
+## Flash-focus
+```
+git clone https://aur.archlinux.org/flashfocus-git.git
+cd flashfocus-git
+makepkg -si
+```
+
 ## zsh autosuggestions plugin
 ```
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
