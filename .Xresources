@@ -7,7 +7,7 @@ Xft.hintstyle: hintfull
 Xft.lcdfilter: lcdlight
 
 ! --URXVT Config --
-URxvt.font: xft:Iosevka:size=10
+URxvt.font: xft:Iosevka:size=10:antialias=true
 URxvt.scrollBar: false
 ! special
 *.foreground:   #ebdbb2
