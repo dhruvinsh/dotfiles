@@ -1,5 +1,9 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
+if [ -d $HOME/.local/bin ]
+then
+	export PATH=$HOME/.local/bin:$PATH
+fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/ds/.oh-my-zsh"
@@ -98,3 +102,5 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias dotconfig='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias superstore_mount='sudo mount -t cifs //192.168.1.72/products ~/superstore -o credentials=/home/ds/Documents/credential,vers=1.0,uid=$UID,gid=$(id -g)'
+alias superstore_umount='sudo umount ~/superstore'

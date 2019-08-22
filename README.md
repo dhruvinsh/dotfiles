@@ -10,12 +10,12 @@ sudo pacman -S lxappearance arandr intel-ucode xf86-video-intel
 
 ## Fonts installation
 ```
-sudo pacman -S ttf-anonymous-pro ttf-fira-code ttf-fira-mono ttf-hack ttf-inconsolata adobe-source-code-pro-fonts ttf-ubuntu-font-family noto-fonts ttf-dejavu xorg-fonts-misc ttf-roboto ttf-font-awesome ripgrep
+sudo pacman -S ttf-anonymous-pro ttf-fira-code ttf-fira-mono ttf-hack ttf-inconsolata adobe-source-code-pro-fonts ttf-ubuntu-font-family noto-fonts ttf-dejavu xorg-fonts-misc ttf-roboto ttf-font-awesome noto-fonts-emoji font-mathematica
 ```
 
 ## some helpful softwares
 ```
-sudo pacman -S xdg-user-dirs termite git curl wget neofetch compton rofi ranger feh htop redshift maim jq w3m openssh xclip slock
+sudo pacman -S xdg-user-dirs termite git curl wget neofetch compton rofi ranger feh htop redshift maim jq w3m openssh xclip slock ripgrep hunspell hunspell-en_CA hunspell-en_US libreoffice-still code
 ```
 
 ## Text Editor
