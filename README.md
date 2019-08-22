@@ -100,6 +100,12 @@ cd flashfocus-git
 makepkg -si
 ```
 
+## Teamviewer
+sudo pacman -S lib32-freetype2 
+git clone https://aur.archlinux.org/teamviewer.git
+cd teamviewer
+makepkg -si
+
 ## zsh autosuggestions plugin
 ```
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
