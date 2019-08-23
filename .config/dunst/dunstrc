@@ -166,7 +166,7 @@
     max_icon_size = 64
 
     # Paths to default icons.
-    icon_path = $HOME/.icons/oomox-Gruvbox/64x64/apps:$HOME/.icons/oomox-Gruvbox/64x64/devices:$HOME/.icons/oomox-Gruvbox/64x64/places:/usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
+    icon_path = $HOME/.icons/oomox-Gruvbox/32x32/actions:$HOME/.icons/oomox-Gruvbox/64x64/apps:$HOME/.icons/oomox-Gruvbox/64x64/devices:$HOME/.icons/oomox-Gruvbox/64x64/places:/usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
 
     ### History ###
 
