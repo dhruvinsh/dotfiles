@@ -3,9 +3,32 @@
 sudo pacman -S xorg xorg-server xorg-apps xorg-xinit i3-gaps 
 ```
 
-## Graphic softwares
+## Desktop Manager
+```
+sudo pacman -S lightdm lightdm-gtk-greeter
+sudo systemctl enable lightdm
+```
+
+## Graphic card softwares
 ```
 sudo pacman -S lxappearance arandr intel-ucode xf86-video-intel
+```
+
+## Bluetooth
+```
+sudo pacman -S bluez bluez-utils blueman
+```
+
+## audio driver
+```
+sudo pacman -S alsa-utils pulseaudio pulseaudio-alsa pulseaudio-bluetooth
+```
+
+## zsh with plugin
+```
+sudo pacman -S zsh
+chsh -s $(which zsh)
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 ```
 
 ## Fonts installation
@@ -26,16 +49,6 @@ sudo pacman -s vim emacs
 ## Browser
 ```
 sudo pacman -S firefox chromium
-```
-
-## Bluetooth
-```
-sudo pacman -S bluez bluez-utils blueman
-```
-
-## audio driver
-```
-sudo pacman -S alsa-utils pulseaudio pulseaudio-alsa pulseaudio-bluetooth
 ```
 
 ## video/audio software
@@ -63,6 +76,9 @@ sudo pacman -S lm_sensors acpid upower
 git clone https://aur.archlinux.org/ttf-iosevka.git
 cd ttf-iosevka
 makepkg -si
+git clone https://aur.archlinux.org/siji-git.git
+cd siji-git
+makepkg -si
 ```
 
 ## polybar
@@ -76,13 +92,6 @@ makepkg -si
 ```
 git clone
 cd rxvt-unicode-pixbuf
-makepkg -si
-```
-
-## siji Font
-```
-git clone https://aur.archlinux.org/siji-git.git
-cd siji-git
 makepkg -si
 ```
 
@@ -101,12 +110,10 @@ makepkg -si
 ```
 
 ## Teamviewer
+```
 sudo pacman -S lib32-freetype2 
 git clone https://aur.archlinux.org/teamviewer.git
 cd teamviewer
 makepkg -si
-
-## zsh autosuggestions plugin
-```
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+sudo systemctl enable teamviewer
 ```
