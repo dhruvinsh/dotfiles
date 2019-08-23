@@ -1,4 +1,4 @@
-## Disaply softwares
+## Display/Window Managers
 ```
 sudo pacman -S xorg xorg-server xorg-apps xorg-xinit i3-gaps 
 ```
@@ -9,7 +9,7 @@ sudo pacman -S lightdm lightdm-gtk-greeter
 sudo systemctl enable lightdm
 ```
 
-## Graphic card softwares
+## Graphic
 ```
 sudo pacman -S lxappearance arandr intel-ucode xf86-video-intel
 ```
@@ -19,26 +19,26 @@ sudo pacman -S lxappearance arandr intel-ucode xf86-video-intel
 sudo pacman -S bluez bluez-utils blueman
 ```
 
-## audio driver
+## Audio Driver
 ```
 sudo pacman -S alsa-utils pulseaudio pulseaudio-alsa pulseaudio-bluetooth
 ```
 
-## zsh with plugin
+## ZSH With Plugin
 ```
 sudo pacman -S zsh
 chsh -s $(which zsh)
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 ```
 
-## Fonts installation
+## Fonts Installation
 ```
 sudo pacman -S ttf-anonymous-pro ttf-fira-code ttf-fira-mono ttf-hack ttf-inconsolata adobe-source-code-pro-fonts ttf-ubuntu-font-family noto-fonts ttf-dejavu xorg-fonts-misc ttf-roboto ttf-font-awesome noto-fonts-emoji font-mathematica
 ```
 
-## some helpful softwares
+## Some Helpful Softwares
 ```
-sudo pacman -S xdg-user-dirs termite git curl wget neofetch compton rofi ranger feh htop redshift maim jq w3m openssh xclip slock ripgrep hunspell hunspell-en_CA hunspell-en_US libreoffice-still code
+sudo pacman -S xdg-user-dirs termite git curl wget neofetch compton rofi ranger feh htop redshift maim jq w3m openssh xclip slock ripgrep hunspell hunspell-en_CA hunspell-en_US libreoffice-still code xorg-xcalc
 ```
 
 ## Text Editor
@@ -51,27 +51,27 @@ sudo pacman -s vim emacs
 sudo pacman -S firefox chromium
 ```
 
-## video/audio software
+## Video/Audio Software
 ```
 sudo pacman -S mpv ffmpeg youtube-dl 
 ```
 
-## Notification tools
+## Notification Tools
 ```
 sudo pacman -S dunst libnotify
 ```
 
-## Input software
+## Input Software
 ```
 sudo pacman -S xf86-input-libinput
 ```
 
-## Sensors and events
+## Sensors and Events
 ```
 sudo pacman -S lm_sensors acpid upower
 ```
 
-## Another useful font
+## Another Useful Font
 ```
 git clone https://aur.archlinux.org/ttf-iosevka.git
 cd ttf-iosevka
@@ -81,28 +81,28 @@ cd siji-git
 makepkg -si
 ```
 
-## polybar
+## Polybar
 ```
 git clone https://aur.archlinux.org/polybar.git
 cd polybar
 makepkg -si
 ```
 
-## rxvt-unicode-pixbuf
+## RXVT-Unicode-Pixbuf
 ```
 git clone
 cd rxvt-unicode-pixbuf
 makepkg -si
 ```
 
-## Pulseaudio control
+## Pulseaudio Control
 ```
 git clone https://aur.archlinux.org/pulseaudio-ctl.git
 cd pulseaudio-ctl
 makepkg -si
 ```
 
-## Flash-focus
+## Flash-Focus
 ```
 git clone https://aur.archlinux.org/flashfocus-git.git
 cd flashfocus-git
