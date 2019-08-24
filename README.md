@@ -41,10 +41,26 @@ sudo pacman -S ttf-anonymous-pro ttf-fira-code ttf-fira-mono ttf-hack ttf-incons
 sudo pacman -S xdg-user-dirs termite git curl wget neofetch compton rofi ranger feh htop redshift maim jq w3m openssh xclip slock ripgrep hunspell hunspell-en_CA hunspell-en_US libreoffice-still code xorg-xcalc
 ```
 
+## PDF reader
+```
+sudo pacman -S libpng zlib imagemagick poppler
+# poppler-glib might required replace poppler with it
+cd Download
+git clone https://aur.archlinux.org/cask.git
+cd cask
+makepkg -si
+cd ..
+git clone https://aur.archlinux.org/emacs-tablist-git.git
+cd emacs-tablist-git
+makepkg -si
+cd ..
+```
+
 ## Text Editor
 ```
 sudo pacman -s vim emacs 
 ```
+
 
 ## Browser
 ```
