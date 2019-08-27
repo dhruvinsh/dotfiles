@@ -20,6 +20,7 @@ sudo pacman -S xorg xorg-server xorg-apps xorg-xinit i3-gaps
 ## Display Manager
 ```
 sudo pacman -S lightdm lightdm-webkit2-greeter
+update /etc/lightdm/lightdm.conf: greeter-session=lightdm-webkit2-greeter
 sudo systemctl enable lightdm
 ```
 
@@ -59,7 +60,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 ```
 
-## PDF reader for Emacs (Spacemacs)
+## Emacs as PDF Reader(Spacemacs)
 ```
 sudo pacman -S libpng zlib imagemagick poppler
 # poppler-glib might required replace poppler with it
