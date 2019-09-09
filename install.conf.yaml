@@ -43,3 +43,7 @@
                 glob: true
                 path: local/bin/*
                 relink: true
+
+        # morc menu link
+        ~/.local/bin/morc_menu: morc_menu/pkg/morc_menu
+        ~/.config/morc_menu/morc_menu_v1.conf: morc_menu/morc_menu_v1.conf
