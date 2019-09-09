@@ -1,0 +1,45 @@
+- defaults:
+        link:
+                create: true
+                relink: true
+
+- clean: ['~', '~/.config']
+
+- link:
+        ~/.dotfiles: ''
+
+        # emacs config
+        ~/.emacs.d: emacs/emacs.d
+        ~/.spacemacs: emacs/spacemacs
+
+        # config links
+        ~/.config/:
+                glob: true
+                path: config/*
+                relink: true
+
+        # zsh links
+        ~/.oh-my-zsh: zsh/oh-my-zsh
+        ~/.zshrc: zsh/zshrc
+        ~/.oh-my-zsh/custom/plugins/:
+                glob: true
+                path: zsh/plugins/*
+                relink: true
+        ~/.oh-my-zsh/custom/themes/:
+                glob: true
+                path: zsh/themes/*
+                relink: true
+
+        # home links
+        ~/.bashrc: bash/bashrc
+        ~/.bash_profile: bash/bash_profile
+        ~/.dir_colors:
+        ~/.gitconfig:
+        ~/.profile:
+        ~/.Xresources:
+
+        # local bin links
+        ~/.local/bin/:
+                glob: true
+                path: local/bin/*
+                relink: true
