@@ -3,12 +3,13 @@
 ``` text
 xorg mesa xf86-video-intel vulkan-intel i3-gaps lightdm lightdm-gtk-greeter i3lock
 arandr lxappearance
+sudo systemctl enable lightdm
 ```
 
 ## Network
 ### Manager
 ``` text
-dialog wpa_suplicant networkmanager network-manager-applet
+dialog wpa_supplicant networkmanager network-manager-applet
 ```
 ### Bluetooth
 ``` text
@@ -17,6 +18,8 @@ blueman blueman bluez
 ### Tools
 ``` text
 ufw openssh gufw
+sudo systemctl enable ufw
+sudo systemctl enable sshd
 ```
 
 ## Power Management
@@ -26,8 +29,8 @@ powertop acpid tlp xfce4-power-manager acpi htop
 
 ## Misc tools
 ``` text
-xdg-user-dirs bash-completion polkit-gnome ntfs-3g xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi zsh termite ranger w3m  nginx  newsboat libreoffice-still pcmanfm python-pywal variety nitrogen zathura zathura-pdf-mupdf qt5ct calcurse
-xdg-user-dir-update
+xdg-user-dirs bash-completion polkit-gnome ntfs-3g xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi zsh termite ranger w3m  nginx  newsboat libreoffice-still pcmanfm python-pywal variety nitrogen zathura zathura-pdf-mupdf qt5ct calcurse redshift
+xdg-user-dirs-update
 ```
 
 ## Volume
@@ -38,6 +41,7 @@ alsa alsa-utils volumeicon
 ## Printer
 ``` text
 cups cups-pdf
+sudo systemctl enable org.cups.cupsd
 ```
 
 ## Fonts
