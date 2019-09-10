@@ -17,3 +17,6 @@
 [submodule "morc_menu"]
 	path = morc_menu
 	url = https://github.com/dhruvinsh/morc_menu.git
+[submodule "zsh/plugins/zsh-syntax-highlighting"]
+	path = zsh/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
