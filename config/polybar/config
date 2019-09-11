@@ -44,7 +44,7 @@ font-1 = Font Awesome 5 Free Solid:size=13;2
 
 modules-left = i3
 modules-center =
-modules-right = pulseaudio wlan eth battery date powermenu
+modules-right = weather xkeyboard pulseaudio xbacklight battery temperature date
 
 ;scroll-up = i3wm-wsnext
 ;scroll-down = i3wm-wsprev
@@ -52,17 +52,8 @@ modules-right = pulseaudio wlan eth battery date powermenu
 cursor-click = pointer
 cursor-scroll = ns-resize
 
-[bar/bottombar]
-inherit = bar/mybar
-
-modules-left = weather
-modules-center =
-modules-right = xbacklight xkeyboard memory cpu temperature
-
 tray-position = right
 tray-padding = 2
-
-bottom = true
 
 [module/xwindow]
 type = internal/xwindow
