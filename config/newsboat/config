@@ -1,2 +1,2 @@
 auto-reload yes
-macro m set browser "mpv %u </dev/null &>/dev/null &"; open-in-browser ; set browser "$BROWSER %u"
+macro m set browser "mpv %u </dev/null &>/dev/null &"; open-in-browser-and-mark-read ; set browser "$BROWSER %u"
