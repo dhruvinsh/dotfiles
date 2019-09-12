@@ -73,4 +73,10 @@ youtube-dl mpv ffmpeg
 ``` text
 pamac-gtk: https://aur.archlinux.org/pamac-aur.git
 ttf-iosevka: https://aur.archlinux.org/ttf-iosevka.git
+flat-remix: https://aur.archlinux.org/flat-remix.git
+```
+
+## PIP packages
+``` text
+streamlink
 ```
