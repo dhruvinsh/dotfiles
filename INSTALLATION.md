@@ -50,7 +50,7 @@ sudo systemctl enable org.cups.cupsd
 
 ## Fonts
 ``` text
-ttf-dejavu ttf-droid ttf-roboto noto-fonts ttf-fira-mono ttf-hack adobe-source-code-pro-fonts ttf-font-awesome
+ttf-dejavu ttf-droid ttf-roboto noto-fonts ttf-fira-mono ttf-hack adobe-source-code-pro-fonts ttf-font-awesome ttf-liberation wqy-zenhei
 ```
 
 ## Development
