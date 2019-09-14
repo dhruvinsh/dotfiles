@@ -84,3 +84,9 @@ flat-remix: https://aur.archlinux.org/flat-remix.git
 ``` text
 streamlink
 ```
+
+## Gaming
+``` text
+steam
+# Make sure multilib is enabled: https://wiki.archlinux.org/index.php/Official_repositories#multilib
+```
