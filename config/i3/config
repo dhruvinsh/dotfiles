@@ -285,6 +285,7 @@ exec --no-startup-id $HOME/.config/conky/launcher
 # exec_always --no-startup-id ff-theme-util
 # exec_always --no-startup-id fix_xcursor
 exec --no-startup-id redshift -O 5000
+exec --no-startup-id udiskie --tray --use-udisks2 &
 
 # Color palette used for the terminal ( ~/.Xresources file )
 # Colors are gathered based on the documentation:
