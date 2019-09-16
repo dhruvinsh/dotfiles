@@ -24,7 +24,7 @@
         relink: true
     ~/.config/polybar/config:
       path: profile_config/polybar/config
-      profile: work_cube
+      profile: home
 
     # zsh links
     ~/.oh-my-zsh: zsh/oh-my-zsh

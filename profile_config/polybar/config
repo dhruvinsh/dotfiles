@@ -44,7 +44,7 @@ font-1 = Font Awesome 5 Free Solid:size=13;2
 
 modules-left = i3
 modules-center =
-modules-right = weather xkeyboard pulseaudio xbacklight battery temperature date
+modules-right = weather xkeyboard alsa xbacklight battery temperature date
 
 ;scroll-up = i3wm-wsnext
 ;scroll-down = i3wm-wsprev
@@ -54,6 +54,7 @@ cursor-scroll = ns-resize
 
 tray-position = right
 tray-padding = 2
+tray-maxsize = 1000
 
 [module/xwindow]
 type = internal/xwindow
@@ -129,8 +130,11 @@ label-song-ellipsis = true
 [module/xbacklight]
 type = internal/xbacklight
 
-format = <label> <bar>
-label = 
+#format = <label> <bar>
+#label = 
+
+format = <label>
+label =  %percentage%%
 
 bar-width = 10
 bar-indicator = |
@@ -218,6 +222,38 @@ format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #0a6cf5
 
 label = %date% %time%
+
+[module/alsa]
+type = internal/alsa
+
+#format-volume = <label-volume> <bar-volume>
+#label-volume = VOL
+#label-volume-foreground = ${root.foreground}
+
+format-volume = <label-volume>
+label-volume =  %percentage%%
+label-volume-foreground = ${root.foreground}
+
+format-muted-prefix = " "
+format-muted-foreground = ${colors.foreground-alt}
+label-muted = sound muted
+
+bar-volume-width = 10
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 2
+bar-volume-fill = ─
+bar-volume-fill-font = 2
+bar-volume-empty = ─
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.foreground-alt}
 
 [module/pulseaudio]
 type = internal/pulseaudio
