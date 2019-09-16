@@ -36,8 +36,7 @@ This function should only modify configuration layer settings."
      pdf
      xclipboard
      javascript
-     (python :variables
-             python-formatter 'black)
+     python
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
