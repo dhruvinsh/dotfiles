@@ -13,7 +13,7 @@
     ~/.emacs.d: emacs/emacs.d
     ~/.spacemacs:
         path: profile_config/emacs/spacemacs
-        profile: 'home'
+        profile: 'work_cube'
 
     # config links
     ~/.config/:
@@ -26,7 +26,7 @@
         relink: true
     ~/.config/polybar/config:
       path: profile_config/polybar/config
-      profile: home
+      profile: work_cube
 
     # zsh links
     ~/.oh-my-zsh: zsh/oh-my-zsh
