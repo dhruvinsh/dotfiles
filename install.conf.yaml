@@ -1,3 +1,4 @@
+# vim: set filetype=yaml ts=4 sw=4 tw=0 et :
 - defaults:
     link:
       create: true
@@ -17,6 +18,13 @@
       glob: true
       path: config/*
       relink: true
+    ~/.config/polybar/:
+        glob: true
+        path: polybar/*
+        relink: true
+    ~/.config/polybar/config:
+      path: profile_config/polybar/config
+      profile: work_cube
 
     # zsh links
     ~/.oh-my-zsh: zsh/oh-my-zsh
@@ -50,3 +58,4 @@
 
 - shell:
     - git submodule sync --recursive
+
