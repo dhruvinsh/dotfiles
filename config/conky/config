@@ -32,7 +32,7 @@ conky.config = {
 	default_color = 'white',
     cpu_avg_samples = 2,
 	double_buffer = true,
-    font = 'Roboto Mono:size=8.6',
+    font = 'Iosevka:size=12',
     gap_x = 20,
     gap_y = 50,
 	minimum_width = 5,
@@ -65,11 +65,12 @@ conky.config = {
 }
 
 conky.text = [[
-${voffset 8}$color2${font Bitstream Vera Sans:size=16}${time %A}$font\
-${voffset -8}$alignr$color${font Bitstream Vera Sans:size=38}${time %e}$font
-$color${voffset -30}$color${font Bitstream Vera Sans:size=18}${time %b}$font\
-${voffset -3} $color${font Bitstream Vera Sans:size=20}${time %Y}$font$color2$hr
+${voffset 8}${font Iosevka:size=16}${time %A}\
+${voffset -8}$alignr${font Iosevka:size=38}${time %e}$font
+$color${voffset -30}$color${font Iosevka:size=18}${time %b}$font\
+${voffset -3} $color${font Iosevka:size=20}${time %Y}$font$color2
 #
+$hr
 ${color white}Uptime: ${color white}$uptime
 $hr
 ${color white}CPU:$color $cpu%
