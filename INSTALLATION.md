@@ -1,3 +1,27 @@
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [Softwares](#softwares)
+    - [Display](#display)
+    - [Network](#network)
+        - [Manager](#manager)
+        - [Bluetooth](#bluetooth)
+        - [Tools](#tools)
+        - [Storage Management](#storage-management)
+    - [Power Management](#power-management)
+    - [Misc tools](#misc-tools)
+    - [Volume](#volume)
+    - [Printer](#printer)
+    - [Fonts](#fonts)
+    - [Development](#development)
+    - [Notification](#notification)
+    - [Web Browser](#web-browser)
+    - [Media](#media)
+    - [Aur packages](#aur-packages)
+    - [PIP packages](#pip-packages)
+    - [Gaming](#gaming)
+
+<!-- markdown-toc end -->
 # Softwares
 
 
