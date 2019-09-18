@@ -2,7 +2,7 @@
 allow_bold = true
 bold_is_bright = true
 clickable_url = true
-font = Iosevka 12
+font = Iosevka 13
 scrollback_lines = 10000
 hyperlinks = true
 browser = xdg-open

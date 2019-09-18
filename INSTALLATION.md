@@ -1,4 +1,6 @@
-# Softwares to Install
+# Softwares
+
+
 ## Display
 ``` text
 xorg mesa xf86-video-intel vulkan-intel i3-gaps lightdm lightdm-gtk-greeter i3lock
@@ -33,7 +35,7 @@ powertop acpid tlp xfce4-power-manager acpi htop
 
 ## Misc tools
 ``` text
-xdg-user-dirs bash-completion polkit-gnome xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi zsh termite ranger w3m  nginx  newsboat libreoffice-still pcmanfm python-pywal variety nitrogen zathura zathura-pdf-mupdf qt5ct calcurse redshift pacman-contrib sqlitebrowser
+xdg-user-dirs bash-completion polkit-gnome xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi zsh termite ranger w3m  nginx  newsboat libreoffice-still pcmanfm python-pywal variety nitrogen zathura zathura-pdf-mupdf qt5ct calcurse redshift pacman-contrib sqlitebrowser calibre pandoc
 xdg-user-dirs-update
 ```
 
@@ -50,7 +52,7 @@ sudo systemctl enable org.cups.cupsd
 
 ## Fonts
 ``` text
-ttf-dejavu ttf-droid ttf-roboto noto-fonts ttf-fira-mono ttf-hack adobe-source-code-pro-fonts ttf-font-awesome ttf-liberation wqy-zenhei
+ttf-dejavu ttf-droid ttf-roboto noto-fonts ttf-fira-mono ttf-hack adobe-source-code-pro-fonts ttf-font-awesome ttf-liberation wqy-zenhei noto-fonts-emoji
 ```
 
 ## Development
