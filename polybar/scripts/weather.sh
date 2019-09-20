@@ -4,21 +4,19 @@
 
 get_icon() {
     case $1 in
-        01d) ICON="";;
-        01n) ICON="";;
-        #02d) ICON="";; # This was commented because of below icon
-        #02n) ICON="";; # This icon not working correctly
-        02d) ICON="";;
-        02n) ICON="";;
-        03*) ICON="";;
-        04*) ICON="";;
-        09*) ICON="";;
-        10d) ICON="";;
-        10n) ICON="";;
-        11*) ICON="";;
-        13*) ICON="";;
-        50*) ICON="";;
-        *) ICON="";
+        01d) ICON="";; # clear sky - day
+        01n) ICON="望";; # clear sky - night
+        02d) ICON="杖";; # few clouds - day
+        02n) ICON="";; # few clouds - night
+        03*) ICON="摒";; # scattered clouds - day and night
+        04*) ICON="";; # broken clouds - day and night
+        09*) ICON="";; # shower rain - day and night
+        10d) ICON="";; # rain - day
+        10n) ICON="";; # rain - night
+        11*) ICON="";; # thunder storm - day and night
+        13*) ICON="";; # snow - day and night
+        50*) ICON="";; # mist - day and night
+        *) ICON=""; # no status
     esac
 
     echo $ICON
