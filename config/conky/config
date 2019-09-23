@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
 
 conky.config = {
-    alignment = 'bottom_right',
+    alignment = 'bottom_left',
     background = false,
     draw_shades = true,
 	default_color = 'white',
