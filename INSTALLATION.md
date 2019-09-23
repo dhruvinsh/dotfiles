@@ -3,13 +3,17 @@
 
 - [Softwares](#softwares)
     - [Display](#display)
+    - [Console](#console)
+        - [Termianl](#termianl)
+        - [Shell](#shell)
+        - [Apps](#apps)
     - [Network](#network)
         - [Manager](#manager)
         - [Bluetooth](#bluetooth)
         - [Tools](#tools)
         - [Storage Management](#storage-management)
     - [Power Management](#power-management)
-    - [Misc tools](#misc-tools)
+    - [Tools](#tools-1)
     - [Volume](#volume)
     - [Printer](#printer)
     - [Fonts](#fonts)
@@ -22,14 +26,29 @@
     - [Gaming](#gaming)
 
 <!-- markdown-toc end -->
-# Softwares
-
+# Things to Install
 
 ## Display
 ``` text
 xorg mesa xf86-video-intel vulkan-intel i3-gaps lightdm lightdm-gtk-greeter i3lock
 arandr lxappearance
 sudo systemctl enable lightdm
+```
+
+## Console
+### Termianl
+``` text
+kitty termite rxvt-unicode
+```
+
+### Shell
+``` text
+zsh
+```
+
+### Apps
+``` text
+newsboat calcurse
 ```
 
 ## Network
@@ -57,9 +76,9 @@ ntfs-3g udisks2 udiskie
 powertop acpid tlp xfce4-power-manager acpi htop
 ```
 
-## Misc tools
+## Tools
 ``` text
-xdg-user-dirs bash-completion polkit-gnome xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi zsh termite ranger w3m  nginx  newsboat libreoffice-still pcmanfm python-pywal variety nitrogen zathura zathura-pdf-mupdf qt5ct calcurse redshift pacman-contrib sqlitebrowser calibre pandoc
+xdg-user-dirs bash-completion polkit-gnome xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi ranger w3m  nginx  libreoffice-still pcmanfm python-pywal variety nitrogen zathura zathura-pdf-mupdf qt5ct redshift pacman-contrib sqlitebrowser calibre pandoc
 xdg-user-dirs-update
 ```
 
