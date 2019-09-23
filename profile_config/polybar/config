@@ -97,7 +97,7 @@ label-urgent-padding = 2
 type = custom/script
 
 ; Script
-exec = /home/ds/.config/polybar/scripts/weather.sh
+exec = $HOME/.config/polybar/scripts/weather.sh
 
 ; Update interval
 interval = 600
