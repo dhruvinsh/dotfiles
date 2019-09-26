@@ -30,8 +30,7 @@
 
 ## Display
 ``` text
-xorg mesa xf86-video-intel vulkan-intel i3-gaps lightdm lightdm-gtk-greeter i3lock
-arandr lxappearance
+xorg mesa xf86-video-intel vulkan-intel i3-gaps lightdm lightdm-gtk-greeter i3lock arandr lxappearance
 sudo systemctl enable lightdm
 ```
 
@@ -44,6 +43,7 @@ kitty termite rxvt-unicode
 ### Shell
 ``` text
 zsh
+chsh -s $(which zsh)
 ```
 
 ### Apps
@@ -54,11 +54,13 @@ newsboat calcurse
 ## Network
 ### Manager
 ``` text
-dialog wpa_supplicant networkmanager network-manager-applet
+dialog wpa_supplicant networkmanager network-manager-applet dhclinet
+systemctl enable NetworkManager
 ```
 ### Bluetooth
 ``` text
-blueman blueman bluez
+bluez bluez-utils blueman
+systemclt enable bluetooth
 ```
 ### Tools
 ``` text
