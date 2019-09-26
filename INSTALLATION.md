@@ -126,6 +126,8 @@ pamac-gtk: https://aur.archlinux.org/pamac-aur.git
 ttf-iosevka: https://aur.archlinux.org/ttf-iosevka.git
 flat-remix: https://aur.archlinux.org/flat-remix.git
 realvnc-viewer: https://aur.archlinux.org/realvnc-vnc-viewer.git
+teamviwer: https://aur.archlinux.org/teamviewer.git
+systemctl enable teamviewerd
 ```
 
 ## PIP packages
