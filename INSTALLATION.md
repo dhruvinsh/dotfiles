@@ -54,7 +54,7 @@ newsboat calcurse
 ## Network
 ### Manager
 ``` text
-dialog wpa_supplicant networkmanager network-manager-applet dhclinet
+dialog wpa_supplicant networkmanager network-manager-applet dhclinet pptpclient ppp
 systemctl enable NetworkManager
 ```
 ### Bluetooth
@@ -76,11 +76,12 @@ ntfs-3g udisks2 udiskie
 ## Power Management
 ``` text
 powertop acpid tlp xfce4-power-manager acpi htop
+systemctl enable tlp
 ```
 
 ## Tools
 ``` text
-xdg-user-dirs bash-completion polkit-gnome xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi ranger w3m  nginx  libreoffice-still pcmanfm python-pywal variety nitrogen zathura zathura-pdf-mupdf qt5ct redshift pacman-contrib sqlitebrowser calibre pandoc
+xdg-user-dirs bash-completion polkit-gnome xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi ranger w3m  nginx  libreoffice-still pcmanfm python-pywal variety nitrogen zathura zathura-pdf-mupdf qt5ct redshift pacman-contrib sqlitebrowser calibre pandoc autojump
 xdg-user-dirs-update
 ```
 
