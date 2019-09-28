@@ -25,5 +25,6 @@
     <property name="dpms-on-battery-sleep" type="uint" value="0"/>
     <property name="dpms-on-ac-sleep" type="uint" value="0"/>
     <property name="dpms-on-ac-off" type="uint" value="0"/>
+    <property name="brightness-level-on-battery" type="uint" value="10"/>
   </property>
 </channel>
