@@ -1,27 +1,29 @@
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
-- [Softwares](#softwares)
+- [Things to Install](#things-to-install)
     - [Display](#display)
-    - [Console](#console)
-        - [Termianl](#termianl)
-        - [Shell](#shell)
-        - [Apps](#apps)
     - [Network](#network)
         - [Manager](#manager)
         - [Bluetooth](#bluetooth)
         - [Tools](#tools)
-        - [Storage Management](#storage-management)
     - [Power Management](#power-management)
+    - [Console](#console)
+        - [Termianl](#termianl)
+        - [Shell](#shell)
+        - [Apps](#apps)
     - [Tools](#tools-1)
     - [Volume](#volume)
     - [Printer](#printer)
+    - [Storage Management](#storage-management)
     - [Fonts](#fonts)
     - [Development](#development)
     - [Notification](#notification)
     - [Web Browser](#web-browser)
     - [Media](#media)
-    - [Aur packages](#aur-packages)
+    - [AUR](#aur)
+        - [Helper](#helper)
+        - [AUR Packages](#aur-packages)
     - [PIP packages](#pip-packages)
     - [Gaming](#gaming)
 
@@ -32,23 +34,6 @@
 ``` text
 xorg mesa xf86-video-intel vulkan-intel i3-gaps lightdm lightdm-gtk-greeter i3lock arandr lxappearance
 sudo systemctl enable lightdm
-```
-
-## Console
-### Termianl
-``` text
-kitty termite rxvt-unicode
-```
-
-### Shell
-``` text
-zsh
-chsh -s $(which zsh)
-```
-
-### Apps
-``` text
-newsboat calcurse
 ```
 
 ## Network
@@ -68,20 +53,33 @@ ufw openssh gufw
 sudo systemctl enable ufw
 sudo systemctl enable sshd
 ```
-### Storage Management
-``` text
-ntfs-3g udisks2 udiskie
-```
 
 ## Power Management
 ``` text
-powertop acpid tlp xfce4-power-manager acpi htop
+powertop acpid tlp xfce4-power-manager acpi
 systemctl enable tlp
+```
+
+## Console
+### Termianl
+``` text
+termite rxvt-unicode
+```
+
+### Shell
+``` text
+zsh
+chsh -s $(which zsh)
+```
+
+### Apps
+``` text
+newsboat calcurse htop
 ```
 
 ## Tools
 ``` text
-xdg-user-dirs bash-completion polkit-gnome xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi ranger w3m  nginx  libreoffice-still pcmanfm python-pywal variety nitrogen zathura zathura-pdf-mupdf qt5ct redshift pacman-contrib sqlitebrowser calibre pandoc autojump
+xdg-user-dirs bash-completion polkit-gnome xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi ranger w3m nginx libreoffice-still pcmanfm python-pywal variety nitrogen feh zathura zathura-pdf-mupdf qt5ct redshift pacman-contrib sqlitebrowser calibre pandoc autojump
 xdg-user-dirs-update
 ```
 
@@ -96,6 +94,11 @@ cups cups-pdf
 sudo systemctl enable org.cups.cupsd
 ```
 
+## Storage Management
+``` text
+ntfs-3g udisks2 udiskie
+```
+
 ## Fonts
 ``` text
 ttf-dejavu ttf-droid ttf-roboto noto-fonts ttf-fira-mono ttf-hack adobe-source-code-pro-fonts ttf-font-awesome ttf-liberation wqy-zenhei noto-fonts-emoji ttf-bitstream-vera
@@ -103,7 +106,7 @@ ttf-dejavu ttf-droid ttf-roboto noto-fonts ttf-fira-mono ttf-hack adobe-source-c
 
 ## Development
 ``` text
-git emacs vim code python python-pip
+git emacs vim code pyenv
 ```
 
 ## Notification
@@ -113,7 +116,7 @@ dunst libnotify
 
 ## Web Browser
 ``` text
-chromium qutebrowser
+chromium
 ```
 
 ## Media
@@ -121,13 +124,15 @@ chromium qutebrowser
 youtube-dl mpv ffmpeg
 ```
 
-## Aur packages
+## AUR
+### Helper
 ``` text
-pamac-gtk: https://aur.archlinux.org/pamac-aur.git
-ttf-iosevka: https://aur.archlinux.org/ttf-iosevka.git
-flat-remix: https://aur.archlinux.org/flat-remix.git
-realvnc-viewer: https://aur.archlinux.org/realvnc-vnc-viewer.git
-teamviwer: https://aur.archlinux.org/teamviewer.git
+yay: https://aur.archlinux.org/yay.git
+```
+
+### AUR Packages
+``` text
+pamac-gtk ttf-iosevka flat-remix realvnc-viewer teamviwer polybar flashfocus-git
 systemctl enable teamviewerd
 ```
 
