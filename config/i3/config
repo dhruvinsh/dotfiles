@@ -274,6 +274,7 @@ bindsym $mod+9 exec --no-startup-id blurlock
 # Autostart applications
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 # exec --no-startup-id nitrogen --restore; sleep 1; compton -b
+exec --no-startup-id compton -b
 exec_always --no-startup-id feh --bg-fill $HOME/.dotfiles/wallpapers/clouds.jpg
 # exec --no-startup-id manjaro-hello
 exec --no-startup-id nm-applet
