@@ -51,7 +51,8 @@ This function should only modify configuration layer settings."
      helm
      markdown
      multiple-cursors
-     org
+     (org :variables
+          org-enable-reveal-js-support t)
      (shell :variables
             shell-default-shell 'eshell
             shell-default-height 30
