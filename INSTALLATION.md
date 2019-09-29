@@ -74,7 +74,7 @@ chsh -s $(which zsh)
 
 ### Apps
 ``` text
-newsboat calcurse htop
+newsboat calcurse htop aspell aspell-en
 ```
 
 ## Tools
