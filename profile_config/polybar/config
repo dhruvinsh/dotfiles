@@ -225,6 +225,8 @@ type = internal/temperature
 thermal-zone = 0
 {%@@ elif profile == 'work_cube' @@%}
 thermal-zone = 2
+{%@@ elif profile == 'work_laptop' @@%}
+thermal-zone = 1
 {%@@ endif @@%}
 warn-temperature = 60
 

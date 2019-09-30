@@ -1,0 +1,13 @@
+# vim: set filetype=yaml ts=4 sw=4 tw=0 et :
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- link:
+    ~/.spacemacs:
+        path: profile_config/emacs/spacemacs
+        profile: work_laptop
+    ~/.config/polybar/config:
+      path: profile_config/polybar/config
+      profile: work_laptop
