@@ -148,3 +148,6 @@ fi
 if [ -f ~/.bash_functions ]; then
   source ~/.bash_functions
 fi
+
+# pyenv setup
+eval "$(pyenv init -)"
