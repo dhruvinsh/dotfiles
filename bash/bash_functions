@@ -1,0 +1,13 @@
+function count() {
+  total=$1
+  for ((i=total; i>0; i--)); do sleep 1; printf "Time remaining $i secs \r"; done
+  echo -e "\a"
+}
+
+function up() {
+  times=$1
+  while [ "$times" -gt "0" ]; do
+    cd ..
+    times=$(($times - 1))
+  done
+}
