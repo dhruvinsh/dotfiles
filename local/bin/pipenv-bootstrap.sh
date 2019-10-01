@@ -1,9 +1,9 @@
 # vim: set filetype=sh ts=4 sw=4 tw=0 et :
 #!/usr/bin/env bash
 
-BASE_INSTALL="pipenv install --dev "
-ANACONDA=( yapf flake8 autoflake isort importmagic python-language-server pyls-isort pyls-mypy epc pylint )
-LSP=( yapf flake8 autoflake isort importmagic jedi json-rpc service_factory epc pylint )
+BASE="pipenv install --dev "
+LSP=( yapf flake8 autoflake isort importmagic python-language-server pyls-isort pyls-mypy epc pylint )
+ANACONDA=( yapf flake8 autoflake isort importmagic jedi json-rpc service_factory epc pylint )
 
 while [[ $# -gt 0 ]]
 do
@@ -37,5 +37,5 @@ esac
 
 
 packages=${packages:1}
-echo "Running.." $BASE_INSTALL $packages
-eval $BASE_INSTALL $packages
+echo "Running.." $BASE $packages
+eval $BASE $packages
