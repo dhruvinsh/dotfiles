@@ -25,6 +25,7 @@
     # zsh links
     ~/.oh-my-zsh: zsh/oh-my-zsh
     ~/.zshrc: zsh/zshrc
+    ~/.zshenv: zsh/zshenv
     ~/.oh-my-zsh/custom/plugins/:
       glob: true
       path: zsh/plugins/*
