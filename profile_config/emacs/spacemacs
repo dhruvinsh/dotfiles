@@ -40,16 +40,20 @@ This function should only modify configuration layer settings."
      javascript
      (python :variables
              python-backend 'anaconda)
+     (dash :variables
+           dash-docs-docset-newpath "~/.local/share/Zeal/Zeal/docsets")
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     auto-completion
+     (auto-completion :variables
+                      auto-completion-enable-sort-by-usage t)
      better-defaults
      emacs-lisp
      git
-     helm
+     (helm :variables
+           helm-enable-auto-resize t)
      markdown
      multiple-cursors
      (org :variables
