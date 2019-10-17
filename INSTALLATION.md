@@ -79,7 +79,7 @@ newsboat calcurse htop aspell aspell-en
 
 ## Tools
 ``` text
-xdg-user-dirs bash-completion polkit-gnome xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi ranger w3m nginx libreoffice-still pcmanfm python-pywal variety nitrogen feh zathura zathura-pdf-mupdf qt5ct redshift pacman-contrib sqlitebrowser calibre pandoc autojump
+xdg-user-dirs bash-completion polkit-gnome xarchiver zip unrar curl jq neofetch conky scrot xclip compton rofi ranger w3m nginx libreoffice-still pcmanfm python-pywal variety nitrogen feh zathura zathura-pdf-mupdf qt5ct redshift pacman-contrib sqlitebrowser calibre pandoc autojump fd
 xdg-user-dirs-update
 ```
 
@@ -106,7 +106,7 @@ ttf-dejavu ttf-droid ttf-roboto noto-fonts ttf-fira-mono ttf-hack adobe-source-c
 
 ## Development
 ``` text
-git emacs vim code pyenv
+git emacs vim code pyenv zeal docker
 ```
 
 ## Notification
