@@ -106,7 +106,8 @@ ttf-dejavu ttf-droid ttf-roboto noto-fonts ttf-fira-mono ttf-hack adobe-source-c
 
 ## Development
 ``` text
-git emacs vim code pyenv zeal docker
+git git-lfs emacs vim code pyenv zeal docker
+sudo systemctl enable docker
 ```
 
 ## Notification
