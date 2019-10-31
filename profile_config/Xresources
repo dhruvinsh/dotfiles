@@ -1,4 +1,10 @@
+{%@@ if profile == 'home' @@%}
+Xft.dpi:       130
+{%@@ elif profile == 'work_cube' @@%}
 Xft.dpi:       120
+{%@@ elif profile == 'work_laptop' @@%}
+Xft.dpi:       130
+{%@@ endif @@%}
 Xft.antialias: true
 Xft.hinting:   true
 Xft.rgba:      rgb

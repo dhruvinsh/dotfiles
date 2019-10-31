@@ -11,3 +11,6 @@
     ~/.config/polybar/config:
       path: profile_config/polybar/config
       profile: home
+    ~/.Xresources:
+      path: profile_config/Xresources
+      profile: home

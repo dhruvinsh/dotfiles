@@ -11,3 +11,6 @@
     ~/.config/polybar/config:
       path: profile_config/polybar/config
       profile: work_laptop
+    ~/.Xresources:
+      path: profile_config/Xresources
+      profile: work_laptop

@@ -42,7 +42,6 @@
     ~/.dir_colors:
     ~/.gitconfig:
     ~/.profile:
-    ~/.Xresources:
 
     # local bin links
     ~/.local/bin/:
