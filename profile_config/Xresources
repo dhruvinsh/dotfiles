@@ -20,45 +20,15 @@ XTerm*faceSize:          14
 XTerm*reverseVideo:      on
 XTerm*selectToClipboard: true
 
-*background:                      #222D31
-*foreground:                      #d8d8d8
 *fading:                          8
 *fadeColor:                       black
 *cursorColor:                     #1ABB9B
 *pointerColorBackground:          #2B2C2B
 *pointerColorForeground:          #16A085
 
-!! black dark/light
-*color0:                          #222D31
-*color8:                          #585858
+! color scheme
+#include ".xrdb/color/default"
 
-!! red dark/light
-*color1:                          #ab4642
-*color9:                          #ab4642
-
-!! green dark/light
-*color2:                          #7E807E
-*color10:                         #8D8F8D
-
-!! yellow dark/light
-*color3:                          #f7ca88
-*color11:                         #f7ca88
-
-!! blue dark/light
-*color4:                          #7cafc2
-*color12:                         #7cafc2
-
-!! magenta dark/
-*color5:                          #ba8baf
-*color13:                         #ba8baf
-
-!! cyan dark/light
-*color6:                          #1ABB9B
-*color14:                         #1ABB9B
-
-!! white dark/light
-*color7:                          #d8d8d8
-*color15:                         #f8f8f8
 
 Xcursor.theme: xcursor-breeze
 Xcursor.size:                     0
@@ -222,20 +192,3 @@ URxvt.keysym.Shift-Control-Down:  \033[1;6B
 ! URxvt*tabbar-bg:                  colour
 ! URxvt*tabbar-fg:                  colour
 ! URxvt*url-launcher:               string
-
-! The Terminus font uses the following X-names:
-! -xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso10646-1
-! -xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso10646-1
-! -xos4-terminus-medium-r-normal--16-160-72-72-c-80-iso10646-1
-! -xos4-terminus-medium-r-normal--20-200-72-72-c-100-iso10646-1
-! -xos4-terminus-medium-r-normal--22-220-72-72-c-110-iso10646-1
-! -xos4-terminus-medium-r-normal--24-240-72-72-c-120-iso10646-1
-! -xos4-terminus-medium-r-normal--28-280-72-72-c-140-iso10646-1
-! -xos4-terminus-medium-r-normal--32-320-72-72-c-160-iso10646-1
-! -xos4-terminus-bold-r-normal--12-120-72-72-c-60-iso10646-1
-! -xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso10646-1
-! -xos4-terminus-bold-r-normal--16-160-72-72-c-80-iso10646-1
-! -xos4-terminus-bold-r-normal--20-200-72-72-c-100-iso10646-1
-! -xos4-terminus-bold-r-normal--24-240-72-72-c-120-iso10646-1
-! -xos4-terminus-bold-r-normal--28-280-72-72-c-140-iso10646-1
-! -xos4-terminus-bold-r-normal--32-320-72-72-c-160-iso10646-1

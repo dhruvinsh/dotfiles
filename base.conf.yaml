@@ -42,6 +42,7 @@
     ~/.dir_colors:
     ~/.gitconfig:
     ~/.profile:
+    ~/.xrdb:
 
     # local bin links
     ~/.local/bin/:
