@@ -133,7 +133,7 @@ yay: https://aur.archlinux.org/yay.git
 
 ### AUR Packages
 ``` text
-pamac-gtk ttf-iosevka flat-remix realvnc-viewer teamviwer polybar flashfocus-git
+pamac-gtk ttf-iosevka flat-remix flat-remix-gtk realvnc-viewer teamviwer polybar flashfocus-git
 systemctl enable teamviewerd
 ```
 
