@@ -1,0 +1,9 @@
+# vim: set filetype=yaml ts=4 sw=4 tw=0 et :
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- link:
+    ~/.doom.d: emacs/doom.d
+    ~/.emacs.d: emacs/emacs.d.doom
