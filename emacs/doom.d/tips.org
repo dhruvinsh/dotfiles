@@ -1,0 +1,56 @@
+#+TITLE: Tips
+
+
+* Doom Emacs Tips:
+** Docs
+*** https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org
+*** https://github.com/hlissner/doom-emacs/issues/1166
+
+
+
+** Surrounding string or text
+NOTE: Surrounding Objects are: "" () {} [] ''
+
+| Description                           | keybinding                                     |
+|---------------------------------------+------------------------------------------------|
+| change text inside surrounding object | ci<surrounding object>                         |
+| copy text in surrounding object       | yi<surrounding object>                         |
+| delete surrounding                    | ds<surrounding object>                         |
+| replace surrounding                   | cs<surrounding object><new surrounding object> |
+| select text inside surrounding object | viwS<surrounding object>                       |
+| surround the word                     | ysiw<surrounding object>                       |
+
+
+** Comments toggling
+NOTE: If you're in visual mode, gc will just use the selection
+
+| Description                                      | keybinding |
+|--------------------------------------------------+------------|
+| toggle comment on current line.                  | gcc        |
+| comment everything at the same indentation level | gcii       |
+| comment the sexp around point                    | gcab       |
+
+
+** Calling Time:
+format-time-string. e.g. (format-time-string "%Y-%m-%d %H:%M:%S %z") #=> "2018-11-15 05:23:25 +0800"
+Otherwise (current-time) to get a timestamp #=> (23532 37172 685559 0)
+Or (current-time-string) #=> "Thu Nov 15 05:18:28 2018"
+
+
+** Templates
+*** Override/Custom Template, example Python-mode
+Since the file-template module already has a default template for python-mode here
+https://github.com/hlissner/doom-emacs/blob/develop/modules/editor/file-templates/config.el#L83
+
+You can override it by adding this to ~/.doom.d/snippets/python-mode/__:
+
+# author: `user-login-name` <`user-mail-address`>
+# Date: `(format-time-string "%Y-%m-%d")`
+
+$0
+
+*** Calling the snippets
+Refresh the snippets by calling `M-x yas-reload-all`
+Type the trigger `__` and press TAB.
+Press `C-x C-s` to complete snippets.
+See `SPC i s` to see if the snippet you're expecting is "visible" to the current mode.
