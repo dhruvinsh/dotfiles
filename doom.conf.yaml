@@ -7,3 +7,10 @@
 - link:
     ~/.doom.d: emacs/doom.d
     ~/.emacs.d: emacs/emacs.d.doom
+
+- shell:
+    - 
+      command: ~/.emacs.d/bin/doom sync
+      stdin: true
+      stdout: true
+      description: Syncing Doom Emacs
