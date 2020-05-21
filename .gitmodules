@@ -20,3 +20,6 @@
 [submodule "dotbot"]
 	path = dotbot
 	url = https://github.com/dhruvinsh/dotbot.git
+[submodule "emacs/emacs.d.doom"]
+	path = emacs/emacs.d.doom
+	url = https://github.com/hlissner/doom-emacs.git
