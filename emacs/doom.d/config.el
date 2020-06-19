@@ -35,6 +35,7 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+
 ;; Fix font and icon for treemacs
 (setq doom-themes-treemacs-enable-variable-pitch nil
       doom-themes-treemacs-theme "doom-colors")
@@ -47,10 +48,11 @@
 ;; (after! evil-org
 ;;   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
 
+
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
-;; - `use-package' for configuring packages
+;; - `use-package!' for configuring packages
 ;; - `after!' for running code after a package has loaded
 ;; - `add-load-path!' for adding directories to the `load-path', relative to
 ;;   this file. Emacs searches the `load-path' when you load packages with
@@ -58,10 +60,10 @@
 ;; - `map!' for binding new keys
 ;;
 ;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
 ;; This will open documentation for it, including demos of how they are used.
 ;;
-;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
+;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 (map! :leader
       (:prefix-map ("O" . "org")
@@ -92,3 +94,15 @@
         ;; (kbd "C-c ij") 'org-jira-get-issues-from-custom-jql
         ;; (kbd "C-c wu") 'org-jira-update-worklogs-from-org-clocks
         ;; (kbd "C-c pg") 'org-jira-get-projects
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auth-source-save-behavior nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
