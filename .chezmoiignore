@@ -1,0 +1,3 @@
+.oh-my-zsh/cache/**
+.emacs.d/.local/**
+.config/nvim/plugin/**
