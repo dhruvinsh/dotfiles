@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repositories=()
+packages=(
+    apt-transport-https
+    ca-certificates
+    gnupg-agent
+    software-properties-common
+    curl
+    wget
+    git
+    jq
+    ranger
+    direnv
+    zsh
+)
+
+# pyenv dependency
+packages+=(
+    make
+    build-essential
+    libssl-dev
+    zlib1g-dev
+    libbz2-dev
+    libreadline-dev
+    libsqlite3-dev
+    llvm
+    libncursesw5-dev
+    xz-utils
+    tk-dev
+    libxml2-dev
+    libxmlsec1-dev
+    libffi-dev
+    liblzma-dev
+)
+
+# emacs dpendency
+packages+=(
+    autoconf
+    make
+    gcc
+    texinfo
+    libgtk-3-dev
+    libtiff5-dev
+    libjpeg-dev
+    libpng-dev
+    libxpm-dev
+    libncurses5-dev
+    libharfbuzz-dev
+    libharfbuzz-bin
+    libgif-dev
+    libjansson4
+    libjansson-dev
+    libgnutls28-dev
+    mailutils
+    libxaw7-dev
+    libmpfr-dev
+    libmpc-dev
+    libgmp-dev
+    gcc-10
+    libgccjit0
+    libgccjit-10-dev
+)
+
+# go lang repository
+repositories+=(
+	ppa:longsleep/golang-backports
+)
+packages+=(
+    golang-go
+)
+
+for repository in ${repositories[@]}; do
+	sudo add-apt-repository -y $repository
+done
+
+sudo apt update
+
+echo ${packages[@]}
+sudo apt install -y ${packages[@]}

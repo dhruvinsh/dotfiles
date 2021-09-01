@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Set ZSH to default"
+chsh -s $(which zsh)
+
+echo "Setup doom-emacs"
+$HOME/.emacs.d/bin/doom sync
