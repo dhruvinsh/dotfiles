@@ -1,3 +1,6 @@
 .oh-my-zsh/cache/**
 .emacs.d/.local/**
 .config/nvim/plugin/**
+.pyenv/shims/**
+.pyenv/versions/**
+.pyenv/version
