@@ -1,5 +1,0 @@
-#!/bin/bash
-
-conky -c /usr/share/conky/conky_solarized_custom &&
-
-exit 0
