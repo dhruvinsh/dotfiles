@@ -4,3 +4,6 @@
 .pyenv/shims/**
 .pyenv/versions/**
 .pyenv/version
+.nvm/.cache/**
+.nvm/alias/**
+.nvm/versions
