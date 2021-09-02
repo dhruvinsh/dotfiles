@@ -1,21 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# vars
-PYTHON_VERSION=3.9.7
-
-echo "set ZSH to default"
-chsh -s $(which zsh)
-
 echo "setup doom-emacs"
+PATH="$PATH:$HOME/.local/bin"
 $HOME/.emacs.d/bin/doom sync
-
-echo "setup python"
-PYENV_ROOT="$HOME/.pyenv"
-PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
-pyenv install $PYTHON_VERSION || true
-pyenv global $PYTHON_VERSION
 
 echo "setup node"
 NVM_DIR="$HOME/.nvm"
@@ -33,3 +21,14 @@ if [ ! -d $AUTOJUMP_DIR ]; then
 fi
 cd $AUTOJUMP_DIR
 ./install.py
+
+echo "setup fd"
+# URLs
+FD=https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb
+# remove fd-find package installed by zsh else it will have conflict
+sudo apt purge fd-find
+wget $FD -O /tmp/fd.deb
+sudo apt install /tmp/fd.deb
+
+echo "set ZSH to default"
+chsh -s $(which zsh)
