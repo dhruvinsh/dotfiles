@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# before setting up the dotfiles, lets make sure we setup all the
+# dependency.
+
 repositories=()
 packages=(
     apt-transport-https
@@ -15,6 +18,7 @@ packages=(
     direnv
     zsh
     tmux
+    htop
 )
 
 # pyenv dependency
@@ -64,12 +68,14 @@ packages+=(
     libgccjit-10-dev
 )
 
-# go lang repository
+# go, neovim lang repository
 repositories+=(
 	ppa:longsleep/golang-backports
+    ppa:neovim-ppa/unstable
 )
 packages+=(
     golang-go
+    neovim
 )
 
 for repository in ${repositories[@]}; do
