@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-# Install ripgrep
-RIPGREP_URL=https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep_13.0.0_amd64.deb
-wget $RIPGREP_URL -O /tmp/ripgrep.deb
-sudo apt install /tmp/ripgrep.deb

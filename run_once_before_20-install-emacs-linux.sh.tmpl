@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-# Emacs setup
-wget http://gnu.freemirror.org/gnu/emacs/emacs-27.2.tar.gz -O /tmp/emacs.tar.gz
-tar -xzvf /tmp/emacs.tar.gz --directory /tmp
-cd /tmp/emacs-27.2
-./configure --with-x-toolkit=lucid --with-mailutils --prefix=$HOME/.local
-make -j $(nproc) install
