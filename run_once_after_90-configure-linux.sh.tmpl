@@ -27,6 +27,9 @@ fc-cache -f -v
 
 echo "setup autojump"
 AUTOJUMP=https://github.com/wting/autojump.git
-git clone $AUTOJUMP /tmp/autojump
-cd /tmp/autojump
+AUTOJUMP_DIR=/tmp/autojump
+if [ ! -d $AUTOJUMP_DIR ]; then
+    git clone $AUTOJUMP $AUTOJUMP_DIR
+fi
+cd $AUTOJUMP_DIR
 ./install.py
