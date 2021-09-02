@@ -25,8 +25,6 @@ cd $AUTOJUMP_DIR
 echo "setup fd"
 # URLs
 FD=https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb
-# remove fd-find package installed by zsh else it will have conflict
-sudo apt purge fd-find
 wget $FD -O /tmp/fd.deb
 sudo apt install /tmp/fd.deb
 
