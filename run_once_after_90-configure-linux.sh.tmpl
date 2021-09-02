@@ -21,3 +21,6 @@ echo "setup node"
 NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 nvm install --lts
+
+echo "setup fonts"
+fc-cache -f -v
