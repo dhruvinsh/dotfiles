@@ -24,3 +24,9 @@ nvm install --lts
 
 echo "setup fonts"
 fc-cache -f -v
+
+echo "setup autojump"
+AUTOJUMP=https://github.com/wting/autojump.git
+git clone $AUTOJUMP /tmp/autojump
+cd /tmp/autojump
+./install.py
