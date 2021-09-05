@@ -115,3 +115,12 @@ export EDITOR=nvim
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+{{ if (eq .chezmoi.os "linux") }}
+{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+# Display setup
+export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+export LIBGL_ALWAYS_INDIRECT=1
+export GDK_SCALE=2
+{{-   end }}
+{{- end }}
