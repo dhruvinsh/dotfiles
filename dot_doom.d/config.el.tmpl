@@ -23,7 +23,13 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
+{{- if (eq .chezmoi.os "linux") }}
+{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+(setq doom-font (font-spec :family "Iosevka Nerd Font" :size 20 :weight 'regular)
+{{-   else }}
 (setq doom-font (font-spec :family "Iosevka Nerd Font" :size 16 :weight 'regular)
+{{-   end }}
+{{- end }}
       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
