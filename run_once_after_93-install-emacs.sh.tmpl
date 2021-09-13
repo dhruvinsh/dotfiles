@@ -11,3 +11,8 @@ cd /tmp/emacs-27.2
 export CC="gcc-10"
 ./configure --with-x-toolkit=gtk3 --with-cairo --with-mailutils --prefix=$HOME/.local
 make -j $(nproc) install
+
+echo "setup doom-emacs"
+PATH="$PATH:$HOME/.local/bin"
+$HOME/.emacs.d/bin/doom install
+
