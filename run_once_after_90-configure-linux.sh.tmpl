@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "setup doom-emacs"
-PATH="$PATH:$HOME/.local/bin"
-$HOME/.emacs.d/bin/doom install
-
 echo "setup node"
 NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
