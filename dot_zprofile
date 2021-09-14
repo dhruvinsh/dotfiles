@@ -6,3 +6,6 @@ eval "$(pyenv init --path)"
 # nvm setup
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+# cargo path
+. "$HOME/.cargo/env"
