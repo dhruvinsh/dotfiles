@@ -49,7 +49,7 @@ packages+=(
     liblzma-dev
 )
 
-{{ if .cli eq false }}
+{{ if eq .cli false }}
 # emacs dpendency
 packages+=(
     autoconf
