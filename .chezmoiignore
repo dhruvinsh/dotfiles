@@ -8,3 +8,7 @@
 .nvm/.cache/**
 .nvm/alias/**
 .nvm/versions
+{{- if .chezmoi.cli eq true }}
+# Ignore .doom.d in case of cli configuration
+.doom.d
+{{- end }}
