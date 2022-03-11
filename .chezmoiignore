@@ -8,7 +8,7 @@
 .nvm/.cache/**
 .nvm/alias/**
 .nvm/versions
-{{- if .cli eq true }}
+{{- if eq .cli true }}
 # Ignore .doom.d in case of cli configuration
 .doom.d
 {{- end }}
