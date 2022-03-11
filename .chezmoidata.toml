@@ -1,0 +1,4 @@
+pythonVersion = "3.10.2"
+goVersion = "1.17.8"
+ripgrepVersion = "13.0.0"
+fdVersion = "8.3.2"
