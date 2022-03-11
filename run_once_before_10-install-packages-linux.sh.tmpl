@@ -49,6 +49,7 @@ packages+=(
     liblzma-dev
 )
 
+{{ if .chezmoi.cli eq false }}
 # emacs dpendency
 packages+=(
     autoconf
@@ -76,6 +77,7 @@ packages+=(
     libgccjit0
     libgccjit-10-dev
 )
+{{ end }}
 
 # go, neovim lang repository
 repositories+=(
