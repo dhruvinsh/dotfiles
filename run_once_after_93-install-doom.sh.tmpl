@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+{{ if eq .cli false }}
+echo "setup doom-emacs"
+PATH="$PATH:$HOME/.local/bin"
+$HOME/.emacs.d/bin/doom install
+{{ end }}
