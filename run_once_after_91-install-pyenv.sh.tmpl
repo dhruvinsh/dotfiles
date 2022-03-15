@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo "install pyenv"
+unset PYENV_ROOT
+curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+
 echo "setup python"
 # vars
 PYTHON_VERSION={{ .pythonVersion }}
@@ -10,3 +14,7 @@ eval "$(pyenv init --path)"
 pyenv install $PYTHON_VERSION || true
 # set global python version
 pyenv global $PYTHON_VERSION
+
+# some python packages setup
+echo "Installing python packages"
+pip install -U pip pipenv black mypy pylint isort

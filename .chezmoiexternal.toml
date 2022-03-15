@@ -43,8 +43,3 @@
   url = "https://github.com/nvm-sh/nvm/archive/master.tar.gz"
   exact = true
   stripComponents = 1
-[".pyenv"]
-  type = "archive"
-  url = "https://github.com/pyenv/pyenv/archive/master.tar.gz"
-  exact = true
-  stripComponents = 1
