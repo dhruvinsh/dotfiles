@@ -17,5 +17,14 @@ FD=https://github.com/sharkdp/fd/releases/download/v{{ .fdVersion }}/fd_{{ .fdVe
 wget $FD -O /tmp/fd.deb
 sudo apt install /tmp/fd.deb
 
+echo "setup fzf"
+# URLs
+FZF=https://github.com/junegunn/fzf/releases/download/{{ .fzfVersion }}/fzf-{{ .fzfVersion }}-linux_amd64.tar.gz
+LOCALBIN=$HOME/.local/bin
+wget $FZF -O /tmp/fzf.tar.gz
+[ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
+tar -xf /tmp/fzf.tar.gz -C $LOCALBIN/
+chmod +x $LOCALBIN/fzf
+
 echo "set ZSH to default"
 chsh -s $(which zsh)
