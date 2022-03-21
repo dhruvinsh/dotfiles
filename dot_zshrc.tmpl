@@ -118,11 +118,13 @@ export EDITOR=nvim
 
 {{ if (eq .chezmoi.os "linux") }}
 {{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+{{- if eq .win11 false }}
 # Display setup
 export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
 export LIBGL_ALWAYS_INDIRECT=1
 export GDK_SCALE=2
-{{-   end }}
+{{- end }}
+{{- end }}
 {{- end }}
 
 # Direnv Setup

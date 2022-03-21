@@ -1,4 +1,6 @@
 {{ $cli := promptBool "cli" -}}
+{{ $win11 := promptBool "is win11" -}}
 
 data:
   cli: {{ $cli }}
+  win11: {{ $win11 }}
