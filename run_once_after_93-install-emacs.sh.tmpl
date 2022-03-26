@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-{{- if eq .cli false }}
+{{- if eq .emacs true }}
 # URLs
-EMACS=http://gnu.freemirror.org/gnu/emacs/emacs-27.2.tar.gz
+EMACS=http://gnu.freemirror.org/gnu/emacs/emacs-{{ .emacsVersion }}.tar.gz
 
 # Emacs setup
 wget $EMACS  -O /tmp/emacs.tar.gz

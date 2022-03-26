@@ -1,6 +1,6 @@
-{{ $cli := promptBool "cli" -}}
+{{ $emacs := promptBool "Want to build emacs?"}}
 {{ $win11 := promptBool "Is it win11?" -}}
 
 data:
-  cli: {{ $cli }}
+  emacs: {{ $emacs }}
   win11: {{ $win11 }}
