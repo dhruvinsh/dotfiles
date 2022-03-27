@@ -3,13 +3,14 @@ set -euo pipefail
 
 {{- if eq .emacs true }}
 # URLs
-EMACS=http://gnu.freemirror.org/gnu/emacs/emacs-{{ .emacsVersion }}.tar.gz
+EMACS=https://github.com/emacs-mirror/emacs.git
+BRANCH=emacs-27
+TEMP_DIR=/tmp/emacs
 
 # Emacs setup
-wget $EMACS  -O /tmp/emacs.tar.gz
-tar -xzvf /tmp/emacs.tar.gz --directory /tmp
-cd /tmp/emacs-27.2
-export CC="gcc-10"
-./configure --with-x-toolkit=gtk3 --with-cairo --with-mailutils --prefix=$HOME/.local
+git clone --depth=1 --branch=$BRANCH $EMACS $TEMP_DIR
+cd $TEMP_DIR
+./autogen.sh
+./configure --prefix=$HOME/.local
 make -j $(nproc) install
 {{- end }}
