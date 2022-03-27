@@ -1,6 +1,8 @@
 {{ $emacs := promptBool "Want to build emacs?"}}
 {{ $win11 := promptBool "Is it win11?" -}}
+{{ $personalMachine := promptBool "Is it personal machine" -}}
 
 data:
   emacs: {{ $emacs }}
   win11: {{ $win11 }}
+  personalMachine: {{ $personalMachine }}
