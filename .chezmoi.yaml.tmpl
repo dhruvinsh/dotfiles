@@ -1,9 +1,9 @@
 # Question mark at the end not required. Chezmoi adds its own.
 {{ $emacs := promptBool "Want to build emacs"}}
 {{ $win11 := promptBool "Is it win11" -}}
-{{ $personalMachine := promptBool "Is it personal machine" -}}
+{{ $personalmachine := promptBool "Is it personal machine" -}}
 
 data:
   emacs: {{ $emacs }}
   win11: {{ $win11 }}
-  personalMachine: {{ $personalMachine }}
+  personalmachine: {{ $personalmachine }}
