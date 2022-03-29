@@ -13,4 +13,11 @@ cd $TEMP_DIR
 ./autogen.sh
 ./configure --prefix=$HOME/.local
 make -j $(nproc) install
+
+{{ if eq .doom true }}
+# Once emacs is installed lets setup doom emacs if required
+echo "setup doom-emacs"
+PATH="$PATH:$HOME/.local/bin"
+$HOME/.emacs.d/bin/doom install
+{{- end }}
 {{- end }}
