@@ -8,7 +8,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # set doom emacs in path if exists
-if [ -d "$HOME/.emacs.d/bin" ]: then
+if [ -d "$HOME/.emacs.d/bin" ]; then
     PATH="$HOME/.emacs.d/bin:$PATH"
 fi
 
