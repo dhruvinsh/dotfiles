@@ -6,12 +6,16 @@ set -euo pipefail
 EMACS=https://github.com/emacs-mirror/emacs.git
 BRANCH=emacs-28
 TEMP_DIR=/tmp/emacs
-[[ -d $TEMP_DIR ]] && rm -rf $TEMP_DIR || echo "Directory not present"
+  
 
 # Emacs setup
-git clone --depth=1 --branch=$BRANCH $EMACS $TEMP_DIR
 export CC=gcc-10
+# if directory exists make pull else make clone
+if [ ! -d "$TEMP_DIR" ]; then
+  git clone --depth=1 --branch=$BRANCH $EMACS $TEMP_DIR
+fi
 cd $TEMP_DIR
+git pull --ff
 ./autogen.sh
 ./configure --prefix=$HOME/.local --with-native-compilation --with-mailutils
 make -j $(nproc) install
