@@ -28,6 +28,14 @@
   url = "https://github.com/dhruvinsh/nvim/archive/main.tar.gz"
   exact = true
   stripComponents = 1
+{{ if (and (eq .emacs true) (eq .doom true)) -}}
+# emacs is set to true then we can think about adding doom setup else don't do it at all
+[".emacs.d"]
+  type = "archive"
+  url = "https://github.com/hlissner/doom-emacs/archive/develop.tar.gz"
+  exact = true
+  stripComponents = 1
+{{ end -}}
 [".tmux/plugins/tpm"]
   type = "archive"
   url = "https://github.com/tmux-plugins/tpm/archive/master.tar.gz"
