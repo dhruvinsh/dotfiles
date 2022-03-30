@@ -37,7 +37,6 @@
 {{ else }}
 (set-face-attribute 'default nil :font "Iosevka" :height 130)
 {{ end }}
-(load-theme 'wombat)
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -99,6 +98,10 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
+
+(use-package doom-themes
+    :config
+    (load-theme 'doom-one t))
 
 (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
