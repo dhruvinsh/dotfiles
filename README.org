@@ -1,0 +1,9 @@
+* Dotfiles
+Collection of personal dotfile, managed via chezmoi.
+
+* Installation
+Below code will install chezmoi in local bin directory and start applying the existing setup.
+#+BEGIN_SRC sh
+  export BINDIR=$HOME/.local/bin
+  sh -c "$(curl -fsLS chezmoi.io/get)" --init dhruvinsh --apply
+#+END_SRC
