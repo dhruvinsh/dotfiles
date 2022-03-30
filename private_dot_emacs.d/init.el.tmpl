@@ -92,6 +92,10 @@
 (use-package swiper
   :after ivy)
 
+(use-package ivy-rich
+    :after ivy
+    :init (ivy-rich-mode 1))
+
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1)
