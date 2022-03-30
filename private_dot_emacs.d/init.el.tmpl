@@ -104,6 +104,12 @@
 (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
 
+(use-package which-key
+    :init(which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idel-delay 0.3))
+
 ;; Variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
