@@ -9,6 +9,15 @@
 
 (menu-bar-mode -1)            ; Disable the menu bar
 
+;; Enable line number
+(column-number-mode)
+(global-display-line-numbers-mode t)
+;; Disable line number for some modes
+(dolist (mode '(org-mode-hook
+		term-mode-hook
+		eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-number-mode 0))))
+
 ;; custom.el file
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
