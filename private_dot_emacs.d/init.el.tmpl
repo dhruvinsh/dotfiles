@@ -58,7 +58,7 @@
    (package-install 'use-package))
 
 (require 'use-package)
-(setq use-package-always-ensure t)
+(setq use-package-always-ensure t) ;; global ensure for use-package
 
 (use-package command-log-mode)
 
@@ -97,7 +97,6 @@
     :init (ivy-rich-mode 1))
 
 (use-package doom-modeline
-  :ensure t
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
