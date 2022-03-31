@@ -190,6 +190,18 @@
   ("k" text-scale-decrease "out")
   ("f" nil "finished" :exit t))
 
+(use-package projectile
+    :after ivy
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :custom ((projectile-completion-system 'ivy))
+    :bind-keymap
+    ("C-c p" . projectile-command-map))
+
+(use-package counsel-projectile
+    :after projectile
+    :config (counsel-projectile-mode))
+
 ;; Variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
