@@ -193,10 +193,11 @@
 (use-package projectile
     :after ivy
     :diminish projectile-mode
-    :config (projectile-mode)
     :custom ((projectile-completion-system 'ivy))
     :bind-keymap
-    ("C-c p" . projectile-command-map))
+    ("C-c p" . projectile-command-map)
+    :init
+    (projectile-mode +1))
 
 (use-package counsel-projectile
     :after projectile
