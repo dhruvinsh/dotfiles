@@ -44,9 +44,14 @@
 ;; Initialize package sources
 (require 'package)
 
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+;; Install into sepearte package dirs for each Emacs verson to preven 
+;; bytecode incompatibility
+(setq package-user-dir
+    (expand-file-name (format "elpa-%s.%s" emacs-major-version emacs-minor-version)
+                      user-emacs-directory))
+
+;; standard package repositories
+(add-to-list 'package-archives '( "melpa" . "https://melpa.org/packages/"))
 
 (package-initialize)
 (unless package-archive-contents
