@@ -31,6 +31,8 @@
 		eshell-mode-hook))
   (add-hook mode (lambda () (display-line-number-mode 0))))
 
+;; Newline at end of file
+(setq require-final-newline t)
 
 ;; wsl delay exit mechanism
 (setq map (make-sparse-keymap))
