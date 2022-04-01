@@ -275,6 +275,23 @@
 	:diminish
         :hook (company-mode . company-box-mode)))
 
+;; treemacs added
+(use-package treemacs
+    :config
+  (setq treemacs-sorting 'alphabetic-asc
+	treemacs-follow-after-init t
+	treemacs-width 30)
+  (treemacs-follow-mode t)
+  (treemacs-filewatch-mode t))
+
+(use-package treemacs-projectile
+    :after projectile
+    :bind (:map projectile-command-map
+		("h" . treemacs-projectile)))
+
+(use-package treemacs-magit
+    :after magit)
+
 ;; Variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
