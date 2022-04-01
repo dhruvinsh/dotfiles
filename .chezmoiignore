@@ -2,9 +2,12 @@
 .oh-my-zsh/custom/themes/powerlevel10k/**/*.zwc
 .emacs.d/.local/**
 .emacs.d/auto-save-list/**
-.emacs.d/custom.el
 .emacs.d/eln-cache/**
 .emacs.d/elpa/**
+.emacs.d/elpa-28.0/**
+.emacs.d/transient/**
+.emacs.d/custom.el
+.emacs.d/projectile-bookmarks.eld
 .config/nvim/plugin/**
 .pyenv/shims/**
 .pyenv/versions/**
