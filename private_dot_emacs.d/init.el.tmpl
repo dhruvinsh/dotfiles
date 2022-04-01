@@ -280,6 +280,12 @@
 	:diminish
         :hook (company-mode . company-box-mode)))
 
+(use-package company-quickhelp
+    :after company
+    :bind (:map company-active-map
+		("C-c h" . company-quickhelp-manual-begin))
+    :init (company-quickhelp-mode 1))
+
 ;; treemacs added
 (use-package treemacs
     :config
