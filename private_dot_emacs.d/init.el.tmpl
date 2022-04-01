@@ -225,6 +225,18 @@
     :custom
     (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
+;; LSP goodies
+;; NOTE: few things to note for below variable:
+;; https://github.com/hlissner/doom-emacs/pull/2590
+;; https://github.com/hlissner/doom-emacs/issues/2589
+(setq read-process-output-max (* 1024 1024))
+
+;; I had two option of LSP, lsp-mode or eglot. Lets try Eglot (hard way I guess)
+(use-package eglot)
+
+(use-package consult-eglot
+    :after eglot)
+
 ;; Variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
