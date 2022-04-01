@@ -114,6 +114,10 @@
     :after ivy
     :init (ivy-rich-mode 1))
 
+(use-package ivy-prescient
+    :after ivy
+    :init (ivy-prescient-mode 1))
+
 ;; chezmoi dotfiles have all-the-icons fonts by defaults but if its missing
 ;; then can be installed via
 ;; M-x all-the-icons-install-fonts
