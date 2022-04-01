@@ -186,6 +186,7 @@
   ("k" text-scale-decrease "out")
   ("f" nil "finished" :exit t))
 
+;; Project management
 (use-package projectile
     :after ivy
     :diminish projectile-mode
@@ -199,6 +200,7 @@
     :after projectile
     :config (counsel-projectile-mode))
 
+;; Git managment
 (use-package magit)
 
 ;; Variables configured via the interactive 'customize' interface
