@@ -137,8 +137,13 @@
 (use-package which-key
     :init(which-key-mode)
     :diminish which-key-mode
-    :config
-    (setq which-key-idel-delay 0.3))
+    :init
+    (setq which-key-idel-delay 0.3
+	  which-key-special-keys '("SPC")
+	  which-key-ellipsis ".."
+          which-key-max-description-length 25
+          which-key-add-column-padding 1
+          which-key-prefix-prefix "+" ))
 
 (use-package helpful
   :custom
