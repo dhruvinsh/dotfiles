@@ -12,3 +12,4 @@
 .nvm/.cache/**
 .nvm/alias/**
 .nvm/versions
+README.org
