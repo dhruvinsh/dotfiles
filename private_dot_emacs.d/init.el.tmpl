@@ -237,6 +237,40 @@
 (use-package consult-eglot
     :after eglot)
 
+(use-package company
+    :defer t
+    :bind (("M-/" . company-complete)
+	   ("C-M-i" . company-complete)
+	   :map company-mode-map
+	   ("M-/" . company-complete)
+	   ("C-M-i" . company-complete)
+	   ([remap completion-at-point] . company-complete)
+	   ([remap indent-for-tab-command] . company-indent-or-complete-common)
+           :map company-active-map
+	   ("<tab>" . company-complete-selection)
+	   ;; ("M-/" . company-other-backend)
+	   ("C-n" . company-select-next)
+	   ("C-p" . company-select-previous)
+           ("C-d" . company-show-doc-buffer)
+           ("M-." . company-show-location)
+           :map company-search-map
+           ("C-p" . company-select-previous)
+           ("C-n" . company-select-next))
+    :hook (after-init . global-company-mode)
+    :init
+    (setq company-minimum-prefix-length 1
+	  company-tooltip-limit 12
+	  company-ideal-delay 0))
+
+(use-package company-prescient
+    :after company
+    :init (company-prescient-mode 1))
+
+(if (display-graphic-p)
+    (use-package company-box
+	:diminish
+        :hook (company-mode . company-box-mode)))
+
 ;; Variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
