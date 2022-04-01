@@ -203,6 +203,20 @@
 ;; Git managment
 (use-package magit)
 
+;; Org mode with some basic goodies
+(defun ds/org-mode-setup ()
+  (org-indent-mode)
+  (org-hide-emphasis-markers t)
+  (org-catch-invisible-edits 'show)
+  (org-export-coding-system 'utf-8)
+  (auto-fill-mode 0)
+  (visual-line-mode 1))
+
+(use-package org
+    :hook (org-mode . ds/org-mode-setup)
+    :config
+    (setq org-ellipsis " ▾"))
+
 ;; Variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
