@@ -259,6 +259,18 @@
 (use-package consult-eglot
     :after eglot)
 
+(use-package flymake-flycheck
+    :after flymake
+    :init
+    (setq-local lfymake-diagnostic-functions
+		(append flymake-diagnostic-functions
+			(flymake-flycheck-all-chained-diagnostic-functions)))
+    :hook ((prog-mode . flymake-mode)
+	   (text-mode . flymake-mode))
+    :bind (("C-c ! n" . flymake-goto-next-error)
+	   ("C-c ! p" . flymake-goto-prev-error)
+	   ("C-c ! c" . flymake-start)))
+
 (use-package company
     :defer t
     :bind (("M-/" . company-complete)
