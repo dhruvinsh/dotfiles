@@ -323,6 +323,13 @@
 (use-package treemacs-magit
     :after (treemacs magit))
 
+;; env management
+(use-package envrc
+    :when (executable-find "direnv")
+    :hook (after-init . envrc-global-mode)
+    :bind-keymap
+    ("C-c e" . envrc-command-map))
+
 ;; Variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
