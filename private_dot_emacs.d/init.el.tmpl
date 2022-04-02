@@ -353,6 +353,11 @@
     :after evil
     :hook (after-init . global-origami-mode))
 
+;; some awesome search
+(use-package rg
+    :defer t
+    :bind ([remap xref-find-references] . rg-project))
+
 ;; Variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
