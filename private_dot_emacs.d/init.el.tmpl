@@ -242,7 +242,18 @@
 (setq read-process-output-max (* 1024 1024))
 
 ;; I had two option of LSP, lsp-mode or eglot. Lets try Eglot (hard way I guess)
-(use-package eglot)
+(use-package eglot
+    :defer t
+    :bind (:map eglot-mode-map
+		("C-c l a" . eglot-code-actions)
+		("C-c l r" . eglot-rename)
+		("C-c l f" . eglot-format)
+		("C-c l d" . eldoc))
+    :config
+    ;; I hate the minibuffer keep moving when eglot and eldoc team ups
+    ;; they keep moving the text that I write
+    (setq eldoc-echo-area-use-multiline-p nil)
+    :hook (python-mode . eglot-ensure))
 
 (use-package consult-eglot
     :after eglot)
