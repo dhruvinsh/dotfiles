@@ -211,7 +211,8 @@
     :config (counsel-projectile-mode))
 
 ;; Git managment
-(use-package magit)
+(use-package magit
+    :commands (magit))
 
 ;; Org mode with some basic goodies
 (defun ds/org-mode-setup ()
