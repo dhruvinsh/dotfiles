@@ -331,6 +331,11 @@
     :bind-keymap
     ("C-c e" . envrc-command-map))
 
+;; crontab editing
+(use-package crontab-mode
+    :mode "\\.?cron\\(tab\\)?\\'"
+    :interpreter "crontab-mode")
+
 ;; Variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
