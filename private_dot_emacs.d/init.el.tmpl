@@ -244,6 +244,7 @@
 ;; I had two option of LSP, lsp-mode or eglot. Lets try Eglot (hard way I guess)
 (use-package eglot
     :defer t
+    :after envrc
     :bind (:map eglot-mode-map
 		("C-c l a" . eglot-code-actions)
 		("C-c l r" . eglot-rename)
