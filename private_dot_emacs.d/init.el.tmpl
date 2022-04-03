@@ -4,25 +4,6 @@
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
-;; Always load newest byte code
-(setq load-prefer-newer t)
-
-;; reduce the frequency of garbage collection by making it happen on
-;; each 50MB of allocated data (the default is on every 0.76MB)
-(setq gc-cons-threshold 50000000)
-
-;; warn when opening files bigger than 100MB
-(setq large-file-warning-threshold 100000000)
-
-(setq inhibit-startup-message t)
-
-(scroll-bar-mode -1)        ; Disable visible scrollbar
-(tool-bar-mode -1)          ; Disable the toolbar
-(tooltip-mode -1)           ; Disable tooltips
-(set-fringe-mode 10)        ; Give some breathing room
-(menu-bar-mode -1)          ; Disable the menu bar
-(blink-cursor-mode -1)      ; Disable cursor blinking
-
 ;; Enable line number
 (column-number-mode)
 (global-display-line-numbers-mode t)
