@@ -9,7 +9,7 @@ TEMP_DIR=/tmp/emacs
   
 
 # Emacs setup
-export CC=gcc-10
+export CC=/usr/bin/gcc-10 CXX=/usr/bin/gcc-10
 # if directory exists make pull else make clone
 if [ ! -d "$TEMP_DIR" ]; then
   git clone --depth=1 --branch=$BRANCH $EMACS $TEMP_DIR
@@ -17,6 +17,6 @@ fi
 cd $TEMP_DIR
 git pull --ff
 ./autogen.sh
-./configure --prefix=$HOME/.local --with-native-compilation --with-mailutils
+./configure --with-json --with-native-compilation --with-mailutils --prefix=$HOME/.local
 make -j $(nproc) install
 {{- end }}

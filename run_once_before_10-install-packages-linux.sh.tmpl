@@ -55,6 +55,7 @@ packages+=(
 # from github. Also some reference:
 # https://emacsredux.com/blog/2021/12/19/using-emacs-on-windows-11-with-wsl2/
 packages+=(
+    build-essential
     autoconf
     texinfo
     libharfbuzz-dev
@@ -69,9 +70,13 @@ packages+=(
     librsvg2-dev
     libncurses-dev
     gcc-10
+    g++-10
     libgccjit0
     libgccjit-10-dev
+    libjansson4
+    libjansson-dev
     sqlite3
+    mailutils
 )
 {{ end -}}
 
