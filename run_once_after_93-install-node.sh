@@ -9,10 +9,10 @@ nvm install --lts
 npm install -g npm
 
 echo "Some LSP installation for development"
-server=(
+servers=(
     pyright
     eslint
     typescript-language-server
     typescript
 )
-npm install -g pyright
+npm install -g ${servers[@]}
