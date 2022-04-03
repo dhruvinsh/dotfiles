@@ -210,9 +210,17 @@
     :after projectile
     :config (counsel-projectile-mode))
 
+(use-package treemacs-projectile
+    :after projectile
+    :bind (:map projectile-command-map
+		("h" . treemacs-projectile)))
+
 ;; Git managment
 (use-package magit
     :commands (magit))
+
+(use-package treemacs-magit
+    :after (treemacs magit))
 
 ;; Org mode with some basic goodies
 (defun ds/org-mode-setup ()
@@ -328,14 +336,6 @@
 
 (use-package treemacs-all-the-icons
     :after treemacs)
-
-(use-package treemacs-projectile
-    :after projectile
-    :bind (:map projectile-command-map
-		("h" . treemacs-projectile)))
-
-(use-package treemacs-magit
-    :after (treemacs magit))
 
 ;; env management
 (use-package envrc
