@@ -288,10 +288,10 @@
     :after company
     :init (company-prescient-mode 1))
 
-(if (display-graphic-p)
-    (use-package company-box
-	:diminish
-        :hook (company-mode . company-box-mode)))
+(use-package company-box
+    :if window-system
+    :diminish
+    :hook (company-mode . company-box-mode))
 
 (use-package company-quickhelp
     :after company
