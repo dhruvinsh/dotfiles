@@ -12,6 +12,7 @@ echo "Some LSP installation for development"
 server=(
     pyright
     eslint
-    tsserver
+    typescript-language-server
+    typescript
 )
 npm install -g pyright
