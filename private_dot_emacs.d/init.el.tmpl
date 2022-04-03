@@ -216,12 +216,9 @@
     :config
     (setq org-ellipsis " ▾"))
 
-(use-package init-org-bullets
-    :ensure nil
-    :after org
-    :hook (org-mode . org-bullets-mode)
-    :custom
-    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+(use-package org-modern
+    :defer t
+    :hook (org-mode . org-modern-mode))
 
 ;; LSP goodies
 ;; NOTE: few things to note for below variable:
