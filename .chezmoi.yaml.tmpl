@@ -1,11 +1,13 @@
 # Question mark at the end not required. Chezmoi adds its own.
 {{ $doom := promptBool "Want doom emacs setup" -}}
+{{ $purcell := promptBool "Want purcell emacs setup" -}}
 {{ $emacs := promptBool "Want to build emacs" -}}
 {{ $personalmachine := promptBool "Is it personal machine" -}}
 {{ $win11 := promptBool "Is it win11" -}}
 
 data:
   doom: {{ $doom }}
+  purcell: {{ $purcell }}
   emacs: {{ $emacs }}
   personalmachine: {{ $personalmachine }}
   win11: {{ $win11 }}

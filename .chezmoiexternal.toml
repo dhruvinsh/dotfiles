@@ -28,13 +28,26 @@
   url = "https://github.com/dhruvinsh/nvim/archive/main.tar.gz"
   exact = true
   stripComponents = 1
-{{ if (and (eq .emacs true) (eq .doom true)) -}}
+{{ if eq .emacs true -}}
 # emacs is set to true then we can think about adding doom setup else don't do it at all
+{{ if eq .doom true -}}
+# setup doom emacs if thats what we want
 [".emacs.d"]
   type = "archive"
   url = "https://github.com/hlissner/doom-emacs/archive/develop.tar.gz"
   exact = true
   stripComponents = 1
+  refreshPeriod = "168h"  # refresh after 7 days
+{{ end -}}
+{{ if eq .purcell true -}}
+# setup purcell (from fork) if thats what we want, I guess for now lets have habbit of this
+[".emacs.d"]
+  type = "git-repo"
+  url = "https://github.com/dhruvinsh/purcell-emacs.d.git"
+  refreshPeriod = "168h"  # refresh after 7 days
+  [".emacs.d".pull]
+    args = ["--ff-only"]
+{{ end -}}
 {{ end -}}
 [".tmux/plugins/tpm"]
   type = "archive"
