@@ -3,31 +3,37 @@
   url = "https://github.com/ohmyzsh/ohmyzsh/archive/master.tar.gz"
   exact = true
   stripComponents = 1
+  refreshPeriod = "168h"
 [".oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
   type = "archive"
   url = "https://github.com/zsh-users/zsh-syntax-highlighting/archive/master.tar.gz"
   exact = true
   stripComponents = 1
+  refreshPeriod = "168h"
 [".oh-my-zsh/custom/plugins/zsh-autosuggestions"]
   type = "archive"
   url = "https://github.com/zsh-users/zsh-autosuggestions/archive/master.tar.gz"
   exact = true
   stripComponents = 1
+  refreshPeriod = "168h"
 [".oh-my-zsh/custom/plugins/zsh-completions"]
   type = "archive"
   url = "https://github.com/zsh-users/zsh-completions/archive/master.tar.gz"
   exact = true
   stripComponents = 1
+  refreshPeriod = "168h"
 [".oh-my-zsh/custom/themes/powerlevel10k"]
   type = "archive"
   url = "https://github.com/romkatv/powerlevel10k/archive/master.tar.gz"
   exact = true
   stripComponents = 1
+  refreshPeriod = "168h"
 [".config/nvim"]
   type = "archive"
   url = "https://github.com/dhruvinsh/nvim/archive/main.tar.gz"
   exact = true
   stripComponents = 1
+  refreshPeriod = "168h"
 {{ if eq .emacs true -}}
 # emacs is set to true then we can think about adding doom setup else don't do it at all
 {{ if eq .doom true -}}
@@ -54,8 +60,10 @@
   url = "https://github.com/tmux-plugins/tpm/archive/master.tar.gz"
   exact = true
   stripComponents = 1
+  refreshPeriod = "168h"
 [".nvm"]
   type = "archive"
   url = "https://github.com/nvm-sh/nvm/archive/master.tar.gz"
   exact = true
   stripComponents = 1
+  refreshPeriod = "168h"
