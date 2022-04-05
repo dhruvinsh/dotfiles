@@ -1,9 +1,9 @@
 [".oh-my-zsh"]
-  type = "archive"
-  url = "https://github.com/ohmyzsh/ohmyzsh/archive/master.tar.gz"
-  exact = true
-  stripComponents = 1
+  type = "git-repo"
+  url = "https://github.com/ohmyzsh/ohmyzsh.git"
   refreshPeriod = "168h"
+  [".oh-my-zsh".pull]
+    args = ["--ff-only"]
 [".oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
   type = "archive"
   url = "https://github.com/zsh-users/zsh-syntax-highlighting/archive/master.tar.gz"
@@ -29,21 +29,21 @@
   stripComponents = 1
   refreshPeriod = "168h"
 [".config/nvim"]
-  type = "archive"
-  url = "https://github.com/dhruvinsh/nvim/archive/main.tar.gz"
-  exact = true
-  stripComponents = 1
+  type = "git-repo"
+  url = "https://github.com/dhruvinsh/nvim.git"
   refreshPeriod = "168h"
+  [".config/nvim".pull]
+    args = ["--ff-only"]
 {{ if eq .emacs true -}}
 # emacs is set to true then we can think about adding doom setup else don't do it at all
 {{ if eq .doom true -}}
 # setup doom emacs if thats what we want
 [".emacs.d"]
-  type = "archive"
-  url = "https://github.com/hlissner/doom-emacs/archive/develop.tar.gz"
-  exact = true
-  stripComponents = 1
+  type = "git-repo"
+  url = "https://github.com/hlissner/doom-emacs.git"
   refreshPeriod = "168h"  # refresh after 7 days
+  [".emacs.d".pull]
+    args = ["--ff-only"]
 {{ end -}}
 {{ if eq .purcell true -}}
 # setup purcell (from fork) if thats what we want, I guess for now lets have habbit of this
@@ -56,14 +56,14 @@
 {{ end -}}
 {{ end -}}
 [".tmux/plugins/tpm"]
-  type = "archive"
-  url = "https://github.com/tmux-plugins/tpm/archive/master.tar.gz"
-  exact = true
-  stripComponents = 1
+  type = "git-repo"
+  url = "https://github.com/tmux-plugins/tpm.git"
   refreshPeriod = "168h"
+  [".tmux/plugins/tpm".pull]
+    args = ["--ff-only"]
 [".nvm"]
-  type = "archive"
-  url = "https://github.com/nvm-sh/nvm/archive/master.tar.gz"
-  exact = true
-  stripComponents = 1
+  type = "git-repo"
+  url = "https://github.com/nvm-sh/nvm.git"
   refreshPeriod = "168h"
+  [".nvm".pull]
+    args = ["--ff-only"]
