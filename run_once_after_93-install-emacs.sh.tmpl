@@ -2,21 +2,37 @@
 set -euo pipefail
 
 {{- if eq .emacs true }}
+# clean ups befor we build new emacs
+LOCAL=~/.local
+rm -rf $LOCAL/bin/ctags
+rm -rf $LOCAL/bin/ebrowse
+rm -rf $LOCAL/bin/emacs
+rm -rf $LOCAL/bin/emacs*
+rm -rf $LOCAL/bin/etags
+
+rm -rf $LOCAL/include/emac*
+rm -rf $LOCAL/lib/emacs*
+rm -rf $LOCAL/lib/systemd/user/ema*
+rm -rf $LOCAL/libexec/emacs*
+rm -rf $LOCAL/share/applications/emacs*
+rm -rf $LOCAL/share/emacs*
+rm -rf $LOCAL/share/info
+rm -rf $LOCAL/share/metainfo/emacs*
+
 # URLs
 EMACS=https://github.com/emacs-mirror/emacs.git
-BRANCH=emacs-28
+BRANCH=master
 TEMP_DIR=/tmp/emacs
-  
 
 # Emacs setup
 export CC=/usr/bin/gcc-10 CXX=/usr/bin/gcc-10
 # if directory exists make pull else make clone
-if [ ! -d "$TEMP_DIR" ]; then
-  git clone --depth=1 --branch=$BRANCH $EMACS $TEMP_DIR
+if [ -d "$TEMP_DIR" ]; then
+  rm -rf $TEMP_DIR
 fi
+git clone --depth=1 --branch=$BRANCH $EMACS $TEMP_DIR
 cd $TEMP_DIR
-git pull --ff
 ./autogen.sh
-./configure --with-json --with-native-compilation --with-mailutils --prefix=$HOME/.local
+./configure --with-pgtk --with-json --with-native-compilation --with-mailutils --prefix=$HOME/.local
 make -j $(nproc) install
 {{- end }}
