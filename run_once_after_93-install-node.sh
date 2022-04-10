@@ -8,11 +8,12 @@ nvm install --lts
 # update npm to latest version
 npm install -g npm
 
-echo "Some LSP installation for development"
+echo "Some LSP/Formatter installation for development"
 servers=(
     pyright
     eslint
     typescript-language-server
     typescript
+    prettier
 )
 npm install -g ${servers[@]}
