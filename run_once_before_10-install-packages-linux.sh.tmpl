@@ -132,4 +132,7 @@ tar -xf /tmp/fzf.tar.gz -C $LOCALBIN/
 chmod +x $LOCALBIN/fzf
 
 echo "set ZSH to default"
-chsh -s $(which zsh)
+if [ "$SHELL" != "/usr/bin/zsh" ];
+then
+    chsh -s $(which zsh)
+fi
