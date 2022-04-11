@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "install pyenv"
-unset PYENV_ROOT
-curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+if [ ! -d $HOME/.pyenv ];
+then
+    echo "install pyenv"
+    unset PYENV_ROOT
+    curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 
-echo "setup python"
-# vars
-PYTHON_VERSION={{ .pythonVersion }}
-PYENV_ROOT="$HOME/.pyenv"
-PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
-pyenv install $PYTHON_VERSION || true
-# set global python version
-pyenv global $PYTHON_VERSION
+    echo "setup python"
+    # vars
+    PYTHON_VERSION={{ .pythonVersion }}
+    PYENV_ROOT="$HOME/.pyenv"
+    PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init --path)"
+    pyenv install $PYTHON_VERSION || true
+    # set global python version
+    pyenv global $PYTHON_VERSION
+fi
 
 # some python packages setup
 echo "Installing python packages"
