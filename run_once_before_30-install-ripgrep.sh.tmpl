@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-# URLs
-RIPGREP=https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep_{{ .ripgrepVersion }}_amd64.deb
-
-# ripgrep setup
-wget $RIPGREP -O /tmp/ripgrep.deb
-sudo apt install /tmp/ripgrep.deb
