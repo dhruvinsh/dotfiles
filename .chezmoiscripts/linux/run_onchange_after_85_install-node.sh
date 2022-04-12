@@ -15,6 +15,5 @@ applications=(
     typescript-language-server
     typescript
     prettier
-    @bitwarden/cli
 )
 npm install -g ${applications[@]}
