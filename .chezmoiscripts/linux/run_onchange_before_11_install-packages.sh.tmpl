@@ -7,6 +7,7 @@ set -euo pipefail
 repositories=()
 packages=(
     apt-transport-https
+    aspell
     ca-certificates
     curl
     direnv
@@ -16,11 +17,14 @@ packages=(
     htop
     jq
     ranger
+    shellcheck
     software-properties-common
+    sqlite3
     tar
     tmux
     unzip
     wget
+    wordnet
     zsh
 )
 
@@ -92,7 +96,7 @@ packages+=(
 )
 
 for repository in ${repositories[@]}; do
-	sudo add-apt-repository -y $repository
+    sudo add-apt-repository -y $repository
 done
 
 sudo apt update
