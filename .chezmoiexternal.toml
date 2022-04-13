@@ -45,6 +45,12 @@
   refreshPeriod = "168h"  # refresh after 7 days
   [".emacs.d".pull]
     args = ["--ff-only"]
+# setup .doom.d folder as well
+[".doom.d"]
+  type = "git-repo"
+  url = "https://github.com/dhruvinsh/doom.d"
+  [".doom.d".pull]
+    args = ["--ff-only"]
 {{ end -}}
 {{ if eq .purcell true -}}
 # setup purcell (from fork) if thats what we want, I guess for now lets have habbit of this
