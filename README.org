@@ -1,3 +1,11 @@
+#+TITLE:   dotfiles
+#+DATE:    September 9, 2019
+#+STARTUP: inlineimages nofold
+
+* Table of Contents :TOC_3:noexport:
+- [[#dotfiles][Dotfiles]]
+- [[#installation][Installation]]
+
 * Dotfiles
 Collection of personal dotfile, managed via chezmoi.
 
