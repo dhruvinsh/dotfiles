@@ -1,5 +1,12 @@
 #!/bin/sh
 
+if ! [ -x "$(command -v age)" ]; then
+    echo "Setting up age!"
+    URL="https://github.com/FiloSottile/age/releases/download/v{{ .ageVersion }}/age-v{{ .ageVersion }}-{{ .chezmoi.os }}-{{ .chezmoi.arch }}.tar.gz"
+    wget "$URL" -O /tmp/age.tar.gz
+    tar -xf /tmp/age.tar.gz -C ~/.local/bin/
+fi
+
 if [ ! -f "/home/ds/key.txt" ]; then
     age --decrypt --output "/home/ds/key.txt" "{{ .chezmoi.sourceDir }}/key.txt.age"
     chmod 600 "/home/ds/key.txt"
