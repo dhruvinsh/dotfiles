@@ -105,34 +105,32 @@ sudo apt update
 # install all the packages
 sudo apt install -y ${packages[@]}
 
+echo "purge unwanted packages"
+sudo apt purge -y vim fd-find
+
+# some variable
+echo "local bin directory setup"
+LOCALBIN=$HOME/.local/bin
+[ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
+
 echo "install zenith"
 ZENITH=https://github.com/bvaisvil/zenith/releases/download/{{ .zenithVersion }}/zenith_{{ .zenithVersion }}-1_amd64.deb
 wget $ZENITH -O /tmp/zenith.deb
 sudo apt install /tmp/zenith.deb
 
-echo "purge unwanted packages"
-sudo apt purge -y vim fd-find
-
 echo "install ripgrep"
-# URLs
 RIPGREP=https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep_{{ .ripgrepVersion }}_amd64.deb
-
-# ripgrep setup
 wget $RIPGREP -O /tmp/ripgrep.deb
 sudo apt install /tmp/ripgrep.deb
 
 echo "setup fd"
-# URLs
 FD=https://github.com/sharkdp/fd/releases/download/v{{ .fdVersion }}/fd_{{ .fdVersion }}_amd64.deb
 wget $FD -O /tmp/fd.deb
 sudo apt install /tmp/fd.deb
 
 echo "setup fzf"
-# URLs
 FZF=https://github.com/junegunn/fzf/releases/download/{{ .fzfVersion }}/fzf-{{ .fzfVersion }}-linux_amd64.tar.gz
-LOCALBIN=$HOME/.local/bin
 wget $FZF -O /tmp/fzf.tar.gz
-[ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
 tar -xf /tmp/fzf.tar.gz -C $LOCALBIN/
 chmod +x $LOCALBIN/fzf
 
