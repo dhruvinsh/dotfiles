@@ -136,6 +136,12 @@ wget $FZF -O /tmp/fzf.tar.gz
 tar -xf /tmp/fzf.tar.gz -C $LOCALBIN/
 chmod +x $LOCALBIN/fzf
 
+echo "setup stylua"
+STYLUA=https://github.com/JohnnyMorganz/StyLua/releases/download/v{{ .styluaVersion }}/stylua-linux.zip
+wget $STYLUA -O /tmp/stylua.zip
+unzip /tmp/stylua.zip -d $LOCALBIN/
+chmod +x $LOCALBIN/stylua
+
 echo "set ZSH to default"
 if [ "$SHELL" != "/usr/bin/zsh" ];
 then
