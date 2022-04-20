@@ -105,36 +105,40 @@ sudo apt update
 # install all the packages
 sudo apt install -y ${packages[@]}
 
-echo "install zenith"
-ZENITH=https://github.com/bvaisvil/zenith/releases/download/0.12.0/zenith_0.12.0-1_amd64.deb
-wget $ZENITH -O /tmp/zenith.deb
-sudo apt install /tmp/zenith.deb
-
 echo "purge unwanted packages"
 sudo apt purge -y vim fd-find
 
-echo "install ripgrep"
-# URLs
-RIPGREP=https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep_{{ .ripgrepVersion }}_amd64.deb
+# some variable
+echo "local bin directory setup"
+LOCALBIN=$HOME/.local/bin
+[ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
 
-# ripgrep setup
+echo "install zenith"
+ZENITH=https://github.com/bvaisvil/zenith/releases/download/{{ .zenithVersion }}/zenith_{{ .zenithVersion }}-1_amd64.deb
+wget $ZENITH -O /tmp/zenith.deb
+sudo apt install /tmp/zenith.deb
+
+echo "install ripgrep"
+RIPGREP=https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep_{{ .ripgrepVersion }}_amd64.deb
 wget $RIPGREP -O /tmp/ripgrep.deb
 sudo apt install /tmp/ripgrep.deb
 
 echo "setup fd"
-# URLs
 FD=https://github.com/sharkdp/fd/releases/download/v{{ .fdVersion }}/fd_{{ .fdVersion }}_amd64.deb
 wget $FD -O /tmp/fd.deb
 sudo apt install /tmp/fd.deb
 
 echo "setup fzf"
-# URLs
 FZF=https://github.com/junegunn/fzf/releases/download/{{ .fzfVersion }}/fzf-{{ .fzfVersion }}-linux_amd64.tar.gz
-LOCALBIN=$HOME/.local/bin
 wget $FZF -O /tmp/fzf.tar.gz
-[ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
 tar -xf /tmp/fzf.tar.gz -C $LOCALBIN/
 chmod +x $LOCALBIN/fzf
+
+echo "setup stylua"
+STYLUA=https://github.com/JohnnyMorganz/StyLua/releases/download/v{{ .styluaVersion }}/stylua-linux.zip
+wget $STYLUA -O /tmp/stylua.zip
+unzip /tmp/stylua.zip -d $LOCALBIN/
+chmod +x $LOCALBIN/stylua
 
 echo "set ZSH to default"
 if [ "$SHELL" != "/usr/bin/zsh" ];
