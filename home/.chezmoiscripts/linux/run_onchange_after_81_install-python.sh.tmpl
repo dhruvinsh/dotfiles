@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# TODO: this installation just check if .pyenv directory present or not but
+# underlying python version might be old. Need python version validation
 if [ ! -d $HOME/.pyenv ];
 then
     echo "install pyenv"
