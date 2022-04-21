@@ -13,4 +13,6 @@ if [ -d "$HOME/.emacs.d/bin" ]; then
 fi
 
 # cargo path
-. "$HOME/.cargo/env"
+if [ -d "$HOME/.cargo" ]; then
+    . "$HOME/.cargo/env"
+fi
