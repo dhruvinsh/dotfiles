@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 
 {{- if eq .emacs true }}
-# clean ups befor we build new emacs
+# some variables
 LOCAL=~/.local
+TEMP_DIR=/tmp/emacs
+
+# clean ups befor we build new emacs
 rm -rf $LOCAL/bin/ctags
 rm -rf $LOCAL/bin/ebrowse
 rm -rf $LOCAL/bin/emacs
@@ -18,21 +21,28 @@ rm -rf $LOCAL/share/applications/emacs*
 rm -rf $LOCAL/share/emacs*
 rm -rf $LOCAL/share/info
 rm -rf $LOCAL/share/metainfo/emacs*
+rm -rf /tmp/emacs*
 
-# URLs
-EMACS=https://github.com/emacs-mirror/emacs.git
-BRANCH=master
-TEMP_DIR=/tmp/emacs
 
 # Emacs setup
 export CC=/usr/bin/gcc-10 CXX=/usr/bin/gcc-10
-# if directory exists make pull else make clone
-if [ -d "$TEMP_DIR" ]; then
-  rm -rf $TEMP_DIR
+
+if [ -z $EMACS_PGTK ]; then
+  URL=http://mirror.csclub.uwaterloo.ca/gnu/emacs/emacs-{{ .emacsVersion }}.tar.gz
+  wget $URL -O /tmp/emacs.tar.gz
+  tar -xzvf /tmp/emacs.tar.gz --directory /tmp
+  cd /tmp/emacs-{{ .emacsVersion }}
+  ./configure --with-modules --with-json --with-native-compilation --with-mailutils --prefix=$HOME/.local
+else
+  URL=https://github.com/emacs-mirror/emacs.git
+  BRANCH=master
+
+  git clone --depth=1 --branch=$BRANCH $URL $TEMP_DIR
+  cd $TEMP_DIR
+
+  ./autogen.sh
+  ./configure --with-modules --with-pgtk --with-json --with-native-compilation --with-mailutils --prefix=$HOME/.local
 fi
-git clone --depth=1 --branch=$BRANCH $EMACS $TEMP_DIR
-cd $TEMP_DIR
-./autogen.sh
-./configure --with-modules --with-pgtk --with-json --with-native-compilation --with-mailutils --prefix=$HOME/.local
+
 make -j $(nproc) install
 {{- end }}
