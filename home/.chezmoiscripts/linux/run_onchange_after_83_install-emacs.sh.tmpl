@@ -27,13 +27,17 @@ rm -rf /tmp/emacs*
 # Emacs setup
 export CC=/usr/bin/gcc-10 CXX=/usr/bin/gcc-10
 
-if [ -z $EMACS_PGTK ]; then
+if [[ -z $EMACS_PGTK ]]; then
+  echo "Downloading Emacs from GNU FTP and extracting the files.."
+  sleep 2
   URL=http://mirror.csclub.uwaterloo.ca/gnu/emacs/emacs-{{ .emacsVersion }}.tar.gz
-  wget $URL -O /tmp/emacs.tar.gz
-  tar -xzvf /tmp/emacs.tar.gz --directory /tmp
+  wget $URL -O /tmp/emacs.tar.gz -q
+  tar -xzf /tmp/emacs.tar.gz --directory /tmp
   cd /tmp/emacs-{{ .emacsVersion }}
   ./configure --with-modules --with-json --with-native-compilation --with-mailutils --prefix=$HOME/.local
 else
+  echo "Git clone master emacs-mirror from github"
+  sleep 2
   URL=https://github.com/emacs-mirror/emacs.git
   BRANCH=master
 
