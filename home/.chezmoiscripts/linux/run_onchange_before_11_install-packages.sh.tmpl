@@ -137,7 +137,7 @@ chmod +x $LOCALBIN/fzf
 echo "setup stylua"
 STYLUA=https://github.com/JohnnyMorganz/StyLua/releases/download/v{{ .styluaVersion }}/stylua-linux.zip
 wget $STYLUA -O /tmp/stylua.zip
-unzip /tmp/stylua.zip -d $LOCALBIN/
+unzip -o /tmp/stylua.zip -d $LOCALBIN/
 chmod +x $LOCALBIN/stylua
 
 echo "set ZSH to default"
