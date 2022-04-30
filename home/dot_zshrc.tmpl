@@ -84,7 +84,6 @@ plugins=(git autojump zsh-syntax-highlighting zsh-autosuggestions zsh-completion
 # zsh-completions setup
 autoload -U compinit && compinit
 
-
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -114,21 +113,17 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias "ec=emacsclient -cnqua ''"
 alias vim=ec
-export EDITOR='emacsclient -cnqua \\'\\''
+export EDITOR='nvim'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-{{ if (eq .chezmoi.os "linux") -}}
-{{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
-{{ if eq .win11 false -}}
 # Display setup
-export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
-export LIBGL_ALWAYS_INDIRECT=1
-export GDK_SCALE=1
-{{ end -}}
-{{ end -}}
-{{ end -}}
+if [ -z "$DISPLAY" ]; then
+  export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+  export LIBGL_ALWAYS_INDIRECT=1
+  export GDK_SCALE=1
+fi
 
 # Direnv Setup
 eval "$(direnv hook zsh)"
