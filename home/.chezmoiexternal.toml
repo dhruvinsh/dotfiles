@@ -42,7 +42,7 @@
 # setup doom emacs if thats what we want
 [".emacs.d"]
   type = "git-repo"
-  url = "https://github.com/hlissner/doom-emacs.git"
+  url = "https://github.com/doomemacs/doomemacs.git"
   refreshPeriod = "168h"  # refresh after 7 days
   [".emacs.d".pull]
     args = ["--ff-only"]
