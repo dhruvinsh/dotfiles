@@ -2,4 +2,4 @@
 
 exec shellcheck -s bash -x \
   home/.chezmoiscripts/linux/*.sh \
-  scripts/*.bash \
+  scripts/*.bash
