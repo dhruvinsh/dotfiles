@@ -16,5 +16,6 @@ applications=(
     typescript-language-server
     typescript
     prettier
+    tldr
 )
 npm install -g "${applications[@]}"
