@@ -6,6 +6,20 @@
 {{ $emacs := promptBool "Want to build emacs" -}}
 {{ $personalmachine := promptBool "Is it personal machine" -}}
 
+{{- $wsl          := false -}}{{/* wsl 1/2 */}}
+{{- $wsl1         := false -}}{{/* wsl 1 */}}
+{{- $wsl2         := false -}}{{/* wsl 2 */}}
+{{/* wsl detection */}}
+{{- if (env "WSL_DISTRO_NAME") -}}
+{{- $wsl = true -}}
+{{- end -}}
+{{- if and $wsl (env "WSL_INTEROP" | not) -}}
+{{- $wsl1 = true -}}
+{{- end -}}
+{{- if and $wsl (env "WSL_INTEROP") -}}
+{{- $wsl2 = true -}}
+{{- end -}}
+
 data:
   doom: {{ $doom }}
   purcell: {{ $purcell }}
