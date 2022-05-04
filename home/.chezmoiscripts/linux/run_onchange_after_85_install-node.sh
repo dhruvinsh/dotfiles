@@ -17,5 +17,6 @@ applications=(
   typescript
   prettier
   tldr
+  yarn
 )
 npm install -g "${applications[@]}"
