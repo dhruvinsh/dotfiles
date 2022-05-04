@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# some time I make change in environemnt and residula files needs to be clean
+# manually. This script takes care of that part
+
+if [ -x "$(command -v add-apt-repository)" ]; then
+  # golang ppa removal
+  sudo add-apt-repository --remove -y ppa:longsleep/golang-backports
+fi
+
+{{- if eq .doom true }}
+# Decided to move doom emacs to .config directory
+# Below cleanup is for doom emacs installs
+# we have doom installation setup that means if
+# we detect $HOME/.emacs.d delete it no matter what kind of installation it is
+[[ -d "$HOME/.emacs.d" ]] && rm -rf "$HOME"/.emacs.d
+[[ -d "$HOME/.doom.d" ]] && rm -rf "$HOME"/.doom.d
+{{- end }}
+echo "I am done"
