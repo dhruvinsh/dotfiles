@@ -141,7 +141,6 @@ unzip -o /tmp/stylua.zip -d $LOCALBIN/
 chmod +x $LOCALBIN/stylua
 
 echo "set ZSH to default"
-if [ "$SHELL" != "/usr/bin/zsh" ];
-then
-    chsh -s $(which zsh)
+if [ "$SHELL" != "/usr/bin/zsh" ]; then
+    sudo chsh -s $(which zsh) $USER
 fi
