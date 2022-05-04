@@ -40,17 +40,17 @@
 # emacs is set to true then we can think about adding doom setup else don't do it at all
 {{ if eq .doom true -}}
 # setup doom emacs if thats what we want
-[".emacs.d"]
+[".config/emacs"]
   type = "git-repo"
   url = "https://github.com/doomemacs/doomemacs.git"
   refreshPeriod = "168h"  # refresh after 7 days
-  [".emacs.d".pull]
+  [".config/emacs".pull]
     args = ["--ff-only"]
 # setup .doom.d folder as well
-[".doom.d"]
+[".config/doom"]
   type = "git-repo"
   url = "https://github.com/dhruvinsh/doom.d"
-  [".doom.d".pull]
+  [".config/doom".pull]
     args = ["--ff-only"]
 {{ end -}}
 {{ if eq .purcell true -}}
