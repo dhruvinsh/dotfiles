@@ -91,15 +91,9 @@ packages+=(
 # neovim lang repository
 repositories+=(
     ppa:neovim-ppa/unstable
-    {{- if eq .wsl false }}
-    ppa:appimagelauncher-team/stable
-    {{ end -}}
 )
 packages+=(
     neovim
-    {{- if eq .wsl false }}
-    appimagelauncher
-    {{ end -}}
 )
 
 for repository in ${repositories[@]}; do
