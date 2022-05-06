@@ -8,6 +8,14 @@
 .emacs.d/transient/**
 .emacs.d/custom.el
 .emacs.d/projectile-bookmarks.eld
+.config/emacs/.local/**
+.config/emacs/auto-save-list/**
+.config/emacs/eln-cache/**
+.config/emacs/elpa/**
+.config/emacs/elpa-28.0/**
+.config/emacs/transient/**
+.config/emacs/custom.el
+.config/emacs/projectile-bookmarks.eld
 .config/nvim/plugin/**
 .pyenv/shims/**
 .pyenv/versions/**
