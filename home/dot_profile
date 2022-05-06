@@ -29,8 +29,8 @@ if [ -d "$HOME/.local/bin" ]; then
 fi
 
 # set doom emacs in path if exists
-if [ -d "$HOME/.emacs.d/bin" ]; then
-    PATH="$HOME/.emacs.d/bin:$PATH"
+if [ -d "$HOME/.config/emacs/bin" ]; then
+    PATH="$HOME/.config/emacs/bin:$PATH"
 fi
 
 # cargo path
