@@ -38,30 +38,17 @@
     args = ["--ff-only"]
 {{ if eq .emacs true -}}
 # emacs is set to true then we can think about adding doom setup else don't do it at all
-{{ if eq .doom true -}}
-# setup doom emacs if thats what we want
 [".config/emacs"]
   type = "git-repo"
   url = "https://github.com/doomemacs/doomemacs.git"
   refreshPeriod = "168h"  # refresh after 7 days
   [".config/emacs".pull]
     args = ["--ff-only"]
-# setup .doom.d folder as well
 [".config/doom"]
   type = "git-repo"
   url = "https://github.com/dhruvinsh/doom.d"
   [".config/doom".pull]
     args = ["--ff-only"]
-{{ end -}}
-{{ if eq .purcell true -}}
-# setup purcell (from fork) if thats what we want, I guess for now lets have habbit of this
-[".emacs.d"]
-  type = "git-repo"
-  url = "https://github.com/dhruvinsh/purcell-emacs.d.git"
-  refreshPeriod = "168h"  # refresh after 7 days
-  [".emacs.d".pull]
-    args = ["--ff-only"]
-{{ end -}}
 {{ end -}}
 [".tmux/plugins/tpm"]
   type = "git-repo"
