@@ -8,7 +8,7 @@ if [ -x "$(command -v add-apt-repository)" ]; then
   sudo add-apt-repository --remove -y ppa:longsleep/golang-backports
 fi
 
-{{- if eq .doom true }}
+{{- if eq .emacs true }}
 # Decided to move doom emacs to .config directory
 # Below cleanup is for doom emacs installs
 # we have doom installation setup that means if
