@@ -18,12 +18,22 @@
 {{- $wsl2 = true -}}
 {{- end }}
 
+{{/* arch or ubuntu */}}
+{{- $archlinux      := false -}}
+{{- $ubuntu         := true -}}
+{{- if lookPath "pacman" }}
+{{- $archlinux = true -}}
+{{- $ubuntu = false -}}
+{{- end -}}
+
 [data]
   emacs = {{ $emacs }}
   personalmachine = {{ $personalmachine }}
   wsl = {{ $wsl }}
   wsl1 = {{ $wsl1 }}
   wsl2 = {{ $wsl2 }}
+  archlinux = {{ $archlinux }}
+  ubuntu = {{ $ubuntu }}
 
 encryption = "age"
 [age]

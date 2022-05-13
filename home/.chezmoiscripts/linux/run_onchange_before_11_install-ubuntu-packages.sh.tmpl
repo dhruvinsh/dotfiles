@@ -1,46 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-{{- if eq .chezmoi.osRelease.id "arch" }}
-packages=(
-    aspell
-    direnv
-    jq
-    ranger
-    shellcheck
-    sqlite3
-    tar
-    tmux
-    unzip
-    wget
-    zsh
-)
-
-# install all the packages
-sudo pacman -Sy ${packages[@]}
-
-# some variable
-echo "local bin directory setup"
-LOCALBIN=$HOME/.local/bin
-[ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
-
-
-echo "setup fzf"
-FZF=https://github.com/junegunn/fzf/releases/download/{{ .fzfVersion }}/fzf-{{ .fzfVersion }}-linux_amd64.tar.gz
-wget $FZF -O /tmp/fzf.tar.gz
-tar -xf /tmp/fzf.tar.gz -C $LOCALBIN/
-chmod +x $LOCALBIN/fzf
-
-echo "set ZSH to default"
-if [ "$SHELL" != "/usr/bin/zsh" ]; then
-    sudo chsh -s $(which zsh) $USER
-fi
-exit 0
-{{- end }}
-
-
-
-
+# if ubuntu based system
+{{- if lookPath "apt" }}
 # before setting up the dotfiles, lets make sure we setup all the
 # dependency.
 
@@ -184,3 +146,4 @@ echo "set ZSH to default"
 if [ "$SHELL" != "/usr/bin/zsh" ]; then
     sudo chsh -s $(which zsh) $USER
 fi
+{{- end }}
