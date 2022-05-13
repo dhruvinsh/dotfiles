@@ -63,13 +63,13 @@ Simply follow this steps/cmds to install arch linux with LTS kernel xmonad (that
   swapon /dev/sda2
   #+END_SRC
 - Install archlinux: ~pacstrap /mnt base base-devel linux-lts linux-firmware neovim sudo~
-- Fstab setup: ~genfstab -U /mnt > /mnt/etc/fstab~
+- Fstab setup: ~genfstab -U /mnt >> /mnt/etc/fstab~
 - Change root: ~arch-chroot /mnt~
 - Zoneinfo update: ~ln -sf /usr/share/zoneinfo/America/Toronto /etc/localtime~
 - Localization: ~nvim /etc/locale.gen~ and un-comment ~en_US.UTF-8 UTF-8~ once that done generate locale by ~locale-gen~
 - Update language: ~echo "LANG=en_US.UTF-8" > /etc/locale.conf~ and ~export LANG=en_US.UTF-8~
 - Update hostname: ~echo "ds-laptop" > /etc/hostname~
-- Update hosts file:
+- Update hosts file with ~nvim /etc/hosts~:
   #+BEGIN_SRC text
   127.0.0.1     localhost
   ::1           localhost
@@ -95,12 +95,10 @@ Simply follow this steps/cmds to install arch linux with LTS kernel xmonad (that
 - Enable Some services
   #+BEGIN_SRC bash
   systemctl enable NetworkManager
-  systemctl enable wpa_supplicant
   #+END_SRC
 - Exit and shutdown
   #+BEGIN_SRC bash
   exit
-  genfstab -U /mnt > /mnt/etc/fstab
   umount -R /mnt
   shutdown now
   #+END_SRC
