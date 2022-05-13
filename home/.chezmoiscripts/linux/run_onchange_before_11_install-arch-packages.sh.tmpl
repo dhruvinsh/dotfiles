@@ -105,5 +105,5 @@ if [ ! -x "$(command -v yay)" ]; then
     makepkg -si
     cd ~
 fi
-sudo yay -S ${packages_aur[@]}
+yay -S ${packages_aur[@]}
 {{- end }}
