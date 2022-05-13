@@ -1,4 +1,4 @@
-# chezmoi.yaml -*- mode: yaml -*-
+# chezmoi.yaml -*- mode: toml -*-
 
 # Question mark at the end not required. Chezmoi adds its own.
 {{- $emacs           := promptBool "Want to build emacs" -}}
@@ -18,14 +18,14 @@
 {{- $wsl2 = true -}}
 {{- end }}
 
-data:
-  emacs: {{ $emacs }}
-  personalmachine: {{ $personalmachine }}
-  wsl: {{ $wsl }}
-  wsl1: {{ $wsl1 }}
-  wsl2: {{ $wsl2 }}
+[data]
+  emacs = {{ $emacs }}
+  personalmachine = {{ $personalmachine }}
+  wsl = {{ $wsl }}
+  wsl1 = {{ $wsl1 }}
+  wsl2 = {{ $wsl2 }}
 
-encryption : "age"
-age:
-  identity: "~/key.txt"
-  recipient: "age17yfjyk63433uzr5q2lqxx4sexfnz6e9t648kku5t9sehfye7x4eqy9mhmu"
+encryption = "age"
+[age]
+  identity = "~/key.txt"
+  recipient = "age17yfjyk63433uzr5q2lqxx4sexfnz6e9t648kku5t9sehfye7x4eqy9mhmu"
