@@ -99,12 +99,11 @@ fi
 
 
 echo "YAY installation"
-if [ -x "$(command -v yay)" ] ; then
-     echo "Yay Already Installed"
-else
+if [ ! -x "$(command -v yay)" ]; then
     git clone https://aur.archlinux.org/yay-git.git ~/Downloads/yay-git
     cd ~/Downloads/yay-git
     makepkg -si
     cd ~
+fi
 sudo yay -S ${packages_aur[@]}
 {{- end }}
