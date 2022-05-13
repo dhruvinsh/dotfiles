@@ -3,41 +3,75 @@ set -euo pipefail
 
 # if arch based system
 {{- if lookPath "pacman" }}
+# desktop environment package
 packages=(
+    inotify-tools
+    lightdm
+    lightdm-gtk-greeter
+    picom
+    pulseaudio
+    rofi  # or dmenu
+    xf86-video-intel # I know I will be using it on laptop
+    xmonad
+    xmonad-contrib
+    xorg-server
+    xorg-xinit
+)
+# some usefule packages
+packages+=(
     aspell
     ca-certificates
     curl
-    git
     direnv
+    dunst
+    fd
+    ffmpegthumbnailer
+    firefox
     fontconfig
+    fzf
+    git
     gnupg
+    graphviz
+    htop
+    imagemagick
     jq
+    kitty
+    light
+    mpc
+    mpd
+    mpv
+    ncmpcpp
+    neovim
     ranger
+    ranger
+    ripgrep
+    scrot
     shellcheck
     sqlite
+    stylua
     tar
     tmux
     unzip
     wget
+    xclip
+    zathura
+    zathura-pdf-mupdf
     zsh
-    kitty
-    graphviz
-    htop
-    ranger
-    fzf
-    neovim
-    ripgrep
-    fd
-    stylua
 )
 
 # python build packages
+# Arch linux does supports latest python but I will stick to pyenv
 packages+=(
     base-devel
     openssl
-    zlib
-    xz
     tk
+    xz
+    zlib
+)
+# aur packages
+packages_aur=(
+    cava
+    i3lock-color
 )
 
 {{ if eq .emacs true }}
@@ -48,7 +82,10 @@ packages+=(
 {{ end -}}
 
 # install all the packages
-sudo pacman -Sy ${packages[@]}
+sudo pacman -S --noconfirm --needed ${packages[@]}
+
+echo "XDG-Dir setups"
+xdg-user-dirs-update
 
 # some variable
 echo "local bin directory setup"
@@ -59,4 +96,15 @@ echo "set ZSH to default"
 if [ "$SHELL" != "/usr/bin/zsh" ]; then
     sudo chsh -s $(which zsh) $USER
 fi
+
+
+echo "YAY installation"
+if [ -x "$(command -v yay)" ] ; then
+     echo "Yay Already Installed"
+else
+    git clone https://aur.archlinux.org/yay-git.git ~/Downloads/yay-git
+    cd ~/Downloads/yay-git
+    makepkg -si
+    cd ~
+sudo yay -S ${packages_aur[@]}
 {{- end }}
