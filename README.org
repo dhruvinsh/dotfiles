@@ -5,6 +5,9 @@
 * Table of Contents :TOC_3:noexport:
 - [[#dotfiles][Dotfiles]]
 - [[#installation][Installation]]
+- [[#arch-linux-installation][Arch Linux installation]]
+  - [[#arch-installation][Arch Installation:]]
+  - [[#graphical-desktopwindows-manager-installation][Graphical Desktop/Windows manager Installation:]]
 - [[#credits][Credits]]
 
 * Dotfiles
@@ -17,5 +20,120 @@ Below code will install chezmoi in local bin directory and start applying the ex
   sh -c "$(curl -fsLS chezmoi.io/get)" -- init dhruvinsh --apply
 #+END_SRC
 
+* Arch Linux installation
+** Arch Installation:
+Simply follow this steps/cmds to install arch linux with LTS kernel xmonad (thats what I want to try and use as daily drive)
+
+- Obtain latest iso image for Arch linux from [[http://mirror.csclub.uwaterloo.ca/archlinux/iso/latest/archlinux-x86_64.iso][Here (latest version)]] and boot to it.
+- Verify EFI boot mode: ~ls /sys/firmware/efi/efivars~
+- Connect to Internet via Ethernet or ~iwctl~. In below example we are using wifi over wlan0 but we can have different network type
+  #+BEGIN_SRC bash
+  iwctl
+  device list
+  station wlan0 scan
+  station wlan0 get-networks
+  station wlan0 connect "Name of Netork/WiFi"
+  #+END_SRC
+- Update the clock: ~timedatectl set-ntp true~
+- Disk partition:
+  | Mount Point | Partition | Partition Type | Size                     |
+  |-------------+-----------+----------------+--------------------------|
+  | /mnt/boot/  | /dev/sda1 | fat32          | 512MiB (1MiB to 512MiB)  |
+  | swap        | /dev/sda2 | linux-swap     | 1.5GiB (512MiB to 2GiB)  |
+  | /mnt        | /dev/sda3 | ext4           | remaining (2GiB to 100%) |
+
+  I will be using ~parted~ to create the partitions
+  #+BEGIN_SRC shell
+  parted /dev/sda -- mklabel gpt
+  parted /dev/sda -- mkpart ESP fat32 1MiB 512MiB
+  parted /dev/sda -- set 1 esp on
+  parted /dev/sda -- mkpart primary linux-swap 512MiB 2GiB
+  parted /dev/sda -- mkpart primary 2GiB 100%
+  #+END_SRC
+
+  Formatting the disks:
+  #+BEGIN_SRC bash
+  mkfs.fat -F 32 -n BOOT /dev/sda1
+  mkswap -L SWAP /dev/sda2
+  mkfs.ext4 -L ARCH /dev/sda3
+  #+END_SRC
+- Mounting partitions:
+  #+BEGIN_SRC bash
+  mount /dev/sda3 /mnt
+  swapon /dev/sda2
+  #+END_SRC
+- Install archlinux: ~pacstrap /mnt base base-devel linux-lts linux-firmware neovim sudo~
+- Fstab setup: ~genfstab -U /mnt > /mnt/etc/fstab~
+- Change root: ~arch-chroot /mnt~
+- Zoneinfo update: ~ln -sf /usr/share/zoneinfo/America/Toronto /etc/localtime~
+- Localization: ~nvim /etc/locale.gen~ and un-comment ~en_US.UTF-8 UTF-8~ once that done generate locale by ~locale-gen~
+- Update language: ~echo "LANG=en_US.UTF-8" > /etc/locale.conf~ and ~export LANG=en_US.UTF-8~
+- Update hostname: ~echo "ds-laptop" > /etc/hostname~
+- Update hosts file:
+  #+BEGIN_SRC text
+  127.0.0.1     localhost
+  ::1           localhost
+  127.0.1.1     ds-laptop
+  #+END_SRC
+- Setup root password: ~passwd~
+- Adding a user:
+  #+BEGIN_SRC bash
+  useradd -m ds
+  passwd ds
+  usermod -aG wheel,audio,video,storage ds
+  EDITOR=nvim visuod
+  # uncomment this line: %wheel ALL=(ALL:ALL) ALL
+  #+END_SRC
+- Install Grub
+  #+BEGIN_SRC bash
+  pacman -S grub efibootmgr os-prober mtools
+  mount --mkdir /dev/sda1 /boot/efi
+  grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
+  grub-mkconfig -o /boot/grub/grub.conf
+  #+END_SRC
+- Install microcode and few extra essential software: ~pacman -S intel-ucode curl wget git xdg-user-dirs networkmanager~
+- Enable Some services
+  #+BEGIN_SRC bash
+  systemctl enable NetworkManager
+  systemctl enable wpa_supplicant
+  #+END_SRC
+- Exit and shutdown
+  #+BEGIN_SRC bash
+  exit
+  genfstab -U /mnt > /mnt/etc/fstab
+  umount -R /mnt
+  shutdown now
+  #+END_SRC
+
+** Graphical Desktop/Windows manager Installation:
+NOTE: Almost all parts are taken care by ~chezmoi~ so below data might not be accurate. Look at the [[file:home/.chezmoiscripts/linux/run_onchange_before_11_install-arch-packages.sh.tmpl][Arch Installation]] script.
+
+Boot to the arch linux which is base installation only.
+- Make sure xdg-dirs are available: ~xdg-usr-dirs-update~
+- Install graphic driver, terminal emulator, xorg, compositor etc..
+  #+BEGIN_SRC bash
+  pacman -S xorg-xinit xorg-server xf86-video-intel
+  # optional
+  pacman -S xfce4 xfce4-goodies libcanberra ttf-droid ttf-dejavu ttf-iosevka
+
+  pacman -S lightdm light-gtk-greeter
+  pacman -S xmonad xmonad-contrib rofi
+  pacman -S nitrogen picom firefox bash-completion
+
+  systemctl enable lightdm
+  # do not forgot to edit greeter in lightdm.conf
+  #+END_SRC
+- Setup AUR
+  #+BEGIN_SRC bash
+  git clone https://aur.archlinux.org/yay-git.git ~/Downloads/yay-git
+  cd ~/Downloads/yay-git
+  makepkg -si
+  #+END_SRC
+- AUR packages installation
+  #+BEGIN_SRC bash
+
+  #+END_SRC
+
 * Credits
-Thanks [[https://github.com/twpayne][Tom Payne]] for awesome tool: [[https://github.com/twpayne/chezmoi][chezmoi]]
+- Thanks [[https://github.com/twpayne][Tom Payne]] for awesome tool: [[https://github.com/twpayne/chezmoi][chezmoi]]
+- Arch Linux installation guide: [[https://wiki.archlinux.org/title/Installation_guide][Arch Wiki]]
