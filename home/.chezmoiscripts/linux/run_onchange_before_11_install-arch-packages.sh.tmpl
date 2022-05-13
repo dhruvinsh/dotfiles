@@ -20,7 +20,6 @@ packages=(
 # some usefule packages
 packages+=(
     aspell
-    ca-certificates
     curl
     direnv
     dunst
@@ -31,8 +30,8 @@ packages+=(
     fzf
     git
     gnupg
-    graphviz
     htop
+    iftop
     imagemagick
     jq
     kitty
@@ -42,6 +41,7 @@ packages+=(
     mpv
     ncmpcpp
     neovim
+    powertop
     ranger
     ranger
     ripgrep
@@ -50,6 +50,7 @@ packages+=(
     sqlite
     stylua
     tar
+    tlp
     tmux
     unzip
     wget
@@ -72,6 +73,7 @@ packages+=(
 packages_aur=(
     cava
     i3lock-color
+    tlpui
 )
 
 {{ if eq .emacs true }}
@@ -83,9 +85,6 @@ packages+=(
 
 # install all the packages
 sudo pacman -S --noconfirm --needed ${packages[@]}
-
-echo "XDG-Dir setups"
-xdg-user-dirs-update
 
 # some variable
 echo "local bin directory setup"
