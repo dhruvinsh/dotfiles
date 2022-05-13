@@ -6,6 +6,8 @@ set -eo pipefail
 LOCAL=~/.local
 TEMP_DIR=/tmp/emacs
 
+# in Arch system no cleaning or bulding emacs required
+{{- if eq .ubuntu true }}
 # clean ups befor we build new emacs
 rm -rf $LOCAL/bin/ctags
 rm -rf $LOCAL/bin/ebrowse
@@ -49,6 +51,7 @@ else
 fi
 
 make -j $(nproc) install
+{{- end }}
 
 # Once emacs is installed lets setup doom emacs if required
 echo "setup doom-emacs"

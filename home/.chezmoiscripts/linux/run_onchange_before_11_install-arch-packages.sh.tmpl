@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# if arch based system
+{{- if lookPath "pacman" }}
+packages=(
+    aspell
+    ca-certificates
+    curl
+    git
+    direnv
+    fontconfig
+    gnupg
+    jq
+    ranger
+    shellcheck
+    sqlite
+    tar
+    tmux
+    unzip
+    wget
+    zsh
+    kitty
+    graphviz
+    htop
+    ranger
+    fzf
+    neovim
+    ripgrep
+    fd
+    stylua
+)
+
+# python build packages
+packages+=(
+    base-devel
+    openssl
+    zlib
+    xz
+    tk
+)
+
+{{ if eq .emacs true }}
+# for arch linux emacs-nativecomp is available
+packages+=(
+    emacs-nativecomp
+)
+{{ end -}}
+
+# install all the packages
+sudo pacman -Sy ${packages[@]}
+
+# some variable
+echo "local bin directory setup"
+LOCALBIN=$HOME/.local/bin
+[ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
+
+echo "set ZSH to default"
+if [ "$SHELL" != "/usr/bin/zsh" ]; then
+    sudo chsh -s $(which zsh) $USER
+fi
+{{- end }}
