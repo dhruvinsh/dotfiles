@@ -3,24 +3,62 @@ set -euo pipefail
 
 # if arch based system
 {{- if lookPath "pacman" }}
-# desktop environment package
+# bootstrapping archlinux
 packages=(
     inotify-tools
-    lightdm
+    lightdm # consider switching with sdm
     lightdm-gtk-greeter
     picom
-    pulseaudio
-    rofi  # or dmenu
-    xf86-video-intel # I know I will be using it on laptop
-    xmonad
-    xmonad-contrib
     xorg-server
     xorg-xinit
+    xorg-xmessage
+    xorg-xprop
+    xorg-xrdb
+    xorg-xset
+    xorg-xsetroot
 )
+
+# hardware bring ups like network, audio, graphics, printers
+packages+=(
+    bluez
+    bluez-utils
+    cups
+    network-manager-applet
+    networkmanager # its already installed but lets keep it here
+    pulseaudio
+    volumeicon
+    xdotool
+    xf86-video-intel # I know I will be using it on laptop
+)
+
+# xmonad setup
+packages+=(
+    rofi  # or dmenu
+    trayer
+    xmobar
+    xmonad
+    xmonad-contrib
+)
+
+# some visual packages like fonts, themes, icons etc
+packages+=(
+    adobe-source-code-pro-fonts
+    adobe-source-sans-fonts
+    otf-font-awesome
+    ttf-joypixels
+    ttf-ubuntu-font-family
+    xwallpaper
+)
+
 # some usefule packages
 packages+=(
+    alacritty
     aspell
+    aspell-en
+    conky
+    cmake
     curl
+    dialog
     direnv
     dunst
     fd
@@ -41,6 +79,8 @@ packages+=(
     mpv
     ncmpcpp
     neovim
+    nitrogen
+    pacman-contrib
     powertop
     ranger
     ranger
@@ -49,6 +89,7 @@ packages+=(
     shellcheck
     sqlite
     stylua
+    sxiv
     tar
     tlp
     tmux
@@ -73,6 +114,9 @@ packages+=(
 packages_aur=(
     cava
     i3lock-color
+    otf-raleway
+    ttf-mononoki
+    ttf-ms-fonts
     tlpui
 )
 
@@ -104,5 +148,5 @@ if [ ! -x "$(command -v yay)" ]; then
     makepkg -si
     cd ~
 fi
-yay -S ${packages_aur[@]}
+yay -S --nocleanmenu --nodiffmenu --removemake --norebuild --noredownload ${packages_aur[@]}
 {{- end }}
