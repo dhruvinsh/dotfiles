@@ -6,40 +6,50 @@ set -euo pipefail
 # bootstrapping archlinux
 packages=(
     inotify-tools
-    lightdm # consider switching with sdm
-    lightdm-gtk-greeter
-    picom
-    xorg-server
+    sddm
+    xorg
     xorg-xinit
-    xorg-xmessage
-    xorg-xprop
-    xorg-xrdb
-    xorg-xset
-    xorg-xsetroot
 )
 
 # hardware bring ups like network, audio, graphics, printers
 packages+=(
+    acpi
+    alsa-utils
+    arandr
+    blueman
     bluez
     bluez-utils
     cups
+    lxappearance
     network-manager-applet
     networkmanager # its already installed but lets keep it here
     pulseaudio
+    pulseaudio-alsa
+    pulseaudio-bluetooth
     volumeicon
-    xdotool
+    xf86-input-libinput
     xf86-video-intel # I know I will be using it on laptop
 )
 
+# NOTE: xmonad feels alien and hard to learn haskell for now, dropping it for now
+# and switching to i3-gaps
 # xmonad setup
-packages+=(
-    rofi  # or dmenu
-    trayer
-    xmobar
-    xmonad
-    xmonad-contrib
-)
+# packages+=(
+#     picom
+#     rofi  # or dmenu
+#     trayer
+#     xmobar
+#     xmonad
+#     xmonad-contrib
+# )
 
+# i3-gaps setup
+packages+=(
+    i3-gaps
+    picom
+    polybar
+    rofi
+)
 # some visual packages like fonts, themes, icons etc
 packages+=(
     adobe-source-code-pro-fonts
@@ -47,7 +57,6 @@ packages+=(
     otf-font-awesome
     ttf-joypixels
     ttf-ubuntu-font-family
-    xwallpaper
 )
 
 # some usefule packages
@@ -55,8 +64,9 @@ packages+=(
     alacritty
     aspell
     aspell-en
-    conky
     cmake
+    code
+    conky
     curl
     dialog
     direnv
@@ -72,7 +82,7 @@ packages+=(
     iftop
     imagemagick
     jq
-    kitty
+    libnotify
     light
     mpc
     mpd
@@ -84,6 +94,7 @@ packages+=(
     powertop
     ranger
     ranger
+    redshift
     ripgrep
     scrot
     shellcheck
@@ -112,10 +123,7 @@ packages+=(
 )
 # aur packages
 packages_aur=(
-    cava
-    i3lock-color
-    otf-raleway
-    ttf-mononoki
+    rofi-greenclip
     ttf-ms-fonts
     tlpui
 )
