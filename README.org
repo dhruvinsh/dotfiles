@@ -104,33 +104,7 @@ Simply follow this steps/cmds to install arch linux with LTS kernel xmonad (that
   #+END_SRC
 
 ** Graphical Desktop/Windows manager Installation:
-NOTE: Almost all parts are taken care by ~chezmoi~ so below data might not be accurate. Look at the [[file:home/.chezmoiscripts/linux/run_onchange_before_11_install-arch-packages.sh.tmpl][Arch Installation]] script.
-
-Boot to the arch linux which is base installation only.
-- Make sure xdg-dirs are available: ~xdg-usr-dirs-update~
-- Install graphic driver, terminal emulator, xorg, compositor etc..
-  #+BEGIN_SRC bash
-  pacman -S xorg-xinit xorg-server xf86-video-intel
-  # optional
-  pacman -S xfce4 xfce4-goodies libcanberra ttf-droid ttf-dejavu ttf-iosevka
-
-  pacman -S lightdm light-gtk-greeter
-  pacman -S xmonad xmonad-contrib rofi
-  pacman -S nitrogen picom firefox bash-completion
-
-  systemctl enable lightdm
-  # do not forgot to edit greeter in lightdm.conf
-  #+END_SRC
-- Setup AUR
-  #+BEGIN_SRC bash
-  git clone https://aur.archlinux.org/yay-git.git ~/Downloads/yay-git
-  cd ~/Downloads/yay-git
-  makepkg -si
-  #+END_SRC
-- AUR packages installation
-  #+BEGIN_SRC bash
-
-  #+END_SRC
+All packages installation are taken care by ~chezmoi~ so look at the [[file:home/.chezmoiscripts/linux/run_onchange_before_11_install-arch-packages.sh.tmpl][Arch Installation]] script.
 
 * Credits
 - Thanks [[https://github.com/twpayne][Tom Payne]] for awesome tool: [[https://github.com/twpayne/chezmoi][chezmoi]]
