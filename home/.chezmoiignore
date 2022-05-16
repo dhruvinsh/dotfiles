@@ -25,3 +25,4 @@
 .nvm/versions
 README.org
 key.txt.age
+__pycache__/
