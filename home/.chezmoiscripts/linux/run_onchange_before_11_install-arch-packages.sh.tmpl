@@ -14,19 +14,31 @@ packages=(
 # hardware bring ups like network, audio, graphics, printers
 packages+=(
     acpi
+    acpid
     alsa-utils
-    arandr
+    blueberry
     blueman
     bluez
     bluez-utils
-    cups
-    lxappearance
+    cpupower
+    jack2
+    mesa
     network-manager-applet
     networkmanager # its already installed but lets keep it here
+    networkmanager-openvpn
+    pipewire
+    pipewire-alsa
+    pipewire-media-session
+    pipewire-pulse
+    pipewire-zeroconf
     pulseaudio
     pulseaudio-alsa
     pulseaudio-bluetooth
+    pulsemixer
+    udisks2
+    upower
     volumeicon
+    vulkan-intel
     xf86-input-libinput
     xf86-video-intel # I know I will be using it on laptop
 )
@@ -54,7 +66,11 @@ packages+=(
 packages+=(
     adobe-source-code-pro-fonts
     adobe-source-sans-fonts
+    arandr
+    harfbuzz
+    lxappearance
     otf-font-awesome
+    papirus-icon-theme
     ttf-joypixels
     ttf-ubuntu-font-family
 )
@@ -64,9 +80,12 @@ packages+=(
     alacritty
     aspell
     aspell-en
+    avahi
     cmake
     code
     conky
+    cups
+    cups-pdf
     curl
     dialog
     direnv
@@ -78,27 +97,36 @@ packages+=(
     fzf
     git
     gnupg
+    gutenprint
+    hplip
     htop
     iftop
     imagemagick
     jq
     libnotify
     light
+    lm_sensors
+    lsb-release
     mpc
     mpd
     mpv
     ncmpcpp
     neovim
     nitrogen
+    ntfs-3g
+    openssh
     pacman-contrib
+    pcmanfm-gtk3
     powertop
     ranger
     ranger
     redshift
     ripgrep
+    samba
     scrot
     shellcheck
     sqlite
+    startup-notification
     stylua
     sxiv
     tar
@@ -123,6 +151,10 @@ packages+=(
 )
 # aur packages
 packages_aur=(
+    autotiling
+    flashfocus
+    poweralertd
+    pulseaudio-ctl
     rofi-greenclip
     ttf-ms-fonts
     tlpui
