@@ -12,7 +12,7 @@ if ! [ -f "$LOCALBIN/age" ]; then
     chmod +x "$LOCALBIN/age-keygen"
 fi
 
-if [ ! -f "/home/ds/key.txt" ]; then
-    "$LOCALBIN/age" --decrypt --output "/home/ds/key.txt" "{{ .chezmoi.sourceDir }}/key.txt.age"
-    chmod 600 "/home/ds/key.txt"
+if [ ! -f "/home/ds/.key.txt" ]; then
+    "$LOCALBIN/age" --decrypt --output "/home/ds/.key.txt" "{{ .chezmoi.sourceDir }}/key.txt.age"
+    chmod 600 "/home/ds/.key.txt"
 fi
