@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # if ubuntu based system
-{{- if lookPath "apt" }}
+{{- if eq .ubuntu true }}
 # before setting up the dotfiles, lets make sure we setup all the
 # dependency.
 
