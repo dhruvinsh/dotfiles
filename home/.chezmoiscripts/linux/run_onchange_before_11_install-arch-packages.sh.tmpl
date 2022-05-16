@@ -34,6 +34,9 @@ packages+=(
     pipewire-media-session
     pipewire-pulse
     pipewire-zeroconf
+    # NOTE: pipewire replaces pulseaudio
+    # Install pipewire-pulse. It will replace pulseaudio and pulseaudio-bluetooth.
+    # Reboot, re-login or start the pipewire-pulse.service user unit to see the effect.
     # pulseaudio
     # pulseaudio-alsa
     # pulseaudio-bluetooth
@@ -90,7 +93,6 @@ packages+=(
     lxappearance
     otf-font-awesome
     papirus-icon-theme
-    ttf-joypixels
     ttf-ubuntu-font-family
 )
 
@@ -99,6 +101,7 @@ packages+=(
     alacritty
     aspell
     aspell-en
+    audacity
     avahi
     bash-completion
     cmake
@@ -170,9 +173,9 @@ packages+=(
     xz
     zlib
 )
-# aur packages
+
+# general aur packages
 packages_aur+=(
-    # pulseaudio-ctl
     ttf-ms-fonts
     tlpui
 )
