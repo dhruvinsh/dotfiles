@@ -3,6 +3,8 @@ set -euo pipefail
 
 # if arch based system
 {{- if lookPath "pacman" }}
+packages=()
+packages_aur=()
 # bootstrapping archlinux
 packages=(
     inotify-tools
@@ -62,11 +64,17 @@ packages+=(
 #     polybar
 #     rofi
 # )
+# packages_aur+=(
+#     autotiling
+#     flashfocus
+#     rofi-greenclip
+# )
 
 # qtile setup
 packages+=(
     qtile
 )
+
 # some visual packages like fonts, themes, icons etc
 packages+=(
     adobe-source-code-pro-fonts
@@ -155,12 +163,9 @@ packages+=(
     zlib
 )
 # aur packages
-packages_aur=(
-    autotiling
-    flashfocus
+packages_aur+=(
     poweralertd
     pulseaudio-ctl
-    rofi-greenclip
     ttf-ms-fonts
     tlpui
 )
