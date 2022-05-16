@@ -2,9 +2,10 @@
 set -euo pipefail
 
 # if arch based system
-{{- if lookPath "pacman" }}
+{{- if eq .archlinux true }}
 packages=()
 packages_aur=()
+
 # bootstrapping archlinux
 packages=(
     inotify-tools

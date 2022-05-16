@@ -1,4 +1,4 @@
-# chezmoi.yaml -*- mode: toml -*-
+# chezmoi.toml -*- mode: toml -*-
 
 # Question mark at the end not required. Chezmoi adds its own.
 {{- $emacs           := promptBool "Want to build emacs" -}}
@@ -21,7 +21,7 @@
 {{/* arch or ubuntu */}}
 {{- $archlinux      := false -}}
 {{- $ubuntu         := true -}}
-{{- if lookPath "pacman" }}
+{{- if eq .chezmoi.osRelease.name "Arch Linux" }}
 {{- $archlinux = true -}}
 {{- $ubuntu = false -}}
 {{- end -}}
