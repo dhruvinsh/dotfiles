@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# if arch based system then perform some previleged setups
+{{- if eq .archlinux true }}
+sudo cat <<EOF > /etc/X11/xorg.conf.d/30-touchpad.conf
+Section "InputClass"
+        Identifier "touchpad"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+        Option "Tapping" "on"
+        Option "NaturalScrolling" "true"
+EndSection
+EOF
+{{- end }}
