@@ -80,7 +80,7 @@ Simply follow this steps/cmds to install arch linux with LTS kernel xmonad (that
   #+BEGIN_SRC bash
   useradd -m ds
   passwd ds
-  usermod -aG wheel,audio,video,storage ds
+  usermod -aG wheel,audio,video,storage,power ds
   EDITOR=nvim visuod
   # uncomment this line: %wheel ALL=(ALL:ALL) ALL
   #+END_SRC
@@ -89,7 +89,7 @@ Simply follow this steps/cmds to install arch linux with LTS kernel xmonad (that
   pacman -S grub efibootmgr os-prober mtools
   mount --mkdir /dev/sda1 /boot/efi
   grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
-  grub-mkconfig -o /boot/grub/grub.conf
+  grub-mkconfig -o /boot/grub/grub.cfg
   #+END_SRC
 - Install microcode and few extra essential software: ~pacman -S intel-ucode curl wget git xdg-user-dirs networkmanager~
 - Enable Some services
@@ -100,6 +100,7 @@ Simply follow this steps/cmds to install arch linux with LTS kernel xmonad (that
   #+BEGIN_SRC bash
   exit
   umount -R /mnt
+  swapoff /dev/sda2
   shutdown now
   #+END_SRC
 
