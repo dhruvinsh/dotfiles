@@ -94,6 +94,7 @@ packages+=(
     aspell
     aspell-en
     avahi
+    bash-completion
     cmake
     code
     conky
@@ -120,6 +121,7 @@ packages+=(
     light
     lm_sensors
     lsb-release
+    meson
     mpc
     mpd
     mpv
@@ -164,7 +166,6 @@ packages+=(
 )
 # aur packages
 packages_aur+=(
-    poweralertd
     # pulseaudio-ctl
     ttf-ms-fonts
     tlpui
@@ -180,6 +181,12 @@ packages+=(
 # install all the packages
 sudo pacman -S --noconfirm --needed ${packages[@]}
 
+# enable some services
+sudo systemctl enable avahi-daemon.service
+sudo systemctl enable cups.service
+sudo systemctl enable sddm.service
+sudo systemctl enable sshd.service
+
 # some variable
 echo "local bin directory setup"
 LOCALBIN=$HOME/.local/bin
@@ -189,7 +196,6 @@ echo "set ZSH to default"
 if [ "$SHELL" != "/usr/bin/zsh" ]; then
     sudo chsh -s $(which zsh) $USER
 fi
-
 
 echo "YAY installation"
 if [ ! -x "$(command -v yay)" ]; then
