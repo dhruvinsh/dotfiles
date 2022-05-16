@@ -1,64 +1,64 @@
-# Colors (Doom One)
+# TODO: cool idea!! program it to change with rofi!
 schemes:
   # Default colors
   base16: &base16
     primary:
-      background: '#181818'
-      foreground: '#d8d8d8'
+      background: "#181818"
+      foreground: "#d8d8d8"
     normal:
-      black:   '#181818'
-      red:     '#ab4642'
-      green:   '#a1b56c'
-      yellow:  '#f7ca88'
-      blue:    '#7cafc2'
-      magenta: '#ba8baf'
-      cyan:    '#86c1b9'
-      white:   '#d8d8d8'
+      black: "#181818"
+      red: "#ab4642"
+      green: "#a1b56c"
+      yellow: "#f7ca88"
+      blue: "#7cafc2"
+      magenta: "#ba8baf"
+      cyan: "#86c1b9"
+      white: "#d8d8d8"
     bright:
-      black:   '#585858'
-      red:     '#ab4642'
-      green:   '#a1b56c'
-      yellow:  '#f7ca88'
-      blue:    '#7cafc2'
-      magenta: '#ba8baf'
-      cyan:    '#86c1b9'
-      white:   '#f8f8f8'
+      black: "#585858"
+      red: "#ab4642"
+      green: "#a1b56c"
+      yellow: "#f7ca88"
+      blue: "#7cafc2"
+      magenta: "#ba8baf"
+      cyan: "#86c1b9"
+      white: "#f8f8f8"
 
   doomone: &doomone
     primary:
-      background: '#282c34'
-      foreground: '#bbc2cf'
+      background: "#282c34"
+      foreground: "#bbc2cf"
     normal:
-      black:   '#282c34'
-      red:     '#ff6c6b'
-      green:   '#98be65'
-      yellow:  '#ecbe7b'
-      blue:    '#51afef'
-      magenta: '#c678dd'
-      cyan:    '#46d9ff'
-      white:   '#bbc2cf'
+      black: "#282c34"
+      red: "#ff6c6b"
+      green: "#98be65"
+      yellow: "#ecbe7b"
+      blue: "#51afef"
+      magenta: "#c678dd"
+      cyan: "#46d9ff"
+      white: "#bbc2cf"
 
   onedark: &onedark
     primary:
-      background: '#1e2127'
-      foreground: '#abb2bf'
+      background: "#1e2127"
+      foreground: "#abb2bf"
     normal:
-      black:   '#1e2127'
-      red:     '#e06c75'
-      green:   '#98c379'
-      yellow:  '#d19a66'
-      blue:    '#61afef'
-      magenta: '#c678dd'
-      cyan:    '#56b6c2'
-      white:   '#abb2bf'
+      black: "#1e2127"
+      red: "#e06c75"
+      green: "#98c379"
+      yellow: "#d19a66"
+      blue: "#61afef"
+      magenta: "#c678dd"
+      cyan: "#56b6c2"
+      white: "#abb2bf"
     bright:
-      black:   '#5c6370'
-      red:     '#e06c75'
-      green:   '#98c379'
-      yellow:  '#d19a66'
-      blue:    '#61afef'
-      magenta: '#c678dd'
-      cyan:    '#56b6c2'
-      white:   '#ffffff'
+      black: "#5c6370"
+      red: "#e06c75"
+      green: "#98c379"
+      yellow: "#d19a66"
+      blue: "#61afef"
+      magenta: "#c678dd"
+      cyan: "#56b6c2"
+      white: "#ffffff"
 
 colors: *doomone
