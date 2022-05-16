@@ -62,13 +62,32 @@ Simply follow this steps/cmds to install arch linux with LTS kernel xmonad (that
   mount /dev/sda3 /mnt
   swapon /dev/sda2
   #+END_SRC
-- Install archlinux: ~pacstrap /mnt base base-devel linux-lts linux-firmware neovim sudo~
-- Fstab setup: ~genfstab -U /mnt >> /mnt/etc/fstab~
-- Change root: ~arch-chroot /mnt~
-- Zoneinfo update: ~ln -sf /usr/share/zoneinfo/America/Toronto /etc/localtime~
+- Install archlinux:
+  #+BEGIN_SRC bash
+  pacstrap /mnt base base-devel linux-lts linux-firmware neovim sudo
+  #+END_SRC
+- Fstab setup:
+  #+BEGIN_SRC bash
+  genfstab -U /mnt >> /mnt/etc/fstab
+  #+END_SRC
+- Change root: ~~
+  #+BEGIN_SRC bash
+  arch-chroot /mnt
+  #+END_SRC
+- Zoneinfo update:
+  #+BEGIN_SRC bash
+  ln -sf /usr/share/zoneinfo/America/Toronto /etc/localtime
+  #+END_SRC
 - Localization: ~nvim /etc/locale.gen~ and un-comment ~en_US.UTF-8 UTF-8~ once that done generate locale by ~locale-gen~
-- Update language: ~echo "LANG=en_US.UTF-8" > /etc/locale.conf~ and ~export LANG=en_US.UTF-8~
-- Update hostname: ~echo "ds-laptop" > /etc/hostname~
+- Update language:
+  #+BEGIN_SRC bash
+  echo "LANG=en_US.UTF-8" > /etc/locale.conf
+  export LANG=en_US.UTF-8
+  #+END_SRC
+- Update hostname:
+  #+BEGIN_SRC bash
+  echo "ds-laptop" > /etc/hostname
+  #+END_SRC
 - Update hosts file with ~nvim /etc/hosts~:
   #+BEGIN_SRC text
   127.0.0.1     localhost
@@ -91,7 +110,10 @@ Simply follow this steps/cmds to install arch linux with LTS kernel xmonad (that
   grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
   grub-mkconfig -o /boot/grub/grub.cfg
   #+END_SRC
-- Install microcode and few extra essential software: ~pacman -S intel-ucode curl wget git xdg-user-dirs networkmanager~
+- Install microcode and few extra essential software:
+  #+BEGIN_SRC bash
+  pacman -S intel-ucode curl wget git xdg-user-dirs networkmanager
+  #+END_SRC
 - Enable Some services
   #+BEGIN_SRC bash
   systemctl enable NetworkManager
