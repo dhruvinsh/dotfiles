@@ -16,7 +16,8 @@ Collection of personal dotfile, managed via chezmoi.
 * Installation
 Below code will install chezmoi in local bin directory and start applying the existing setup.
 #+BEGIN_SRC sh
-  export BINDIR=$HOME/.local/bin
+  export BINDIR="$HOME/.local/bin"
+  export PATH="$HOME/.local/bin:$PATH"  # I need to do it else age binary will give me error
   sh -c "$(curl -fsLS chezmoi.io/get)" -- init dhruvinsh --apply
 #+END_SRC
 
@@ -132,3 +133,5 @@ All packages installation are taken care by ~chezmoi~ so look at the [[file:home
 * Credits
 - Thanks [[https://github.com/twpayne][Tom Payne]] for awesome tool: [[https://github.com/twpayne/chezmoi][chezmoi]]
 - Arch Linux installation guide: [[https://wiki.archlinux.org/title/Installation_guide][Arch Wiki]]
+- Wallpapers credits: [[https://www.reddit.com/user/VictorTennekes/][VictorTennekes]]
+  All the wallpaper can be found [[file:home/private_dot_wallpaper/][HERE]]
