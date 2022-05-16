@@ -8,6 +8,8 @@ if [ -x "$(command -v add-apt-repository)" ]; then
   sudo add-apt-repository --remove -y ppa:longsleep/golang-backports
 fi
 
+[ -f "$HOME/key.txt" ] && rm -rf "$HOME/key.txt"
+
 {{- if eq .emacs true }}
 # Decided to move doom emacs to .config directory
 # Below cleanup is for doom emacs installs
@@ -16,4 +18,5 @@ fi
 [[ -d "$HOME/.emacs.d" ]] && rm -rf "$HOME"/.emacs.d
 [[ -d "$HOME/.doom.d" ]] && rm -rf "$HOME"/.doom.d
 {{- end }}
+
 echo "I am done"
