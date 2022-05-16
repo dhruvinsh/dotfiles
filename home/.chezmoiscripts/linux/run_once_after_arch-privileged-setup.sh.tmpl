@@ -3,7 +3,7 @@ set -euo pipefail
 
 # if arch based system then perform some previleged setups
 {{- if eq .archlinux true }}
-sudo cat <<EOF > /etc/X11/xorg.conf.d/30-touchpad.conf
+cat <<EOF > /tmp/30-touchpad.conf
 Section "InputClass"
         Identifier "touchpad"
         MatchIsTouchpad "on"
@@ -13,4 +13,5 @@ Section "InputClass"
         Option "NaturalScrolling" "true"
 EndSection
 EOF
+sudo mv /tmp/30-touchpad.conf /etc/X11/xorg.conf.d/
 {{- end }}
