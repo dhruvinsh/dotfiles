@@ -3,6 +3,9 @@ set -euo pipefail
 
 # if arch based system then perform some previleged setups
 {{- if eq .archlinux true }}
+X11CONFDIR=/etc/X11/xorg.conf.d
+
+# touchpad setup
 cat <<EOF > /tmp/30-touchpad.conf
 Section "InputClass"
         Identifier "touchpad"
@@ -13,5 +16,19 @@ Section "InputClass"
         Option "NaturalScrolling" "true"
 EndSection
 EOF
-sudo mv /tmp/30-touchpad.conf /etc/X11/xorg.conf.d/
+sudo mv /tmp/30-touchpad.conf "$X11CONFDIR"
+
+# fix for graphical glitch
+cat <<EOF > /tmp/20-intel.conf
+Section "Device"
+  Identifier "Intel Graphics"
+  Driver "intel"
+  Option "DRI" "2"
+  Option "AccelMethod" "sna"
+  Option "TearFree" "true"
+  Option "TripleBuffer" "true"
+  Option "AccelMethod" "uxa"
+EndSection
+EOF
+sudo mv /tmp/20-intel.conf "$X11CONFDIR"
 {{- end }}
