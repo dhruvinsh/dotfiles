@@ -65,6 +65,15 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod], "e", lazy.spawn("rofi -show drun"), desc="Rofi launcher"),
+    Key(
+        [], "XF86MonBrightnessUp", lazy.spawn("light -A 5"), desc="Brightness increase"
+    ),
+    Key(
+        [],
+        "XF86MonBrightnessDown",
+        lazy.spawn("light -U 5"),
+        desc="Brightness increase",
+    ),
 ]
 
 groups = [Group(i) for i in "123456789"]
