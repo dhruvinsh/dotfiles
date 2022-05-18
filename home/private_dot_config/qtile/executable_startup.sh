@@ -19,5 +19,8 @@ volumeicon &
 # Lets have network applet
 nm-applet &
 
+# Auto mount usb disk if needed
+udiskie --tray &
+
 # Emacs startup, with archlinux I am using pacman emacs
 /usr/bin/emacs --daemon &
