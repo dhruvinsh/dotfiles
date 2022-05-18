@@ -199,7 +199,7 @@ wl_input_rules = None
 def start_once():
     """startup script"""
     script = Path.home() / ".config" / "qtile" / "startup.sh"
-    subprocess.call([script])
+    subprocess.Popen([script])
 
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
