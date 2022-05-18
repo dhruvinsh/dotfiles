@@ -16,6 +16,13 @@ packages=(
 
 # hardware bring ups like network, audio, graphics, printers
 packages+=(
+    # Installing pipewire-pulse! It will replace pulseaudio and pulseaudio-bluetooth.
+    # NOTE: pipewire replaces pulseaudio
+    # Reboot, re-login or start the pipewire-pulse.service user unit to see the effect.
+    # pulseaudio
+    # pulseaudio-alsa
+    # pulseaudio-bluetooth
+    # pulsemixer
     acpi
     acpid
     alsa-utils
@@ -23,8 +30,12 @@ packages+=(
     bluez
     bluez-utils
     cpupower
+    intel-gpu-tools
+    intel-media-driver
     jack2
+    libva-utils
     mesa
+    mesa-utils
     network-manager-applet
     networkmanager # its already installed but lets keep it here
     networkmanager-openvpn
@@ -33,13 +44,6 @@ packages+=(
     pipewire-media-session
     pipewire-pulse
     pipewire-zeroconf
-    # NOTE: pipewire replaces pulseaudio
-    # Install pipewire-pulse. It will replace pulseaudio and pulseaudio-bluetooth.
-    # Reboot, re-login or start the pipewire-pulse.service user unit to see the effect.
-    # pulseaudio
-    # pulseaudio-alsa
-    # pulseaudio-bluetooth
-    # pulsemixer
     udisks2
     upower
     volumeicon
