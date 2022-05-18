@@ -7,7 +7,7 @@ env:
 
 window:
   decorations: none
-  opacity: 0.8
+  opacity: 1.0
   # TODO: cool idea!! program it to change with time if possible!
   # GTK theme variant (Linux/BSD only)
   #
@@ -32,7 +32,7 @@ font:
     family: Iosevka Nerd Font
     style: Italic
 
-  size: 9.0
+  size: 12.0
   builtin_box_drawing: true
 
 draw_bold_text_with_bright_colors: false
