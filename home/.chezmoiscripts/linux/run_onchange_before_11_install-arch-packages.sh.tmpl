@@ -79,12 +79,14 @@ packages+=(
 
 # qtile setup
 packages+=(
+    lxsession
     picom
     qtile
     rofi
 )
 packages_aur+=(
     rofi-greenclip
+    flashfocus
 )
 
 # some visual packages like fonts, themes, icons etc
@@ -116,6 +118,7 @@ packages+=(
     cmake
     code
     conky
+    cronie
     cups
     cups-pdf
     curl
@@ -124,6 +127,7 @@ packages+=(
     dunst
     fd
     feh
+    ffmpeg
     ffmpegthumbnailer
     firefox
     fontconfig
@@ -135,6 +139,7 @@ packages+=(
     htop
     iftop
     imagemagick
+    jgmenu
     jq
     libnotify
     light
@@ -151,6 +156,7 @@ packages+=(
     openssh
     pacman-contrib
     pcmanfm-gtk3
+    playerctl
     powertop
     ranger
     ranger
@@ -159,16 +165,15 @@ packages+=(
     samba
     scrot
     shellcheck
-    sqlite
     startup-notification
     stylua
     sxiv
     tar
-    tlp
     tmux
     unzip
     wget
     xclip
+    youtube-dl
     zathura
     zathura-pdf-mupdf
     zsh
@@ -187,7 +192,6 @@ packages+=(
 # general aur packages
 packages_aur+=(
     ttf-ms-fonts
-    tlpui
 )
 
 {{ if eq .emacs true }}
@@ -199,12 +203,6 @@ packages+=(
 
 # install all the packages
 sudo pacman -S --noconfirm --needed ${packages[@]}
-
-# enable some services
-sudo systemctl enable avahi-daemon.service
-sudo systemctl enable cups.service
-sudo systemctl enable sddm.service
-sudo systemctl enable sshd.service
 
 # some variable
 echo "local bin directory setup"
@@ -224,4 +222,21 @@ if [ ! -x "$(command -v yay)" ]; then
     cd ~
 fi
 yay -S --nocleanmenu --nodiffmenu --removemake --norebuild --noredownload ${packages_aur[@]}
+
+
+# enable some services
+sudo systemctl enable --now NetworkManager.service
+sudo systemctl enable --now NetworkManager-dispatcher.service
+sudo systemctl enable --now avahi-daemon.service
+sudo systemctl enable --now bluetooth.service
+sudo systemctl enable --now cups.service
+sudo systemctl enable --now sddm.service
+sudo systemctl enable --now sshd.service
+
+# some user services
+systemctl --user enable --now greenclip.service
+systemctl --user enable --now pipewire.service
+systemctl --user enable --now pipewire-pulse.service
+systemctl --user enable --now redshift-gtk.service
+
 {{- end }}
