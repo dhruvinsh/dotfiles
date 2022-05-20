@@ -163,6 +163,7 @@ packages+=(
     ranger
     ranger
     redshift
+    remmina
     ripgrep
     samba
     scrot
@@ -171,6 +172,7 @@ packages+=(
     stylua
     sxiv
     tar
+    tigervnc
     tmux
     unzip
     wget
@@ -240,5 +242,8 @@ systemctl --user enable --now greenclip.service
 systemctl --user enable --now pipewire.service
 systemctl --user enable --now pipewire-pulse.service
 systemctl --user enable --now redshift-gtk.service
++{{- if stat (joinPath .chezmoi.homeDir ".config/systemd/user/x0vncserver.service") }}
+systemctl --user enable --now x0vncserver.service
+{{- end }}
 
 {{- end }}
