@@ -21,7 +21,7 @@ nm-applet &
 udiskie --tray &
 
 # Delay emacs startup a little bit more I don't need urgently
-sleep 10
+sleep 5
 
 # Emacs startup, with archlinux I am using pacman emacs
 /usr/bin/emacs --daemon &
