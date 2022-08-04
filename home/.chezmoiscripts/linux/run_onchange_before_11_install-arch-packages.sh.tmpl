@@ -198,7 +198,7 @@ packages_aur+=(
     ttf-ms-fonts
 )
 
-{{ if eq .emacs true }}
+{{ if eq .emacs.setup true }}
 # for arch linux emacs-nativecomp is available
 packages+=(
     emacs-nativecomp

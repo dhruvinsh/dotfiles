@@ -55,13 +55,13 @@
   threads = {{ $cpuThreads }}
 
 [data.emacs]
-  {{- if eq $emacs true }}
+  setup = {{ $emacs }}
   {{- if gt $cpuCores 4 }}
-  emacsbuild = true
-  emacsppa = false
+  build = true
+  ppa = false
   {{- else }}
-  emacsbuild = false
-  emacsppa = true
+  build = false
+  ppa = true
   {{- end }}
   {{- end }}
 
