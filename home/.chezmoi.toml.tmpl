@@ -1,7 +1,7 @@
 # chezmoi.toml -*- mode: toml -*-
 
 # Question mark at the end not required. Chezmoi adds its own.
-{{- $emacs           := promptBool "Want to build emacs" -}}
+{{- $emacs           := promptBool "Want to install emacs" -}}
 {{- $personalmachine := promptBool "Is it personal machine" -}}
 
 {{/* wsl detection */}}
@@ -26,16 +26,45 @@
 {{- $ubuntu = false -}}
 {{- end -}}
 
+{{/* CPU core detection */}}
+{{- $cpuCores := 1 }}
+{{- $cpuThreads := 1 }}
+{{- if eq .chezmoi.os "darwin" }}
+{{-   $cpuCores = (output "sysctl" "-n" "hw.physicalcpu_max") | trim | atoi }}
+{{-   $cpuThreads = (output "sysctl" "-n" "hw.logicalcpu_max") | trim | atoi }}
+{{- else if eq .chezmoi.os "linux" }}
+{{-   $cpuCores = (output "sh" "-c" "lscpu --online --parse | grep --invert-match '^#' | sort --field-separator=',' --key='2,4' --unique | wc --lines") | trim | atoi }}
+{{-   $cpuThreads = (output "sh" "-c" "lscpu --online --parse | grep --invert-match '^#' | wc --lines") | trim | atoi }}
+{{- else if eq .chezmoi.os "windows" }}
+{{-   $cpuCores = (output "powershell.exe" "-NoProfile" "-NonInteractive" "-Command" "(Get-CimInstance -ClassName 'Win32_Processor').NumberOfCores") | trim | atoi }}
+{{-   $cpuThreads = (output "powershell.exe" "-NoProfile" "-NonInteractive" "-Command" "(Get-CimInstance -ClassName 'Win32_Processor').NumberOfLogicalProcessors") | trim | atoi }}
+{{- end }}
+
+
 [data]
-  emacs = {{ $emacs }}
   personalmachine = {{ $personalmachine }}
   wsl = {{ $wsl }}
   wsl1 = {{ $wsl1 }}
   wsl2 = {{ $wsl2 }}
   archlinux = {{ $archlinux }}
   ubuntu = {{ $ubuntu }}
+  encryption = "age"
 
-encryption = "age"
+[data.cpu]
+  cores = {{ $cpuCores }}
+  threads = {{ $cpuThreads }}
+
+[data.emacs]
+  {{- if eq $emacs true }}
+  {{- if gt $cpuCores 4 }}
+  emacsbuild = true
+  emacsppa = false
+  {{- else }}
+  emacsbuild = false
+  emacsppa = true
+  {{- end }}
+  {{- end }}
+
 [age]
   identity = "~/.key.txt"
   recipient = "age17yfjyk63433uzr5q2lqxx4sexfnz6e9t648kku5t9sehfye7x4eqy9mhmu"
