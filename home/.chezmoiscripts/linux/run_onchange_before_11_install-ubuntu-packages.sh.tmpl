@@ -58,7 +58,7 @@ packages+=(
     liblzma-dev
 )
 
-{{ if eq .emacsbuild true }}
+{{ if eq .emacs.build true }}
 # emacs dpendency, went through the INSTALL file from emacs-27 branch
 # from github. Also some reference:
 # https://emacsredux.com/blog/2021/12/19/using-emacs-on-windows-11-with-wsl2/
@@ -94,7 +94,7 @@ packages+=(
 # neovim lang repository
 repositories+=(
     ppa:neovim-ppa/unstable
-    {{ if eq .emacsppa true }}
+    {{ if eq .emacs.ppa true }}
     ppa:kelleyk/emacs
     {{ end -}}
 )

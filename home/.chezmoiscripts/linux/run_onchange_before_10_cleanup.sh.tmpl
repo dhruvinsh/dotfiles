@@ -10,7 +10,7 @@ fi
 
 [ -f "$HOME/key.txt" ] && rm -rf "$HOME/key.txt"
 
-{{- if eq .emacs true }}
+{{- if eq .emacs.setup true }}
 # Decided to move doom emacs to .config directory
 # Below cleanup is for doom emacs installs
 # we have doom installation setup that means if

@@ -36,7 +36,7 @@
   refreshPeriod = "168h"
   [".config/nvim".pull]
     args = ["--ff-only"]
-{{ if eq .emacs true -}}
+{{ if eq .emacs.setup true -}}
 # emacs is set to true then we can think about adding doom setup else don't do it at all
 [".config/emacs"]
   type = "git-repo"
