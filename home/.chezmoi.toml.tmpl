@@ -56,7 +56,7 @@
 
 [data.emacs]
   setup = {{ $emacs }}
-  {{- if gt $cpuCores 4 }}
+  {{- if ge $cpuCores 4 }}
   build = true
   ppa = false
   {{- else }}
