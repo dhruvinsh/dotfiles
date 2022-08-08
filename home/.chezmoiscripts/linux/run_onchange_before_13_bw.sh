@@ -5,7 +5,7 @@ set -euo pipefail
 echo "Setting up bitwarden cli"
 URL="https://vault.bitwarden.com/download/?app=cli&platform=linux"
 LOCALBIN=$HOME/.local/bin
-wget "$URL" -O /tmp/bw.zip
+wget "$URL" --no-check-certificate -O /tmp/bw.zip
 
 # just incase if we don't have .local/bin directory
 mkdir -p "$LOCALBIN"
