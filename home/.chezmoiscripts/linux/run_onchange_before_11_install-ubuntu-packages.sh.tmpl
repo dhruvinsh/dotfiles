@@ -13,12 +13,18 @@ packages=(
     ca-certificates
     curl
     direnv
+    ethtool
     fontconfig
     git
     gnupg-agent
     graphviz
     htop
     jq
+    {{ if ne .wsl true }}
+    linux-tools-common
+    linux-tools-generic
+    linux-tools-`uname -r`
+    {{ end }}
     net-tools
     ranger
     shellcheck
