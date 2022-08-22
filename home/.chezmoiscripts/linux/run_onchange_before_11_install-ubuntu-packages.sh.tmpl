@@ -13,6 +13,7 @@ packages=(
     ca-certificates
     curl
     direnv
+    editorconfig
     fontconfig
     git
     gnupg-agent
@@ -31,6 +32,15 @@ packages=(
     wget
     wordnet
     zsh
+)
+
+# some c++ setup
+packages+=(
+    build-essential
+    clang
+    clangd-12
+    cmake
+    make
 )
 
 # unattended upgrades setup
