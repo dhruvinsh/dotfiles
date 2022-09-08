@@ -1,12 +1,12 @@
 # chezmoixternal -*- mode: toml -*-
 
 pythonVersion = "3.10.2"
-goVersion = "1.17.8"
+goVersion = "1.19.1"
 ripgrepVersion = "13.0.0"
-fdVersion = "8.3.2"
-fzfVersion = "0.30.0"
+fdVersion = "8.4.0"
+fzfVersion = "0.33.0"
 emacsVersion = "28.1"
 ageVersion = "1.0.0"
-styluaVersion = "0.13.1"
-zenithVersion = "0.13.0"
-syncthingVersion = "1.20.2"
+styluaVersion = "0.14.3"
+zenithVersion = "0.13.1"
+syncthingVersion = "1.21.0"
