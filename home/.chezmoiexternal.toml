@@ -32,10 +32,16 @@
   refreshPeriod = "168h"
 [".config/nvim"]
   type = "git-repo"
-  url = "https://github.com/dhruvinsh/nvim.git"
+  url = "https://github.com/NvChad/NvChad.git"
   refreshPeriod = "168h"
   [".config/nvim".pull]
     args = ["--ff-only"]
+[".config/nvim/lua/custom"]
+  type = "archive"
+  url = "https://github.com/dhruvinsh/nvim/archive/refs/heads/nvchad.zip"
+  exact = true
+  stripComponents = 1
+  refreshPeriod = "168h"
 {{ if eq .emacs.setup true -}}
 # emacs is set to true then we can think about adding doom setup else don't do it at all
 [".config/emacs"]
