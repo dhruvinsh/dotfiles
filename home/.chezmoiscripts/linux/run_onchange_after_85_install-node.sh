@@ -11,12 +11,13 @@ npm install -g npm
 
 echo "Some node application installation for development"
 applications=(
-  pyright
   eslint
-  typescript-language-server
-  typescript
   prettier
+  pyright
   tldr
+  tree-sitter-cli
+  typescript
+  typescript-language-server
   yarn
 )
 npm install -g "${applications[@]}"
