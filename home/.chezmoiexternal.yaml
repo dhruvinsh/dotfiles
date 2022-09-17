@@ -57,13 +57,6 @@
   executable: true
   filter:
     command: zcat
-.nvm:
-  type: git-repo
-  url: "https://github.com/nvm-sh/nvm.git"
-  refreshPeriod: 168h
-  pull:
-    args:
-      - "--ff-only"
 
 .local/bin/syncthing:
   type: file
@@ -83,6 +76,14 @@
       - >-
         syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion
         }}/syncthing
+
+.nvm:
+  type: git-repo
+  url: "https://github.com/nvm-sh/nvm.git"
+  refreshPeriod: 168h
+  pull:
+    args:
+      - "--ff-only"
 
 .oh-my-zsh:
   type: git-repo
