@@ -93,3 +93,11 @@
   [".local/bin/lazygit".filter]
     command = "tar"
     args = ["--extract", "--file", "/dev/stdin", "--gzip", "--to-stdout", "lazygit"]
+
+[".local/bin/selene"]
+  type = "file"
+  url = "https://github.com/Kampfkarren/selene/releases/download/{{ .seleneVersion }}/selene-{{ .seleneVersion }}-{{ .chezmoi.os }}.zip"
+  executable = true
+  [".local/bin/selene".filter]
+    command = "zcat"
+  
