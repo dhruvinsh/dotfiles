@@ -6,42 +6,49 @@
   refreshPeriod = "168h"
   [".oh-my-zsh".pull]
     args = ["--ff-only"]
+
 [".oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
   type = "archive"
   url = "https://github.com/zsh-users/zsh-syntax-highlighting/archive/master.tar.gz"
   exact = true
   stripComponents = 1
   refreshPeriod = "168h"
+
 [".oh-my-zsh/custom/plugins/zsh-autosuggestions"]
   type = "archive"
   url = "https://github.com/zsh-users/zsh-autosuggestions/archive/master.tar.gz"
   exact = true
   stripComponents = 1
   refreshPeriod = "168h"
+
 [".oh-my-zsh/custom/plugins/zsh-completions"]
   type = "archive"
   url = "https://github.com/zsh-users/zsh-completions/archive/master.tar.gz"
   exact = true
   stripComponents = 1
   refreshPeriod = "168h"
+
 [".oh-my-zsh/custom/themes/powerlevel10k"]
   type = "archive"
   url = "https://github.com/romkatv/powerlevel10k/archive/master.tar.gz"
   exact = true
   stripComponents = 1
   refreshPeriod = "168h"
+
 [".config/nvim"]
   type = "git-repo"
   url = "https://github.com/NvChad/NvChad.git"
   refreshPeriod = "168h"
   [".config/nvim".pull]
     args = ["--ff-only"]
+
 [".config/nvim/lua/custom"]
   type = "archive"
   url = "https://github.com/dhruvinsh/nvim/archive/refs/heads/nvchad.zip"
   exact = true
   stripComponents = 1
   refreshPeriod = "168h"
+
 {{ if eq .emacs.setup true -}}
 # emacs is set to true then we can think about adding doom setup else don't do it at all
 [".config/emacs"]
@@ -56,25 +63,29 @@
   [".config/doom".pull]
     args = ["--ff-only"]
 {{ end -}}
+
 [".tmux/plugins/tpm"]
   type = "git-repo"
   url = "https://github.com/tmux-plugins/tpm.git"
   refreshPeriod = "168h"
   [".tmux/plugins/tpm".pull]
     args = ["--ff-only"]
+
 [".nvm"]
   type = "git-repo"
   url = "https://github.com/nvm-sh/nvm.git"
   refreshPeriod = "168h"
   [".nvm".pull]
     args = ["--ff-only"]
+
 [".local/bin/syncthing"]
     type = "file"
     url = "https://github.com/syncthing/syncthing/releases/download/v{{ .syncthingVersion }}/syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}.tar.gz"
     executable = true
     [".local/bin/syncthing".filter]
-        command = "tar"
-        args = ["--extract", "--file", "/dev/stdin", "--gzip", "--to-stdout", "syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing"]
+      command = "tar"
+      args = ["--extract", "--file", "/dev/stdin", "--gzip", "--to-stdout", "syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing"]
+
 [".local/bin/lazygit"]
   type = "file"
   url = "https://github.com/jesseduffield/lazygit/releases/download/v{{ .lazygitVersion }}/lazygit_{{.lazygitVersion }}_Linux_x86_64.tar.gz"

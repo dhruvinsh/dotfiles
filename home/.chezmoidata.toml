@@ -1,15 +1,14 @@
 # chezmoixternal -*- mode: toml -*-
 
-pythonVersion = "3.10.2"
-goVersion = "1.19.1"
-ripgrepVersion = "13.0.0"
+ageVersion = "1.0.0"
+emacsVersion = "28.1"
 fdVersion = "8.4.0"
 fzfVersion = "0.33.0"
-emacsVersion = "28.1"
-ageVersion = "1.0.0"
+goVersion = "1.19.1"
 lazygitVersion = "0.35"
+pythonVersion = "3.10.2"
+ripgrepVersion = "13.0.0"
 styluaVersion = "0.14.3"
-# eventhough zenit says v0.13.1 but actually it
-# v0.13.0
-zenithVersion = "0.13.0"
 syncthingVersion = "1.21.0"
+# eventhough zenit says v0.13.1 but actually it v0.13.0
+zenithVersion = "0.13.0"
