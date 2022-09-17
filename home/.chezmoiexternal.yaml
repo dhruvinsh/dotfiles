@@ -36,8 +36,7 @@
 .local/bin/lazygit:
   type: file
   url: >-
-    https://github.com/jesseduffield/lazygit/releases/download/v{{
-    .lazygitVersion }}/lazygit_{{.lazygitVersion }}_Linux_x86_64.tar.gz
+    https://github.com/jesseduffield/lazygit/releases/download/v{{ .lazygitVersion }}/lazygit_{{.lazygitVersion }}_Linux_x86_64.tar.gz
   executable: true
   filter:
     command: tar
@@ -52,8 +51,7 @@
 .local/bin/selene:
   type: file
   url: >-
-    https://github.com/Kampfkarren/selene/releases/download/{{ .seleneVersion
-    }}/selene-{{ .seleneVersion }}-{{ .chezmoi.os }}.zip
+    https://github.com/Kampfkarren/selene/releases/download/{{ .seleneVersion }}/selene-{{ .seleneVersion }}-{{ .chezmoi.os }}.zip
   executable: true
   filter:
     command: zcat
@@ -67,9 +65,7 @@
 .local/bin/syncthing:
   type: file
   url: >-
-    https://github.com/syncthing/syncthing/releases/download/v{{
-    .syncthingVersion }}/syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{
-    .syncthingVersion }}.tar.gz
+    https://github.com/syncthing/syncthing/releases/download/v{{ .syncthingVersion }}/syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}.tar.gz
   executable: true
   filter:
     command: tar
@@ -80,8 +76,7 @@
       - "--gzip"
       - "--to-stdout"
       - >-
-        syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion
-        }}/syncthing
+        syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing
 
 .nvm:
   type: git-repo
