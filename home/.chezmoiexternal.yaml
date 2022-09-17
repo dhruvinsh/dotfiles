@@ -1,0 +1,129 @@
+# chezmoixternal -*- mode: yaml -*-
+# vim: set filetype=yaml
+
+.config/nvim:
+  type: git-repo
+  url: "https://github.com/NvChad/NvChad.git"
+  refreshPeriod: 168h
+  pull:
+    args:
+      - "--ff-only"
+
+.config/nvim/lua/custom:
+  type: archive
+  url: "https://github.com/dhruvinsh/nvim/archive/refs/heads/nvchad.zip"
+  exact: true
+  stripComponents: 1
+  refreshPeriod: 168h
+
+{{ if eq .emacs.setup true -}}
+.config/emacs:
+  type: git-repo
+  url: "https://github.com/doomemacs/doomemacs.git"
+  refreshPeriod: 168h
+  pull:
+    args:
+      - "--ff-only"
+
+.config/doom:
+  type: git-repo
+  url: "https://github.com/dhruvinsh/doom.d"
+  pull:
+    args:
+      - "--ff-only"
+{{ end -}}
+
+.local/bin/lazygit:
+  type: file
+  url: >-
+    https://github.com/jesseduffield/lazygit/releases/download/v{{
+    .lazygitVersion }}/lazygit_{{.lazygitVersion }}_Linux_x86_64.tar.gz
+  executable: true
+  filter:
+    command: tar
+    args:
+      - "--extract"
+      - "--file"
+      - /dev/stdin
+      - "--gzip"
+      - "--to-stdout"
+      - lazygit
+
+.local/bin/selene:
+  type: file
+  url: >-
+    https://github.com/Kampfkarren/selene/releases/download/{{ .seleneVersion
+    }}/selene-{{ .seleneVersion }}-{{ .chezmoi.os }}.zip
+  executable: true
+  filter:
+    command: zcat
+.nvm:
+  type: git-repo
+  url: "https://github.com/nvm-sh/nvm.git"
+  refreshPeriod: 168h
+  pull:
+    args:
+      - "--ff-only"
+
+.local/bin/syncthing:
+  type: file
+  url: >-
+    https://github.com/syncthing/syncthing/releases/download/v{{
+    .syncthingVersion }}/syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{
+    .syncthingVersion }}.tar.gz
+  executable: true
+  filter:
+    command: tar
+    args:
+      - "--extract"
+      - "--file"
+      - /dev/stdin
+      - "--gzip"
+      - "--to-stdout"
+      - >-
+        syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion
+        }}/syncthing
+
+.oh-my-zsh:
+  type: git-repo
+  url: "https://github.com/ohmyzsh/ohmyzsh.git"
+  refreshPeriod: 168h
+  pull:
+    args:
+      - "--ff-only"
+
+.oh-my-zsh/custom/plugins/zsh-syntax-highlighting:
+  type: archive
+  url: "https://github.com/zsh-users/zsh-syntax-highlighting/archive/master.tar.gz"
+  exact: true
+  stripComponents: 1
+  refreshPeriod: 168h
+
+.oh-my-zsh/custom/plugins/zsh-autosuggestions:
+  type: archive
+  url: "https://github.com/zsh-users/zsh-autosuggestions/archive/master.tar.gz"
+  exact: true
+  stripComponents: 1
+  refreshPeriod: 168h
+
+.oh-my-zsh/custom/plugins/zsh-completions:
+  type: archive
+  url: "https://github.com/zsh-users/zsh-completions/archive/master.tar.gz"
+  exact: true
+  stripComponents: 1
+  refreshPeriod: 168h
+
+.oh-my-zsh/custom/themes/powerlevel10k:
+  type: archive
+  url: "https://github.com/romkatv/powerlevel10k/archive/master.tar.gz"
+  exact: true
+  stripComponents: 1
+  refreshPeriod: 168h
+
+.tmux/plugins/tpm:
+  type: git-repo
+  url: "https://github.com/tmux-plugins/tpm.git"
+  refreshPeriod: 168h
+  pull:
+    args:
+      - "--ff-only"
