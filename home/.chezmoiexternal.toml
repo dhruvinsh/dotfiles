@@ -75,3 +75,10 @@
     [".local/bin/syncthing".filter]
         command = "tar"
         args = ["--extract", "--file", "/dev/stdin", "--gzip", "--to-stdout", "syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing"]
+[".local/bin/lazygit"]
+  type = "file"
+  url = "https://github.com/jesseduffield/lazygit/releases/download/v{{ .lazygitVersion }}/lazygit_{{.lazygitVersion }}_Linux_x86_64.tar.gz"
+  executable = true
+  [".local/bin/lazygit".filter]
+    command = "tar"
+    args = ["--extract", "--file", "/dev/stdin", "--gzip", "--to-stdout", "lazygit"]
