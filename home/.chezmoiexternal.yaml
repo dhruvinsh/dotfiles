@@ -58,6 +58,12 @@
   filter:
     command: zcat
 
+.local/bin/shfmt:
+  type: file
+  url: >-
+    https://github.com/mvdan/sh/releases/download/v{{ .shfmtVersion }}/shfmt_v{{ .shfmtVersion}}_linux_{{ .chezmoi.arch }}
+  executable: true
+
 .local/bin/syncthing:
   type: file
   url: >-
