@@ -28,7 +28,7 @@ pip install -U pip pipenv black mypy pylint isort
 # Poetry 1.1 series releases are not able to update in-place to 1.2 or newer series 
 # releases. To migrate to newer releases, uninstall using your original install method,
 # and then reinstall using the methods above.
-if poetry --version | grep 1.2; then
+if poetry --version | grep 1.1; then
   echo "Cleaning up Old Poetry..."
   curl -sSL https://install.python-poetry.org | python3 - --uninstall
 fi
