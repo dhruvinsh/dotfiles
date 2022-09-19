@@ -14,7 +14,6 @@ applications=(
   eslint
   prettier
   pyright
-  tldr
   tree-sitter-cli
   typescript
   typescript-language-server
