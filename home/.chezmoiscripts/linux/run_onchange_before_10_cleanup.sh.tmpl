@@ -19,4 +19,10 @@ fi
 [[ -d "$HOME/.doom.d" ]] && rm -rf "$HOME"/.doom.d
 {{- end }}
 
+# tldr now moved to tealdeer version (rust) cleaning up node version
+if command -v npm &> /dev/null; then
+  # even if tldr is uninstalled running it again will not harm
+  npm uninstall -g tldr
+fi
+
 echo "I am done"
