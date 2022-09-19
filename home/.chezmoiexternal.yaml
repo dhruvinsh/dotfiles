@@ -78,7 +78,7 @@
       - >-
         syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing
 
-.local/bin/tealdeer:
+.local/bin/tldr:
   type: file
   url: >-
     https://github.com/dbrgn/tealdeer/releases/download/v{{ .tealdeerVersion }}/tealdeer-{{ .chezmoi.os }}-x86_64-musl
