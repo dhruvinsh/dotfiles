@@ -78,6 +78,12 @@
       - >-
         syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing
 
+.local/bin/tealdeer:
+  type: file
+  url: >-
+    https://github.com/dbrgn/tealdeer/releases/download/v{{ .tealdeerVersion }}/tealdeer-{{ .chezmoi.os }}-x86_64-musl
+  executable: true
+
 .nvm:
   type: git-repo
   url: "https://github.com/nvm-sh/nvm.git"
