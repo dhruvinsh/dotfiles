@@ -3,7 +3,7 @@
 
 .config/nvim:
   type: archive
-  url: "https://github.com/dhruvinsh/nvim/archive/refs/heads/kickstart.zip"
+  url: "https://github.com/dhruvinsh/nvim/archive/refs/heads/main.zip"
   exact: true
   stripComponents: 1
   refreshPeriod: 168h
