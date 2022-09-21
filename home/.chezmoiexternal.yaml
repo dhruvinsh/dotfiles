@@ -2,16 +2,8 @@
 # vim: set filetype=yaml
 
 .config/nvim:
-  type: git-repo
-  url: "https://github.com/NvChad/NvChad.git"
-  refreshPeriod: 168h
-  pull:
-    args:
-      - "--ff-only"
-
-.config/nvim/lua/custom:
   type: archive
-  url: "https://github.com/dhruvinsh/nvim/archive/refs/heads/nvchad.zip"
+  url: "https://github.com/dhruvinsh/nvim/archive/refs/heads/kickstart.zip"
   exact: true
   stripComponents: 1
   refreshPeriod: 168h
