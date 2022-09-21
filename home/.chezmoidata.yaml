@@ -11,7 +11,7 @@ pythonVersion: "3.10.2"
 ripgrepVersion: "13.0.0"
 seleneVersion: "0.21.0"
 shfmtVersion: "3.5.1"
-styluaVersion: "0.14.3"
+styluaVersion: "0.15.0"
 syncthingVersion: "1.21.0"
 tealdeerVersion: "1.5.0"
 # eventhough zenit says v0.13.1 but actually it v0.13.0
