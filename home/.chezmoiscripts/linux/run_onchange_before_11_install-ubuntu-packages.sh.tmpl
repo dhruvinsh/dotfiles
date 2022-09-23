@@ -110,14 +110,12 @@ packages+=(
 
 # neovim lang repository
 repositories+=(
-    ppa:bashtop-monitor/bashtop
     ppa:neovim-ppa/unstable
     {{ if eq .emacs.ppa true }}
     ppa:kelleyk/emacs
     {{ end -}}
 )
 packages+=(
-    bashtop
     neovim
     luajit  # for lua lsp server
 )
