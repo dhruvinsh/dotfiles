@@ -12,6 +12,7 @@ npm install -g npm
 echo "Some node application installation for development"
 applications=(
   eslint
+  neovim
   prettier
   pyright
   tree-sitter-cli
