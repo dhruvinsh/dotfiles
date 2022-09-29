@@ -13,7 +13,7 @@ fi
 [ -f "$HOME/.local/bin/bw" ] && rm -rf "$HOME/.local/bin/bw"
 
 # gh-cli moved to release build instead of directory
-[ -f "/etc/apt/sources.list.d/github-cli.list"] && rm -rf /etc/apt/sources.list.d/github-cli*
+[ -f "/etc/apt/sources.list.d/github-cli.list" ] && rm -rf /etc/apt/sources.list.d/github-cli*
 sudo apt purge -y gh
 
 {{- if eq .emacs.setup true }}
