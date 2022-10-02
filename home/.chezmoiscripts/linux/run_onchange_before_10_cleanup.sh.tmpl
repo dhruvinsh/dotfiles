@@ -31,4 +31,13 @@ if command -v npm &> /dev/null; then
   npm uninstall -g tldr
 fi
 
+# neovim unstable cleanup
+sudo add-apt-repository --remove -y ppa:neovim-ppa/unstable
+if [ -x "$(command -v nvim)" ]; then
+  if nvim --version | grep -q "dev"; then
+    echo "Cleaning up neovim unstable"
+    sudo apt purge neovim*
+  fi
+fi
+
 echo "I am done"
