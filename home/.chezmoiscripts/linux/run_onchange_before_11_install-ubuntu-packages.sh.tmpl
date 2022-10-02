@@ -109,12 +109,8 @@ packages+=(
 )
 {{ end -}}
 
-# neovim lang repository
-repositories+=(
-    ppa:neovim-ppa/stable
-)
+# neovim lang support
 packages+=(
-    neovim
     luajit  # for lua lsp server
 )
 
@@ -173,6 +169,11 @@ echo "setup gh for github"
 GH=https://github.com/cli/cli/releases/download/v{{ .ghVersion }}/gh_{{ .ghVersion }}_{{ .chezmoi.os }}_{{ .chezmoi.arch }}.deb
 wget $GH -O /tmp/gh.deb
 sudo dpkg -i /tmp/gh.deb
+
+echo "setup neovim from github release"
+NEOVIM=https://github.com/neovim/neovim/releases/download/v{{ .neovimVersion }}/nvim-{{ .chezmoi.os }}64.deb
+wget $NEOVIM -O /tmp/neovim.deb
+sudo dpkg -i /tmp/neovim.deb
 
 echo "set ZSH to default"
 if [ "$SHELL" != "/usr/bin/zsh" ]; then
