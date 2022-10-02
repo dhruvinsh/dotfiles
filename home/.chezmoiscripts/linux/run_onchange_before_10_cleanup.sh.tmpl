@@ -36,7 +36,7 @@ sudo add-apt-repository --remove -y ppa:neovim-ppa/unstable
 if [ -x "$(command -v nvim)" ]; then
   if nvim --version | grep -q "dev"; then
     echo "Cleaning up neovim unstable"
-    sudo apt purge neovim*
+    sudo apt purge neovim neovim-runtime
   fi
 fi
 
