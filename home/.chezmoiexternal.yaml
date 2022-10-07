@@ -2,11 +2,12 @@
 # vim: set filetype=yaml
 
 .config/nvim:
-  type: archive
-  url: "https://github.com/dhruvinsh/nvim/archive/refs/heads/main.zip"
-  exact: true
-  stripComponents: 1
+  type: git-repo
+  url: "https://github.com/dhruvinsh/nvim.git"
   refreshPeriod: 168h
+  pull:
+    args:
+      - "--ff-only"
 
 {{ if eq .emacs.setup true -}}
 .config/emacs:
