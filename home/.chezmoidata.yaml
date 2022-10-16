@@ -2,6 +2,7 @@
 # vim: set filetype=yaml
 
 ageVersion: "1.0.0"
+batVersion: "0.22.1"
 emacsVersion: "28.1"
 fdVersion: "8.4.0"
 fzfVersion: "0.33.0"

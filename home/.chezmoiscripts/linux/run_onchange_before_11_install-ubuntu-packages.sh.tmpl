@@ -138,6 +138,11 @@ echo "local bin directory setup"
 LOCALBIN=$HOME/.local/bin
 [ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
 
+echo "install bat(cat)"
+BAT=https://github.com/sharkdp/bat/releases/download/v{{ .batVersion }}/bat-musl_{{ .batVersion }}_{{ .chezmoi.arch }}.deb
+wget $BAT -O /tmp/bat.deb
+sudo apt install /tmp/bat.deb
+
 echo "install zenith"
 ZENITH=https://github.com/bvaisvil/zenith/releases/download/{{ .zenithVersion }}/zenith_{{ .zenithVersion }}-1_{{ .chezmoi.arch }}.deb
 wget $ZENITH -O /tmp/zenith.deb
