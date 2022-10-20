@@ -16,7 +16,6 @@ packages=(
     editorconfig
     ethtool
     fontconfig
-    git
     gnupg-agent
     graphviz
     htop
@@ -108,6 +107,11 @@ packages+=(
     texinfo
 )
 {{ end -}}
+
+# latest git version
+repositories+=(
+    ppa:git-core/ppa
+)
 
 # neovim lang support
 packages+=(
