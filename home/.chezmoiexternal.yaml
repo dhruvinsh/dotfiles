@@ -10,7 +10,7 @@
       - "--ff-only"
 
 {{ if eq .emacs.setup true -}}
-.config/emacs:
+.emacs.d:
   type: git-repo
   url: "https://github.com/doomemacs/doomemacs.git"
   refreshPeriod: 168h
@@ -18,7 +18,7 @@
     args:
       - "--ff-only"
 
-.config/doom:
+.doom.d:
   type: git-repo
   url: "https://github.com/dhruvinsh/doom.d"
   pull:
