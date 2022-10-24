@@ -3,7 +3,7 @@
 
 ageVersion: "1.0.0"
 batVersion: "0.22.1"
-emacsVersion: "28.1"
+emacsVersion: "28.2"
 fdVersion: "8.4.0"
 fzfVersion: "0.34.0"
 ghVersion: "2.17.0"
