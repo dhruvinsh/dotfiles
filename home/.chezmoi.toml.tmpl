@@ -59,7 +59,7 @@
   ubuntu = {{ $ubuntu }}
   encryption = "age"
   isDesktop = {{ $desktopEnv }}
-  chassisType = {{ $chassisType }}
+  chassisType = {{ $chassisType | quote }}
 
 [data.cpu]
   cores = {{ $cpuCores }}
