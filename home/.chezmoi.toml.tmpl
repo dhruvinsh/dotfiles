@@ -33,7 +33,10 @@
 {{- end }}
 
 {{/* chassisType variable set to "desktop" or "laptop" or "vm" */}}
-{{- $chassisType := (output "hostnamectl" "--json=short" | mustFromJson).Chassis }}
+{{- $chassisType := "unknown" }}
+{{- if not $wsl }}
+{{-   $chassisType = (output "hostnamectl" "--json=short" | mustFromJson).Chassis }}
+{{- end }}
 
 {{/* CPU core detection */}}
 {{- $cpuCores := 1 }}
