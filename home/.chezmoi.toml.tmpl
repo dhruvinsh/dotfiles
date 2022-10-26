@@ -29,6 +29,14 @@
 {{/* is it desktop version linux? */}}
 {{- $desktop_env:= env "XDG_CURRENT_DESKTOP" | not | not -}}
 
+{{/* $chassisType variable to "desktop" or "laptop" */}}
+{{- $chassisType := "desktop" }}
+{{- if eq .chezmoi.os "linux" }}
+{{-   $chassisType = (output "hostnamectl" "--json=short" | mustFromJson).Chassis }}
+{{- else if eq .chezmoi.os "windows" }}
+{{-   $chassisType = (output "powershell.exe" "-NoProfile" "-NonInteractive" "-Command" "if ((Get-CimInstance -Class Win32_Battery | Measure-Object).Count -gt 0) { Write-Output 'laptop' } else { Write-Output 'desktop' }") | trim }}
+{{- end }}
+
 {{/* CPU core detection */}}
 {{- $cpuCores := 1 }}
 {{- $cpuThreads := 1 }}
@@ -53,6 +61,7 @@
   ubuntu = {{ $ubuntu }}
   encryption = "age"
   is_desktop = {{ $desktop_env }}
+  chassis_type = {{ $chassisType }}
 
 [data.cpu]
   cores = {{ $cpuCores }}

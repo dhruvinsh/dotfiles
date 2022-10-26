@@ -32,6 +32,9 @@ packages=(
     software-properties-common
     sqlite3
     tar
+    {{ if eq .chassis_type "laptop" }}
+    tlp
+    {{ end }}
     tmux
     tree
     unzip
@@ -150,6 +153,12 @@ sudo apt install -y ${packages[@]}
 echo "local bin directory setup"
 LOCALBIN=$HOME/.local/bin
 [ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
+
+# enable tlp for laptop
+{{ if eq .chassis_type "laptop" }}
+sudo systemctl enable tlp.service
+sudo systemctl start tlp.service
+{{ end }}
 
 echo "install bat(cat)"
 BAT=https://github.com/sharkdp/bat/releases/download/v{{ .batVersion }}/bat-musl_{{ .batVersion }}_{{ .chezmoi.arch }}.deb
