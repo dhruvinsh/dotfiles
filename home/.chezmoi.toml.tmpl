@@ -26,6 +26,9 @@
 {{- $ubuntu = false -}}
 {{- end -}}
 
+{{/* is it desktop version linux? */}}
+{{- $desktop_env:= env "XDG_CURRENT_DESKTOP" | not | not -}}
+
 {{/* CPU core detection */}}
 {{- $cpuCores := 1 }}
 {{- $cpuThreads := 1 }}
@@ -49,6 +52,7 @@
   archlinux = {{ $archlinux }}
   ubuntu = {{ $ubuntu }}
   encryption = "age"
+  is_desktop = {{ $desktop_env }}
 
 [data.cpu]
   cores = {{ $cpuCores }}
