@@ -3,7 +3,7 @@ set -euo pipefail
 
 # if ubuntu desktop based system
 {{- if eq .ubuntu true }}
-{{- if .is_desktop }}
+{{- if .isDesktop }}
 
 echo "setup kitty terminal"
 curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
