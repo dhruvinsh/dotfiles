@@ -170,10 +170,13 @@ ZENITH=https://github.com/bvaisvil/zenith/releases/download/{{ .zenithVersion }}
 wget $ZENITH -O /tmp/zenith.deb
 sudo apt install /tmp/zenith.deb
 
-echo "install ripgrep"
-RIPGREP=https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep_{{ .ripgrepVersion }}_{{ .chezmoi.arch }}.deb
-wget $RIPGREP -O /tmp/ripgrep.deb
-sudo apt install /tmp/ripgrep.deb
+# do not install ripgrep if already found
+if [ ! $(command -v rg) ]; then
+    echo "install ripgrep"
+    RIPGREP=https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep_{{ .ripgrepVersion }}_{{ .chezmoi.arch }}.deb
+    wget $RIPGREP -O /tmp/ripgrep.deb
+    sudo apt install /tmp/ripgrep.deb
+fi
 
 echo "setup fd"
 FD=https://github.com/sharkdp/fd/releases/download/v{{ .fdVersion }}/fd_{{ .fdVersion }}_{{ .chezmoi.arch }}.deb
