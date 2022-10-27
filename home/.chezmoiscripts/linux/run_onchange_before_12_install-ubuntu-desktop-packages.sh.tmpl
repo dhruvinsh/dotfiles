@@ -2,8 +2,7 @@
 set -euo pipefail
 
 # if ubuntu desktop based system
-{{- if eq .ubuntu true }}
-{{- if .isDesktop }}
+{{- if (and (.isDesktop) (eq .ubuntu true)) }}
 
 echo "setup kitty terminal"
 if [ ! $(command -v kitty) ]; then
@@ -20,5 +19,4 @@ CHROME=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 wget $CHROME -O /tmp/chrome.deb
 sudo apt install -y /tmp/chrome.deb
 
-{{- end }}
 {{- end }}
