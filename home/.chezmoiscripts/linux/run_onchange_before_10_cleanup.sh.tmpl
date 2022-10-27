@@ -17,12 +17,11 @@ fi
 sudo apt purge -y gh
 
 {{- if eq .emacs.setup true }}
-# Decided to move doom emacs to .config directory
-# Below cleanup is for doom emacs installs
-# we have doom installation setup that means if
-# we detect $HOME/.emacs.d delete it no matter what kind of installation it is
-[[ -d "$HOME/.emacs.d" ]] && rm -rf "$HOME"/.emacs.d
-[[ -d "$HOME/.doom.d" ]] && rm -rf "$HOME"/.doom.d
+# Decided to move doom emacs to .config directory but it gives lots of trouble for emacs
+# hence moving back to the $HOME/.emacs.d and $HOME/.doom.d Below cleanup is for doom
+# emacs installs in $HOME/.config/
+[[ -d "$HOME/.config/emacs" ]] && rm -rf "$HOME"/.config/emacs
+[[ -d "$HOME/.config/doom" ]] && rm -rf "$HOME"/.config/doom
 {{- end }}
 
 # tldr now moved to tealdeer version (rust) cleaning up node version
