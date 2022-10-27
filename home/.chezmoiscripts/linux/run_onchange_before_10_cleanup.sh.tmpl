@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
+# vim: set expandtab ts=4 sw=4 ft=sh:
 
 # some time I make change in environemnt and residula files needs to be clean
 # manually. This script takes care of that part
 
 if [ -x "$(command -v add-apt-repository)" ]; then
-  # golang ppa removal
-  sudo add-apt-repository --remove -y ppa:longsleep/golang-backports
+    # golang ppa removal
+    sudo add-apt-repository --remove -y ppa:longsleep/golang-backports
 fi
 
 [ -f "$HOME/key.txt" ] && rm -rf "$HOME/key.txt"
@@ -26,17 +27,17 @@ sudo apt purge -y gh
 
 # tldr now moved to tealdeer version (rust) cleaning up node version
 if command -v npm &> /dev/null; then
-  # even if tldr is uninstalled running it again will not harm
-  npm uninstall -g tldr
+    # even if tldr is uninstalled running it again will not harm
+    npm uninstall -g tldr
 fi
 
 # neovim unstable cleanup
 sudo add-apt-repository --remove -y ppa:neovim-ppa/unstable
 if [ -x "$(command -v nvim)" ]; then
-  if nvim --version | grep -q "dev"; then
-    echo "Cleaning up neovim unstable"
-    sudo apt purge neovim neovim-runtime
-  fi
+    if nvim --version | grep -q "dev"; then
+        echo "Cleaning up neovim unstable"
+        sudo apt purge neovim neovim-runtime
+    fi
 fi
 
 echo "I am done"
