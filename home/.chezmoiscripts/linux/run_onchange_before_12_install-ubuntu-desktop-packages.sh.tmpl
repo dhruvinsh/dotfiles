@@ -5,6 +5,13 @@ set -euo pipefail
 # if ubuntu desktop based system
 {{- if (and (.isDesktop) (eq .ubuntu true)) }}
 
+packages+=(
+    imagemagick
+)
+
+# install all the packages
+sudo apt install -y ${packages[@]}
+
 echo "setup kitty terminal"
 if [ ! $(command -v kitty) ]; then
     curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin launch=n
@@ -15,6 +22,7 @@ if [ ! $(command -v kitty) ]; then
     sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
 fi
 
+# chrome re-installation is harmless in fact we end up updating it!
 echo "setup google chrome"
 CHROME=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 wget $CHROME -O /tmp/chrome.deb
