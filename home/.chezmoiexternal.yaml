@@ -48,6 +48,23 @@
       - "--to-stdout"
       - lazygit
 
+{{- if .isDesktop }}
+.local/bin/neovide:
+  type: file
+  url: >-
+    https://github.com/neovide/neovide/releases/download/{{ .neovideVersion }}/neovide.tar.gz
+  executable: true
+  filter:
+    command: tar
+    args:
+      - "--extract"
+      - "--file"
+      - /dev/stdin
+      - "--gzip"
+      - "--to-stdout"
+      - neovide
+{{- end }}
+
 .local/bin/selene:
   type: file
   url: >-
