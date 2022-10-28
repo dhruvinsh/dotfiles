@@ -1,4 +1,5 @@
 # zprofile -*- mode: sh -*-
+# vim: set expandtab ts=4 sw=4 ft=sh:
 
 # in order to silence direnv message we need this
 # https://github.com/romkatv/powerlevel10k/issues/702#issuecomment-626222730
@@ -118,18 +119,18 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias "ec=emacsclient -cnqua ''"
-alias vim=ec
+alias vim=nvim
 export EDITOR='nvim'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Display setup
-if [ -z "$DISPLAY" ]; then
-  export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
-  export LIBGL_ALWAYS_INDIRECT=1
-  export GDK_SCALE=1
-fi
+{{- if .wsl }}
+# Display setup for wsl
+export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+export LIBGL_ALWAYS_INDIRECT=1
+export GDK_SCALE=1
+{{- end }}
 
 # Direnv Setup
 eval "$(direnv hook zsh)"
@@ -140,4 +141,6 @@ command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
 # nix settings if available
-if [ -e /home/ds/.nix-profile/etc/profile.d/nix.sh ]; then . /home/ds/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+if [ -e /home/ds/.nix-profile/etc/profile.d/nix.sh ]; then
+    . /home/ds/.nix-profile/etc/profile.d/nix.sh
+fi
