@@ -13,7 +13,7 @@ packages+=(
 sudo apt install -y ${packages[@]}
 
 echo "setup kitty terminal"
-if [ ! $(command -v kitty) ]; then
+if [ ! -x $(command -v kitty) ]; then
     curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin launch=n
     ln -s ~/.local/kitty.app/bin/kitty ~/.local/bin/
     cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/
