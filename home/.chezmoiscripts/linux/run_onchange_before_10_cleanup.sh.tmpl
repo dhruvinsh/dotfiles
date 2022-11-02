@@ -22,7 +22,10 @@ fi
 {{- end }}
 
 # tldr now moved to tealdeer version (rust) cleaning up node version
-if command -v npm &> /dev/null; then
+if
+    command -v npm &
+    > /dev/null
+then
     # even if tldr is uninstalled running it again will not harm
     npm uninstall -g tldr
 fi
@@ -36,4 +39,8 @@ if [ -x "$(command -v nvim)" ]; then
     fi
 fi
 
-echo "I am done"
+# Change in python workflow hence global poetry installation not required
+echo "Cleaning up Old Poetry..."
+curl -sSL https://install.python-poetry.org | python3 - --uninstall
+
+echo "Clean up finished"
