@@ -1,0 +1,15 @@
+[*.{sh,sh.tmpl}]
+# like -i=4
+indent_style = space
+indent_size = 4
+
+shell_variant      = posix # --language-variant
+binary_next_line   = true
+switch_case_indent = true  # --case-indent
+space_redirects    = true
+keep_padding       = true
+function_next_line = true  # --func-next-line
+
+# Ignore the entire "third_party" directory.
+[third_party/**]
+ignore = true
