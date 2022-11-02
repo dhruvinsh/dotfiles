@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # vim: set expandtab ts=4 sw=4 ft=sh:
-
 set -euo pipefail
 
 # expected python version
@@ -10,47 +9,51 @@ PYTHON_VERSION={{ .pythonVersion }}
 # Install pyenv
 #######################################
 install_pyenv() {
-	echo "*** Installing pyenv ***"
-	unset PYENV_ROOT
-	curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+    echo "*** Installing pyenv ***"
+    unset PYENV_ROOT
+    curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 }
 
 #######################################
 # Install python with help of pyenv
 #######################################
 install_python() {
-	echo "*** Setting up Python {{ .pythonVersion }} *** "
-	PYENV_ROOT="$HOME/.pyenv"
-	PATH="$PYENV_ROOT/bin:$PATH"
-	eval "$(pyenv init --path)"
-	pyenv install $PYTHON_VERSION || true
-	# set global python version
-	pyenv global $PYTHON_VERSION
+    echo "*** Setting up Python {{ .pythonVersion }} *** "
+    PYENV_ROOT="$HOME/.pyenv"
+    PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init --path)"
+    pyenv install $PYTHON_VERSION || true
+    # set global python version
+    pyenv global $PYTHON_VERSION
 }
 
 # Setup pyenv
-if [ ! "$(command -v pyenv &>/dev/null)" ]; then
-	pyenv update
+if command -v pyenv &> /dev/null; then
+    # if pyenv found lets just update it
+    pyenv update
 else
-	# pyenv setup required
-	install_pyenv
+    # pyenv setup required
+    install_pyenv
 fi
 
 # lets see if I need python version change!
 CURRENT_VERSION="$(pyenv versions | grep "set by" | awk '{ print $2 }')"
 if [ "$CURRENT_VERSION" != "$PYTHON_VERSION" ]; then
-	echo "*** Python update required ***"
-	[ "$CURRENT_VERSION" != "system" ] && pyenv uninstall -f "$CURRENT_VERSION"
-	install_python
-
-	# NOTE: removal of python breaks poetry, so re-installation required
-	echo "Cleaning up Old Poetry..."
-	curl -sSL https://install.python-poetry.org | python3 - --uninstall
+    echo "*** Python change required ***"
+    [ "$CURRENT_VERSION" != "system" ] && pyenv uninstall -f "$CURRENT_VERSION"
+    install_python
 fi
 
-# some python packages setup
+# Some workflow based setup since pip is available
 echo "*** Installing python packages ***"
-pip install -U pip pipenv black mypy pylint isort
+pip install -U pip pipx
 
-# poetry installtion
-curl -sSL https://install.python-poetry.org | python3 -
+# create some independent envs with packages 
+packages=( black isort mypy pipenv poetry pylint )
+
+# setup poetry env via pipx
+for pkg in "${packages[@]}"
+do
+    echo "*** Setting up $pkg ***"
+    pipx install "$pkg"
+done
