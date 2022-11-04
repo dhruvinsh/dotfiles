@@ -43,4 +43,16 @@ fi
 echo "Cleaning up Old Poetry..."
 curl -sSL https://install.python-poetry.org | python3 - --uninstall
 
+echo "Cleaning up autojump"
+if [ -x "$(command -v autojump)" ]; then
+    # at this point we can assume that in past dotfiles were installed
+    # and with that git and python is available.
+    AUTOJUMP=https://github.com/wting/autojump.git
+    AUTOJUMP_DIR=/tmp/autojump
+    git clone $AUTOJUMP $AUTOJUMP_DIR
+    cd $AUTOJUMP_DIR
+    ./uninstall.py
+    rm -rf .local/share/autojump/
+fi
+
 echo "Clean up finished"
