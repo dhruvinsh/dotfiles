@@ -1,30 +1,21 @@
 # zprofile -*- mode: sh -*-
 # vim: set expandtab ts=4 sw=4 ft=sh:
 
-# in order to silence direnv message we need this
-# https://github.com/romkatv/powerlevel10k/issues/702#issuecomment-626222730
-emulate zsh -c "$(direnv export zsh)"
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-emulate zsh -c "$(direnv hook zsh)"
-
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/ds/.oh-my-zsh"
 
+# starship
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
+eval "$(starship init zsh)"
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -121,9 +112,6 @@ source $ZSH/oh-my-zsh.sh
 alias "ec=emacsclient -cnqua ''"
 alias vim=nvim
 export EDITOR='nvim'
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 {{- if .wsl }}
 # Display setup for wsl
