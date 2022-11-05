@@ -81,6 +81,22 @@
     https://github.com/mvdan/sh/releases/download/v{{ .shfmtVersion }}/shfmt_v{{ .shfmtVersion}}_linux_{{ .chezmoi.arch }}
   executable: true
 
+.local/bin/starship:
+  type: file
+  url: >-
+    https://github.com/starship/starship/releases/download/v{{ .starshipVersion }}/starship-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz
+  executable: true
+  refreshPeriod: 168h
+  filter:
+    command: tar
+    args:
+      - "--extract"
+      - "--file"
+      - /dev/stdin
+      - "--gzip"
+      - "--to-stdout"
+      - starship
+
 .local/bin/syncthing:
   type: file
   url: >-
@@ -136,13 +152,6 @@
 .oh-my-zsh/custom/plugins/zsh-completions:
   type: archive
   url: "https://github.com/zsh-users/zsh-completions/archive/master.tar.gz"
-  exact: true
-  stripComponents: 1
-  refreshPeriod: 168h
-
-.oh-my-zsh/custom/themes/powerlevel10k:
-  type: archive
-  url: "https://github.com/romkatv/powerlevel10k/archive/master.tar.gz"
   exact: true
   stripComponents: 1
   refreshPeriod: 168h
