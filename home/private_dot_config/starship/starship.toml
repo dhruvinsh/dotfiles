@@ -1,0 +1,7 @@
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[➜](bold red)"
+
+[directory]
+fish_style_pwd_dir_length = 1
+truncate_to_repo = false
