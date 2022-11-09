@@ -49,7 +49,7 @@ echo "*** Installing python packages ***"
 pip install -U pip pipx
 
 # create some independent envs with packages 
-packages=( black isort mypy pipenv poetry pylint )
+packages=( black httpie isort mypy pipenv poetry pylint )
 
 # setup poetry env via pipx
 for pkg in "${packages[@]}"
