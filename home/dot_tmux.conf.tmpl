@@ -7,6 +7,9 @@ set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin '27medkamal/tmux-session-wizard'
 
 set -as terminal-features ",xterm-256color:RGB"
+{{- if eq .wsl true }}
+set -sg escape-time 10
+{{- end }}
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
