@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# vim: set expandtab ts=4 sw=4 ft=sh:
+set -euo pipefail
+
+# work with non WSL system only
+{{ if eq .wsl false -}}
+
+# install stack
+curl -sSL https://get.haskellstack.org/ | sh -s - -f
+
+KMONAD=/tmp/kmonad
+
+if [ -d $KMONAD ]; then
+    cd $KMONAD
+    git pull
+else
+    git clone https://github.com/kmonad/kmonad.git $KMONAD
+    cd $KMONAD
+fi
+
+stack build
+stack haddock
+stack install
+
+{{ end -}}
