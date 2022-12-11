@@ -28,4 +28,34 @@ CHROME=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 wget $CHROME -O /tmp/chrome.deb
 sudo apt install -y /tmp/chrome.deb
 
+# vscode setup
+echo "setup vscode"
+VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
+wget $VSCODE -O /tmp/code.deb
+sudo apt install -y /tmp/code.deb
+
+# docker engine installation
+echo "setup docker"
+sudo apt -y install ca-certificates curl gnupg lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+# using jammy forcefully, since I use linux mint.
+echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    jammy stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+if [ $(getent group docker) ]; then
+    echo "docker group exists."
+else
+    sudo groupadd docker
+fi
+
+sudo usermod -aG docker $USER
+newgrp docker
+
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+
 {{- end }}
