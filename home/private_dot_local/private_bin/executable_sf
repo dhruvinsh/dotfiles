@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# supercharded SSH with fzf and ripgrep.
+# scavange SSH config with ripgrep and present with fzf and login to selected hostname
+
+data=$(rg -i "Host (.*)" ~/.ssh/config -r '$1' | rg -iv "\*")
+
+selected=$(echo "$data" | fzf)
+ssh "$selected"
