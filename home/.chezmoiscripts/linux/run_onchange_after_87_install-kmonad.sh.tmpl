@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # work with non WSL system only
-{{ if eq .wsl false -}}
+{{ if (and (eq .wsl false) (eq .sshSession false) ) -}}
 
 # install stack
 curl -sSL https://get.haskellstack.org/ | sh -s - -f

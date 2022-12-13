@@ -32,6 +32,12 @@
 {{-   $desktopEnv = true -}}
 {{- end }}
 
+{{/* is it a ssh session? */}}
+{{- $sshSession := false }}
+{{- if (env "SSH_CONNECTION") -}}
+{{-   $sshSession = true -}}
+{{- end }}
+
 {{/* chassisType variable set to "desktop" or "laptop" or "vm" */}}
 {{- $chassisType := "unknown" }}
 {{- if not $wsl }}
@@ -63,6 +69,7 @@
   encryption = "age"
   isDesktop = {{ $desktopEnv }}
   chassisType = {{ $chassisType | quote }}
+  sshSession = {{ $sshSession }}
 
 [data.cpu]
   cores = {{ $cpuCores }}
