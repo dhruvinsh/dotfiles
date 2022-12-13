@@ -124,9 +124,9 @@ export GDK_SCALE=1
 eval "$(direnv hook zsh)"
 
 # pyenv require for interactive shells
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+# export PYENV_ROOT="$HOME/.pyenv"
+# command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init -)"
 
 # nix settings if available
 if [ -e /home/ds/.nix-profile/etc/profile.d/nix.sh ]; then
