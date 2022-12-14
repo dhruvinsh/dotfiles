@@ -128,6 +128,10 @@ eval "$(direnv hook zsh)"
 # command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 # eval "$(pyenv init -)"
 
+# volta setup
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
+
 # nix settings if available
 if [ -e /home/ds/.nix-profile/etc/profile.d/nix.sh ]; then
     . /home/ds/.nix-profile/etc/profile.d/nix.sh

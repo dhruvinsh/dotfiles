@@ -129,14 +129,6 @@
     https://github.com/dbrgn/tealdeer/releases/download/v{{ .tealdeerVersion }}/tealdeer-{{ .chezmoi.os }}-x86_64-musl
   executable: true
 
-.nvm:
-  type: git-repo
-  url: "https://github.com/nvm-sh/nvm.git"
-  refreshPeriod: 168h
-  pull:
-    args:
-      - "--ff-only"
-
 .oh-my-zsh:
   type: git-repo
   url: "https://github.com/ohmyzsh/ohmyzsh.git"
