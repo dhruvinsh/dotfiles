@@ -80,7 +80,7 @@ DISABLE_AUTO_UPDATE="true"
 plugins=(git zoxide zsh-syntax-highlighting zsh-autosuggestions zsh-completions)
 
 # zsh-completions setup
-autoload -U compinit && compinit
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 source $ZSH/oh-my-zsh.sh
 
