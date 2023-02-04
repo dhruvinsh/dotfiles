@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # if ubuntu desktop based system
-{{- if (and (.isDesktop) (eq .ubuntu true)) }}
+{{- if (and (.isDesktop) (.ubuntu) (eq .personalmachine)) }}
 
 packages+=(
     imagemagick
