@@ -2,6 +2,11 @@
 # vim: set expandtab ts=4 sw=4 ft=sh:
 set -euo pipefail
 
+# not installing anymore (for now!)
+exit 0
+
+#######################################################
+
 # work with non WSL system only
 {{ if (and (eq .wsl false) (eq .sshSession false) ) -}}
 
