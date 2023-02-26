@@ -5,6 +5,22 @@ set -euo pipefail
 # if ubuntu desktop based system
 {{- if (and (.isDesktop) (.ubuntu) (.personalmachine)) }}
 
+appimg_installer ()
+{
+    # $1: URL
+    # $2: filename
+    url=$1
+    tmp_file="/tmp/$2.AppImage"
+    wget $url -O $tmp_file
+
+    # if directory not exists lets create one
+    [ -d "$HOME/Applications" ] || mkdir "$HOME/Applications"
+
+    # make it executable
+    chmod a+x $tmp_file
+    mv $tmp_file "$HOME/Applications/"
+}
+
 packages+=(
     imagemagick
 )
@@ -34,5 +50,9 @@ VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
 wget $VSCODE -O /tmp/code.deb
 sudo apt install -y /tmp/code.deb
 
+########################################################################################################################
+echo "setup logseq"
+LOGSEQ="https://github.com/logseq/logseq/releases/download/{{ .logseqVersion }}/Logseq-{{ .chezmoi.os }}-x64-{{ .logseqVersion }}.AppImage"
+appimg_installer $LOGSEQ logseq
 
 {{- end }}
