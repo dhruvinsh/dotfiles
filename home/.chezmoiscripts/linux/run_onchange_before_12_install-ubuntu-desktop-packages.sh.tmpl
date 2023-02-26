@@ -60,6 +60,11 @@ echo "setup vscode"
 VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
 deb_installer $VSCODE "code"
 
+# discord setup
+echo "setup discord"
+DISCORD="https://discord.com/api/download?platform=linux&format=deb"
+deb_installer $DISCORD "discord"
+
 ########################################################################################################################
 echo "setup logseq"
 LOGSEQ="https://github.com/logseq/logseq/releases/download/{{ .logseqVersion }}/Logseq-{{ .chezmoi.os }}-x64-{{ .logseqVersion }}.AppImage"
