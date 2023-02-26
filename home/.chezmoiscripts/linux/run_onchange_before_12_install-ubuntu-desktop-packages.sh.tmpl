@@ -5,6 +5,16 @@ set -euo pipefail
 # if ubuntu desktop based system
 {{- if (and (.isDesktop) (.ubuntu) (.personalmachine)) }}
 
+deb_installer ()
+{
+    # $1: URL
+    # $2: temp file name
+    url=$1
+    tmp_file="/tmp/$2.deb"
+    wget $url -O $tmp_file
+    sudo apt install -y $tmp_file
+}
+
 appimg_installer ()
 {
     # $1: URL
@@ -21,6 +31,7 @@ appimg_installer ()
     mv $tmp_file "$HOME/Applications/"
 }
 
+########################################################################################################################
 packages+=(
     imagemagick
 )
@@ -28,6 +39,7 @@ packages+=(
 # install all the packages
 sudo apt install -y ${packages[@]}
 
+########################################################################################################################
 echo "setup kitty terminal"
 if [ ! $(command -v kitty) ]; then
     curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin launch=n
@@ -41,14 +53,12 @@ fi
 # chrome re-installation is harmless in fact we end up updating it!
 echo "setup google chrome"
 CHROME=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-wget $CHROME -O /tmp/chrome.deb
-sudo apt install -y /tmp/chrome.deb
+deb_installer $CHROME "chrome"
 
 # vscode setup
 echo "setup vscode"
 VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
-wget $VSCODE -O /tmp/code.deb
-sudo apt install -y /tmp/code.deb
+deb_installer $VSCODE "code"
 
 ########################################################################################################################
 echo "setup logseq"
