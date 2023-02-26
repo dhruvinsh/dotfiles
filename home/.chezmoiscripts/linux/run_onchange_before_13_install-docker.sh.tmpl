@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# vim: set expandtab ts=4 sw=4 ft=sh:
+set -euo pipefail
+
+# if ubuntu desktop based system
+{{- if (and (.isDesktop) (.ubuntu) (.personalmachine)) }}
+
+# docker engine installation
+echo "setup docker"
+
+# if docker gpg not found then and then get the GPG
+if [ ! -f "/etc/apt/keyrings/docker.gpg" ]; then
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+fi
+
+# NOTE: using jammy forcefully, since I use linux mint 21.2.
+if [ ! -f "/etc/apt/sources.list.d/docker.list" ]; then
+    echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        jammy stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+fi
+
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+if [ $(getent group docker) ]; then
+    echo "docker group exists."
+else
+    sudo groupadd docker
+fi
+
+sudo usermod -aG docker $USER
+
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+
+{{- end }}
