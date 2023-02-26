@@ -8,6 +8,15 @@ set -euo pipefail
 # docker engine installation
 echo "setup docker"
 
+packages=(
+    ca-certificates
+    curl
+    gnupg
+    lsb-release
+)
+# install all the packages
+sudo apt install -y ${packages[@]}
+
 # if docker gpg not found then and then get the GPG
 if [ ! -f "/etc/apt/keyrings/docker.gpg" ]; then
     sudo mkdir -p /etc/apt/keyrings
