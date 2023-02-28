@@ -50,14 +50,17 @@ fi
 
 # Some workflow based setup since pip is available
 echo "*** Installing python packages ***"
-pip install -U pip pipx
+pip install -U pip pipx pynvim
+
+# just to be safe side re-install pipx packages
+pipx reinstall-all
 
 # create some independent envs with packages 
-packages=( black httpie isort mypy pipenv poetry pylint )
+packages=( black flake8 httpie isort mypy pipenv poetry pylint )
 
 # setup poetry env via pipx
 for pkg in "${packages[@]}"
 do
     echo "*** Setting up $pkg ***"
-    pipx install "$pkg"
+    pipx install --force "$pkg"
 done
