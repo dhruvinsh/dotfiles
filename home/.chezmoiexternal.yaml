@@ -11,11 +11,11 @@
 {{ end -}}
 
 .config/nvim:
-  type: archive
-  url: "https://github.com/dhruvinsh/nvim/archive/lazy.tar.gz"
-  exact: true
-  stripComponents: 1
-  refreshPeriod: 168h
+  type: git-repo
+  url: "https://github.com/dhruvinsh/nvim.git"
+  pull:
+    args:
+      - "--ff-only"
 
 {{ if eq .emacs.setup true -}}
 .emacs.d:
