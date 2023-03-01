@@ -42,9 +42,11 @@ fi
 
 # lets see if I need python version change!
 CURRENT_VERSION="$(pyenv versions | grep "set by" | awk '{ print $2 }')"
+IS_UPDATE_REQUIRED=false
 if [ "$CURRENT_VERSION" != "$PYTHON_VERSION" ]; then
     echo "*** Python change required ***"
     [ "$CURRENT_VERSION" != "system" ] && pyenv uninstall -f "$CURRENT_VERSION"
+    IS_UPDATE_REQUIRED=true
     install_python
 fi
 
@@ -52,11 +54,13 @@ fi
 echo "*** Installing python packages ***"
 pip install -U pip pipx pynvim
 
-# just to be safe side re-install pipx packages
-pipx reinstall-all
+if [$IS_UPDATE_REQUIRED]
+then
+    pipx reinstall-all
+fi
 
 # create some independent envs with packages 
-packages=( black flake8 httpie isort mypy pipenv poetry pylint )
+packages=( black flake8 httpie isort mypy pipenv poetry pylint ruff )
 
 # setup poetry env via pipx
 for pkg in "${packages[@]}"
