@@ -54,8 +54,7 @@ fi
 echo "*** Installing python packages ***"
 pip install -U pip pipx pynvim
 
-if [$IS_UPDATE_REQUIRED]
-then
+if [ $IS_UPDATE_REQUIRED ]; then
     pipx reinstall-all
 fi
 
