@@ -96,22 +96,6 @@
       - "--to-stdout"
       - starship
 
-.local/bin/syncthing:
-  type: file
-  url: >-
-    https://github.com/syncthing/syncthing/releases/download/v{{ .syncthingVersion }}/syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}.tar.gz
-  executable: true
-  filter:
-    command: tar
-    args:
-      - "--extract"
-      - "--file"
-      - /dev/stdin
-      - "--gzip"
-      - "--to-stdout"
-      - >-
-        syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing
-
 .local/bin/taplo:
   type: file
   url: >-

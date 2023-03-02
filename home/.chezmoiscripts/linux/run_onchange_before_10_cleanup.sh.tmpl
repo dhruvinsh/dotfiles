@@ -58,4 +58,9 @@ fi
 echo "removing nvm.."
 rm -rf ~/.nvm
 
+echo "cleaning up syncthing"
+systemctl --user stop syncthing.service
+systemctl --user disable syncthing.service
+rm -rf ~/.config/systemd/user/syncthing.service
+
 echo "Clean up finished"
