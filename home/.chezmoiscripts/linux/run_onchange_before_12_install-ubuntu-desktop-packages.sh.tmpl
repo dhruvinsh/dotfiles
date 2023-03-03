@@ -50,6 +50,10 @@ if [ ! $(command -v kitty) ]; then
     sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
 fi
 
+echo "wezterm terminal"
+WEZTERM=https://github.com/wez/wezterm/releases/latest/download/wezterm-{{ .weztermVersion }}.Ubuntu22.04.deb
+deb_installer $WEZTERM "wezterm"
+
 # chrome re-installation is harmless in fact we end up updating it!
 echo "setup google chrome"
 CHROME=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
