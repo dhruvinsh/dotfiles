@@ -19,7 +19,6 @@ packages=(
     fontconfig
     gnupg-agent
     graphviz
-    htop
     jq
     {{ if ne .wsl true }}
     linux-tools-common
@@ -42,6 +41,18 @@ packages=(
     wget
     wordnet
     zsh
+)
+
+# some networking packages
+packages+=(
+    libpcap-dev
+)
+
+# some measureing tools
+packages+=(
+    htop
+    iftop
+    iotop
 )
 
 # some c++ setup
