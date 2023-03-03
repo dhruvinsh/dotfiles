@@ -205,15 +205,21 @@ NEOVIM=https://github.com/neovim/neovim/releases/download/v{{ .neovimVersion }}/
 wget $NEOVIM -O /tmp/neovim.deb
 sudo dpkg -i /tmp/neovim.deb
 
-echo "install syncthing"
+echo "install syncthing as service"
 SYNCTHING="https://github.com/syncthing/syncthing/releases/download/v{{ .syncthingVersion }}/syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}.tar.gz"
 wget $SYNCTHING -O /tmp/syncthing.tar.gz
 # extrac the service
-sudo tar -zxf /tmp/syncthing.tar.gz -C /etc/systemd/system/ --strip-components=4 syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/etc/linux-systemd/system/syncthing@.service
 sudo tar -zxf /tmp/syncthing.tar.gz -C /usr/bin/ --strip-components=1 syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing
 
-sudo systemctl enable syncthing@{{ .chezmoi.username }}.service
-sudo systemctl start syncthing@{{ .chezmoi.username }}.service
+# for wsl systems systemd might not be present
+if [ -d "/etc/systemd" ]; then
+    sudo tar -zxf /tmp/syncthing.tar.gz -C /etc/systemd/system/ --strip-components=4 --overwrite syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/etc/linux-systemd/system/syncthing@.service
+
+    sudo systemctl enable syncthing@{{ .chezmoi.username }}.service
+    sudo systemctl start syncthing@{{ .chezmoi.username }}.service
+else
+    echo "Syncthing service is not installed, systemd not found"
+fi
 
 echo "set ZSH to default"
 if [ "$SHELL" != "/usr/bin/zsh" ]; then
