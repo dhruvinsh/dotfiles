@@ -223,7 +223,7 @@ wget $SYNCTHING -O /tmp/syncthing.tar.gz
 sudo tar -zxf /tmp/syncthing.tar.gz -C /usr/bin/ --strip-components=1 syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing
 
 # for wsl systems systemd might not be present
-if [ -d "/etc/systemd" ]; then
+if [ -d "/run/systemd/system" ]; then
     sudo tar -zxf /tmp/syncthing.tar.gz -C /etc/systemd/system/ --strip-components=4 --overwrite syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/etc/linux-systemd/system/syncthing@.service
 
     sudo systemctl enable syncthing@{{ .chezmoi.username }}.service
