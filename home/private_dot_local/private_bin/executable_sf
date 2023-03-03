@@ -2,6 +2,11 @@
 # supercharded SSH with fzf and ripgrep.
 # scavange SSH config with ripgrep and present with fzf and login to selected hostname
 
+if [ ! -f ~/.ssh/config ]; then
+  echo "no ssh config file found"
+  exit 1
+fi
+
 data=$(rg -i "Host (.*)" ~/.ssh/config -r '$1' | rg -iv "\*")
 
 selected=$(echo "$data" | fzf)
