@@ -2,6 +2,7 @@
 # vim: set expandtab ts=4 sw=4 ft=sh:
 set -euo pipefail
 
+# shellcheck disable=all
 # if ubuntu desktop based system
 {{- if (and (.isDesktop) (.ubuntu) (.personalmachine)) }}
 
@@ -36,9 +37,12 @@ appimg_installer ()
 
 ########################################################################################################################
 packages+=(
+    fonts-symbola
     imagemagick
-    wireshark
+    smartmontools
     tshark
+    wireshark
+    xsensors
 )
 
 # install all the packages
