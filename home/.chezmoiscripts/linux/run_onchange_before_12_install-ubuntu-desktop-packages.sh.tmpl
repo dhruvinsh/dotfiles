@@ -9,6 +9,8 @@ deb_installer ()
 {
     # $1: URL
     # $2: temp file name
+    echo "setup $2"
+
     url=$1
     tmp_file="/tmp/$2.deb"
     wget $url -O $tmp_file
@@ -19,6 +21,7 @@ appimg_installer ()
 {
     # $1: URL
     # $2: filename
+    echo "setup $2"
     url=$1
     tmp_file="/tmp/$2.AppImage"
     wget $url -O $tmp_file
@@ -52,22 +55,18 @@ if [ ! $(command -v kitty) ]; then
     sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
 fi
 
-echo "wezterm terminal"
 WEZTERM=https://github.com/wez/wezterm/releases/latest/download/wezterm-{{ .weztermVersion }}.Ubuntu22.04.deb
 deb_installer $WEZTERM "wezterm"
 
 # chrome re-installation is harmless in fact we end up updating it!
-echo "setup google chrome"
 CHROME=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 deb_installer $CHROME "chrome"
 
 # vscode setup
-echo "setup vscode"
 VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
 deb_installer $VSCODE "code"
 
 # discord setup
-echo "setup discord"
 DISCORD="https://discord.com/api/download?platform=linux&format=deb"
 deb_installer $DISCORD "discord"
 
@@ -76,7 +75,6 @@ F3D="https://github.com/f3d-app/f3d/releases/latest/download/f3d-{{ .f3dVersion 
 deb_installer $F3D "f3d"
 
 ########################################################################################################################
-echo "setup logseq"
 LOGSEQ="https://github.com/logseq/logseq/releases/download/{{ .logseqVersion }}/Logseq-{{ .chezmoi.os }}-x64-{{ .logseqVersion }}.AppImage"
 appimg_installer $LOGSEQ logseq
 
