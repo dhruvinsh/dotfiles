@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-# vim: set expandtab ts=2 sw=2 ft=sh:
 # supercharded SSH with fzf and ripgrep.
 # scavange SSH config with ripgrep and present with fzf and login to selected hostname
 
 if [ ! -f ~/.ssh/config ]; then
-	echo "no ssh config file found"
-	exit 1
+  echo "no ssh config file found"
+  exit 1
 fi
 
 # reference: https://www.jamesridgway.co.uk/list-ssh-hosts-from-your-ssh-config/
@@ -14,8 +13,8 @@ data=$(rg -P "^Host ([^*]+)$" $HOME/.ssh/config | sed 's/Host //')
 selected=$(echo "$data" | fzf)
 
 if [ -z "$selected" ]; then
-	echo "no valid host found"
-	exit 1
+  echo "no valid host found"
+  exit 1
 fi
 
 ssh "$selected"
