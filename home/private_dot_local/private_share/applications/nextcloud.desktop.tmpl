@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Nextcloud
+GenericName=Nextcloud desktop client
+Comment=A tool to sync files from Nextcloud server
+X-AppImage-Version="{{ .nextcloudVersion }}"
+StartupWMClass=Nextcloud
+Terminal=false
+Type=Application
+Path={{ .chezmoi.homeDir }}/Applications/
+Exec={{ .chezmoi.homeDir }}/Applications/nextcloud.AppImage
+Icon=Nextcloud
+MimeType=x-scheme-handler/nextcloud
+Categories=Internet;Office;
