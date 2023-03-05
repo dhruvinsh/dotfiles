@@ -82,4 +82,7 @@ deb_installer $F3D "f3d"
 LOGSEQ="https://github.com/logseq/logseq/releases/download/{{ .logseqVersion }}/Logseq-{{ .chezmoi.os }}-x64-{{ .logseqVersion }}.AppImage"
 appimg_installer $LOGSEQ logseq
 
+BITWARDEN="https://vault.bitwarden.com/download/?app=desktop&platform=linux"
+appimg_installer $BITWARDEN bitwarden
+
 {{- end }}
