@@ -85,4 +85,7 @@ appimg_installer $LOGSEQ logseq
 BITWARDEN="https://vault.bitwarden.com/download/?app=desktop&platform=linux"
 appimg_installer $BITWARDEN bitwarden
 
+NEXTCLOUD="https://github.com/nextcloud/desktop/releases/download/v{{ .nextcloudVersion }}/Nextcloud-{{ .nextcloudVersion }}-x86_64.AppImage"
+appimg_installer $NEXTCLOUD nextcloud
+
 {{- end }}
