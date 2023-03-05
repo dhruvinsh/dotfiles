@@ -59,30 +59,30 @@ if [ ! $(command -v kitty) ]; then
     sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
 fi
 
-WEZTERM=https://github.com/wez/wezterm/releases/latest/download/wezterm-{{ .weztermVersion }}.Ubuntu22.04.deb
+WEZTERM="https://github.com/wez/wezterm/releases/download/{{ .weztermVersion }}/wezterm-{{ .weztermVersion }}.Ubuntu22.04.deb"
 deb_installer $WEZTERM "wezterm"
 
 # chrome re-installation is harmless in fact we end up updating it!
-CHROME=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+CHROME=https://dl.google.com/{{ .chezmoi.os }}/direct/google-chrome-stable_current_amd64.deb
 deb_installer $CHROME "chrome"
 
 # vscode setup
-VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
+VSCODE="https://code.visualstudio.com/sha/download?build=stable&os={{ .chezmoi.os }}-deb-x64"
 deb_installer $VSCODE "code"
 
 # discord setup
-DISCORD="https://discord.com/api/download?platform=linux&format=deb"
+DISCORD="https://discord.com/api/download?platform={{ .chezmoi.os }}&format=deb"
 deb_installer $DISCORD "discord"
 
 # f3d setup
-F3D="https://github.com/f3d-app/f3d/releases/latest/download/f3d-{{ .f3dVersion }}-{{ .chezmoi.os }}.deb"
+F3D="https://github.com/f3d-app/f3d/releases/download/v{{ .f3dVersion }}/f3d-{{ .f3dVersion }}-{{ .chezmoi.os }}.deb"
 deb_installer $F3D "f3d"
 
 ########################################################################################################################
 LOGSEQ="https://github.com/logseq/logseq/releases/download/{{ .logseqVersion }}/Logseq-{{ .chezmoi.os }}-x64-{{ .logseqVersion }}.AppImage"
 appimg_installer $LOGSEQ logseq
 
-BITWARDEN="https://vault.bitwarden.com/download/?app=desktop&platform=linux"
+BITWARDEN="https://vault.bitwarden.com/download/?app=desktop&platform={{ .chezmoi.os }}"
 appimg_installer $BITWARDEN bitwarden
 
 NEXTCLOUD="https://github.com/nextcloud/desktop/releases/download/v{{ .nextcloudVersion }}/Nextcloud-{{ .nextcloudVersion }}-x86_64.AppImage"
