@@ -66,6 +66,21 @@
       - neovide
 {{- end }}
 
+.local/bin/rustfmt:
+  type: file
+  url: >-
+    https://github.com/rust-lang/rustfmt/releases/download/v{{ .rustfmtVersion }}/rustfmt_{{ .chezmoi.os }}-x86_64_v{{ .rustfmtVersion }}.tar.gz
+  executable: true
+  filter:
+    command: tar
+    args:
+      - "--extract"
+      - "--file"
+      - /dev/stdin
+      - "--gzip"
+      - "--to-stdout"
+      - rustfmt_{{ .chezmoi.os }}-x86_64_v{{ .rustfmtVersion }}/rustfmt
+
 .local/bin/selene:
   type: file
   url: >-
