@@ -63,4 +63,7 @@ systemctl --user stop syncthing.service
 systemctl --user disable syncthing.service
 rm -rf ~/.config/systemd/user/syncthing.service
 
+echo "cleaning up syncthing"
+sudo rm -rf /usr/bin/syncthing
+
 echo "Clean up finished"
