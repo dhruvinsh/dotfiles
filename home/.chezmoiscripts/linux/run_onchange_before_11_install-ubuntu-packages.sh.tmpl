@@ -220,11 +220,12 @@ echo "install syncthing as service"
 SYNCTHING="https://github.com/syncthing/syncthing/releases/download/v{{ .syncthingVersion }}/syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}.tar.gz"
 wget $SYNCTHING -O /tmp/syncthing.tar.gz
 # extrac the service
-sudo tar -zxf /tmp/syncthing.tar.gz -C /usr/bin/ --strip-components=1 syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing
+tar -zxf /tmp/syncthing.tar.gz -C $HOME/.local/bin --strip-components=1 --overwrite syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing
 
 # for wsl systems systemd might not be present
 if [ -d "/run/systemd/system" ]; then
     sudo tar -zxf /tmp/syncthing.tar.gz -C /etc/systemd/system/ --strip-components=4 --overwrite syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/etc/linux-systemd/system/syncthing@.service
+    sudo sed -i "s/ExecS.*/ExecStart=\/bin\/bash -c '\$\{HOME\}\/.local\/bin\/syncthing serve --no-browser --no-restart --logflags=0'/g" /etc/systemd/system/syncthing@.service
 
     sudo systemctl enable syncthing@{{ .chezmoi.username }}.service
     sudo systemctl start syncthing@{{ .chezmoi.username }}.service
