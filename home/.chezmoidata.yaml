@@ -23,7 +23,7 @@ seleneVersion: "0.24.0"
 shfmtVersion: "3.6.0"
 starshipVersion: "1.13.1"
 styluaVersion: "0.16.1"
-syncthingVersion: "1.23.1"
+syncthingVersion: "1.23.2"
 tealdeerVersion: "1.6.1"
 weztermVersion: "20221119-145034-49b9839f"
 # eventhough zenit says v0.13.1 but actually it v0.13.0
