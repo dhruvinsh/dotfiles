@@ -14,7 +14,7 @@ deb_installer ()
 
     url=$1
     tmp_file="/tmp/$2.deb"
-    wget $url -O $tmp_file
+    wget -q --show-progress --progress=bar:force 2>&1 $url -O $tmp_file
     sudo apt install -y $tmp_file
 }
 
@@ -25,7 +25,7 @@ appimg_installer ()
     echo "setup $2"
     url=$1
     tmp_file="/tmp/$2.AppImage"
-    wget $url -O $tmp_file
+    wget -q --show-progress --progress=bar:force 2>&1 $url -O $tmp_file
 
     # if directory not exists lets create one
     [ -d "$HOME/Applications" ] || mkdir "$HOME/Applications"

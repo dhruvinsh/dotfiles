@@ -170,52 +170,52 @@ sudo systemctl start tlp.service
 
 echo "install bat(cat)"
 BAT=https://github.com/sharkdp/bat/releases/download/v{{ .batVersion }}/bat-musl_{{ .batVersion }}_{{ .chezmoi.arch }}.deb
-wget $BAT -O /tmp/bat.deb
+wget -q --show-progress --progress=bar:force 2>&1 $BAT -O /tmp/bat.deb
 sudo apt install /tmp/bat.deb
 
 echo "install zenith"
 ZENITH=https://github.com/bvaisvil/zenith/releases/download/{{ .zenithVersion }}/zenith_{{ .zenithVersion }}-1_{{ .chezmoi.arch }}.deb
-wget $ZENITH -O /tmp/zenith.deb
+wget -q --show-progress --progress=bar:force 2>&1 $ZENITH -O /tmp/zenith.deb
 sudo apt install /tmp/zenith.deb
 
 # do not install ripgrep if already found
 if [ ! $(command -v rg) ]; then
     echo "install ripgrep"
     RIPGREP=https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep_{{ .ripgrepVersion }}_{{ .chezmoi.arch }}.deb
-    wget $RIPGREP -O /tmp/ripgrep.deb
+    wget -q --show-progress --progress=bar:force 2>&1 $RIPGREP -O /tmp/ripgrep.deb
     sudo apt install /tmp/ripgrep.deb
 fi
 
 echo "setup fd"
 FD=https://github.com/sharkdp/fd/releases/download/v{{ .fdVersion }}/fd_{{ .fdVersion }}_{{ .chezmoi.arch }}.deb
-wget $FD -O /tmp/fd.deb
+wget -q --show-progress --progress=bar:force 2>&1 $FD -O /tmp/fd.deb
 sudo apt install /tmp/fd.deb
 
 echo "setup fzf"
 FZF=https://github.com/junegunn/fzf/releases/download/{{ .fzfVersion }}/fzf-{{ .fzfVersion }}-{{ .chezmoi.os }}_{{ .chezmoi.arch }}.tar.gz
-wget $FZF -O /tmp/fzf.tar.gz
+wget -q --show-progress --progress=bar:force 2>&1 $FZF -O /tmp/fzf.tar.gz
 tar -xf /tmp/fzf.tar.gz -C $LOCALBIN/
 chmod +x $LOCALBIN/fzf
 
 echo "setup stylua"
 STYLUA=https://github.com/JohnnyMorganz/StyLua/releases/download/v{{ .styluaVersion }}/stylua-{{ .chezmoi.os }}.zip
-wget $STYLUA -O /tmp/stylua.zip
+wget -q --show-progress --progress=bar:force 2>&1 $STYLUA -O /tmp/stylua.zip
 unzip -o /tmp/stylua.zip -d $LOCALBIN/
 chmod +x $LOCALBIN/stylua
 
 echo "setup gh for github"
 GH=https://github.com/cli/cli/releases/download/v{{ .ghVersion }}/gh_{{ .ghVersion }}_{{ .chezmoi.os }}_{{ .chezmoi.arch }}.deb
-wget $GH -O /tmp/gh.deb
+wget -q --show-progress --progress=bar:force 2>&1 $GH -O /tmp/gh.deb
 sudo dpkg -i /tmp/gh.deb
 
 echo "setup neovim from github release"
 NEOVIM=https://github.com/neovim/neovim/releases/download/v{{ .neovimVersion }}/nvim-{{ .chezmoi.os }}64.deb
-wget $NEOVIM -O /tmp/neovim.deb
+wget -q --show-progress --progress=bar:force 2>&1 $NEOVIM -O /tmp/neovim.deb
 sudo dpkg -i /tmp/neovim.deb
 
 echo "install syncthing as service"
 SYNCTHING="https://github.com/syncthing/syncthing/releases/download/v{{ .syncthingVersion }}/syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}.tar.gz"
-wget $SYNCTHING -O /tmp/syncthing.tar.gz
+wget -q --show-progress --progress=bar:force 2>&1 $SYNCTHING -O /tmp/syncthing.tar.gz
 # extrac the service
 tar -zxf /tmp/syncthing.tar.gz -C $HOME/.local/bin --strip-components=1 --overwrite syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}/syncthing
 
