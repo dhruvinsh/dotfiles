@@ -148,9 +148,6 @@ repositories+=(
 # Installation starts here #
 ############################
 sudo apt update
-
-echo "purge unwanted packages"
-sudo apt purge -y vim vim-common vim-tiny fd-find
 sudo apt autoremove -y
 
 for repository in ${repositories[@]}; do

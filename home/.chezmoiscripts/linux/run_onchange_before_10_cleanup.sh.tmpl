@@ -66,4 +66,7 @@ rm -rf ~/.config/systemd/user/syncthing.service
 echo "cleaning up syncthing"
 sudo rm -rf /usr/bin/syncthing
 
+echo "purge unwanted packages"
+sudo apt purge -y vim vim-common vim-tiny fd-find
+
 echo "Clean up finished"
