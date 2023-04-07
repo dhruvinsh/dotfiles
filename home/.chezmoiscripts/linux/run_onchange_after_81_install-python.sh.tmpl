@@ -59,7 +59,18 @@ if [ $IS_UPDATE_REQUIRED ]; then
 fi
 
 # create some independent envs with packages 
-packages=( black flake8 httpie isort mypy pipenv poetry pylint ruff )
+packages=(
+    black
+    flake8
+    httpie
+    isort
+    mypy
+    pipenv
+    poetry
+    pre-commit
+    pylint
+    ruff
+)
 
 # setup poetry env via pipx
 for pkg in "${packages[@]}"
