@@ -38,6 +38,13 @@ if [ -x "$(command -v nvim)" ]; then
         sudo apt purge neovim neovim-runtime
     fi
 fi
+# Neovim 0.9.0 migrate to appimage https://github.com/neovim/neovim/pull/22773
+if [ -x "$(command -v nvim)" ]; then
+    if nvim --version | grep -q "0.8"; then
+        echo "Cleaning up neovim 0.8.x"
+        sudo apt purge neovim*
+    fi
+fi
 
 # Change in python workflow hence global poetry installation not required
 echo "Cleaning up Old Poetry..."

@@ -209,9 +209,14 @@ wget -q --show-progress --progress=bar:force 2>&1 $GH -O /tmp/gh.deb
 sudo dpkg -i /tmp/gh.deb
 
 echo "setup neovim from github release"
-NEOVIM=https://github.com/neovim/neovim/releases/download/v{{ .neovimVersion }}/nvim-{{ .chezmoi.os }}64.deb
-wget -q --show-progress --progress=bar:force 2>&1 $NEOVIM -O /tmp/neovim.deb
-sudo dpkg -i /tmp/neovim.deb
+NEOVIM=https://github.com/neovim/neovim/releases/download/v{{ .neovimVersion }}/nvim.appimage
+tmp_file="/tmp/nvim.appimage"
+wget -q --show-progress --progress=bar:force 2>&1 $NEOVIM -O $tmp_file
+# if directory not exists lets create one
+[ -d "$HOME/Applications" ] || mkdir "$HOME/Applications"
+# make it executable
+chmod a+x $tmp_file
+sudo mv $tmp_file "/usr/bin/nvim"
 
 echo "install syncthing as service"
 SYNCTHING="https://github.com/syncthing/syncthing/releases/download/v{{ .syncthingVersion }}/syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}.tar.gz"
