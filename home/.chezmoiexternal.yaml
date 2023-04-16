@@ -81,20 +81,6 @@
       - "--to-stdout"
       - rustfmt_{{ .chezmoi.os }}-x86_64_v{{ .rustfmtVersion }}/rustfmt
 
-.local/bin/selene:
-  type: file
-  url: >-
-    https://github.com/Kampfkarren/selene/releases/download/{{ .seleneVersion }}/selene-{{ .seleneVersion }}-{{ .chezmoi.os }}.zip
-  executable: true
-  filter:
-    command: zcat
-
-.local/bin/shfmt:
-  type: file
-  url: >-
-    https://github.com/mvdan/sh/releases/download/v{{ .shfmtVersion }}/shfmt_v{{ .shfmtVersion}}_linux_{{ .chezmoi.arch }}
-  executable: true
-
 .local/bin/starship:
   type: file
   url: >-

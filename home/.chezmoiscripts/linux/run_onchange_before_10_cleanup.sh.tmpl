@@ -76,4 +76,9 @@ sudo rm -rf /usr/bin/syncthing
 echo "purge unwanted packages"
 sudo apt purge -y vim vim-common vim-tiny fd-find
 
+echo "cleaning up selene, shfmt and stylua"
+rm -rf "$HOME/.local/bin/shfmt"
+rm -rf "$HOME/.local/bin/selene"
+rm -rf "$HOME/.local/bin/stylua"
+
 echo "Clean up finished"

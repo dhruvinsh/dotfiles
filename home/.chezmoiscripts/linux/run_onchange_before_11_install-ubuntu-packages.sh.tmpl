@@ -197,12 +197,6 @@ wget -q --show-progress --progress=bar:force 2>&1 $FZF -O /tmp/fzf.tar.gz
 tar -xf /tmp/fzf.tar.gz -C $LOCALBIN/
 chmod +x $LOCALBIN/fzf
 
-echo "setup stylua"
-STYLUA=https://github.com/JohnnyMorganz/StyLua/releases/download/v{{ .styluaVersion }}/stylua-{{ .chezmoi.os }}.zip
-wget -q --show-progress --progress=bar:force 2>&1 $STYLUA -O /tmp/stylua.zip
-unzip -o /tmp/stylua.zip -d $LOCALBIN/
-chmod +x $LOCALBIN/stylua
-
 echo "setup gh for github"
 GH=https://github.com/cli/cli/releases/download/v{{ .ghVersion }}/gh_{{ .ghVersion }}_{{ .chezmoi.os }}_{{ .chezmoi.arch }}.deb
 wget -q --show-progress --progress=bar:force 2>&1 $GH -O /tmp/gh.deb
