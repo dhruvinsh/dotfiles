@@ -215,10 +215,7 @@ chmod a+x $tmp_file
 sudo mv $tmp_file "/usr/bin/nvim"
 
 echo "install syncthing as service"
-# if service already exists lets stop it first
-if systemctl --all --type service | grep -q syncthing; then
-    sudo systemctl stop syncthing@{{ .chezmoi.username }}.service
-fi
+sudo systemctl stop syncthing@{{ .chezmoi.username }}.service
 SYNCTHING="https://github.com/syncthing/syncthing/releases/download/v{{ .syncthingVersion }}/syncthing-{{ .chezmoi.os }}-{{ .chezmoi.arch }}-v{{ .syncthingVersion }}.tar.gz"
 wget -q --show-progress --progress=bar:force 2>&1 $SYNCTHING -O /tmp/syncthing.tar.gz
 # extrac the service
