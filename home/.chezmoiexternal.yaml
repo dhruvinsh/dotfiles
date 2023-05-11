@@ -49,6 +49,21 @@
       - "--to-stdout"
       - lazygit
 
+.local/bin/lazydocker:
+  type: file
+  url: >-
+    https://github.com/jesseduffield/lazydocker/releases/download/v{{ .lazydockerVersion }}/lazydocker_{{ .lazydockerVersion }}_Linux_x86_64.tar.gz
+  executable: true
+  filter:
+    command: tar
+    args:
+      - "--extract"
+      - "--file"
+      - /dev/stdin
+      - "--gzip"
+      - "--to-stdout"
+      - lazydocker
+
 {{- if .isDesktop }}
 .local/bin/neovide:
   type: file
