@@ -78,6 +78,10 @@ deb_installer $DISCORD "discord"
 F3D="https://github.com/f3d-app/f3d/releases/download/v{{ .f3dVersion }}/f3d-{{ .f3dVersion }}-{{ .chezmoi.os }}.deb"
 deb_installer $F3D "f3d"
 
+# snifnet setup
+SNIFFNET="https://github.com/GyulyVGC/sniffnet/releases/download/v{{ .sniffnetVersion }}/Sniffnet_Linux.deb"
+deb_installer $SNIFFNET "sniffnet"
+
 ########################################################################################################################
 BITWARDEN="https://vault.bitwarden.com/download/?app=desktop&platform={{ .chezmoi.os }}"
 FREECAD="https://github.com/FreeCAD/FreeCAD/releases/latest/download/FreeCAD_{{ .freecadVersion }}-conda-{{ .chezmoi.os }}-x86_64-py310.AppImage"
