@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-sudo add-apt-repository ppa:longsleep/golang-backports
+sudo add-apt-repository -y ppa:longsleep/golang-backports
 sudo apt update
-sudo apt install golang-go
+sudo apt install -y golang-go
