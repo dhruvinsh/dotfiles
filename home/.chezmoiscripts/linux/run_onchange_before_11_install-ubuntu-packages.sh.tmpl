@@ -175,11 +175,6 @@ BAT=https://github.com/sharkdp/bat/releases/download/v{{ .batVersion }}/bat-musl
 wget -q --show-progress --progress=bar:force 2>&1 $BAT -O /tmp/bat.deb
 sudo apt install /tmp/bat.deb
 
-echo "install zenith"
-ZENITH=https://github.com/bvaisvil/zenith/releases/download/{{ .zenithVersion }}/zenith_{{ .zenithVersion }}-1_{{ .chezmoi.arch }}.deb
-wget -q --show-progress --progress=bar:force 2>&1 $ZENITH -O /tmp/zenith.deb
-sudo apt install /tmp/zenith.deb
-
 # do not install ripgrep if already found
 if [ ! $(command -v rg) ]; then
     echo "install ripgrep"
