@@ -1,6 +1,8 @@
 # chezmoixternal -*- mode: yaml -*-
 # vim: set ft=yaml
 
+{{ if ne .chezmoi.os "windows" }}
+
 {{ if .isDesktop -}}
 .config/kitty/kitty-themes:
   type: archive
@@ -164,3 +166,5 @@
   pull:
     args:
       - "--ff-only"
+
+{{ end -}}
