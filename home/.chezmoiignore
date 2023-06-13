@@ -28,13 +28,20 @@ key.txt.age
 __pycache__/
 
 {{ if eq .chezmoi.os "windows" }}
-.chezmoiscripts/linux
-private_dot_config
-private_dot_local
-private_dot_ssh
-private_dot_wallpaperlinux
-dot_Xresources
-dot_gitconfig.tmpl
-dot_profile
-dot_tmux.conf.tmpl
+.chezmoiscripts/linux/**
+.config/**
+.local/**
+.ssh/**
+.wallpaper/**
+.Xresources
+.gitconfig.tmpl
+.profile
+.tmux.conf
+.zshrc
+.zprofile
+.huslogin
+{{ end }}
+
+{{ if eq .chezmoi.os "linux" }}
+.chezmoiscripts/windows/**
 {{ end }}
