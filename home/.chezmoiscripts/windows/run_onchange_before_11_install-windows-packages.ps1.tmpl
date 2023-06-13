@@ -1,0 +1,25 @@
+# this script assumes that winget is available by defaul
+# TODO: look at https://github.com/Kugane/winget/blob/main/winget-basic.ps1
+
+$apps = @(
+    "7zip.7zip"
+    "Git.Git"
+    {{ if .personalmachine -}}
+    "Bitwarden.Bitwarden"
+    "Nextcloud.NextcloudDesktop"
+    {{ end -}}
+    "Logseq.Logseq"
+    "Obsidian.Obsidian"
+    "WinSCP.WinSCP"
+    "Neovim.Neovim"
+    "wez.wezterm"
+    "9PMMSR1CGPWG"                      # HEIF-PictureExtension
+    "9MVZQVXJBQ9V"                      # AV1 VideoExtension
+    "9NCTDW2W1BH8"                      # Raw-PictureExtension
+    "9N95Q1ZZPMH4"                      # MPEG-2-VideoExtension
+);
+
+foreach ($app in $apps) {
+    winget install --exact --scope machine $app
+}
+pause
