@@ -1,5 +1,7 @@
 # chezmoi.toml -*- mode: toml -*-
 
+{{- if eq .chezmoi.os "linux" -}}
+
 # Question mark at the end not required. Chezmoi adds its own.
 {{- $emacs           := promptBool "Want to install emacs" -}}
 {{- $personalmachine := promptBool "Is it personal machine" -}}
@@ -88,3 +90,20 @@
 [age]
   identity = "~/.key.txt"
   recipient = "age17yfjyk63433uzr5q2lqxx4sexfnz6e9t648kku5t9sehfye7x4eqy9mhmu"
+
+{{ end }}
+
+{{ if eq .chezmoi.os "windows" }}
+{{- $personalmachine := promptBool "Is it personal machine" -}}
+[data]
+  personalmachine = {{ $personalmachine }}
+  encryption = "age"
+
+[age]
+  identity = "~/.key.txt"
+  recipient = "age17yfjyk63433uzr5q2lqxx4sexfnz6e9t648kku5t9sehfye7x4eqy9mhmu"
+
+[interpreters.ps1]
+    command = "pwsh"
+    args = ["-NoLogo"]
+{{ end }}
