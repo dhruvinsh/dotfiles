@@ -1,0 +1,5 @@
+echo "Scoop adding extras"
+scoop bucket add extras
+echo "Installing Age"
+scoop install age
+age --decrypt --output "{{ .chezmoi.homeDir }}/.key.txt" "{{ .chezmoi.sourceDir }}/key.txt.age"

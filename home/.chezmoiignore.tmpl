@@ -26,3 +26,20 @@
 README.org
 key.txt.age
 __pycache__/
+
+{{ if eq .chezmoi.os "windows" }}
+.chezmoiscripts/linux/**
+.config/**
+.local/**
+.wallpaper/**
+.Xresources
+.profile
+.tmux.conf
+.zshrc
+.zprofile
+.huslogin
+{{ end }}
+
+{{ if eq .chezmoi.os "linux" }}
+.chezmoiscripts/windows/**
+{{ end }}
