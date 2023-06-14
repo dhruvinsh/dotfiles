@@ -4,6 +4,8 @@ Collection of personal dotfile, managed via chezmoi.
 
 # Installation
 
+## Linux setup
+
 Below code will install chezmoi in local bin directory and start
 applying the existing setup.
 
@@ -13,6 +15,18 @@ export PATH="$HOME/.local/bin:$PATH"  # I need to do it else age binary will giv
 sh -c "$(curl -fsLS chezmoi.io/get)" -- init dhruvinsh --apply
 ```
 
+## Windows setup
+
+Below code will install chezmoi and start applying config changes for the windows system.
+**NOTE: This installation expect powershell 7 installed manually (at least for now)**
+
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+irm get.scoop.sh | iex
+
+scoop install chezmoi
+chezmoi init dhruvinsh --apply
+```
 # Arch Installation
 
 See these file, [Installation](Installation.md)
