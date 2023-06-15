@@ -20,6 +20,7 @@ $apps = @(
     "lazygit"
     "make"
     "ripgrep"
+    "vcredist2022" # ripgrep needs it
 );
 
 foreach ($app in $apps) {
