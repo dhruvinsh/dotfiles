@@ -1,5 +1,11 @@
-echo "Scoop adding extras"
+# vim: set ft=powershell
+
+# NOTE: same shell which installed the scoop and chezmoi, can install other packages
+Write-Output "--> Scoop adding extras"
 scoop bucket add extras
-echo "Installing Age"
+
+Write-Output "--> Installing Age"
 scoop install age
+
+# decrypt the keys
 age --decrypt --output "{{ .chezmoi.homeDir }}/.key.txt" "{{ .chezmoi.sourceDir }}/key.txt.age"
