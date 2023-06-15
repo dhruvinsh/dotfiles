@@ -1,7 +1,20 @@
 # chezmoixternal -*- mode: yaml -*-
 # vim: set ft=yaml
+{{ $nvimPath := "" }}
+{{ if eq .chezmoi.os "windows" }}
+{{   $nvimPath = "AppData/Local/nvim" }}
+{{ else if eq .chezmoi.os "linux" }}
+{{   $nvimPath = ".config/nvim" }}
+{{ end }}
 
-{{ if ne .chezmoi.os "windows" }}
+{{ $nvimPath }}:
+  type: git-repo
+  url: "https://github.com/dhruvinsh/nvim.git"
+  pull:
+    args:
+      - "--ff-only"
+
+{{ if eq .chezmoi.os "linux" }}
 
 {{ if .isDesktop -}}
 .config/kitty/kitty-themes:
@@ -11,13 +24,6 @@
   stripComponents: 1
   refreshPeriod: 168h
 {{ end -}}
-
-.config/nvim:
-  type: git-repo
-  url: "https://github.com/dhruvinsh/nvim.git"
-  pull:
-    args:
-      - "--ff-only"
 
 {{ if eq .emacs.setup true -}}
 .emacs.d:
