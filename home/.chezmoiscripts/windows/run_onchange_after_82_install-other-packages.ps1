@@ -21,6 +21,7 @@ $apps = @(
     "make"
     "ripgrep"
     "vcredist2022" # ripgrep needs it
+    "zoxide"
 );
 
 foreach ($app in $apps) {
