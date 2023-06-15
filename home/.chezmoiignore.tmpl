@@ -28,16 +28,16 @@ key.txt.age
 __pycache__/
 
 {{ if eq .chezmoi.os "windows" }}
+.Xresources
 .chezmoiscripts/linux/**
 .config/**
+.huslogin
 .local/**
-.wallpaper/**
-.Xresources
 .profile
 .tmux.conf
-.zshrc
+.wallpaper/**
 .zprofile
-.huslogin
+.zshrc
 {{ end }}
 
 {{ if eq .chezmoi.os "linux" }}
