@@ -1,5 +1,14 @@
 # chezmoixternal -*- mode: yaml -*-
 # vim: set ft=yaml
+
+# config that applies to windows and linux
+.config/wezterm:
+  type: git-repo
+  url: "https://github.com/dhruvinsh/wezterm-config.git"
+  pull:
+    args:
+      - "--ff-only"
+
 {{ $nvimPath := "" }}
 {{ if eq .chezmoi.os "windows" }}
 {{   $nvimPath = "AppData/Local/nvim" }}
@@ -14,6 +23,7 @@
     args:
       - "--ff-only"
 
+# work on linux based system only
 {{ if eq .chezmoi.os "linux" }}
 
 {{ if .isDesktop -}}
