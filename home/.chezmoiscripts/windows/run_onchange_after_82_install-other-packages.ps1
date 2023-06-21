@@ -19,6 +19,8 @@ $apps = @(
     "gcc"
     "lazygit"
     "make"
+    "nodejs-lts"
+    "nu"
     "ripgrep"
     "vcredist2022" # ripgrep needs it
     "zoxide"
