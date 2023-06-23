@@ -3,16 +3,12 @@
 
 $apps = @(
     "7zip.7zip"
-    "Git.Git"
     {{ if .personalmachine -}}
     "Bitwarden.Bitwarden"
     "Nextcloud.NextcloudDesktop"
     {{ end -}}
     "Logseq.Logseq"
     "Obsidian.Obsidian"
-    "WinSCP.WinSCP"
-    "Neovim.Neovim"
-    "wez.wezterm"
     "9PMMSR1CGPWG"                      # HEIF-PictureExtension
     "9MVZQVXJBQ9V"                      # AV1 VideoExtension
     "9NCTDW2W1BH8"                      # Raw-PictureExtension
@@ -20,6 +16,6 @@ $apps = @(
 );
 
 foreach ($app in $apps) {
-    winget install --exact --scope machine $app
+    winget install --exact --accept-package-agreements $app
 }
 pause
