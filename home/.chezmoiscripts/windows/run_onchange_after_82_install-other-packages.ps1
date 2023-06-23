@@ -12,19 +12,28 @@
 # reason)
 scoop bucket add extras
 
+# NOTE: do not install 7zip from scoop else we will have issue
+# for file extraction for scoop
 $apps = @(
-    "cmake"
-    "fd"
-    "fzf"
-    "gcc"
-    "lazygit"
-    "make"
-    "nodejs-lts"
-    "nu"
-    "ripgrep"
-    "vcredist2022" # ripgrep needs it
-    "zoxide"
+    "main/bat"
+    "main/cmake"
+    "main/fd"
+    "main/fzf"
+    "main/gcc"
+    "main/git" 
+    "main/make"
+    "main/neovim"
+    "main/nodejs-lts"
+    "main/nu"
+    "main/ripgrep"
+    "main/zoxide"
+    "extras/lazygit"
+    "extras/putty"
+    "extras/vcredist2022" # ripgrep needs it
+    "extras/wezterm"
 );
+
+
 
 foreach ($app in $apps) {
     Write-Output "--> Installing $app.."
