@@ -4,7 +4,6 @@
 # prettier-ignore
 ageVersion       : "1.1.1"
 batVersion       : "0.23.0"
-emacsVersion     : "28.2"
 f3dVersion       : "2.0.0"
 fdVersion        : "8.7.0"
 freecadVersion   : "0.20.2-2022-12-27"

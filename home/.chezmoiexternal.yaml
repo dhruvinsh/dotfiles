@@ -35,23 +35,6 @@
   refreshPeriod: 168h
 {{ end -}}
 
-{{ if eq .emacs.setup true -}}
-.emacs.d:
-  type: git-repo
-  url: "https://github.com/doomemacs/doomemacs.git"
-  refreshPeriod: 168h
-  pull:
-    args:
-      - "--ff-only"
-
-.doom.d:
-  type: git-repo
-  url: "https://github.com/dhruvinsh/doom.d"
-  pull:
-    args:
-      - "--ff-only"
-{{ end -}}
-
 .local/bin/lazygit:
   type: file
   url: >-
