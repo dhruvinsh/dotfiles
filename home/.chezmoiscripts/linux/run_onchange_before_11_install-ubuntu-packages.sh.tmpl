@@ -92,39 +92,6 @@ packages+=(
     liblzma-dev
 )
 
-{{ if eq .emacs.build true }}
-# emacs dpendency, went through the INSTALL file from emacs-27 branch
-# from github. Also some reference:
-# https://emacsredux.com/blog/2021/12/19/using-emacs-on-windows-11-with-wsl2/
-packages+=(
-    autoconf
-    build-essential
-    cmake
-    g++-10
-    gcc-10
-    libcairo-5c-dev
-    libgccjit-10-dev
-    libgccjit0
-    libgif-dev
-    libgnutls28-dev
-    libgtk-3-dev
-    libharfbuzz-bin
-    libharfbuzz-dev
-    libjansson-dev
-    libjansson4
-    libjpeg-dev
-    libncurses-dev
-    libpng-dev
-    librsvg2-dev
-    libtiff5-dev
-    libvterm-dev
-    libxpm-dev
-    mailutils
-    sqlite3
-    texinfo
-)
-{{ end -}}
-
 # latest git version
 repositories+=(
     ppa:git-core/ppa
@@ -137,13 +104,6 @@ packages+=(
 packages+=(
     libluajit-5.1-dev
 )
-
-{{ if eq .emacs.ppa true }}
-# emacs installation taken care in its own script
-repositories+=(
-    ppa:kelleyk/emacs
-)
-{{ end -}}
 
 
 ############################

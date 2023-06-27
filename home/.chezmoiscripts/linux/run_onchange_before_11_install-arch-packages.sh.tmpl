@@ -198,13 +198,6 @@ packages_aur+=(
     ttf-ms-fonts
 )
 
-{{ if eq .emacs.setup true }}
-# for arch linux emacs-nativecomp is available
-packages+=(
-    emacs-nativecomp
-)
-{{ end -}}
-
 # install all the packages
 sudo pacman -S --noconfirm --needed ${packages[@]}
 
