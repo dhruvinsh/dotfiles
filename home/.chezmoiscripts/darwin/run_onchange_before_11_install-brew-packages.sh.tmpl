@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# vim: set expandtab ts=4 sw=4 ft=bash:
+set -euo pipefail
+
+# brew package
+packages=(
+    bat
+    bat-extras
+    direnv
+    editorconfig
+    fd
+    fzf
+    jq
+    lazygit
+    lazydocker
+    neovim
+    ranger
+    ripgrep
+    tmux
+    tree
+)
+
+# some measureing tools
+packages+=(
+    btop
+    htop
+)
+
+# pyenv dependency
+# packages+=(
+#     make
+#     build-essential
+#     libssl-dev
+#     zlib1g-dev
+#     libbz2-dev
+#     libreadline-dev
+#     libsqlite3-dev
+#     llvm
+#     libncursesw5-dev
+#     xz-utils
+#     tk-dev
+#     libxml2-dev
+#     libxmlsec1-dev
+#     libffi-dev
+#     liblzma-dev
+# )
+
+# some cask packages
+casks=(
+    wezterm
+)
+
+############################
+# Installation starts here #
+############################
+
+# install all the packages
+brew install ${packages[@]}
+brew install --cask ${casks[@]}
