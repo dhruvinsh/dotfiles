@@ -1,6 +1,5 @@
 #!/bin/bash
 # vim:set ft=sh:
-{{ if or (eq .chezmoi.os "linux") (eq .chezmoi.os "darwin") }}
 # shellcheck disable=1083
 
 VERSION={{ .nerdfontVersion }}
@@ -48,7 +47,4 @@ rm -rf /tmp/all-the-icons
 {{ if eq .chezmoi.os "linux" }}
 echo "--> updating fonts cache"
 fc-cache -f
-{{ end }}
-
-
 {{ end }}
