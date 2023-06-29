@@ -1,18 +1,10 @@
 # chezmoixternal -*- mode: yaml -*-
 # vim: set ft=yaml
 
-# config that applies to windows and linux
-.config/wezterm:
-  type: git-repo
-  url: "https://github.com/dhruvinsh/wezterm-config.git"
-  pull:
-    args:
-      - "--ff-only"
-
 {{ $nvimPath := "" }}
 {{ if eq .chezmoi.os "windows" }}
 {{   $nvimPath = "AppData/Local/nvim" }}
-{{ else if eq .chezmoi.os "linux" }}
+{{ else }}
 {{   $nvimPath = ".config/nvim" }}
 {{ end }}
 
@@ -23,6 +15,25 @@
     args:
       - "--ff-only"
 
+.config/wezterm:
+  type: git-repo
+  url: "https://github.com/dhruvinsh/wezterm-config.git"
+  pull:
+    args:
+      - "--ff-only"
+
+{{ if ne .chezmoi.os "windows" }}
+.tmux/plugins/tpm:
+  type: git-repo
+  url: "https://github.com/tmux-plugins/tpm.git"
+  refreshPeriod: 168h
+  pull:
+    args:
+      - "--ff-only"
+{{ end }}
+
+
+##############################################################
 # work on linux based system only
 {{ if eq .chezmoi.os "linux" }}
 
@@ -157,13 +168,5 @@
   exact: true
   stripComponents: 1
   refreshPeriod: 168h
-
-.tmux/plugins/tpm:
-  type: git-repo
-  url: "https://github.com/tmux-plugins/tpm.git"
-  refreshPeriod: 168h
-  pull:
-    args:
-      - "--ff-only"
 
 {{ end -}}
