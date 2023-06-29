@@ -12,6 +12,7 @@ __pycache__/
 
 {{ if eq .chezmoi.os "windows" }}
 .Xresources
+.chezmoiscripts/darwin/**
 .chezmoiscripts/linux/**
 .config/fontconfig/**
 .huslogin
@@ -25,5 +26,17 @@ __pycache__/
 
 {{ if eq .chezmoi.os "linux" }}
 .chezmoiscripts/windows/**
+.chezmoiscripts/darwin/**
 Documents/PowerShell/**
+{{ end }}
+
+{{ if eq .chezmoi.os "darwin" }}
+.chezmoiscripts/linux/**
+.chezmoiscripts/windows/**
+.local/**
+.wallpaper/**
+.profile
+.Xresources
+.hushlogin
+Documents/**
 {{ end }}
