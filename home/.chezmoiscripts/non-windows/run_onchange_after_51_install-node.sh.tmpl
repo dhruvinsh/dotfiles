@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-{{ if or (eq .chezmoi.os "linux") ( eq .chezmoi.os "darwin") }}
 set -euo pipefail
 
 echo "Setup node with help of volta ⚡️"
@@ -18,5 +17,3 @@ applications=(
   tree-sitter-cli
 )
 npm install -g "${applications[@]}"
-
-{{ end }}
