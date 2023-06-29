@@ -1,42 +1,43 @@
 #!/bin/bash
 # vim:set ft=sh:
+{{ if or (eq .chezmoi.os "linux") (eq .chezmoi.os "darwin") }}
 # shellcheck disable=1083
 
 VERSION={{ .nerdfontVersion }}
 
+{{ if eq .chezmoi.os "linux" }}
 TARGET="$HOME"/.local/share/fonts/
+{{ else }}
+TARGET="$HOME"/Library/Fonts
+{{ end }}
+
 if [ -d "$TARGET" ]; then
     rm -rf "${TARGET:?}/*"
 else
-    commandmkdir -p "$TARGET"
+    mkdir -p "$TARGET"
 fi
 
 CASCADIA=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/CascadiaCode.tar.xz
-IBMPLEX=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/IBMPlexMono.tar.xz
 FIRA=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/FiraCode.tar.xz
-HACK=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/Hack.tar.xz
-INCONSOLATA=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/Inconsolata.tar.xz
 IOSEVKA=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/Iosevka.tar.xz
 JETBRAINS=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/JetBrainsMono.tar.xz
-OVERPASS=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/Overpass.tar.xz
-SOURCECODEPRO=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/SourceCodePro.tar.xz
 VICTOR=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/VictorMono.tar.xz
 
 arr=("$CASCADIA" "$IBMPLEX" "$FIRA" "$HACK" "$INCONSOLATA" "$IOSEVKA" "$JETBRAINS" "$OVERPASS" "$SOURCECODEPRO" "$VICTOR")
 
 SRC=/tmp/font.tar.xz
-DST=/tmp/fonts
+TEMP_DST=/tmp/fonts
 
 # just a cleanup if its present
-rm -rf "$SRC" "$DST"
+rm -rf "$SRC" "$TEMP_DST"
 
 for url in "${arr[@]}"; do
     echo "--> setting $url"
     wget -q --show-progress --progress=bar:force 2>&1 "$url" -O "$SRC"
-    mkdir -p "$DST"
-	tar -xf "$SRC" --directory="$DST"
-    find "$DST" -type f -name "*.ttf" -exec mv {} "$TARGET" \;
-    rm -rf "$SRC" "$DST"
+    mkdir -p "$TEMP_DST"
+	tar -xf "$SRC" --directory="$TEMP_DST"
+    find "$TEMP_DST" -type f -name "*.ttf" -exec mv {} "$TARGET" \;
+    rm -rf "$SRC" "$TEMP_DST"
 done
 
 echo "--> Setting all-the-icons fonts"
@@ -44,5 +45,10 @@ git clone --depth 1 https://github.com/domtronn/all-the-icons.el /tmp/all-the-ic
 find /tmp/all-the-icons/fonts -type f -name "*.ttf" -exec mv {} "$TARGET" \;
 rm -rf /tmp/all-the-icons
 
+{{ if eq .chezmoi.os "linux" }}
 echo "--> updating fonts cache"
 fc-cache -f
+{{ end }}
+
+
+{{ end }}
