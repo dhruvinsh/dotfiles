@@ -11,6 +11,7 @@ TARGET="$HOME"/Library/Fonts
 {{ end }}
 
 if [ -d "$TARGET" ]; then
+    echo "cleaning up fonts.."
     rm -rf "${TARGET:?}/*"
 else
     mkdir -p "$TARGET"
@@ -22,7 +23,7 @@ IOSEVKA=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/Io
 JETBRAINS=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/JetBrainsMono.tar.xz
 VICTOR=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/VictorMono.tar.xz
 
-arr=("$CASCADIA" "$IBMPLEX" "$FIRA" "$HACK" "$INCONSOLATA" "$IOSEVKA" "$JETBRAINS" "$OVERPASS" "$SOURCECODEPRO" "$VICTOR")
+arr=("$CASCADIA" "$FIRA" "$IOSEVKA" "$JETBRAINS" "$VICTOR")
 
 SRC=/tmp/font.tar.xz
 TEMP_DST=/tmp/fonts
