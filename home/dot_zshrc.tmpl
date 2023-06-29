@@ -125,9 +125,11 @@ export GDK_SCALE=1
 eval "$(direnv hook zsh)"
 
 # pyenv require for interactive shells
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+if [ -x "$(command -v pyenv)" ]; then
+	export PYENV_ROOT="$HOME/.pyenv"
+	export PATH="$PYENV_ROOT/bin:$PATH"
+	eval "$(pyenv init -)"
+fi
 
 # volta setup
 export VOLTA_HOME="$HOME/.volta"
