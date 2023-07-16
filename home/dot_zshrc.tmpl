@@ -77,7 +77,16 @@ DISABLE_AUTO_UPDATE="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zoxide zsh-syntax-highlighting zsh-autosuggestions zsh-completions)
+plugins=(
+	{{- if eq .chezmoi.os "darwin"}}
+	brew
+	{{ end -}}
+	git
+	zoxide
+	zsh-syntax-highlighting
+	zsh-autosuggestions
+	zsh-completions
+)
 
 # zsh-completions setup
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
