@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
 set -euo pipefail
 
 # if arch based system then perform some previleged setups
-{{- if eq .archlinux true }}
+# {{- if eq .archlinux true }}
 X11CONFDIR=/etc/X11/xorg.conf.d
 
 # touchpad setup
-cat <<EOF > /tmp/30-touchpad.conf
+cat << EOF > /tmp/30-touchpad.conf
 Section "InputClass"
         Identifier "touchpad"
         MatchIsTouchpad "on"
@@ -19,7 +20,7 @@ EOF
 sudo mv /tmp/30-touchpad.conf "$X11CONFDIR"
 
 # fix for graphical glitch
-cat <<EOF > /tmp/20-intel.conf
+cat << EOF > /tmp/20-intel.conf
 Section "Device"
   Identifier "Intel Graphics"
   Driver "intel"
@@ -31,4 +32,4 @@ Section "Device"
 EndSection
 EOF
 sudo mv /tmp/20-intel.conf "$X11CONFDIR"
-{{- end }}
+# {{- end }}

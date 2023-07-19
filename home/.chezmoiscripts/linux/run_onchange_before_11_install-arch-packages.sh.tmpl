@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
 set -euo pipefail
 
 # if arch based system
-{{- if eq .archlinux true }}
+# {{- if eq .archlinux true }}
 packages=()
 packages_aur=()
 
@@ -235,8 +236,8 @@ systemctl --user enable --now greenclip.service
 systemctl --user enable --now pipewire.service
 systemctl --user enable --now pipewire-pulse.service
 systemctl --user enable --now redshift-gtk.service
-+{{- if stat (joinPath .chezmoi.homeDir ".config/systemd/user/x0vncserver.service") }}
+# {{- if stat (joinPath .chezmoi.homeDir ".config/systemd/user/x0vncserver.service") }}
 systemctl --user enable --now x0vncserver.service
-{{- end }}
+# {{- end }}
 
-{{- end }}
+# {{- end }}

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# vim: set expandtab ts=4 sw=4 ft=sh:
+# vim: set expandtab ft=bash ts=4 tw=4:
 set -euo pipefail
 
 # if ubuntu based system
-{{- if eq .ubuntu true }}
+# {{- if eq .ubuntu true }}
 # before setting up the dotfiles, lets make sure we setup all the
 # dependency.
 
@@ -22,11 +22,11 @@ packages=(
     graphviz
     jq
     libfuse2
-    {{ if ne .wsl true }}
+    # {{ if ne .wsl true }}
     linux-tools-common
     linux-tools-generic
     linux-tools-`uname -r`
-    {{ end }}
+    # {{ end }}
     net-tools
     openssh-server
     ranger
@@ -34,9 +34,9 @@ packages=(
     software-properties-common
     sqlite3
     tar
-    {{ if eq .chassisType "laptop" }}
+    # {{ if eq .chassisType "laptop" }}
     tlp
-    {{ end }}
+    # {{ end }}
     tmux
     tree
     unzip
@@ -126,10 +126,10 @@ LOCALBIN=$HOME/.local/bin
 [ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
 
 # enable tlp for laptop
-{{ if eq .chassisType "laptop" }}
+# {{ if eq .chassisType "laptop" }}
 sudo systemctl enable tlp.service
 sudo systemctl start tlp.service
-{{ end }}
+# {{ end }}
 
 echo "install bat(cat)"
 BAT=https://github.com/sharkdp/bat/releases/download/v{{ .batVersion }}/bat-musl_{{ .batVersion }}_{{ .chezmoi.arch }}.deb
@@ -193,4 +193,4 @@ if [ "$SHELL" != "/usr/bin/zsh" ]; then
     sudo chsh -s $(which zsh) $USER
 fi
 
-{{- end }}
+# {{- end }}
