@@ -76,50 +76,26 @@
 {{ end -}}
 
 .local/bin/lazygit:
-  type: file
+  type: archive-file
   url: >-
     https://github.com/jesseduffield/lazygit/releases/download/v{{ .lazygitVersion }}/lazygit_{{.lazygitVersion }}_Linux_x86_64.tar.gz
   executable: true
-  filter:
-    command: tar
-    args:
-      - "--extract"
-      - "--file"
-      - /dev/stdin
-      - "--gzip"
-      - "--to-stdout"
-      - lazygit
+  path: lazygit
 
 .local/bin/lazydocker:
-  type: file
+  type: archive-file
   url: >-
     https://github.com/jesseduffield/lazydocker/releases/download/v{{ .lazydockerVersion }}/lazydocker_{{ .lazydockerVersion }}_Linux_x86_64.tar.gz
   executable: true
-  filter:
-    command: tar
-    args:
-      - "--extract"
-      - "--file"
-      - /dev/stdin
-      - "--gzip"
-      - "--to-stdout"
-      - lazydocker
+  path: lazydocker
 
 {{- if .isDesktop }}
 .local/bin/neovide:
-  type: file
+  type: archive-file
   url: >-
     https://github.com/neovide/neovide/releases/download/{{ .neovideVersion }}/neovide.tar.gz
   executable: true
-  filter:
-    command: tar
-    args:
-      - "--extract"
-      - "--file"
-      - /dev/stdin
-      - "--gzip"
-      - "--to-stdout"
-      - neovide
+  file: neovide
 {{- end }}
 
 .local/bin/rustfmt:
@@ -127,41 +103,14 @@
   url: >-
     https://github.com/rust-lang/rustfmt/releases/download/v{{ .rustfmtVersion }}/rustfmt_{{ .chezmoi.os }}-x86_64_v{{ .rustfmtVersion }}.tar.gz
   executable: true
-  filter:
-    command: tar
-    args:
-      - "--extract"
-      - "--file"
-      - /dev/stdin
-      - "--gzip"
-      - "--to-stdout"
-      - rustfmt_{{ .chezmoi.os }}-x86_64_v{{ .rustfmtVersion }}/rustfmt
+  path: rustfmt_{{ .chezmoi.os }}-x86_64_v{{ .rustfmtVersion }}/rustfmt
 
 .local/bin/starship:
-  type: file
+  type: archive-file
   url: >-
     https://github.com/starship/starship/releases/download/v{{ .starshipVersion }}/starship-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz
   executable: true
-  refreshPeriod: 168h
-  filter:
-    command: tar
-    args:
-      - "--extract"
-      - "--file"
-      - /dev/stdin
-      - "--gzip"
-      - "--to-stdout"
-      - starship
-
-.local/bin/taplo:
-  type: file
-  url: >-
-    https://github.com/tamasfe/taplo/releases/download/0.8.0/taplo-full-linux-x86_64.gz
-  executable: true
-  filter:
-    command: gzip
-    args:
-      - "-d"
+  path: starship
 
 .local/bin/tldr:
   type: file
