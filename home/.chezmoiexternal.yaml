@@ -118,4 +118,11 @@
     https://github.com/dbrgn/tealdeer/releases/download/v{{ .tealdeerVersion }}/tealdeer-{{ .chezmoi.os }}-x86_64-musl
   executable: true
 
+.local/bin/zoxide:
+  type: archive-file
+  url : >-
+    https://github.com/ajeetdsouza/zoxide/releases/download/v{{ .zoxideVersion }}/zoxide-{{ .zoxideVersion }}-x86_64-unknown-linux-musl.tar.gz
+  executable: true
+  path: zoxide
+
 {{ end -}}
