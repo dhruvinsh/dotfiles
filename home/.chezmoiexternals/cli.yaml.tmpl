@@ -1,6 +1,12 @@
 # vim: set expandtab ft=yaml ts=2 tw=2:
 
 # {{ if eq .chezmoi.os "linux" }}
+.local/bin/helix:
+  type: file
+  url: >-
+    https://github.com/helix-editor/helix/releases/download/{{ .helixVersion }}/helix-{{ .helixVersion }}-x86_64.AppImage
+  executable: true
+
 .local/bin/lazygit:
   type: archive-file
   url: >-
