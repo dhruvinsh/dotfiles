@@ -1,6 +1,13 @@
 # vim: set expandtab ft=yaml ts=2 tw=2:
 
 # {{ if eq .chezmoi.os "linux" }}
+.local/bin/glow:
+  type: archive-file
+  url: >-
+    https://github.com/charmbracelet/glow/releases/download/v{{ .glowVersion }}/glow_Linux_x86_64.tar.gz
+  executable: true
+  path: glow
+
 .local/bin/helix:
   type: file
   url: >-
