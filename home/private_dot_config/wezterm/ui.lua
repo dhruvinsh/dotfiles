@@ -1,10 +1,11 @@
-local colorscheme = "nordfox"
 local wezterm = require("wezterm")
 
 local regular_font = "JetBrainsMono Nerd Font"
 local italic_font = "VictorMono Nerd Font"
 
 local M = {}
+
+M.colorscheme = "nordfox"
 
 ---@param cfg table
 M.setup = function(cfg)
@@ -38,7 +39,7 @@ M.setup = function(cfg)
   }
 
   -- color scheme
-  cfg.color_scheme = colorscheme
+  cfg.color_scheme = M.colorscheme
 
   -- tab bar config
   -- nordfox : use_fancy_tab_bar: false
