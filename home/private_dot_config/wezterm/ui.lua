@@ -7,6 +7,7 @@ local italic_font = "VictorMono Nerd Font"
 local M = {}
 
 M.colorscheme = "nordfox"
+M.colors = wezterm.get_builtin_color_schemes()[M.colorscheme]
 
 ---@param cfg table
 M.setup = function(cfg)
@@ -39,12 +40,16 @@ M.setup = function(cfg)
   }
   if platform.is_mac or platform.is_linux then
     cfg.font_size = 14.5
+    cfg.command_palette_font_size = 14.5
   else
     cfg.font_size = 12
+    cfg.command_palette_font_size = 12
   end
 
   -- color scheme
   cfg.color_scheme = M.colorscheme
+  cfg.command_palette_fg_color = M.colors.foreground
+  cfg.command_palette_bg_color = M.colors.background
 
   -- tab bar config
   -- nordfox : use_fancy_tab_bar: false

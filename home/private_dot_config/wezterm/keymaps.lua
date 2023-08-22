@@ -41,6 +41,9 @@ M.setup = function(cfg)
     -- text management: copy-paste
     { mods = "CTRL|SHIFT", key = "c", action = action.CopyTo("Clipboard") },
     { mods = "CTRL|SHIFT", key = "v", action = action.PasteFrom("Clipboard") },
+
+    -- command center
+    { mods = "CTRL|SHIFT", key = "p", action = action.ActivateCommandPalette },
   }
 
   cfg.mouse_bindings = {
