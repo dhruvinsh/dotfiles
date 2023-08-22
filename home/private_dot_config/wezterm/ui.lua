@@ -1,4 +1,5 @@
 local wezterm = require("wezterm")
+local platform = require("utils.platform")
 
 local regular_font = "JetBrainsMono Nerd Font"
 local italic_font = "VictorMono Nerd Font"
@@ -11,7 +12,6 @@ M.colorscheme = "nordfox"
 M.setup = function(cfg)
   -- font setting
   cfg.font = wezterm.font(regular_font)
-  cfg.font_size = 14.5
   cfg.font_rules = {
     {
       italic = true,
@@ -37,6 +37,11 @@ M.setup = function(cfg)
       }),
     },
   }
+  if platform.is_mac or platform.is_linux then
+    cfg.font_size = 14.5
+  else
+    cfg.font_size = 12
+  end
 
   -- color scheme
   cfg.color_scheme = M.colorscheme
