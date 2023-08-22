@@ -4,9 +4,9 @@ local M = {}
 ---@param cfg table
 M.setup = function(cfg)
   if platform.is_win then
-    cfg.default_prog = { "wsl" }
+    cfg.default_prog = { "wsl", "--cd", "~" }
     cfg.launch_menu = {
-      { label = "WSL", args = { "wsl" } },
+      { label = "WSL", args = { "wsl", "--cd", "~" } },
       { label = "PowerShell Core", args = { "pwsh" } },
       { label = "PowerShell Desktop", args = { "powershell.exe", "-NoLogo" } },
       { label = "Command Prompt", args = { "cmd" } },
