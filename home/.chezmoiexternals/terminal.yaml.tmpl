@@ -1,12 +1,5 @@
 # vim: set expandtab ft=yaml ts=2 tw=2:
 
-.config/wezterm:
-  type: git-repo
-  url: "https://github.com/dhruvinsh/wezterm-config.git"
-  pull:
-    args:
-      - "--ff-only"
-
 # {{ if and (eq .chezmoi.os "linux") (.isDesktop) }}
 
 .config/kitty/kitty-themes:
