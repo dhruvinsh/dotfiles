@@ -25,7 +25,7 @@ M.create_tab_title = function(tab, tabs, panes, config, hover, max_width)
   if copy_mode == nil or n == 0 then
     copy_mode = ""
   else
-    copy_mode = copy_mode .. " : "
+    copy_mode = wezterm.nerdfonts.md_content_copy .. " : "
   end
 
   return copy_mode .. tab.tab_index + 1 .. ":" .. title
