@@ -7,7 +7,7 @@ local tab_title = require("events.tab_title")
 local config = {}
 
 if wezterm.config_builder then
-	config = wezterm.config_builder()
+  config = wezterm.config_builder()
 end
 
 ui.setup(config)
