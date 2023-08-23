@@ -3,6 +3,7 @@ local platform = require("utils.platform")
 
 local regular_font = "JetBrainsMono Nerd Font"
 local italic_font = "VictorMono Nerd Font"
+local frame_font = "Iosevka Nerd Font"
 
 local M = {}
 
@@ -12,6 +13,7 @@ M.colors = wezterm.get_builtin_color_schemes()[M.colorscheme]
 ---@param cfg table
 M.setup = function(cfg)
   -- font setting
+  cfg.window_frame = { font = wezterm.font(frame_font) } -- set frame fonts, affect the command palette as well
   cfg.font = wezterm.font(regular_font)
   cfg.font_rules = {
     {
