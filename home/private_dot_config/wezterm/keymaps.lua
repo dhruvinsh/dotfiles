@@ -35,6 +35,8 @@ M.setup = function(cfg)
     { mods = alt, key = "DownArrow", action = action.ActivatePaneDirection("Down") },
     { mods = alt, key = "LeftArrow", action = action.ActivatePaneDirection("Left") },
     { mods = alt, key = "RightArrow", action = action.ActivatePaneDirection("Right") },
+    { mods = mod, key = "[", action = action.ActivateTabRelative(-1) },
+    { mods = mod, key = "]", action = action.ActivateTabRelative(1) },
 
     { mods = mod, key = "d", action = action.SpawnTab("CurrentPaneDomain") },
 
