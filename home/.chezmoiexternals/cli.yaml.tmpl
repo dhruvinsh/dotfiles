@@ -48,6 +48,13 @@
     https://github.com/dbrgn/tealdeer/releases/download/v{{ .tealdeerVersion }}/tealdeer-{{ .chezmoi.os }}-x86_64-musl
   executable: true
 
+.local/bin/zellij:
+  type: archive-file
+  url: >-
+    https://github.com/zellij-org/zellij/releases/download/{{ (gitHubLatestRelease "zellij-org/zellij").TagName }}/zellij-x86_64-unknown-linux-musl.tar.gz
+  executable: true
+  path: zellij
+ 
 .local/bin/zoxide:
   type: archive-file
   url : >-
