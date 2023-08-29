@@ -42,15 +42,15 @@ M.setup = function(colors)
     -- local edge_background = scheme.background
     -- https://github.com/wez/wezterm/blob/61f01f6ed75a04d40af9ea49aa0afe91f08cb6bd/config/src/color.rs#L245
     local edge_background = colors.background
-    local background = colors.ansi[1]
-    local foreground = colors.ansi[5]
+    local background = colors.tab_bar.inactive_tab.bg_color or colors.ansi[1]
+    local foreground = colors.tab_bar.inactive_tab.fg_color or colors.ansi[5]
 
     if tab.is_active then
-      background = colors.brights[1]
-      foreground = colors.brights[8]
+      background = colors.tab_bar.active_tab.bg_color or colors.brights[1]
+      foreground = colors.tab_bar.active_tab.fg_color or colors.brights[8]
     elseif hover then
-      background = colors.cursor_bg
-      foreground = colors.cursor_fg
+      background = colors.tab_bar.inactive_tab_hover.bg_color or colors.cursor_bg
+      foreground = colors.tab_bar.inactive_tab_hover.fg_color or colors.cursor_fg
     end
 
     local edge_foreground = background
