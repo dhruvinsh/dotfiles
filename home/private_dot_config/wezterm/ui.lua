@@ -7,8 +7,14 @@ local frame_font = "Iosevka Nerd Font"
 
 local M = {}
 
+local ok
 M.colorscheme = "nordfox"
-M.colors = wezterm.get_builtin_color_schemes()[M.colorscheme]
+ok, M.colors =
+  pcall(wezterm.color.load_scheme, wezterm.home_dir .. "/.config/wezterm/colors/" .. M.colorscheme .. ".toml")
+if not ok then
+  wezterm.log_info("external colorscheme not found using built-in colors")
+  M.colors = wezterm.get_builtin_color_schemes()[M.colorscheme]
+end
 
 ---@param cfg table
 M.setup = function(cfg)
