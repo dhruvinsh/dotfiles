@@ -9,33 +9,48 @@ origin_url = "https://github.com/dhruvinsh/dotfiles"
 [colors]
 foreground = "#e0def4"
 background = "#191724"
-cursor_bg = "#524f67"
-cursor_border = "#524f67"
-cursor_fg = "#e0def4"
-compose_cursor = '#c9826b'
-# compose_cursor = "#f0d399"
+
+compose_cursor = '#f2cdcd'
+cursor_bg = "#e0def4"
+cursor_border = "#e0def4"
+cursor_fg = "#524f67"
+
 selection_bg = "#2a283e"
 selection_fg = "#e0def4"
 
-# TODO: need to find the proper colors here
-scrollbar_thumb = "#7e8188"
+scrollbar_thumb = "#6e6a86"
 split = "#232831"
 visual_bell = "#cdcecf"
 
-ansi = ["#26233a","#eb6f92","#9ccfd8","#f6c177","#31748f","#c4a7e7","#ebbcba","#e0def4"]
-brights = ["#6e6a86","#eb6f92","#9ccfd8","#f6c177","#31748f","#c4a7e7","#ebbcba","#e0def4"]
+ansi = [
+  "#26233a",
+  "#eb6f92",
+  "#31748f",
+  "#f6c177",
+  "#9ccfd8",
+  "#c4a7e7",
+  "#ebbcba",
+  "#e0def4",
+]
+brights = [
+  "#6e6a86",
+  "#eb6f92",
+  "#31748f",
+  "#f6c177",
+  "#9ccfd8",
+  "#c4a7e7",
+  "#ebbcba",
+  "#e0def4",
+]
 
-# TODO: figureout what this is for?
 [colors.indexed]
-16 = "#bf88bc"
-17 = "#c9826b"
+16 = "#fab387"
+17 = "#f5e0dc"
 
 # this only applies to retro tab bar
 # see: https://wezfurlong.org/wezterm/config/appearance.html
 [colors.tab_bar]
 background = "#191724"
-
-#TODO: get proper colors here
 inactive_tab_edge = "#232831"
 inactive_tab_edge_hover = "#39404f"
 
@@ -78,4 +93,3 @@ intensity = "Normal"
 italic = false
 strikethrough = false
 underline = "None"
-

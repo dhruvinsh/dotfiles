@@ -8,7 +8,7 @@ local frame_font = "Iosevka Nerd Font"
 local M = {}
 
 local ok
-M.colorscheme = "nordfox"
+M.colorscheme = "rose-pine"
 ok, M.colors =
   pcall(wezterm.color.load_scheme, wezterm.home_dir .. "/.config/wezterm/colors/" .. M.colorscheme .. ".toml")
 if not ok then
