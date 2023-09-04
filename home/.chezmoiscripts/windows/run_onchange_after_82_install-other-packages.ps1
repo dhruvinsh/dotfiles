@@ -17,6 +17,7 @@ scoop bucket add extras
 $apps = @(
     "main/bat"
     "main/cmake"
+    "main/delta"
     "main/fd"
     "main/fzf"
     "main/gcc"
