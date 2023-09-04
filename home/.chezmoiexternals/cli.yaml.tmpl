@@ -6,6 +6,7 @@
   url : >-
     https://github.com/dandavison/delta/releases/download/{{ (gitHubLatestRelease "dandavison/delta").TagName }}/delta-{{ (gitHubLatestRelease "dandavison/delta").TagName }}-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz
   executable: true
+  stripComponents: 1
   path: delta
 
 .local/bin/glow:
