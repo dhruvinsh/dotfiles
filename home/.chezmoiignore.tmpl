@@ -1,43 +1,37 @@
-.oh-my-zsh/cache/**
-.oh-my-zsh/custom/themes/powerlevel10k/**/*.zwc
-.pyenv/shims/**
-.pyenv/versions/**
-.pyenv/version
 .nvm/.cache/**
 .nvm/alias/**
 .nvm/versions
+.oh-my-zsh/cache/**
+.oh-my-zsh/custom/themes/powerlevel10k/**/*.zwc
+.pyenv/shims/**
+.pyenv/version
+.pyenv/versions/**
 README.org
-key.txt.age
 __pycache__/
+key.txt.age
 
 {{ if eq .chezmoi.os "windows" }}
-.Xresources
 .chezmoiscripts/non-windows/**
-.chezmoiscripts/darwin/**
-.chezmoiscripts/linux/**
-.config/fontconfig/**
-.huslogin
-.local/**
-.profile
 .tmux.conf
-.wallpaper/**
 .zprofile
 .zshrc
 {{ end }}
 
-{{ if eq .chezmoi.os "linux" }}
+{{ if ne .chezmoi.os "windows" }}
 .chezmoiscripts/windows/**
-.chezmoiscripts/darwin/**
-Documents/PowerShell/**
+Documents/**
 {{ end }}
 
-{{ if eq .chezmoi.os "darwin" }}
-.chezmoiscripts/linux/**
-.chezmoiscripts/windows/**
-.local/**
-.wallpaper/**
-.profile
+{{ if ne .chezmoi.os "linux" }}
 .Xresources
+.chezmoiscripts/linux/**
+.config/fontconfig/**
 .hushlogin
-Documents/**
+.local/**
+.profile
+.wallpaper/**
+{{ end }}
+
+{{ if ne .chezmoi.os "darwin" }}
+.chezmoiscripts/darwin/**
 {{ end }}
