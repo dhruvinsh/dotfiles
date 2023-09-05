@@ -41,7 +41,8 @@
   url: >-
     https://github.com/rust-lang/rustfmt/releases/download/v{{ .rustfmtVersion }}/rustfmt_{{ .chezmoi.os }}-x86_64_v{{ .rustfmtVersion }}.tar.gz
   executable: true
-  path: rustfmt_{{ .chezmoi.os }}-x86_64_v{{ .rustfmtVersion }}/rustfmt
+  stripComponents: 1
+  path: rustfmt
 
 .local/bin/starship:
   type: archive-file
