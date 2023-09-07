@@ -14,9 +14,9 @@ $apps = @(
     "9MVZQVXJBQ9V"                      # AV1 VideoExtension
     "9NCTDW2W1BH8"                      # Raw-PictureExtension
     "9N95Q1ZZPMH4"                      # MPEG-2-VideoExtension
+    "9PGCV4V3BK4W"                      # DevToys
 );
 
 foreach ($app in $apps) {
     winget install --exact --accept-package-agreements $app
 }
-pause
