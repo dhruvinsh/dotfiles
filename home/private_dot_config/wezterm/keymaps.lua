@@ -30,6 +30,7 @@ M.setup = function(cfg)
     -- window management: splits, movement, spawn
     { mods = mod, key = "|", action = action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
     { mods = mod, key = "-", action = action.SplitVertical({ domain = "CurrentPaneDomain" }) },
+    { mods = mod, key = "_", action = action.SplitVertical({ domain = "CurrentPaneDomain" }) }, --window
 
     { mods = alt, key = "UpArrow", action = action.ActivatePaneDirection("Up") },
     { mods = alt, key = "DownArrow", action = action.ActivatePaneDirection("Down") },
@@ -37,17 +38,23 @@ M.setup = function(cfg)
     { mods = alt, key = "RightArrow", action = action.ActivatePaneDirection("Right") },
     { mods = mod, key = "[", action = action.ActivateTabRelative(-1) },
     { mods = mod, key = "]", action = action.ActivateTabRelative(1) },
+    { mods = mod, key = "{", action = action.ActivateTabRelative(-1) }, -- windows
+    { mods = mod, key = "}", action = action.ActivateTabRelative(1) }, -- windows
 
     { mods = mod, key = "d", action = action.SpawnTab("CurrentPaneDomain") },
 
-    -- text management: copy-paste
+    -- text management: copy-paste, font size
     { mods = "CTRL|SHIFT", key = "c", action = action.CopyTo("Clipboard") },
     { mods = "CTRL|SHIFT", key = "v", action = action.PasteFrom("Clipboard") },
+    { mods = "CTRL|SHIFT", key = "_", action = action.DecreaseFontSize },
+    { mods = "CTRL|SHIFT", key = "+", action = action.IncreaseFontSize },
+    { mods = "CTRL|SHIFT", key = ")", action = action.ResetFontSize },
 
     -- command center
     { mods = "CTRL|SHIFT", key = "p", action = action.ActivateCommandPalette },
   }
 
+  -- url openr with mouse
   cfg.mouse_bindings = {
     {
       mods = "CTRL",
