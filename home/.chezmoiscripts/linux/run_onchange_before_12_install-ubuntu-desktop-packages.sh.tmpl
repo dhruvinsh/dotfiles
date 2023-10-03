@@ -85,13 +85,11 @@ deb_installer $SNIFFNET "sniffnet"
 ########################################################################################################################
 BITWARDEN="https://vault.bitwarden.com/download/?app=desktop&platform={{ .chezmoi.os }}"
 FREECAD="https://github.com/FreeCAD/FreeCAD/releases/latest/download/FreeCAD_{{ .freecadVersion }}-conda-{{ .chezmoi.os }}-x86_64-py310.AppImage"
-LOGSEQ="https://github.com/logseq/logseq/releases/download/{{ .logseqVersion }}/Logseq-{{ .chezmoi.os }}-x64-{{ .logseqVersion }}.AppImage"
 NEXTCLOUD="https://github.com/nextcloud/desktop/releases/download/v{{ .nextcloudVersion }}/Nextcloud-{{ .nextcloudVersion }}-x86_64.AppImage"
 OPENSCAD="https://files.openscad.org/OpenSCAD-{{ .openscadVersion }}-x86_64.AppImage"
 
 appimg_installer $BITWARDEN bitwarden
 appimg_installer $FREECAD freecad
-appimg_installer $LOGSEQ logseq
 appimg_installer $NEXTCLOUD nextcloud
 appimg_installer $OPENSCAD openscad
 
