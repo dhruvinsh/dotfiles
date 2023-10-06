@@ -23,8 +23,8 @@ M.setup = function(cfg)
   -- disable all the default mappings
   cfg.disable_default_key_bindings = true
 
-  -- leader key: CTRL + SPACE
-  cfg.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1000 }
+  -- leader key: CTRL + SHIFT + SPACE
+  cfg.leader = { key = "Space", mods = "CTRL|SHIFT", timeout_milliseconds = 1000 }
 
   cfg.keys = {
     -- window management: splits, movement, spawn
