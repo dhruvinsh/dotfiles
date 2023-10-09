@@ -4,6 +4,7 @@ set -euo pipefail
 
 # brew package
 packages=(
+    atuin
     bat
     bat-extras
     diffr # better git-diff alternative is difftastic
@@ -20,7 +21,6 @@ packages=(
     neovim
     ranger
     ripgrep
-    selene
     starship
     tealdeer
     tmux
@@ -28,6 +28,12 @@ packages=(
     wget
     zellij
     zoxide
+)
+
+# some neovim specific, since mason.nvim can't install arm version
+packages+=(
+    selene
+    shellcheck
 )
 
 # some measureing tools

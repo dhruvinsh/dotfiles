@@ -133,6 +133,9 @@ export GDK_SCALE=1
 # Direnv Setup
 eval "$(direnv hook zsh)"
 
+# Atuin Setup
+eval "$(atuin init zsh)"
+
 # pyenv require for interactive shells
 if [ -x "$(command -v pyenv)" ]; then
 	export PYENV_ROOT="$HOME/.pyenv"

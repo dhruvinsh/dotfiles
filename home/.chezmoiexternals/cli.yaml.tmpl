@@ -1,6 +1,14 @@
 # vim: set expandtab ft=yaml ts=2 tw=2:
 
 # {{ if eq .chezmoi.os "linux" }}
+.local/bin/atuin:
+  type: archive-file
+  url : >-
+    https://github.com/atuinsh/atuin/releases/download/v{{ (gitHubLatestRelease "atuinsh/atuin").TagName }}/atuin-v{{ (gitHubLatestRelease "atuinsh/atuin").TagName }}-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz
+  executable: true
+  stripComponents: 1
+  path: atuin
+
 .local/bin/delta:
   type: archive-file
   url : >-
