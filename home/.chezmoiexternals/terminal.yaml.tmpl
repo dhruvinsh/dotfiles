@@ -10,3 +10,14 @@
   refreshPeriod: 168h
 
 # {{ end -}}
+
+# {{ if ne .chezmoi.os "windows" }}
+.tmux/plugins/tpm:
+  type: git-repo
+  url: "https://github.com/tmux-plugins/tpm.git"
+  refreshPeriod: 168h
+  pull:
+    args:
+      - "--ff-only"
+
+# {{ end }}
