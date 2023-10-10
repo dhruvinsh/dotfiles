@@ -11,6 +11,7 @@
 # lets make sure scoop have extra added (even after the initialization added for safety
 # reason)
 scoop bucket add extras
+scoop bucket add versions
 
 # NOTE: do not install 7zip from scoop else we will have issue
 # for file extraction for scoop
@@ -24,7 +25,6 @@ $apps = @(
     "main/git"
     "main/glow"
     "main/make"
-    "main/neovim"
     "main/nodejs-lts"
     "main/nu"
     "main/ripgrep"
@@ -33,6 +33,7 @@ $apps = @(
     "extras/putty"
     "extras/vcredist2022" # ripgrep needs it
     "extras/wezterm"
+    "versions/neovim-nightly"
 );
 
 
