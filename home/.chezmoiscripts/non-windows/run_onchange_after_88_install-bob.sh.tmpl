@@ -1,0 +1,12 @@
+#!/bin/bash
+# vim: set et ts=4 sw=4 ft=sh:
+
+# {{ if eq .chezmoi.os "darwin" }}
+URL=https://github.com/MordechaiHadad/bob/releases/download/{{ (gitHubLatestRelease "MordechaiHadad/bob").TagName }}/bob-macos-arm.zip
+# {{ else }}
+URL=https://github.com/MordechaiHadad/bob/releases/download/{{ (gitHubLatestRelease "MordechaiHadad/bob").TagName }}/bob-linux-x86_64.zip
+# {{ end }}
+
+wget $URL -O /tmp/bob.zip
+unzip /tmp/bob.zip -d ~/.local/bin
+chmod +x ~/.local/bin/bob
