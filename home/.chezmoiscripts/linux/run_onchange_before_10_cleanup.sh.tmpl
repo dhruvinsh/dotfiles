@@ -36,6 +36,10 @@ fi
 if [ -f "/usr/bin/nvim" ]; then
     sudo rm -rf /usr/bin/nvim
 fi
+# neovim will be managed via bob on linux and mac
+if [ -f "~/.local/bin/nvim" ]; then
+    rm -rf ~/.local/bin/nvim
+fi
 
 # Change in python workflow hence global poetry installation not required
 echo "Cleaning up Old Poetry..."
