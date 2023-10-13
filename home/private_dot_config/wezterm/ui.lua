@@ -2,7 +2,7 @@ local wezterm = require("wezterm")
 local platform = require("utils.platform")
 
 local regular_font = "JetBrainsMono Nerd Font"
-local italic_font = "VictorMono Nerd Font"
+local italic_font = "VictorMono NF Medium"
 local frame_font = "Iosevka Nerd Font"
 
 local M = {}
