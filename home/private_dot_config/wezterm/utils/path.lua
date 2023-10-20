@@ -7,11 +7,15 @@ end
 
 M.convert_home_dir = function(path)
   local cwd = path
-  local home = os.getenv("HOME")
+
+  -- Works with linux and windows home directory
+  local home = os.getenv("UserProfile") or os.getenv("HOME")
   cwd = cwd:gsub("^" .. home .. "/", "~/")
+
   if cwd == "" then
     return path
   end
+
   return cwd
 end
 
