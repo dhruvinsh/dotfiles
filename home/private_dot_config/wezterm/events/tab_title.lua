@@ -13,7 +13,9 @@ M.create_tab_title = function(tab, tabs, panes, config, hover, max_width)
     return tab.tab_index + 1 .. ":" .. user_title
   end
 
+  -- TODO: implement this, https://github.com/wez/wezterm/issues/915#issuecomment-1000605863
   local title = wezterm.truncate_right(utils.basename(tab.active_pane.foreground_process_name), max_width)
+
   if title == "" then
     local dir = string.gsub(tab.active_pane.title, "(.*[: ])(.*)]", "%2")
     dir = utils.convert_useful_path(dir)
