@@ -28,6 +28,7 @@ $apps = @(
     "main/nodejs-lts"
     "main/nu"
     "main/ripgrep"
+    "main/sed"
     "main/zoxide"
     "extras/lazygit"
     "extras/selene"
