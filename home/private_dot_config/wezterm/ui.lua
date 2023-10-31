@@ -50,12 +50,8 @@ M.setup = function(cfg)
     cfg.font_size = 14.5
     cfg.command_palette_font_size = 14.5
   else
-    -- for windows systems
     cfg.font_size = 12
     cfg.command_palette_font_size = 12
-
-    cfg.window_background_opacity = 0.75
-    cfg.win32_system_backdrop = "Acrylic"
   end
 
   -- color scheme
