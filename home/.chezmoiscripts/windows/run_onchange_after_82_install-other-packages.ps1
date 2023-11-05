@@ -16,6 +16,7 @@ scoop bucket add versions
 # NOTE: do not install 7zip from scoop else we will have issue
 # for file extraction for scoop
 $apps = @(
+    "main/ast-grep"
     "main/bat"
     "main/cmake"
     "main/delta"
