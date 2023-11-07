@@ -8,8 +8,7 @@ if [ -d "$HOME/.emacs.d/bin" ]; then
 fi
 
 # cargo path
-# shellcheck source=/home/ds/.cargo/env
-[ -s "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+[ -s "$HOME/.cargo/env" ] &&
 
 # pyenv
 if [ -d "$HOME/.pyenv" ]; then
