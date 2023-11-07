@@ -124,12 +124,13 @@ alias vim=nvim
 alias lg=lazygit
 export EDITOR='nvim'
 
-{{- if .wsl }}
+# {{- if .wsl }}
+# NOTE: all of my machine uses windows 11 with native GUI supports
 # Display setup for wsl
-export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
-export LIBGL_ALWAYS_INDIRECT=1
-export GDK_SCALE=1
-{{- end }}
+# export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+# export LIBGL_ALWAYS_INDIRECT=1
+# export GDK_SCALE=1
+# {{- end }}
 
 # Direnv Setup
 eval "$(direnv hook zsh)"
