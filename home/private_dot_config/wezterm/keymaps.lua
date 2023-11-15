@@ -20,6 +20,14 @@ local M = {}
 
 ---@param cfg table
 M.setup = function(cfg)
+  local toggleBlur = wezterm.action_callback(function(window)
+    if window:effective_config().window_background_opacity == 1 then
+      window:set_config_overrides({ window_background_opacity = 0.75, win32_system_backdrop = "Acrylic" })
+    else
+      window:set_config_overrides({ window_background_opacity = 1, win32_system_backdrop = "None" })
+    end
+  end)
+
   -- disable all the default mappings
   cfg.disable_default_key_bindings = true
 
@@ -52,6 +60,9 @@ M.setup = function(cfg)
 
     -- command center
     { mods = "CTRL|SHIFT", key = "p", action = action.ActivateCommandPalette },
+
+    -- UI
+    { mods = mod, key = "b", action = toggleBlur },
   }
 
   -- url openr with mouse
