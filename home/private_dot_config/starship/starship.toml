@@ -1,6 +1,12 @@
 [character]
-success_symbol = "[➜](bold green)"
-error_symbol = "[➜](bold red)"
+# Iosevka font needs spacing
+success_symbol = "[ ](bold green)"
+error_symbol = "[ ](bold red)"
+
+[git_status]
+# iosevka font needs spacing
+deleted = "✘ "
+ahead = "⇡ "
 
 [directory]
 fish_style_pwd_dir_length = 1
