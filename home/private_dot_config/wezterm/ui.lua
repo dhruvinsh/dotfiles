@@ -1,7 +1,7 @@
 local wezterm = require("wezterm")
 local platform = require("utils.platform")
 
-local regular_font = "JetBrainsMono Nerd Font"
+local regular_font = "Iosevka Nerd Font"
 local italic_font = "VictorMono NF Medium"
 local frame_font = "Iosevka Nerd Font"
 
@@ -47,8 +47,8 @@ M.setup = function(cfg)
     },
   }
   if platform.is_mac or platform.is_linux then
-    cfg.font_size = 14.5
-    cfg.command_palette_font_size = 14.5
+    cfg.font_size = 15.0
+    cfg.command_palette_font_size = 14.0
   else
     cfg.font_size = 12
     cfg.command_palette_font_size = 12
