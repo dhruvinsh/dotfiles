@@ -20,7 +20,9 @@ end
 M.setup = function(cfg)
   -- font setting
   cfg.window_frame = { font = wezterm.font(frame_font) } -- set frame fonts, affect the command palette as well
-  cfg.font = wezterm.font(regular_font)
+  cfg.front_end = "WebGpu"
+  cfg.freetype_load_flags = "NO_HINTING"
+  cfg.font = wezterm.font({ family = regular_font, weight = "Medium" })
   cfg.font_rules = {
     {
       italic = true,
@@ -50,8 +52,8 @@ M.setup = function(cfg)
     cfg.font_size = 15.0
     cfg.command_palette_font_size = 14.0
   else
-    cfg.font_size = 12
-    cfg.command_palette_font_size = 12
+    cfg.font_size = 13.0
+    cfg.command_palette_font_size = 12.5
   end
 
   -- color scheme
