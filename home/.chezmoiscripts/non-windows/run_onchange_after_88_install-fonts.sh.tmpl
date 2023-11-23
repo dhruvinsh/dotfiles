@@ -21,9 +21,10 @@ CASCADIA=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/C
 FIRA=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/FiraCode.tar.xz
 IOSEVKA=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/Iosevka.tar.xz
 JETBRAINS=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/JetBrainsMono.tar.xz
+MONASPACE=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/Monaspace.tar.xz
 VICTOR=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/VictorMono.tar.xz
 
-arr=("$CASCADIA" "$FIRA" "$IOSEVKA" "$JETBRAINS" "$VICTOR")
+arr=("$CASCADIA" "$FIRA" "$IOSEVKA" "$JETBRAINS" "$MONASPACE" "$VICTOR")
 
 SRC=/tmp/font.tar.xz
 TEMP_DST=/tmp/fonts
@@ -36,7 +37,7 @@ for url in "${arr[@]}"; do
     wget -q --show-progress --progress=bar:force 2>&1 "$url" -O "$SRC"
     mkdir -p "$TEMP_DST"
 	tar -xf "$SRC" --directory="$TEMP_DST"
-    find "$TEMP_DST" -type f -name "*.ttf" -exec mv {} "$TARGET" \;
+    find "$TEMP_DST" -type f -name "*.ttf" -exec mv {} "$TARGET" + 2>/dev/null || find "$TEMP_DST" -type f -name "*.otf" -exec mv {} "$TARGET" \;
     rm -rf "$SRC" "$TEMP_DST"
 done
 
