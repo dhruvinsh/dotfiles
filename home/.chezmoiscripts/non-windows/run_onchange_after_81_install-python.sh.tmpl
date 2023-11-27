@@ -22,13 +22,13 @@ install_pyenv() {
 # Install python with help of pyenv
 #######################################
 install_python() {
-    echo "*** Setting up Python {{ .pythonVersion }} *** "
+    echo "*** Setting up Python $PYTHON_VERSION *** "
     PYENV_ROOT="$HOME/.pyenv"
     PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init --path)"
-    pyenv install $PYTHON_VERSION || true
+    pyenv install "$PYTHON_VERSION" || true
     # set global python version
-    pyenv global $PYTHON_VERSION
+    pyenv global "$PYTHON_VERSION"
 }
 
 # Setup pyenv
@@ -42,39 +42,8 @@ fi
 
 # lets see if I need python version change!
 CURRENT_VERSION="$(pyenv versions | grep "set by" | awk '{ print $2 }')"
-IS_UPDATE_REQUIRED=false
 if [ "$CURRENT_VERSION" != "$PYTHON_VERSION" ]; then
     echo "*** Python change required ***"
     [ "$CURRENT_VERSION" != "system" ] && pyenv uninstall -f "$CURRENT_VERSION"
-    IS_UPDATE_REQUIRED=true
     install_python
 fi
-
-# Some workflow based setup since pip is available
-echo "*** Installing python packages ***"
-pip install -U pip pipx pynvim
-
-if [ $IS_UPDATE_REQUIRED ]; then
-    pipx reinstall-all
-fi
-
-# create some independent envs with packages 
-packages=(
-    black
-    flake8
-    httpie
-    isort
-    mypy
-    pipenv
-    poetry
-    pre-commit
-    pylint
-    ruff
-)
-
-# setup poetry env via pipx
-for pkg in "${packages[@]}"
-do
-    echo "*** Setting up $pkg ***"
-    pipx install --force "$pkg"
-done
