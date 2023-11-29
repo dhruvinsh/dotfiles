@@ -4,11 +4,11 @@
 
 VERSION={{ .nerdfontVersion }}
 
-{{ if eq .chezmoi.os "linux" }}
+# {{ if eq .chezmoi.os "linux" }}
 TARGET="$HOME"/.local/share/fonts/
-{{ else }}
+# {{ else }}
 TARGET="$HOME"/Library/Fonts
-{{ end }}
+# {{ end }}
 
 if [ -d "$TARGET" ]; then
     echo "cleaning up fonts.."
