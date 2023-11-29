@@ -12,7 +12,7 @@ TARGET="$HOME"/Library/Fonts
 
 if [ -d "$TARGET" ]; then
     echo "cleaning up fonts.."
-    rm -rf "${TARGET:?}/*"
+    fd . "$TARGET" -x rm -rf {}
 else
     mkdir -p "$TARGET"
 fi
@@ -37,7 +37,8 @@ for url in "${arr[@]}"; do
     wget -q --show-progress --progress=bar:force 2>&1 "$url" -O "$SRC"
     mkdir -p "$TEMP_DST"
 	tar -xf "$SRC" --directory="$TEMP_DST"
-    find "$TEMP_DST" -type f -name "*.ttf" -exec mv {} "$TARGET" + 2>/dev/null || find "$TEMP_DST" -type f -name "*.otf" -exec mv {} "$TARGET" \;
+    fd . "$TEMP_DST" --type file --exclude "*Propo-*" --exclude "*Mono-*" -e "ttf" -e "otf" -x mv {} "$TARGET"
+    # find "$TEMP_DST" -type f -name "*.ttf" -exec mv {} "$TARGET" + 2>/dev/null || find "$TEMP_DST" -type f -name "*.otf" -exec mv {} "$TARGET" \;
     rm -rf "$SRC" "$TEMP_DST"
 done
 
