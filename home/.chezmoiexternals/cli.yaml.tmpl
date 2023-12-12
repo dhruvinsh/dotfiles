@@ -17,6 +17,14 @@
   stripComponents: 1
   path: delta
 
+.local/bin/git-cliff:
+  type: archive-file
+  url : >-
+    https://github.com/orhun/git-cliff/releases/download/{{ (gitHubLatestRelease "orhun/git-cliff").TagName }}/git-cliff-{{ trimPrefix "v" (gitHubLatestRelease "orhun/git-cliff").TagName }}-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz
+  executable: true
+  stripComponents: 1
+  path: git-cliff
+
 .local/bin/glow:
   type: archive-file
   url: >-
