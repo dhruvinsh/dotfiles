@@ -24,6 +24,7 @@ $apps = @(
     "main/fzf"
     "main/gcc"
     "main/git"
+    "main/git-cliff"
     "main/glow"
     "main/make"
     "main/nodejs-lts"
