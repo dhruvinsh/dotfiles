@@ -136,14 +136,6 @@ BAT=https://github.com/sharkdp/bat/releases/download/v{{ .batVersion }}/bat-musl
 wget -q --show-progress --progress=bar:force 2>&1 $BAT -O /tmp/bat.deb
 sudo apt install /tmp/bat.deb
 
-# do not install ripgrep if already found
-if [ ! $(command -v rg) ]; then
-    echo "install ripgrep"
-    RIPGREP=https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep_{{ .ripgrepVersion }}_{{ .chezmoi.arch }}.deb
-    wget -q --show-progress --progress=bar:force 2>&1 $RIPGREP -O /tmp/ripgrep.deb
-    sudo apt install /tmp/ripgrep.deb
-fi
-
 echo "setup fd"
 FD=https://github.com/sharkdp/fd/releases/download/v{{ .fdVersion }}/fd_{{ .fdVersion }}_{{ .chezmoi.arch }}.deb
 wget -q --show-progress --progress=bar:force 2>&1 $FD -O /tmp/fd.deb
