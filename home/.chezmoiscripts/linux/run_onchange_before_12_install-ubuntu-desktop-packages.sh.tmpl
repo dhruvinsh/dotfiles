@@ -10,8 +10,8 @@ deb_installer ()
 
     url=$1
     tmp_file="/tmp/$2.deb"
-    wget -q --show-progress --progress=bar:force 2>&1 $url -O $tmp_file
-    sudo apt install -y $tmp_file
+    wget -q --show-progress --progress=bar:force 2>&1 "$url" -O "$tmp_file"
+    sudo apt install -y "$tmp_file"
 }
 
 appimg_installer ()
@@ -21,14 +21,14 @@ appimg_installer ()
     echo "setup $2"
     url=$1
     tmp_file="/tmp/$2.AppImage"
-    wget -q --show-progress --progress=bar:force 2>&1 $url -O $tmp_file
+    wget -q --show-progress --progress=bar:force 2>&1 "$url" -O "$tmp_file"
 
     # if directory not exists lets create one
     [ -d "$HOME/Applications" ] || mkdir "$HOME/Applications"
 
     # make it executable
-    chmod a+x $tmp_file
-    mv $tmp_file "$HOME/Applications/"
+    chmod a+x "$tmp_file"
+    mv "$tmp_file" "$HOME/Applications/"
 }
 
 # {{- if (and (.isDesktop) (.ubuntu)) }}
