@@ -17,6 +17,13 @@
   stripComponents: 1
   path: delta
 
+.local/bin/fzf:
+  type: archive-file
+  url : >-
+    https://github.com/junegunn/fzf/releases/download/{{ (gitHubLatestRelease "junegunn/fzf").TagName }}/fzf-{{ (gitHubLatestRelease "junegunn/fzf").TagName }}-{{ .chezmoi.os }}_{{ .chezmoi.arch }}.tar.gz
+  executable: true
+  path: fzf
+
 .local/bin/git-cliff:
   type: archive-file
   url : >-
@@ -28,34 +35,34 @@
 .local/bin/glow:
   type: archive-file
   url: >-
-    https://github.com/charmbracelet/glow/releases/download/v{{ .glowVersion }}/glow_Linux_x86_64.tar.gz
+    https://github.com/charmbracelet/glow/releases/download/{{ (gitHubLatestRelease "charmbracelet/glow").TagName }}/glow_Linux_x86_64.tar.gz
   executable: true
   path: glow
 
 .local/bin/helix:
   type: file
   url: >-
-    https://github.com/helix-editor/helix/releases/download/{{ .helixVersion }}/helix-{{ .helixVersion }}-x86_64.AppImage
+    https://github.com/helix-editor/helix/releases/download/{{ (gitHubLatestRelease "helix-editor/helix").TagName }}/helix-{{ (gitHubLatestRelease "helix-editor/helix").TagName }}-x86_64.AppImage
   executable: true
 
 .local/bin/lazygit:
   type: archive-file
   url: >-
-    https://github.com/jesseduffield/lazygit/releases/download/v{{ .lazygitVersion }}/lazygit_{{.lazygitVersion }}_Linux_x86_64.tar.gz
+    https://github.com/jesseduffield/lazygit/releases/download/{{ (gitHubLatestRelease "jesseduffield/lazygit").TagName }}/lazygit_{{ trimPrefix "v" (gitHubLatestRelease "jesseduffield/lazygit").TagName }}_Linux_x86_64.tar.gz
   executable: true
   path: lazygit
 
 .local/bin/lazydocker:
   type: archive-file
   url: >-
-    https://github.com/jesseduffield/lazydocker/releases/download/v{{ .lazydockerVersion }}/lazydocker_{{ .lazydockerVersion }}_Linux_x86_64.tar.gz
+    https://github.com/jesseduffield/lazydocker/releases/download/{{ (gitHubLatestRelease "jesseduffield/lazydocker").TagName }}/lazydocker_{{ trimPrefix "v" (gitHubLatestRelease "jesseduffield/lazydocker").TagName }}_Linux_x86_64.tar.gz
   executable: true
   path: lazydocker
 
 .local/bin/rustfmt:
   type: file
   url: >-
-    https://github.com/rust-lang/rustfmt/releases/download/v{{ .rustfmtVersion }}/rustfmt_{{ .chezmoi.os }}-x86_64_v{{ .rustfmtVersion }}.tar.gz
+    https://github.com/rust-lang/rustfmt/releases/download/{{ (gitHubLatestRelease "rust-lang/rustfmt").TagName }}/rustfmt_{{ .chezmoi.os }}-x86_64_{{ (gitHubLatestRelease "rust-lang/rustfmt").TagName }}.tar.gz
   executable: true
   stripComponents: 1
   path: rustfmt
@@ -70,7 +77,7 @@
 .local/bin/tldr:
   type: file
   url: >-
-    https://github.com/dbrgn/tealdeer/releases/download/v{{ .tealdeerVersion }}/tealdeer-{{ .chezmoi.os }}-x86_64-musl
+    https://github.com/dbrgn/tealdeer/releases/download/{{ (gitHubLatestRelease "dbrgn/tealdeer").TagName }}/tealdeer-{{ .chezmoi.os }}-x86_64-musl
   executable: true
 
 .local/bin/zellij:
@@ -83,7 +90,7 @@
 .local/bin/zoxide:
   type: archive-file
   url : >-
-    https://github.com/ajeetdsouza/zoxide/releases/download/v{{ .zoxideVersion }}/zoxide-{{ .zoxideVersion }}-x86_64-unknown-linux-musl.tar.gz
+    https://github.com/ajeetdsouza/zoxide/releases/download/{{ (gitHubLatestRelease "ajeetdsouza/zoxide").TagName }}/zoxide-{{ trimPrefix "v" (gitHubLatestRelease "ajeetdsouza/zoxide").TagName }}-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz
   executable: true
   path: zoxide
 # {{ end -}}
