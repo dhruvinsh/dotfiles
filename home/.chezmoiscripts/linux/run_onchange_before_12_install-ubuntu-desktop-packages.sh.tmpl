@@ -2,10 +2,6 @@
 # vim: set expandtab ft=bash ts=4 tw=4:
 set -euo pipefail
 
-# shellcheck disable=all
-# if ubuntu desktop based system
-# {{- if (and (.isDesktop) (.ubuntu) (.personalmachine)) }}
-
 deb_installer ()
 {
     # $1: URL
@@ -35,6 +31,19 @@ appimg_installer ()
     mv $tmp_file "$HOME/Applications/"
 }
 
+# {{- if (and (.isDesktop) (.ubuntu)) }}
+
+# {{ $wezterm_version := (gitHubLatestRelease "wez/wezterm").TagName }}
+WEZTERM="https://github.com/wez/wezterm/releases/download/{{ $wezterm_version }}/wezterm-{{ $wezterm_version }}.Ubuntu22.04.deb"
+deb_installer "$WEZTERM" "wezterm"
+
+# {{- end }}
+
+
+# shellcheck disable=all
+# if ubuntu desktop based system
+# {{- if (and (.isDesktop) (.ubuntu) (.personalmachine)) }}
+
 ########################################################################################################################
 packages+=(
     fonts-symbola
@@ -58,9 +67,6 @@ if [ ! $(command -v kitty) ]; then
     sed -i "s|Icon=kitty|Icon=/home/$USER/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
     sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
 fi
-
-WEZTERM="https://github.com/wez/wezterm/releases/download/{{ .weztermVersion }}/wezterm-{{ .weztermVersion }}.Ubuntu22.04.deb"
-deb_installer $WEZTERM "wezterm"
 
 # chrome re-installation is harmless in fact we end up updating it!
 CHROME=https://dl.google.com/{{ .chezmoi.os }}/direct/google-chrome-stable_current_amd64.deb
