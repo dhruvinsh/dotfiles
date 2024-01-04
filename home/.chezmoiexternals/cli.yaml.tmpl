@@ -63,7 +63,7 @@
 .local/bin/starship:
   type: archive-file
   url: >-
-    https://github.com/starship/starship/releases/download/v{{ .starshipVersion }}/starship-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz
+    https://github.com/starship/starship/releases/download/{{ (gitHubLatestRelease "starship/starship").TagName }}/starship-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz
   executable: true
   path: starship
 
