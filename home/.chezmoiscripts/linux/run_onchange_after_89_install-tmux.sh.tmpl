@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+
+set -euo pipefail
+
+sudo apt install -y libevent-dev bison flex
+wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz -O /tmp/tmux.tar.gz
+mkdir /tmp/tmux
+tar xvf /tmp/tmux.tar.gz --strip-components=1 -C /tmp/tmux
+cd /tmp/tmux/
+./configure
+make
+sudo make install
+cd ~
+rm -rf /tmp/tmux
