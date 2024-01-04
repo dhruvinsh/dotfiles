@@ -2,12 +2,11 @@
 
 # {{ if ne .chezmoi.os "windows" }}
 .oh-my-zsh:
-  type: git-repo
-  url: "https://github.com/ohmyzsh/ohmyzsh.git"
+  type: archive
+  url: "https://github.com/ohmyzsh/ohmyzsh/archive/master.tar.gz"
+  exact: true
+  stripComponents: 1
   refreshPeriod: 168h
-  pull:
-    args:
-      - "--ff-only"
 
 .oh-my-zsh/custom/plugins/zsh-syntax-highlighting:
   type: archive
