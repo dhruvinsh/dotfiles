@@ -15,7 +15,7 @@ fi
 # reference: https://www.jamesridgway.co.uk/list-ssh-hosts-from-your-ssh-config/
 data=$(rg -P "^Host ([^*]+)$" $HOME/.ssh/config | sed 's/Host //')
 
-selected=$(echo "$data" | fzf)
+selected=$(echo "$data" | fzf --height=15 --layout=reverse --border)
 
 if [ -z "$selected" ]; then
   echo "no valid host found"
