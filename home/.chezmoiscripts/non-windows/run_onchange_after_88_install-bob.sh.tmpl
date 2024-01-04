@@ -8,7 +8,8 @@ URL=https://github.com/MordechaiHadad/bob/releases/download/{{ (gitHubLatestRele
 # {{ end }}
 
 wget $URL -O /tmp/bob.zip
-unzip -o /tmp/bob.zip -d ~/.local/bin
+unzip -o /tmp/bob.zip -d /tmp
+find /tmp -name bob -exec cp '{}' ~/.local/bin/bob \;
 chmod +x ~/.local/bin/bob
 
 # install and setup bob
