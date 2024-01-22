@@ -59,6 +59,13 @@
   executable: true
   path: lazydocker
 
+.local/bin/lazysql:
+  type: archive-file
+  url: >-
+    https://github.com/jorgerojas26/lazysql/releases/download/{{ (gitHubLatestRelease "jorgerojas26/lazysql").TagName }}/lazysql_Linux_x86_64.tar.gz
+  executable: true
+  path: lazysql
+
 .local/bin/rustfmt:
   type: file
   url: >-
