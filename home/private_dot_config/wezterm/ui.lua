@@ -21,6 +21,9 @@ M.setup = function(cfg)
   -- font setting
   cfg.window_frame = { font = wezterm.font(frame_font) } -- set frame fonts, affect the command palette as well
   cfg.front_end = "WebGpu"
+  if platform.is_win then
+    cfg.webgpu_power_preference = "HighPerformance"
+  end
   cfg.freetype_load_flags = "NO_HINTING"
   cfg.font = wezterm.font({ family = regular_font, weight = "Regular" })
   cfg.font_rules = {
