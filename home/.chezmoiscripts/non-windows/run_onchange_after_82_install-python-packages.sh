@@ -2,6 +2,10 @@
 # vim: set expandtab ts=4 sw=4 ft=sh:
 set -euo pipefail
 
+# if there is change in python version we need to install the package,
+# HACK: just call the python variable to force run this script
+echo "Installed python version is: {{ .pythonVersion }}"
+
 PYENV_ROOT="$HOME/.pyenv"
 PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
