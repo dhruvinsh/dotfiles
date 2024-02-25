@@ -1,28 +1,13 @@
 # vim: set ft=toml:
 
-## where to store your database, default is your system data directory
-## linux/mac: ~/.local/share/atuin/history.db
-## windows: %USERPROFILE%/.local/share/atuin/history.db
-# db_path = "~/.history.db"
-
-## where to store your encryption key, default is your system data directory
-## linux/mac: ~/.local/share/atuin/key
-## windows: %USERPROFILE%/.local/share/atuin/key
-# key_path = "~/.key"
-
-## where to store your auth session token, default is your system data directory
-## linux/mac: ~/.local/share/atuin/session
-## windows: %USERPROFILE%/.local/share/atuin/session
-# session_path = "~/.session"
-
 ## date format used, either "us" or "uk"
-# dialect = "us"
+dialect = "us"
 
 ## enable or disable automatic sync
-# auto_sync = true
+auto_sync = true
 
 ## enable or disable automatic update checks
-# update_check = true
+update_check = true
 
 # {{- if eq .personalmachine true }}
 ## address of the sync server
