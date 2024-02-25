@@ -30,6 +30,7 @@ packages=(
     pre-commit
     pylint
     ruff
+    uv
 )
 
 # setup poetry env via pipx
