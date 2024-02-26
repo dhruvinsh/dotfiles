@@ -2,6 +2,8 @@
 # vim: set expandtab ts=4 sw=4 ft=sh:
 set -euo pipefail
 
+exit 0
+
 # if there is change in python version we need to install the package,
 # HACK: just call the python variable to force run this script
 echo "Installed python version is: {{ .pythonVersion }}"

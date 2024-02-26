@@ -17,6 +17,9 @@ if [ -d "$HOME/.pyenv" ]; then
     eval "$(pyenv init --path --no-rehash zsh)"
 fi
 
+# rye
+[ -d "$HOME"/.rye ] && source "$HOME"/.rye/env
+
 # homebrew
 if [ -f "/opt/homebrew/bin/brew" ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"

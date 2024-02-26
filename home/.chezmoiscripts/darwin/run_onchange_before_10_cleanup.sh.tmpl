@@ -3,3 +3,11 @@
 
 # neovim is now managed by bob
 brew uninstall neovim
+
+echo "cleaning up pyenv and python"
+if [ -x "$(command -v pipx)" ]; then
+    pipx uninstall-all
+fi
+if [ -d "$HOME"/.pyenv ]; then
+    rm -rf "$HOME"/.pyenv
+fi

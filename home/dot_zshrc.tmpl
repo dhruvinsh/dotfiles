@@ -57,6 +57,9 @@ if [ -x "$(command -v pyenv)" ]; then
 	eval "$(pyenv init -)"
 fi
 
+# rye require for interactive shells
+[ -d "$HOME"/.rye ] && source "$HOME"/.rye/env
+
 # volta setup
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"

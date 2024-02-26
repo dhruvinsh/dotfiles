@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# vim: set expandtab ts=4 sw=4 ft=sh:
+set -euo pipefail
+
+echo "✨ Setting up Rye (New python tooling).."
+
+# TODO: when `uv` becomes default make this installation auto.
+curl -sSf https://rye-up.com/get | RYE_TOOLCHAIN_VERSION="cpython@{{ .pythonVersion }}" bash
+
+# source the rye
+source "$HOME"/.rye/env
+
+# make global shims
+rye config --set-bool behavior.global-python=true
+
+packages=(
+    black
+    flake8
+    httpie
+    isort
+    jupyterlab
+    mypy
+    pipenv
+    poetry
+    pre-commit
+    pylint
+    ruff
+)
+
+# setup poetry env via pipx
+for pkg in "${packages[@]}"
+do
+    echo "✨ Setting up $pkg"
+    rye tools install "$pkg"
+done
