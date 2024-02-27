@@ -1,10 +1,12 @@
-#!/usr/bin/env bash
-# vim: set expandtab ft=bash ts=4 tw=4:
+#!/usr/bin/env sh
+# vim: set expandtab ft=sh ts=4 tw=4:
+
+# {{ $ageVersion := (gitHubLatestRelease "FiloSottile/age").TagName }}
 
 LOCALBIN=$HOME/.local/bin
 if ! [ -f "$LOCALBIN/age" ]; then
     echo "Setting up age!"
-    URL="https://github.com/FiloSottile/age/releases/download/v{{ .ageVersion }}/age-v{{ .ageVersion }}-{{ .chezmoi.os }}-{{ .chezmoi.arch }}.tar.gz"
+    URL="https://github.com/FiloSottile/age/releases/download/{{ $ageVersion }}/age-{{ $ageVersion }}-{{ .chezmoi.os }}-{{ .chezmoi.arch }}.tar.gz"
     wget "$URL" -O /tmp/age.tar.gz
     tar -xf /tmp/age.tar.gz -C /tmp
     mv /tmp/age/age "$LOCALBIN"

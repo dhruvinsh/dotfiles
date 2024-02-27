@@ -2,13 +2,11 @@
 # vim: set filetype=yaml
 
 # prettier-ignore
-ageVersion       : "1.1.1"
 batVersion       : "0.24.0"
 f3dVersion       : "2.2.1"
 fdVersion        : "8.7.1"
 freecadVersion   : "0.20.2-2022-12-27"
 ghVersion        : "2.39.1"
-neovideVersion   : "0.11.2"
 nerdfontVersion  : "3.1.0"
 nextcloudVersion : "3.10.1"
 openscadVersion  : "2021.01"
