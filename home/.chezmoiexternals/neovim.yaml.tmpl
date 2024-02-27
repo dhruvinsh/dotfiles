@@ -16,9 +16,8 @@
 
 # {{ if and (eq .chezmoi.os "linux") (.isDesktop) }}
 .local/bin/neovide:
-  type: archive-file
+  type: file
   url: >-
-    https://github.com/neovide/neovide/releases/download/{{ .neovideVersion }}/neovide.tar.gz
+    https://github.com/neovide/neovide/releases/download/{{ (gitHubLatestRelease "neovide/neovide").TagName }}/neovide.AppImage
   executable: true
-  file: neovide
 # {{- end }}

@@ -2,7 +2,7 @@
 Name=Neovide
 GenericName=Neovim made in Rust
 Comment=Fast, feature-rich, Graphical Neovim
-X-AppImage-Version="{{ .neovideVersion }}"
+X-AppImage-Version="{{ (gitHubLatestRelease "neovide/neovide").TagName }}"
 StartupWMClass=Neovide
 Terminal=false
 Type=Application
