@@ -20,6 +20,7 @@ pipx uninstall-all
 # create some independent envs with packages 
 packages=(
     black
+    codespell
     flake8
     httpie
     isort
