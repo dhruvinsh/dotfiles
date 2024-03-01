@@ -40,3 +40,5 @@ do
     echo "*** Setting up $pkg ***"
     pipx install "$pkg"
 done
+
+pipx inject poetry poetry-plugin-export
