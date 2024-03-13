@@ -17,6 +17,12 @@
   stripComponents: 1
   path: delta
 
+.local/bin/fswatch:
+  type: file
+  url : >-
+    https://github.com/dhruvinsh/fswatch/releases/download/{{ (gitHubLatestRelease "dhruvinsh/fswatch").TagName }}/fswatch
+  executable: true
+  
 .local/bin/fzf:
   type: archive-file
   url : >-
