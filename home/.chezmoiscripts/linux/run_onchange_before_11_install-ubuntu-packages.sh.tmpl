@@ -168,4 +168,6 @@ if [ "$SHELL" != "/usr/bin/zsh" ]; then
     sudo chsh -s $(which zsh) $USER
 fi
 
+sudo sysctl fs.inotify.max_user_watches=100000
+sudo sysctl fs.inotify.max_queued_events=100000
 # {{- end }}
