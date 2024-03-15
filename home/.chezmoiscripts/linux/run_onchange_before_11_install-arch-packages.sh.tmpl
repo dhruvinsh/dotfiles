@@ -247,4 +247,7 @@ systemctl --user enable --now redshift-gtk.service
 systemctl --user enable --now x0vncserver.service
 # {{- end }}
 
+sudo sysctl fs.inotify.max_user_watches=100000
+sudo sysctl fs.inotify.max_queued_events=100000
+
 # {{- end }}
