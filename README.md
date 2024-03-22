@@ -1,10 +1,12 @@
-# Dotfiles
+# Dotfiles ☕️
 
 Collection of personal dotfile, managed via chezmoi.
 
-# Installation
+![Neovim](./img/neovim.png)
 
-## Linux setup
+## Installation
+
+### Linux Setup
 
 Below code will install chezmoi in local bin directory and start
 applying the existing setup.
@@ -15,10 +17,11 @@ export PATH="$HOME/.local/bin:$PATH"
 sh -c "$(curl -fsLS chezmoi.io/get)" -- init dhruvinsh --apply
 ```
 
-## Windows setup
+### Windows Setup
 
-Below code will install chezmoi and start applying config changes for the windows system.
-**NOTE: This installation expect powershell 7 installed manually (at least for now)**
+Below code will install chezmoi and start applying config changes for the
+windows system.
+**NOTE: This installation expect manual installation of Powershell 7 (pwsh)**
 
 ```powershell
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
@@ -28,7 +31,7 @@ scoop install chezmoi
 chezmoi init dhruvinsh --apply
 ```
 
-## Mac setup
+### Mac Setup
 
 All the installation on mac managed by brew.
 
@@ -40,11 +43,11 @@ brew install chezmoi
 chezmoi init dhruvinsh --apply
 ```
 
-# Arch Installation
+### Arch Installation
 
 See these file, [Installation](Installation.md)
 
-# Credits
+## Credits
 
 - Thanks [Tom Payne](https://github.com/twpayne) for awesome tool: [chezmoi](https://github.com/twpayne/chezmoi)
 - Arch Linux installation guide: [Arch Wiki](https://wiki.archlinux.org/title/Installation_guide)
