@@ -2,7 +2,7 @@
 # vim: set expandtab ts=4 sw=4 ft=sh:
 # shellcheck disable=1083
 
-VERSION={{ .nerdfontVersion }}
+VERSION={{ (gitHubLatestRelease "ryanoasis/nerd-fonts").TagName }}
 
 # {{ if eq .chezmoi.os "linux" }}
 TARGET="$HOME"/.local/share/fonts/
@@ -17,12 +17,12 @@ else
     mkdir -p "$TARGET"
 fi
 
-CASCADIA=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/CascadiaCode.tar.xz
-FIRA=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/FiraCode.tar.xz
-IOSEVKA=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/Iosevka.tar.xz
-JETBRAINS=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/JetBrainsMono.tar.xz
-MONASPACE=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/Monaspace.tar.xz
-VICTOR=https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/VictorMono.tar.xz
+CASCADIA=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/CascadiaCode.tar.xz
+FIRA=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/FiraCode.tar.xz
+IOSEVKA=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/Iosevka.tar.xz
+JETBRAINS=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/JetBrainsMono.tar.xz
+MONASPACE=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/Monaspace.tar.xz
+VICTOR=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/VictorMono.tar.xz
 
 arr=("$CASCADIA" "$FIRA" "$IOSEVKA" "$JETBRAINS" "$MONASPACE" "$VICTOR")
 
