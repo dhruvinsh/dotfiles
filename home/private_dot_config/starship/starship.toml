@@ -1,35 +1,15 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-palette = "rose_pine"
-
 [character]
 # Iosevka font needs spacing
-success_symbol = '[ ](bold pine)'
-error_symbol = '[ ](bold love)'
+success_symbol = '[ ](bold green)'
+error_symbol = '[ ](bold red)'
 
 [directory]
 fish_style_pwd_dir_length = 1
 truncate_to_repo = false
-style = "rose bold"
 
 [git_status]
 # iosevka font needs spacing
 deleted = '✘ '
 ahead = '⇡ '
-
-[palettes.rose_pine]
-base = "#191724"
-surface = "#1f1d2e"
-overlay = "#26233a"
-muted = "#6e6a86"
-subtle = "#908caa"
-text = "#e0def4"
-love = "#eb6f92"
-gold = "#f6c177"
-rose = "#ebbcba"
-pine = "#31748f"
-foam = "#9ccfd8"
-iris = "#c4a7e7"
-highlight-low = "#21202e"
-highlight-med = "#403d52"
-highlight-high = "#524f67"
