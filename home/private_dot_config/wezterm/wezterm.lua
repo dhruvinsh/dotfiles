@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local ui = require("ui")
+local fonts = require("fonts")
 local program = require("program")
 local keymaps = require("keymaps")
 local tab_title = require("events.tab_title")
@@ -12,6 +13,7 @@ if wezterm.config_builder then
 end
 
 ui.setup(config)
+fonts.setup(config)
 program.setup(config)
 keymaps.setup(config)
 tab_title.setup(ui.colors)
