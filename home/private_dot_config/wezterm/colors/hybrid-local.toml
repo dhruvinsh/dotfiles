@@ -1,0 +1,74 @@
+[metadata]
+name = "hybrid-local"
+origin_url = "https://github.com/dhruvinsh/dotfiles"
+
+[colors]
+background = "#1d1f21"
+foreground = "#c5c8c6"
+
+# in leader mode when the input is pending
+compose_cursor = "orange"
+
+# for block type of cursor
+cursor_bg = "#c5c8c6"
+cursor_fg = "#1d1f21"
+
+cursor_border = "#c5c8c6" # pending
+
+selection_bg = "#373b41"
+selection_fg = "#c5c8c6"
+
+scrollbar_thumb = "#6e6a86" # pending
+split = "#908caa"           # pending
+visual_bell = "#524f67"     # pending
+
+ansi = [
+  "#282a2e",
+  "#a54242",
+  "#8c9440",
+  "#de935f",
+  "#5f819d",
+  "#85678f",
+  "#5e8d87",
+  "#707880",
+]
+brights = [
+  "#373b41",
+  "#cc6666",
+  "#b5bd68",
+  "#f0c674",
+  "#81a2be",
+  "#b294bb",
+  "#8abeb7",
+  "#c5c8c6",
+]
+
+[colors.indexed]
+16 = "#fab387" # pending
+17 = "#f5e0dc" #pending
+
+# this only applies to retro tab bar
+# see: https://wezfurlong.org/wezterm/config/appearance.html
+[colors.tab_bar]
+background = "#1d1f21" # tab bar and terminal background are same
+
+[colors.tab_bar.active_tab]
+bg_color = "#282a2e"
+fg_color = "#c5c8c6"
+
+[colors.tab_bar.inactive_tab]
+bg_color = "#1d1f21"
+fg_color = "#6e6a86"
+
+[colors.tab_bar.inactive_tab_hover]
+bg_color = "#282a2e"
+fg_color = "#c5c8c6"
+
+[colors.tab_bar.new_tab]
+bg_color = "#1d1f21"
+fg_color = "#6e6a86"
+
+# keep this colors similar to inactive_tab_hover
+[colors.tab_bar.new_tab_hover]
+bg_color = "#282a2e"
+fg_color = "#c5c8c6"
