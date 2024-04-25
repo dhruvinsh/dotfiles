@@ -1,0 +1,17 @@
+[shell]
+program = "wsl"
+args = ["--shell-type", "login", "--cd", "~"]
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+size = 12
+
+[scrolling]
+history = 10000
+
+[bell]
+duration = 1
+
+[cursor]
+style = { shape = "Block", blinking = "On" }
+blink_interval = 500
