@@ -4,9 +4,9 @@ local platform = require("utils.platform")
 local M = {}
 
 local ok
-M.colorscheme = "hybrid-local"
+M.colorscheme = "alacritty"
 ok, M.colors =
-  pcall(wezterm.color.load_scheme, wezterm.home_dir .. "/.config/wezterm/colors/" .. M.colorscheme .. ".toml")
+    pcall(wezterm.color.load_scheme, wezterm.home_dir .. "/.config/wezterm/colors/" .. M.colorscheme .. ".toml")
 if not ok then
   wezterm.log_info("external colorscheme not found using built-in colors")
   M.colors = wezterm.get_builtin_color_schemes()[M.colorscheme]
@@ -14,6 +14,8 @@ end
 
 ---@param cfg table
 M.setup = function(cfg)
+  cfg.force_reverse_video_cursor = true -- alacritty like cursor color
+
   cfg.front_end = "WebGpu"
   if platform.is_win then
     cfg.webgpu_power_preference = "HighPerformance"
