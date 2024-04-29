@@ -9,8 +9,8 @@ local M = {}
 
 ---@param cfg table
 M.setup = function(cfg)
-  -- font setting
-  cfg.window_frame = { font = wezterm.font(frame_font) } -- set frame fonts, affect the command palette as well
+  -- set frame fonts, affect the command palette as well
+  cfg.window_frame = { font = wezterm.font({ family = frame_font, weight = "Light" }) }
 
   if platform.is_win then
     cfg.font = wezterm.font({ family = regular_font, weight = "Light" })
