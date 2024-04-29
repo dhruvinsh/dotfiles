@@ -2,7 +2,7 @@ local wezterm = require("wezterm")
 local platform = require("utils.platform")
 
 local regular_font = "JetBrainsMono Nerd Font"
-local italic_font = "VictorMono NF"
+local italic_font = "JetBrainsMono Nerd Font"
 local frame_font = "JetBrainsMono Nerd Font"
 
 local M = {}
@@ -10,8 +10,6 @@ local M = {}
 ---@param cfg table
 M.setup = function(cfg)
   -- font setting
-  cfg.freetype_load_flags = "NO_HINTING"
-
   cfg.window_frame = { font = wezterm.font(frame_font) } -- set frame fonts, affect the command palette as well
 
   cfg.font = wezterm.font({ family = regular_font, weight = "Regular" })
