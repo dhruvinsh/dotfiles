@@ -12,30 +12,17 @@ M.setup = function(cfg)
   -- font setting
   cfg.window_frame = { font = wezterm.font(frame_font) } -- set frame fonts, affect the command palette as well
 
-  cfg.font = wezterm.font({ family = regular_font, weight = "Regular" })
+  if platform.is_win then
+    cfg.font = wezterm.font({ family = regular_font, weight = "Light" })
+  else
+    cfg.font = wezterm.font({ family = regular_font, weight = "Regular" })
+  end
+
   cfg.font_rules = {
     {
       italic = true,
       intensity = "Normal",
       font = wezterm.font({ family = italic_font, style = "Italic" }),
-    },
-    {
-      italic = true,
-      intensity = "Half",
-      font = wezterm.font({
-        family = italic_font,
-        weight = "DemiBold",
-        style = "Italic",
-      }),
-    },
-    {
-      italic = true,
-      intensity = "Bold",
-      font = wezterm.font({
-        family = italic_font,
-        weight = "Bold",
-        style = "Italic",
-      }),
     },
   }
 
