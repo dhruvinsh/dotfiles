@@ -1,0 +1,6 @@
+{{- if and (not (eq .chezmoi.os "darwin")) .ephemeral -}}
+alias vim=nvim
+alias lg=lazygit
+{{ end -}}
+
+{{/* vim: set filetype=bash: */}}
