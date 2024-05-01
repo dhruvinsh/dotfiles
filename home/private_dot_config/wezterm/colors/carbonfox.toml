@@ -15,8 +15,26 @@ selection_fg = "#f2f4f8"
 scrollbar_thumb = "#7b7c7e"
 split = "#0c0c0c"
 visual_bell = "#f2f4f8"
-ansi = ["#282828", "#ee5396", "#25be6a", "#08bdba", "#78a9ff", "#be95ff", "#33b1ff", "#dfdfe0"]
-brights = ["#484848", "#f16da6", "#46c880", "#2dc7c4", "#8cb6ff", "#c8a5ff", "#52bdff", "#e4e4e5"]
+ansi = [
+  "#282828",
+  "#ee5396",
+  "#25be6a",
+  "#08bdba",
+  "#78a9ff",
+  "#be95ff",
+  "#33b1ff",
+  "#dfdfe0",
+]
+brights = [
+  "#484848",
+  "#f16da6",
+  "#46c880",
+  "#2dc7c4",
+  "#8cb6ff",
+  "#c8a5ff",
+  "#52bdff",
+  "#e4e4e5",
+]
 
 [colors.indexed]
 16 = "#ff7eb6"
@@ -66,4 +84,3 @@ intensity = "Normal"
 italic = false
 strikethrough = false
 underline = "None"
-
