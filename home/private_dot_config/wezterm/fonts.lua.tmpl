@@ -1,9 +1,10 @@
+-- vim: set ft=lua:
 local wezterm = require("wezterm")
 local platform = require("utils.platform")
 
-local regular_font = "JetBrainsMono Nerd Font"
-local italic_font = "JetBrainsMono Nerd Font"
-local frame_font = "JetBrainsMono Nerd Font"
+local regular_font = "{{ .font.regular }}"
+local italic_font = "{{ .font.italic }}"
+local frame_font = "{{ .font.regular }}"
 
 local M = {}
 
