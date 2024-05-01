@@ -1,4 +1,4 @@
-{{- if and (not (eq .chezmoi.os "darwin")) .ephemeral -}}
+{{- if ne .chezmoi.os "darwin" -}}
 alias vim=nvim
 alias lg=lazygit
 {{ end -}}
