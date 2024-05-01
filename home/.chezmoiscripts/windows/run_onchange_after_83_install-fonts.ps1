@@ -6,7 +6,7 @@ scoop bucket add nerd-fonts
 # NOTE: do not install 7zip from scoop else we will have issue
 # for file extraction for scoop
 $fonts = @(
-  "nerd-fonts/CascadiaCode-NF"
+  "nerd-fonts/Cascadia-Code"
   "nerd-fonts/FiraCode-NF"
   "nerd-fonts/Iosevka-NF"
   "nerd-fonts/JetBrainsMono-NF"

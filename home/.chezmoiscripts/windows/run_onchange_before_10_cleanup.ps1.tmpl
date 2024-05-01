@@ -1,0 +1,12 @@
+# vim: set ft=powershell
+
+$packages = @(
+  "nerd-fonts/CascadiaCode-NF"
+);
+
+
+foreach ($package in $packages) {
+    Write-Output "--> Uninstalling $package.."
+    scoop uninstall $package
+}
+
