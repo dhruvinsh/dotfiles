@@ -58,9 +58,14 @@
 {{-   $chassisType = (output "powershell.exe" "-NoProfile" "-NonInteractive" "-Command" "if ((Get-CimInstance -Class Win32_Battery | Measure-Object).Count -gt 0) { Write-Output 'laptop' } else { Write-Output 'desktop' }") | trim }}
 {{- end }}
 
+{{- $email := "dhruvinsh@gmail.com" -}}
+{{- if not $personalmachine -}}
+{{-   $email = "dshah@evertz.com" -}}
+{{- end -}}
 
 [data]
   personalmachine = {{ $personalmachine }}
+  email = {{ $email | quote }}
   wsl = {{ $wsl }}
   wsl1 = {{ $wsl1 }}
   wsl2 = {{ $wsl2 }}
