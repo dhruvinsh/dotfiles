@@ -1,95 +1,109 @@
 {{ if eq .chezmoi.os "linux" }}
 
+{{- $atuinVersionTag := (gitHubLatestRelease "atuinsh/atuin").TagName }}
 [".local/bin/atuin"]
   type = "archive-file"
-  url  = 'https://github.com/atuinsh/atuin/releases/download/{{ (gitHubLatestRelease "atuinsh/atuin").TagName }}/atuin-{{ (gitHubLatestRelease "atuinsh/atuin").TagName }}-x86_64-unknown-{{ .chezmoi.os }}-gnu.tar.gz'
+  url  = "https://github.com/atuinsh/atuin/releases/download/{{ $atuinVersionTag }}/atuin-{{ $atuinVersionTag }}-x86_64-unknown-linux-gnu.tar.gz"
   executable = true
   stripComponents = 1
   path = "atuin"
 
+{{- $deltaVersionTag := (gitHubLatestRelease "dandavison/delta").TagName }}
 [".local/bin/delta"]
   type = "archive-file"
-  url  = 'https://github.com/dandavison/delta/releases/download/{{ (gitHubLatestRelease "dandavison/delta").TagName }}/delta-{{ (gitHubLatestRelease "dandavison/delta").TagName }}-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz'
+  url  = "https://github.com/dandavison/delta/releases/download/{{ $deltaVersionTag }}/delta-{{ $deltaVersionTag }}-x86_64-unknown-linux-musl.tar.gz"
   executable = true
   stripComponents = 1
   path = "delta"
 
+{{- $fswatchVersionTag := (gitHubLatestRelease "dhruvinsh/fswatch").TagName }}
 [".local/bin/fswatch"]
   type = "file"
-  url  = 'https://github.com/dhruvinsh/fswatch/releases/download/{{ (gitHubLatestRelease "dhruvinsh/fswatch").TagName }}/fswatch'
+  url  = "https://github.com/dhruvinsh/fswatch/releases/download/{{ $fswatchVersionTag }}/fswatch"
   executable = true
-  
+
+{{- $fzfVersionTag := (gitHubLatestRelease "junegunn/fzf").TagName }}  
 [".local/bin/fzf"]
   type = "archive-file"
-  url  = 'https://github.com/junegunn/fzf/releases/download/{{ (gitHubLatestRelease "junegunn/fzf").TagName }}/fzf-{{ (gitHubLatestRelease "junegunn/fzf").TagName }}-{{ .chezmoi.os }}_{{ .chezmoi.arch }}.tar.gz'
+  url  = "https://github.com/junegunn/fzf/releases/download/{{ $fzfVersionTag }}/fzf-{{ $fzfVersionTag }}-{{ .chezmoi.os }}_{{ .chezmoi.arch }}.tar.gz"
   executable = true
   path = "fzf"
 
+{{- $cliffVersionTag :=  (gitHubLatestRelease "orhun/git-cliff").TagName }}
+{{- $cliffStripVersionTag :=  $cliffVersionTag | trimPrefix "v" }}
 [".local/bin/git-cliff"]
   type = "archive-file"
-  url  = 'https://github.com/orhun/git-cliff/releases/download/{{ (gitHubLatestRelease "orhun/git-cliff").TagName }}/git-cliff-{{ trimPrefix "v" (gitHubLatestRelease "orhun/git-cliff").TagName }}-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz'
+  url  = "https://github.com/orhun/git-cliff/releases/download/{{ $cliffVersionTag }}/git-cliff-{{ $cliffStripVersionTag}}-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz"
   executable = true
   stripComponents = 1
   path = "git-cliff"
 
+{{- $glowVersionTag := (gitHubLatestRelease "charmbracelet/glow").TagName }}
 [".local/bin/glow"]
   type = "archive-file"
-  url = 'https://github.com/charmbracelet/glow/releases/download/{{ (gitHubLatestRelease "charmbracelet/glow").TagName }}/glow_Linux_x86_64.tar.gz'
+  url = "https://github.com/charmbracelet/glow/releases/download/{{ $glowVersionTag }}/glow_Linux_x86_64.tar.gz"
   executable = true
   path = "glow"
 
+{{- $hexlixVersionTag := (gitHubLatestRelease "helix-editor/helix").TagName }}
 [".local/bin/helix"]
   type = "file"
-  url = 'https://github.com/helix-editor/helix/releases/download/{{ (gitHubLatestRelease "helix-editor/helix").TagName }}/helix-{{ (gitHubLatestRelease "helix-editor/helix").TagName }}-x86_64.AppImage'
+  url = "https://github.com/helix-editor/helix/releases/download/{{ $hexlixVersionTag }}/helix-{{ $hexlixVersionTag }}-x86_64.AppImage"
   executable = true
 
+{{- $lazygitVersionTag := (gitHubLatestRelease "jesseduffield/lazygit").TagName }}
+{{- $lazygitStripVersionTag := $lazygitVersionTag | trimPrefix "v" }}
 [".local/bin/lazygit"]
   type = "archive-file"
-  url = 'https://github.com/jesseduffield/lazygit/releases/download/{{ (gitHubLatestRelease "jesseduffield/lazygit").TagName }}/lazygit_{{ trimPrefix "v" (gitHubLatestRelease "jesseduffield/lazygit").TagName }}_Linux_x86_64.tar.gz'
+  url = "https://github.com/jesseduffield/lazygit/releases/download/{{ $lazygitVersionTag }}/lazygit_{{ $lazygitStripVersionTag }}_Linux_x86_64.tar.gz"
   executable = true
   path = "lazygit"
 
+{{- $lazydockerVersionTag := (gitHubLatestRelease "jesseduffield/lazydocker").TagName  }}
+{{- $lazydockerStripVersionTag := $lazydockerVersionTag | trimPrefix "v"  }}
 [".local/bin/lazydocker"]
   type = "archive-file"
-  url = 'https://github.com/jesseduffield/lazydocker/releases/download/{{ (gitHubLatestRelease "jesseduffield/lazydocker").TagName }}/lazydocker_{{ trimPrefix "v" (gitHubLatestRelease "jesseduffield/lazydocker").TagName }}_Linux_x86_64.tar.gz'
+  url = "https://github.com/jesseduffield/lazydocker/releases/download/{{ $lazydockerVersionTag }}/lazydocker_{{ $lazydockerStripVersionTag }}_Linux_x86_64.tar.gz"
   executable = true
   path = "lazydocker"
 
+{{- $lazysqlVersionTag := (gitHubLatestRelease "jorgerojas26/lazysql").TagName }}
 [".local/bin/lazysql"]
   type = "archive-file"
-  url = 'https://github.com/jorgerojas26/lazysql/releases/download/{{ (gitHubLatestRelease "jorgerojas26/lazysql").TagName }}/lazysql_Linux_x86_64.tar.gz'
+  url = "https://github.com/jorgerojas26/lazysql/releases/download/{{ $lazysqlVersionTag }}/lazysql_Linux_x86_64.tar.gz"
   executable = true
   path = "lazysql"
 
+{{- $rustfmtVesrionTag := (gitHubLatestRelease "rust-lang/rustfmt").TagName }}
 [".local/bin/rustfmt"]
   type = "file"
-  url = 'https://github.com/rust-lang/rustfmt/releases/download/{{ (gitHubLatestRelease "rust-lang/rustfmt").TagName }}/rustfmt_{{ .chezmoi.os }}-x86_64_{{ (gitHubLatestRelease "rust-lang/rustfmt").TagName }}.tar.gz'
+  url = "https://github.com/rust-lang/rustfmt/releases/download/{{ $rustfmtVesrionTag }}/rustfmt_{{ .chezmoi.os }}-x86_64_{{ $rustfmtVesrionTag }}.tar.gz"
   executable = true
   stripComponents = 1
   path = "rustfmt"
 
+{{- $starshipVersionTag := (gitHubLatestRelease "starship/starship").TagName }}
 [".local/bin/starship"]
   type = "archive-file"
-  url = 'https://github.com/starship/starship/releases/download/{{ (gitHubLatestRelease "starship/starship").TagName }}/starship-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz'
+  url = "https://github.com/starship/starship/releases/download/{{ $starshipVersionTag }}/starship-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz"
   executable = true
   path = "starship"
 
+{{- $tldrVersionTag := (gitHubLatestRelease "dbrgn/tealdeer").TagName }}
 [".local/bin/tldr"]
   type = "file"
-  url = 'https://github.com/dbrgn/tealdeer/releases/download/{{ (gitHubLatestRelease "dbrgn/tealdeer").TagName }}/tealdeer-{{ .chezmoi.os }}-x86_64-musl'
+  url = "https://github.com/dbrgn/tealdeer/releases/download/{{ $tldrVersionTag }}/tealdeer-{{ .chezmoi.os }}-x86_64-musl"
   executable = true
 
-[".local/bin/zellij"]
-  type = "archive-file"
-  url = 'https://github.com/zellij-org/zellij/releases/download/{{ (gitHubLatestRelease "zellij-org/zellij").TagName }}/zellij-x86_64-unknown-linux-musl.tar.gz'
-  executable = true
-  path = "zellij"
- 
+{{- $zoxideVersionTag := (gitHubLatestRelease "ajeetdsouza/zoxide").TagName }}
+{{- $zoxideStripVersionTag := $zoxideVersionTag | trimPrefix "v" }}
 [".local/bin/zoxide"]
   type = "archive-file"
-  url  = 'https://github.com/ajeetdsouza/zoxide/releases/download/{{ (gitHubLatestRelease "ajeetdsouza/zoxide").TagName }}/zoxide-{{ trimPrefix "v" (gitHubLatestRelease "ajeetdsouza/zoxide").TagName }}-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz'
+  url  = "https://github.com/ajeetdsouza/zoxide/releases/download/{{ $zoxideVersionTag }}/zoxide-{{ $zoxideStripVersionTag }}-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz"
   executable = true
   path = "zoxide"
-{{ end -}}
+
+{{ end }}
 
 {{- /* vim: set filetype=toml: */}}
+

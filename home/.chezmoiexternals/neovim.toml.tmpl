@@ -25,9 +25,10 @@
   refreshPeriod = "168h"
       
 {{ if and (eq .chezmoi.os "linux") (.isDesktop) }}
+{{- $neovideVersionTag :=  (gitHubLatestRelease "neovide/neovide").TagName }}
 [".local/bin/neovide"]
   type = "file"
-  url = https://github.com/neovide/neovide/releases/download/{{ (gitHubLatestRelease "neovide/neovide").TagName }}/neovide.AppImage
+  url = "https://github.com/neovide/neovide/releases/download/{{ $neovideVersionTag }}/neovide.AppImage"
   executable = true
 {{- end }}
 
