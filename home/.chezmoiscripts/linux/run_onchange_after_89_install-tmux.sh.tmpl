@@ -3,8 +3,12 @@
 
 set -euo pipefail
 
+# get build dependencies
 sudo apt install -y libevent-dev bison flex
-wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz -O /tmp/tmux.tar.gz
+
+{{- $tmuxVersion := (gitHubLatestRelease "tmux/tmux").TagName }}
+wget https://github.com/tmux/tmux/releases/download/{{ $tmuxVersion }}/tmux-{{ $tmuxVersion }}.tar.gz -O /tmp/tmux.tar.gz
+
 mkdir /tmp/tmux
 tar xvf /tmp/tmux.tar.gz --strip-components=1 -C /tmp/tmux
 cd /tmp/tmux/
