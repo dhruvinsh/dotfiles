@@ -1,13 +1,17 @@
 # vim: set ft=toml:
 
-# {{ if eq .chezmoi.os "windows" }}
+{{ if eq .chezmoi.os "windows" }}
 [shell]
 program = "wsl"
 args = ["--shell-type", "login", "--cd", "~"]
-# {{ end }}
+{{ end }}
 
 [font]
+{{- if eq .chezmoi.os "windows" }}
+size = 12
+{{- else }}
 size = 15
+{{- end }}
 
 [font.normal]
 family = {{ .font.regular | quote }}
@@ -25,4 +29,3 @@ blink_interval = 500
 [cursor.style]
 shape = "Block"
 blinking = "On" 
-
