@@ -1,19 +1,25 @@
 # Arch Linux installation
 
-## Arch Installation:
+## Arch Installation
 
 Simply follow this steps/cmds to install arch linux with LTS kernel.
 
-- Obtain latest iso image for Arch linux from [Here (latest version)](http://mirror.csclub.uwaterloo.ca/archlinux/iso/latest/archlinux-x86_64.iso) and boot to it.
-- Verify EFI boot mode: `ls /sys/firmware/efi/efivars`. All of my system should be EFI.
-- Connect to Internet via Ethernet or `iwctl`. In below example we are using wifi over wlan0 but we can have different network type
-  ```bash
+- Obtain latest iso image for Arch linux from
+  [Here (latest version)](http://mirror.csclub.uwaterloo.ca/archlinux/iso/latest/archlinux-x86_64.iso)
+  and boot to it.
+- Verify EFI boot mode: `ls /sys/firmware/efi/efivars`. All of my system should
+  be EFI.
+- Connect to Internet via Ethernet or `iwctl`. In below example we are using
+  wifi over wlan0 but we can have different network type
+
+```bash
   iwctl
   device list
   station wlan0 scan
   station wlan0 get-networks
   station wlan0 connect "Name of Network/WiFi"
-  ```
+```
+
 - Update the clock: `timedatectl set-ntp true`
 - Disk partition:
   Mount Point Partition Partition Type Size
@@ -41,18 +47,22 @@ Simply follow this steps/cmds to install arch linux with LTS kernel.
   ```
 
 - Mounting partitions:
-  ```bash
-  mount /dev/sda3 /mnt
-  swapon /dev/sda2
-  ```
+
+```bash
+mount /dev/sda3 /mnt
+swapon /dev/sda2
+```
+
 - Install archlinux:
-  ```bash
-  pacstrap /mnt base base-devel linux-lts linux-firmware neovim sudo
-  ```
+
+```bash
+pacstrap /mnt base base-devel linux-lts linux-firmware neovim sudo
+```
+
 - Fstab setup:
 
   ```bash
-  genfstab -U /mnt >> /mnt/etc/fstab
+  genfstab -U /mnt >>/mnt/etc/fstab
   ```
 
 - Change root: \~\~
@@ -73,23 +83,23 @@ Simply follow this steps/cmds to install arch linux with LTS kernel.
 - Update language:
 
   ```bash
-  echo "LANG=en_US.UTF-8" > /etc/locale.conf
+  echo "LANG=en_US.UTF-8" >/etc/locale.conf
   export LANG=en_US.UTF-8
   ```
 
 - Update hostname:
 
   ```bash
-  echo "<hostname>" > /etc/hostname
+  echo "<hostname>" >/etc/hostname
   ```
 
 - Update hosts file with `nvim /etc/hosts`:
 
-  ```
-  127.0.0.1     localhost
-  ::1           localhost
-  127.0.1.1     ds-laptop
-  ```
+```text
+127.0.0.1     localhost
+::1           localhost
+127.0.1.1     ds-laptop
+```
 
 - Setup root password: `passwd`
 
@@ -133,6 +143,8 @@ Simply follow this steps/cmds to install arch linux with LTS kernel.
   shutdown now
   ```
 
-## Graphical Desktop/Windows manager Installation:
+## Graphical Desktop/Windows manager Installation
 
-All packages installation are taken care by `chezmoi` so look at the [Arch Installation](home/.chezmoiscripts/linux/run_onchange_before_11_install-arch-packages.sh.tmpl) script.
+All packages installation are taken care by `chezmoi` so look at the
+[Arch Installation](home/.chezmoiscripts/linux/run_onchange_before_11_install-arch-packages.sh.tmpl)
+script.

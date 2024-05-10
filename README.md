@@ -51,4 +51,5 @@ See these file, [Installation](Installation.md)
 
 - Thanks [Tom Payne](https://github.com/twpayne) for awesome tool: [chezmoi](https://github.com/twpayne/chezmoi)
 - Arch Linux installation guide: [Arch Wiki](https://wiki.archlinux.org/title/Installation_guide)
-- Wallpapers credits: [VictorTennekes](https://www.reddit.com/user/VictorTennekes/) All the wallpaper can be found [HERE](home/private_dot_wallpaper/)
+- Wallpapers credits: [VictorTennekes](https://www.reddit.com/user/VictorTennekes/)
+  All the wallpaper can be found [HERE](home/private_dot_wallpaper/)
