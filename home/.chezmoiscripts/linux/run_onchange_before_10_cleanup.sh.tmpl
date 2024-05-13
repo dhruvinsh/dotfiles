@@ -77,9 +77,12 @@ rm -rf "$HOME/.local/bin/selene"
 rm -rf "$HOME/.local/bin/stylua"
 
 echo "cleaning up ripgrep"
-sudo apt purge ripgrep*
+sudo apt purge -y ripgrep*
 
 echo "cleaning up tmux"
-sudo apt purge tmux
+sudo apt purge -y tmux
+
+echo "remove ~/.gitconfig"
+rm ~/.gitconfig
 
 echo "Clean up finished"
