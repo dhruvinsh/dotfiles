@@ -1,10 +1,8 @@
-# vim: set ft=toml:
-
-{{ if eq .chezmoi.os "windows" }}
+{{- if eq .chezmoi.os "windows" }}
 [shell]
 program = "wsl"
 args = ["--shell-type", "login", "--cd", "~"]
-{{ end }}
+{{- end }}
 
 [font]
 {{- if eq .chezmoi.os "windows" }}
@@ -29,3 +27,11 @@ blink_interval = 500
 [cursor.style]
 shape = "Block"
 blinking = "On" 
+
+[colors.primary]
+background = "#16161D"
+
+[colors.normal]
+black = "#16161D"
+
+{{/* vim: set filetype=toml: */}}
