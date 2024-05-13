@@ -9,10 +9,10 @@ set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin '27medkamal/tmux-session-wizard'
 set -g @plugin 'sainnhe/tmux-fzf'
 
-set -as terminal-features ",xterm-256color:RGB"
-# {{- if eq .wsl true }}
+set -as terminal-overrides ",$TERM:RGB"
+{{- if eq .wsl true }}
 set -sg escape-time 10
-# {{- end }}
+{{- end }}
 
 set-option -g allow-passthrough on # zen-mode.nvim
 
