@@ -22,18 +22,15 @@
   url  = "https://github.com/dhruvinsh/fswatch/releases/download/{{ $fswatchVersionTag }}/fswatch"
   executable = true
 
-{{- $fzfVersionTag := (gitHubLatestRelease "junegunn/fzf").TagName }}  
 [".local/bin/fzf"]
   type = "archive-file"
-  url  = "https://github.com/junegunn/fzf/releases/download/{{ $fzfVersionTag }}/fzf-{{ $fzfVersionTag }}-{{ .chezmoi.os }}_{{ .chezmoi.arch }}.tar.gz"
+  url  = {{ gitHubLatestReleaseAssetURL "junegunn/fzf" (printf "fzf-*-%s_%s.tar.gz" .chezmoi.os .chezmoi.arch) | quote }}
   executable = true
   path = "fzf"
 
-{{- $cliffVersionTag :=  (gitHubLatestRelease "orhun/git-cliff").TagName }}
-{{- $cliffStripVersionTag :=  $cliffVersionTag | trimPrefix "v" }}
 [".local/bin/git-cliff"]
   type = "archive-file"
-  url  = "https://github.com/orhun/git-cliff/releases/download/{{ $cliffVersionTag }}/git-cliff-{{ $cliffStripVersionTag}}-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz"
+  url  = {{ gitHubLatestReleaseAssetURL "orhun/git-cliff" (printf "git-cliff-*-x86_64-unknown-%s-musl.tar.gz" .chezmoi.os) | quote }}
   executable = true
   stripComponents = 1
   path = "git-cliff"
@@ -51,11 +48,9 @@
   url = "https://github.com/helix-editor/helix/releases/download/{{ $hexlixVersionTag }}/helix-{{ $hexlixVersionTag }}-x86_64.AppImage"
   executable = true
 
-{{- $lazygitVersionTag := (gitHubLatestRelease "jesseduffield/lazygit").TagName }}
-{{- $lazygitStripVersionTag := $lazygitVersionTag | trimPrefix "v" }}
 [".local/bin/lazygit"]
   type = "archive-file"
-  url = "https://github.com/jesseduffield/lazygit/releases/download/{{ $lazygitVersionTag }}/lazygit_{{ $lazygitStripVersionTag }}_Linux_x86_64.tar.gz"
+  url = {{ gitHubLatestReleaseAssetURL "jesseduffield/lazygit" (printf "lazygit_*_Linux_x86_64.tar.gz") | quote}}
   executable = true
   path = "lazygit"
 
@@ -95,11 +90,9 @@
   url = "https://github.com/dbrgn/tealdeer/releases/download/{{ $tldrVersionTag }}/tealdeer-{{ .chezmoi.os }}-x86_64-musl"
   executable = true
 
-{{- $zoxideVersionTag := (gitHubLatestRelease "ajeetdsouza/zoxide").TagName }}
-{{- $zoxideStripVersionTag := $zoxideVersionTag | trimPrefix "v" }}
 [".local/bin/zoxide"]
   type = "archive-file"
-  url  = "https://github.com/ajeetdsouza/zoxide/releases/download/{{ $zoxideVersionTag }}/zoxide-{{ $zoxideStripVersionTag }}-x86_64-unknown-{{ .chezmoi.os }}-musl.tar.gz"
+  url  = {{ gitHubLatestReleaseAssetURL "ajeetdsouza/zoxide" (printf "zoxide-*-x86_64-unknown-%s-musl.tar.gz" .chezmoi.os) | quote}}
   executable = true
   path = "zoxide"
 
