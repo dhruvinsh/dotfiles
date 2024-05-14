@@ -4,7 +4,7 @@ origin_url = "https://github.com/dhruvinsh/dotfiles"
 
 [colors]
 foreground = "#d8d8d8"
-background = "#181818"
+background = "#16161D"
 
 compose_cursor = "#75b5aa"
 cursor_bg = "#d8d8d8"
