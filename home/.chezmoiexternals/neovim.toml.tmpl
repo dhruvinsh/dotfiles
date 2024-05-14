@@ -28,7 +28,7 @@
 {{- $neovideVersionTag :=  (gitHubLatestRelease "neovide/neovide").TagName }}
 [".local/bin/neovide"]
   type = "file"
-  url = "https://github.com/neovide/neovide/releases/download/{{ $neovideVersionTag }}/neovide.AppImage"
+  url = {{ gitHubLatestReleaseAssetURL "neovide/neovide" "neovide.AppImage" | quote }}
   executable = true
 {{- end }}
 
