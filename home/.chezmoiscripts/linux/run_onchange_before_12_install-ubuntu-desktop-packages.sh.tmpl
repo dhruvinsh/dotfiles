@@ -33,8 +33,7 @@ appimg_installer ()
 
 # {{- if (and (.isDesktop) (.ubuntu)) }}
 
-# {{ $wezterm_version := (gitHubLatestRelease "wez/wezterm").TagName }}
-WEZTERM="https://github.com/wez/wezterm/releases/download/{{ $wezterm_version }}/wezterm-{{ $wezterm_version }}.Ubuntu22.04.deb"
+WEZTERM={{ gitHubLatestReleaseAssetURL "wez/wezterm" "wezterm-*.Ubuntu22.04.deb" | quote  }}
 deb_installer "$WEZTERM" "wezterm"
 
 # {{- end }}
@@ -81,17 +80,17 @@ DISCORD="https://discord.com/api/download?platform={{ .chezmoi.os }}&format=deb"
 deb_installer $DISCORD "discord"
 
 # f3d setup
-F3D="https://github.com/f3d-app/f3d/releases/download/v{{ .f3dVersion }}/F3D-{{ .f3dVersion }}-Linux-x86_64.deb"
+F3D={{ gitHubLatestReleaseAssetURL "f3d-app/f3d" "F3D-*=Linux-x86_64.deb" | quote }}
 deb_installer $F3D "f3d"
 
 # snifnet setup
-SNIFFNET="https://github.com/GyulyVGC/sniffnet/releases/download/v{{ .sniffnetVersion }}/Sniffnet_Linux.deb"
+SNIFFNET={{ gitHubLatestReleaseAssetURL "GyulyVGC/sniffnet" "Sniffnet_Linux.deb" | quote }}
 deb_installer $SNIFFNET "sniffnet"
 
 ########################################################################################################################
 BITWARDEN="https://vault.bitwarden.com/download/?app=desktop&platform={{ .chezmoi.os }}"
-FREECAD="https://github.com/FreeCAD/FreeCAD/releases/latest/download/FreeCAD_{{ .freecadVersion }}-conda-{{ .chezmoi.os }}-x86_64-py310.AppImage"
-NEXTCLOUD="https://github.com/nextcloud/desktop/releases/download/v{{ .nextcloudVersion }}/Nextcloud-{{ .nextcloudVersion }}-x86_64.AppImage"
+FREECAD={{ gitHubLatestReleaseAssetURL "FreeCAD/FreeCAD" "FreeCAD_*-conda-linux-x86-64-py310.AppImage" | quote }}
+NEXTCLOUD={{ gitHubLatestReleaseAssetURL "nextcloud/desktop" "Nextcloud-*-x86_64.AppImage" | quote }}
 OPENSCAD="https://files.openscad.org/OpenSCAD-{{ .openscadVersion }}-x86_64.AppImage"
 
 appimg_installer $BITWARDEN bitwarden

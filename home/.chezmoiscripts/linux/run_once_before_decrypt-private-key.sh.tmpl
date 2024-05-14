@@ -6,7 +6,7 @@
 LOCALBIN=$HOME/.local/bin
 if ! [ -f "$LOCALBIN/age" ]; then
     echo "Setting up age!"
-    URL="https://github.com/FiloSottile/age/releases/download/{{ $ageVersion }}/age-{{ $ageVersion }}-{{ .chezmoi.os }}-{{ .chezmoi.arch }}.tar.gz"
+    URL={{ gitHubLatestReleaseAssetURL "FiloSottile/age" (printf "age-*-%s-%s.tar.gz" .chezmoi.os .chezmoi.arch ) | quote }}
     wget "$URL" -O /tmp/age.tar.gz
     tar -xf /tmp/age.tar.gz -C /tmp
     mv /tmp/age/age "$LOCALBIN"
