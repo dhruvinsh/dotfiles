@@ -2,7 +2,7 @@
 Name=Nextcloud
 GenericName=Nextcloud desktop client
 Comment=A tool to sync files from Nextcloud server
-X-AppImage-Version="{{ .nextcloudVersion }}"
+X-AppImage-Version={{ (gitHubLatestRelease "nextcloud/desktop").TagName | quote }}
 StartupWMClass=Nextcloud
 Terminal=false
 Type=Application

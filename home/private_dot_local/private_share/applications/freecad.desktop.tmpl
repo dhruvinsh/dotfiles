@@ -2,7 +2,7 @@
 Name=FreeCAD
 GenericName=FreeCAD Parametric tool
 Comment=Your own 3D parametric modeler
-X-AppImage-Version={{ .freecadVersion }}
+X-AppImage-Version={{ (gitHubLatestRelease "FreeCAD/FreeCAD").TagName | quote }}
 StartupWMClass=FreeCAD
 Terminal=false
 Type=Application
