@@ -13,11 +13,7 @@ M.setup = function(cfg)
   -- set frame fonts, affect the command palette as well
   cfg.window_frame = { font = wezterm.font({ family = frame_font, weight = "Light" }) }
 
-  if platform.is_win then
-    cfg.font = wezterm.font({ family = regular_font, weight = "Light" })
-  else
-    cfg.font = wezterm.font({ family = regular_font, weight = "Regular" })
-  end
+  cfg.font = wezterm.font({ family = regular_font, weight = "Regular" })
 
   cfg.font_rules = {
     {
