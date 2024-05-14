@@ -51,7 +51,7 @@
 
 [".local/bin/lazydocker"]
   type = "archive-file"
-  url = {{ gitHubLatestReleaseAssetURL "jesseduffield/lazydocker" "lazydocker-*-lazysql_Linux_x86_64.tar.gz" | quote }}
+  url = {{ gitHubLatestReleaseAssetURL "jesseduffield/lazydocker" "lazydocker_*_Linux_x86_64.tar.gz" | quote }}
   executable = true
   path = "lazydocker"
 
@@ -63,13 +63,13 @@
 
 [".local/bin/starship"]
   type = "archive-file"
-  url = {{ gitHubLatestReleaseAssetURL "starship/starship" "starship-x86_64-unknown--*-musl.tar.gz" | quote }}
+  url = {{ gitHubLatestReleaseAssetURL "starship/starship" "starship-x86_64-unknown-*-musl.tar.gz" | quote }}
   executable = true
   path = "starship"
 
 [".local/bin/tldr"]
   type = "file"
-  url = {{ gitHubLatestReleaseAssetURL "dbrgn/tealdeer" "tealdeer-linux-x86_64-msl" | quote }}
+  url = {{ gitHubLatestReleaseAssetURL "dbrgn/tealdeer" (printf "tealdeer-%s-x86_64-musl" .chezmoi.os) | quote }}
   executable = true
 
 [".local/bin/zoxide"]
