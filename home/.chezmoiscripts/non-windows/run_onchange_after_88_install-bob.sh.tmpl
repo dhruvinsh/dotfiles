@@ -13,6 +13,7 @@ find /tmp -name bob -exec cp '{}' ~/.local/bin/bob \;
 chmod +x ~/.local/bin/bob
 
 # install and setup bob
+~/.local/bin/bob erase
 ~/.local/bin/bob install stable
 ~/.local/bin/bob use stable
 ~/.local/bin/bob update -a
