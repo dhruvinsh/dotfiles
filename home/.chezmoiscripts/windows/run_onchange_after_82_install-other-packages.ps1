@@ -37,7 +37,7 @@ $apps = @(
     "extras/putty"
     "extras/vcredist2022" # ripgrep needs it
     "extras/wezterm"
-    "versions/neovim-nightly"
+    "main/neovim"
 );
 
 
