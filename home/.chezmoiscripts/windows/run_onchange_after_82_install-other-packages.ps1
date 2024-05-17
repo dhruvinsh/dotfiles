@@ -16,6 +16,11 @@ scoop bucket add versions
 # NOTE: do not install 7zip from scoop else we will have issue
 # for file extraction for scoop
 $apps = @(
+    "extras/lazygit"
+    "extras/putty"
+    "extras/selene"
+    "extras/vcredist2022" # ripgrep needs it
+    "extras/wezterm"
     "main/ast-grep"
     "main/bat"
     "main/cmake"
@@ -27,17 +32,12 @@ $apps = @(
     "main/git-cliff"
     "main/glow"
     "main/make"
+    "main/neovim"
     "main/nodejs-lts"
     "main/nu"
     "main/ripgrep"
     "main/sed"
     "main/zoxide"
-    "extras/lazygit"
-    "extras/selene"
-    "extras/putty"
-    "extras/vcredist2022" # ripgrep needs it
-    "extras/wezterm"
-    "main/neovim"
 );
 
 
