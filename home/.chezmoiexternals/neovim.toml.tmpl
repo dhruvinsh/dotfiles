@@ -25,7 +25,6 @@
   refreshPeriod = "168h"
       
 {{ if and (eq .chezmoi.os "linux") (.isDesktop) }}
-{{- $neovideVersionTag :=  (gitHubLatestRelease "neovide/neovide").TagName }}
 [".local/bin/neovide"]
   type = "file"
   url = {{ gitHubLatestReleaseAssetURL "neovide/neovide" "neovide.AppImage" | quote }}
