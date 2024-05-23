@@ -1,16 +1,6 @@
-local wezterm = require("wezterm")
 local platform = require("utils.platform")
 
 local M = {}
-
-local ok
-M.colorscheme = "alacritty"
-ok, M.colors =
-    pcall(wezterm.color.load_scheme, wezterm.home_dir .. "/.config/wezterm/colors/" .. M.colorscheme .. ".toml")
-if not ok then
-  wezterm.log_info("external colorscheme not found using built-in colors")
-  M.colors = wezterm.get_builtin_color_schemes()[M.colorscheme]
-end
 
 ---@param cfg table
 M.setup = function(cfg)
@@ -22,9 +12,8 @@ M.setup = function(cfg)
   end
 
   -- color scheme
-  cfg.color_scheme = M.colorscheme
-  cfg.command_palette_fg_color = M.colors.foreground
-  cfg.command_palette_bg_color = M.colors.background
+  cfg.command_palette_fg_color = cfg.colors.foreground
+  cfg.command_palette_bg_color = cfg.colors.background
 
   -- tab bar config
   -- nordfox : use_fancy_tab_bar: false
