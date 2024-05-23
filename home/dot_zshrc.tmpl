@@ -90,6 +90,7 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 {{- if .wsl }}
 # https://github.com/microsoft/wslg/wiki/GPU-selection-in-WSLg
 export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
+export PATH=/usr/lib/wsl/lib:$PATH
 {{- end}}
 
 {{- /* vim: set filetype=zsh: */}}
