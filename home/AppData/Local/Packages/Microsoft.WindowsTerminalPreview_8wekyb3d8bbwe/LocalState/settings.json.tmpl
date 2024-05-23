@@ -1,14 +1,11 @@
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema-preview",
-    "actions": [
+    "actions": 
+    [
         {
             "command": "unbound",
             "keys": "ctrl+c"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+shift+c"
         },
         {
             "command": "unbound",
@@ -23,11 +20,26 @@
             "keys": "ctrl+v"
         },
         {
-            "command": {
+            "command": "unbound",
+            "keys": "ctrl+tab"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+shift+tab"
+        },
+        {
+            "command": 
+            {
                 "action": "copy",
                 "singleLine": false
             },
-            "id": "User.copy.644BA8F2"
+            "id": "User.copy.644BA8F2",
+            "keys": "ctrl+shift+c"
+        },
+        {
+            "command": "duplicateTab",
+            "id": "User.duplicateTab",
+            "keys": "alt+shift+d"
         },
         {
             "command": "paste",
@@ -39,51 +51,72 @@
             "keys": "ctrl+shift+f"
         },
         {
-            "command": {
+            "command": 
+            {
                 "action": "splitPane",
                 "split": "auto",
                 "splitMode": "duplicate"
             },
-            "id": "User.splitPane.A6751878",
-            "keys": "alt+shift+d"
+            "id": "User.splitPane.A6751878"
         },
         {
-            "command": {
+            "command": 
+            {
+                "action": "prevTab"
+            },
+            "id": "User.prevTab.0",
+            "keys": "alt+shift+["
+        },
+        {
+            "command": 
+            {
                 "action": "splitPane",
                 "split": "right",
                 "splitMode": "duplicate"
             },
             "id": "User.splitPane.FEF0D40B",
             "keys": "alt+shift+\\"
+        },
+        {
+            "command": 
+            {
+                "action": "nextTab"
+            },
+            "id": "User.nextTab.0",
+            "keys": "alt+shift+]"
         }
     ],
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{2c4de342-38b7-51cf-b940-2309a097f518}",
     "firstWindowPreference": "persistedWindowLayout",
-    "newTabMenu": [
+    "newTabMenu": 
+    [
         {
             "type": "remainingProfiles"
         }
     ],
-    "profiles": {
-        "defaults": {
+    "profiles": 
+    {
+        "defaults": 
+        {
             "antialiasingMode": "cleartype",
             "bellStyle": "none",
             "colorScheme": "Schemer-Dark",
             "cursorShape": "filledBox",
             "experimental.retroTerminalEffect": false,
-            "font": {
+            "font": 
+            {
                 "builtinGlyphs": true,
                 "colorGlyphs": false,
-                "face": "FiraCode Nerd Font"
+                "face": "FiraCode Nerd Font",
+                "weight": "normal"
             },
             "historySize": 50000,
-            "opacity": 90,
-            "padding": "4",
-            "useAcrylic": true
+            "padding": "4"
         },
-        "list": [
+        "list": 
+        [
             {
                 "commandline": "%SystemRoot%\\System32\\cmd.exe",
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
@@ -113,7 +146,8 @@
                 "altGrAliasing": true,
                 "closeOnExit": "automatic",
                 "commandline": "C:\\\\cygwin64\\\\bin\\\\bash.exe -i -l",
-                "font": {
+                "font": 
+                {
                     "size": 12
                 },
                 "guid": "{2e937641-76b0-40f7-bd57-5c88a5919433}",
@@ -126,7 +160,8 @@
                 "altGrAliasing": true,
                 "closeOnExit": "automatic",
                 "commandline": "C:/msys64/msys2_shell.cmd -defterm -here -no-start -msys",
-                "font": {
+                "font": 
+                {
                     "size": 12
                 },
                 "guid": "{9da2cf80-a0f1-4a10-9b3f-0e5107373e76}",
@@ -139,7 +174,8 @@
         ]
     },
     "rendering.graphicsAPI": "direct3d11",
-    "schemes": [
+    "schemes": 
+    [
         {
             "background": "#16161D",
             "black": "#16161D",
@@ -166,5 +202,5 @@
     ],
     "startOnUserLogin": true,
     "themes": [],
-    "windowingBehavior": "useAnyExisting"
+    "windowingBehavior": "useNew"
 }
