@@ -4,14 +4,27 @@ local platform = require("utils.platform")
 
 local regular_font = "{{ .font.regular }}"
 local italic_font = "{{ .font.italic }}"
-local frame_font = "{{ .font.regular }}"
+local frame_font = "Roboto"
 
 local M = {}
+
+local font_size = 12.5
+local command_palette_font_size = 12.5
+if platform.is_mac then
+  font_size = 15.0
+  command_palette_font_size = 14.0
+elseif platform.is_linux then
+  -- for linux mint somehow behaving weirdly, but not going to chase right now.
+  font_size = 14.0
+  command_palette_font_size = 13.0
+end
 
 ---@param cfg table
 M.setup = function(cfg)
   -- set frame fonts, affect the command palette as well
-  cfg.window_frame = { font = wezterm.font({ family = frame_font, weight = "Light" }) }
+  cfg.window_frame = {
+    font = wezterm.font({ family = frame_font }),
+  }
 
   cfg.font = wezterm.font({ family = regular_font, weight = "Regular" })
 
@@ -24,17 +37,8 @@ M.setup = function(cfg)
   }
 
   -- font size
-  if platform.is_mac then
-    cfg.font_size = 15.0
-    cfg.command_palette_font_size = 14.0
-  elseif platform.is_linux then
-    -- for linux mint somehow behaving weirdly, but not going to chase right now.
-    cfg.font_size = 14.0
-    cfg.command_palette_font_size = 13.0
-  else
-    cfg.font_size = 12.5
-    cfg.command_palette_font_size = 12.5
-  end
+  cfg.font_size = font_size
+  cfg.command_palette_font_size = command_palette_font_size
 end
 
 return M
