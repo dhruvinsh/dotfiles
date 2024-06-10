@@ -2,7 +2,7 @@
 
 [".local/bin/atuin"]
   type = "archive-file"
-  url  = {{ gitHubLatestReleaseAssetURL "atuinsh/atuin" "atuin-*-x86_64-unknown-linux-musl.tar.gz" | quote }}
+  url  = {{ gitHubLatestReleaseAssetURL "atuinsh/atuin" "atuin-x86_64-unknown-linux-musl.tar.gz" | quote }}
   executable = true
   stripComponents = 1
   path = "atuin"
