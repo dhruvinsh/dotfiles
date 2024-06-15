@@ -72,6 +72,13 @@
   url = {{ gitHubLatestReleaseAssetURL "dbrgn/tealdeer" (printf "tealdeer-%s-x86_64-musl" .chezmoi.os) | quote }}
   executable = true
 
+[".local/bin/yazi"]
+  type = "archive-file"
+  url = {{ gitHubLatestReleaseAssetURL "sxyazi/yazi" (printf "yazi-x86_64-unknown-%s-musl.zip" .chezmoi.os ) | quote }}
+  executable = true
+  stripComponents = 1
+  path = "yazi"
+
 [".local/bin/zoxide"]
   type = "archive-file"
   url  = {{ gitHubLatestReleaseAssetURL "ajeetdsouza/zoxide" (printf "zoxide-*-x86_64-unknown-%s-musl.tar.gz" .chezmoi.os) | quote}}
