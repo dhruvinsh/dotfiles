@@ -37,6 +37,7 @@ $apps = @(
     "main/nu"
     "main/ripgrep"
     "main/sed"
+    "main/yazi"
     "main/zoxide"
 );
 
