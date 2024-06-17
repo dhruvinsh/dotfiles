@@ -31,10 +31,17 @@ appimg_installer ()
     mv "$tmp_file" "$HOME/Applications/"
 }
 
+# install on all PC
 # {{- if (and (.isDesktop) (.ubuntu)) }}
 
 WEZTERM={{ gitHubLatestReleaseAssetURL "wez/wezterm" "wezterm-*.Ubuntu22.04.deb" | quote  }}
 deb_installer "$WEZTERM" "wezterm"
+
+SUBLIME="https://www.sublimetext.com/download_thanks?target=x64-deb"
+deb_installer "$SUBLIME" "sublime"
+
+SUBLIME_MERGE="https://www.sublimemerge.com/download_thanks?target=x64-deb"
+deb_installer "$SUBLIME_MERGE" "sublime_merge"
 
 # {{- end }}
 
