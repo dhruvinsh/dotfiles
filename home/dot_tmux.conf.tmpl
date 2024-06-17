@@ -11,6 +11,7 @@ set -g @plugin '27medkamal/tmux-session-wizard'
 set -g @plugin 'sainnhe/tmux-fzf'
 
 set -as terminal-overrides ",$TERM:RGB"
+set -ag terminal-features ",$TERM:usstyle"
 {{- if eq .wsl true }}
 set -sg escape-time 10
 {{- end }}
