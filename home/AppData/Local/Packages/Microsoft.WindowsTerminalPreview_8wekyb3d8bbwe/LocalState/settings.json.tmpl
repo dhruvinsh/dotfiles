@@ -4,6 +4,15 @@
     "actions": 
     [
         {
+            "command": 
+            {
+                "action": "copy",
+                "singleLine": false
+            },
+            "id": "User.copy.644BA8F2",
+            "keys": "ctrl+shift+c"
+        },
+        {
             "command": "unbound",
             "keys": "ctrl+c"
         },
@@ -28,22 +37,13 @@
             "keys": "ctrl+shift+tab"
         },
         {
-            "command": 
-            {
-                "action": "copy",
-                "singleLine": false
-            },
-            "id": "User.copy.644BA8F2",
-            "keys": "ctrl+shift+c"
+            "command": "paste",
+            "id": "User.paste"
         },
         {
             "command": "duplicateTab",
             "id": "User.duplicateTab",
             "keys": "alt+shift+d"
-        },
-        {
-            "command": "paste",
-            "id": "User.paste"
         },
         {
             "command": "find",
@@ -135,13 +135,7 @@
                 "name": "podman-machine-default",
                 "source": "Windows.Terminal.Wsl"
             },
-            {
-                "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
-                "hidden": false,
-                "icon": "https://assets.ubuntu.com/v1/49a1a858-favicon-32x32.png",
-                "name": "Ubuntu",
-                "source": "Windows.Terminal.Wsl"
-            },
+            {{ if not .personalmachine -}}
             {
                 "altGrAliasing": true,
                 "closeOnExit": "automatic",
@@ -170,6 +164,14 @@
                 "name": "Msys2",
                 "snapOnInput": true,
                 "startingDirectory": "C:/msys64/home/%USERNAME%"
+            },
+            {{ end -}}
+            {
+                "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+                "hidden": false,
+                "icon": "https://assets.ubuntu.com/v1/49a1a858-favicon-32x32.png",
+                "name": "Ubuntu",
+                "source": "Windows.Terminal.Wsl"
             }
         ]
     },
@@ -200,7 +202,7 @@
             "yellow": "#E5C07B"
         }
     ],
-    "startOnUserLogin": true,
+    "startOnUserLogin": {{ if .personalmachine -}} false{{ else -}} true{{ end -}},
     "themes": [],
     "windowingBehavior": "useNew"
 }
