@@ -33,6 +33,7 @@ $apps = @(
     "main/git"
     "main/git-cliff"
     "main/glow"
+    "main/luarocks"
     "main/make"
     "main/neovim"
     "main/nodejs-lts"
