@@ -21,7 +21,7 @@ layout_poetry() {
     fi
 
     PATH_add "$VIRTUAL_ENV/bin"
-    export POETRY_ACTIVE=1
+    export POETRY_ACTIVE=1  # or VENV_ACTIVE=1
     export VIRTUAL_ENV
 }
 
@@ -37,13 +37,13 @@ layout_rye() {
     fi
 
     if [[ -z $VIRTUAL_ENV || ! -d $VIRTUAL_ENV ]]; then
-        log_status "No virtual environment exists. Executing \`rye sync\` to create one."
+        log_status "No virtual environment exists. Executing \`rye sync\` to create one."    
         rye sync
         VIRTUAL_ENV="$(pwd)/.venv"
     fi
 
     PATH_add "$VIRTUAL_ENV/bin"
-    export VENV_ACTIVE=1
+    export RYE_ACTIVE=1  # or VENV_ACTIVE=1
     export VIRTUAL_ENV
 }
 
