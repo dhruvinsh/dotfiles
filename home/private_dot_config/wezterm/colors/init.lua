@@ -1,5 +1,5 @@
 local M = {}
-local palette = require("colors.palettes")["onedark"]
+local palette = require("colors.palettes")["tokyonight"]
 
 M.setup = function(cfg)
   cfg.colors = {
@@ -46,7 +46,12 @@ M.setup = function(cfg)
     quick_select_label_fg = { Color = "#ffffff" },
     quick_select_match_bg = { AnsiColor = "Navy" },
     quick_select_match_fg = { Color = "#ffffff" },
+  }
 
+  local tab_bar
+  if palette.tab_bar then
+    tab_bar = palette.tab_bar
+  else
     tab_bar = {
       -- The color of the strip that goes along the top of the window
       -- (does not apply when fancy tab bar is in use)
@@ -117,8 +122,10 @@ M.setup = function(cfg)
         -- The same options that were listed under the `active_tab` section above
         -- can also be used for `new_tab_hover`.
       },
-    },
-  }
+    }
+  end
+
+  cfg.colors.tab_bar = tab_bar
 end
 
 return M
