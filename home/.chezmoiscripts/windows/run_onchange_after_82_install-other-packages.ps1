@@ -1,10 +1,10 @@
-# vim: set ft=powershell
+# vim: set ft=powershell:
 
 # NOTE: for future, https://github.com/ScoopInstaller/Extras/issues/1861#issuecomment-1320653215
 # You can install Visual Studio Build Tools using:
 # ```
 # Invoke-WebRequest -Uri 'https://aka.ms/vs/17/release/vs_BuildTools.exe' -OutFile "$env:TEMP\vs_BuildTools.exe"
-# & "$env:TEMP\vs_BuildTools.exe" --passive --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --remove Microsoft.VisualStudio.Component.VC.CMake.Project	
+# & "$env:TEMP\vs_BuildTools.exe" --passive --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --remove Microsoft.VisualStudio.Component.VC.CMake.Project
 # ```
 # Don't include --remove Microsoft.VisualStudio.Component.VC.CMake.Project if you want CMake to be included. Personally, I use scoop install cmake as that has a newer version.
 
@@ -33,6 +33,7 @@ $apps = @(
     "main/git"
     "main/git-cliff"
     "main/glow"
+    "main/just"
     "main/luarocks"
     "main/make"
     "main/neovim"
