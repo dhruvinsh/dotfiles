@@ -68,6 +68,12 @@
   stripComponents = 1
   path = "jj"
 
+[".local/bin/just"]
+  type = "archive-file"
+  url = {{ gitHubLatestReleaseAssetURL "casey/just" (printf "just-*-x86_64-unknown-%s-musl.tar.gz" .chezmoi.os) | quote }}
+  executable = true
+  path = "just"
+
 [".local/bin/starship"]
   type = "archive-file"
   url = {{ gitHubLatestReleaseAssetURL "starship/starship" "starship-x86_64-unknown-*-musl.tar.gz" | quote }}
