@@ -1,3 +1,11 @@
+[".local/bin/nvim"]
+  type = "file"
+  url  = {{ gitHubLatestReleaseAssetURL "neovim/neovim" "nvim.appimage" | quote }}
+  executable = true
+
+#
+# nvim setup
+# 
 {{ $nvimPath := "" }}
 {{ if eq .chezmoi.os "windows" }}
 {{   $nvimPath = "AppData/Local/nvim" }}
@@ -10,6 +18,9 @@
   url = "https://github.com/dhruvinsh/nvim.git"
   refreshPeriod = "168h"
 
+# 
+# vnvim setup
+# 
 {{ $vnvimPath := "" }}
 {{ if eq .chezmoi.os "windows" }}
 {{   $vnvimPath = "AppData/Local/vnvim" }}
