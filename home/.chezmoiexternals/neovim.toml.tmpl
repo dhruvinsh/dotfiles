@@ -1,7 +1,9 @@
+{{ if eq .chezmoi.os "linux" }}
 [".local/bin/nvim"]
   type = "file"
   url  = {{ gitHubLatestReleaseAssetURL "neovim/neovim" "nvim.appimage" | quote }}
   executable = true
+{{- end }}
 
 #
 # nvim setup
