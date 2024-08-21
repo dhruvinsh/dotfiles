@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # vim: set expandtab ft=bash ts=4 tw=4:
 
-# neovim is now managed by bob
-brew uninstall neovim
+# remove bob
+[ -d "$HOME/.local/share/bob" ] && rm -rf "$HOME/.local/share/bob"
+[ -f "$HOME/.local/bin/bob" ] && rm "$HOME/.local/bin/bob"
