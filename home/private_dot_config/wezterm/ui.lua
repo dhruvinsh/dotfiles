@@ -33,8 +33,6 @@ M.setup = function(cfg)
     saturation = 0.9,
     brightness = 0.8,
   }
-
-  cfg.window_decorations = "RESIZE"
 end
 
 return M
