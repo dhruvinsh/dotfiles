@@ -34,8 +34,9 @@
 
 [".local/bin/glow"]
   type = "archive-file"
-  url = {{ gitHubLatestReleaseAssetURL "charmbracelet/glow" "glow_Linux_x86_64.tar.gz" | quote }}
+  url = {{ gitHubLatestReleaseAssetURL "charmbracelet/glow" "glow_*_Linux_x86_64.tar.gz" | quote }}
   executable = true
+  stripComponents = 1
   path = "glow"
 
 [".local/bin/helix"]
