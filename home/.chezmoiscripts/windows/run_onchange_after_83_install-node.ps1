@@ -3,11 +3,11 @@
 # lets make sure scoop have volta installed
 scoop install "main/volta"
 
-$vpackages=@(
-    node
-    pnpm
-    vite
-    yarn
+$vpackages = @(
+    "node"
+    "pnpm"
+    "vite"
+    "yarn"
 );
 
 foreach ($vpackage in $vpackages) {
