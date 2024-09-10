@@ -1,14 +1,22 @@
 # vim: set ft=powershell
 
-$packages = @(
-  "nerd-fonts/CascadiaCode-NF"
-  "versions/neovim-nightly"
-);
+try {
+  if (Get-Command scoop) {
+    $packages = @(
+      "main/nodejs-lts"
+      "nerd-fonts/CascadiaCode-NF"
+      "versions/neovim-nightly"
+    );
 
-
-foreach ($package in $packages) {
-    Write-Output "--> Uninstalling $package.."
-    scoop uninstall $package
+    foreach ($package in $packages) {
+      Write-Output "--> Uninstalling $package.."
+      scoop uninstall $package
+    }
+  }
+}
+catch {
+  Write-Output "Scoop not found, assuming new setup."
 }
 
+Write-Output "Removing gitconfig.."
 rm ~/.gitconfig
