@@ -11,6 +11,6 @@ $vpackages=@(
 );
 
 foreach ($vpackage in $vpackages) {
-    Write-Output "--> Installing $font.."
-    volta install $font
+    Write-Output "--> Installing $vpackage.."
+    volta install $vpackage
 }
