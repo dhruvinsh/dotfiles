@@ -19,8 +19,8 @@ $apps = @(
     "extras/lazygit"
     "extras/putty"
     "extras/selene"
-    "extras/sublime-text"
     "extras/sublime-merge"
+    "extras/sublime-text"
     "extras/vcredist2022" # ripgrep needs it
     "extras/wezterm"
     "main/ast-grep"
