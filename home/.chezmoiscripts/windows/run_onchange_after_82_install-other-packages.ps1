@@ -37,7 +37,6 @@ $apps = @(
     "main/luarocks"
     "main/make"
     "main/neovim"
-    "main/nodejs-lts"
     "main/nu"
     "main/ripgrep"
     "main/sed"
