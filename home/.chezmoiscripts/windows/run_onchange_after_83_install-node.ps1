@@ -4,7 +4,7 @@
 scoop install "main/volta"
 
 $vpackages=@(
-    node@lts
+    node
     pnpm
     vite
     yarn
