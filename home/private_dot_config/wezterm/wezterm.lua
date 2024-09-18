@@ -8,11 +8,7 @@ local zen_mode = require("events.zen_mode")
 local domain = require("events.domain")
 local colors = require("colors")
 
-local config = {}
-
-if wezterm.config_builder then
-  config = wezterm.config_builder()
-end
+local config = wezterm.config_builder()
 
 -- NOTE: first load colors
 colors.setup(config)
