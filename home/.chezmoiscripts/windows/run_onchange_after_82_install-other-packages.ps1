@@ -41,6 +41,7 @@ $apps = @(
     "main/ripgrep"
     "main/sed"
     "main/yazi"
+    "main/yq"
     "main/zoxide"
 );
 
