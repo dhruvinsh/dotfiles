@@ -86,14 +86,14 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
 DISABLE_AUTO_UPDATE="true"
 
 plugins=(
-	{{- if eq .chezmoi.os "darwin"}}
-	brew
-	{{ end -}}
-	git
-	zoxide
-	zsh-syntax-highlighting
-	zsh-autosuggestions
-	zsh-completions
+  {{- if eq .chezmoi.os "darwin"}}
+  brew
+  {{ end -}}
+  git
+  zoxide
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+  zsh-completions
 )
 
 # zsh-completions setup
@@ -119,9 +119,9 @@ eval "$(atuin init zsh)"
 
 # pyenv require for interactive shells
 if [ -d "$HOME/.pyenv" ]; then
-	export PYENV_ROOT="$HOME/.pyenv"
-	export PATH="$PYENV_ROOT/bin:$PATH"
-	eval "$(pyenv init -)"
+  export PYENV_ROOT="$HOME/.pyenv"
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init -)"
 fi
 
 # volta setup
