@@ -1,5 +1,5 @@
 local M = {}
-local palette = require("colors.palettes")["tokyonight"]
+local palette = require("colors.palettes")["gruvbox"]
 
 M.setup = function(cfg)
   cfg.colors = {
