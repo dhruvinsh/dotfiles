@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # supercharded SSH with fzf and ripgrep.
-# scavange SSH config with ripgrep and present with fzf and login to selected hostname
+# scavenge SSH config with ripgrep and present with fzf and login to selected hostname
 
 if [ ! -x "$(command -v rg)" ]; then
   echo "Error: rg is not installed." >&2
@@ -13,9 +13,9 @@ if [ ! -f ~/.ssh/config ]; then
 fi
 
 # reference: https://www.jamesridgway.co.uk/list-ssh-hosts-from-your-ssh-config/
-data=$(rg -P "^Host ([^*]+)$" $HOME/.ssh/config | sed 's/Host //')
+data=$(rg -P "^Host ([^*]+)$" "$HOME"/.ssh/config | sed 's/Host //')
 
-selected=$(echo "$data" | fzf --height=15 --layout=reverse --border)
+selected=$(echo "$data" | fzf --cycle --height=15 --layout=reverse --border)
 
 if [ -z "$selected" ]; then
   echo "no valid host found"
