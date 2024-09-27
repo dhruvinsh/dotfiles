@@ -1,3 +1,26 @@
+# - `#828bb8` -> `#83a598`
+# - `#2f334d` -> `#3c3836`
+# - `#1e2030` -> `#282828`
+# - `#ff966c` -> `#fe8019`
+# - `#0db9d7` -> `#458588`
+# - `#203346` -> `#3c3836`
+# - `#4fd6be` -> `#8ec07c`
+# - `#ff757f` -> `#fb4934`
+# - `#c099ff` -> `#d3869b`
+# - `#82aaff` -> `#83a598`
+# - `#c8d3f5` -> `#ebdbb2`
+# - `#3b4261` -> `#504945`
+# - `#222436` -> `#282828`
+# - `#41a6b5` -> `#689d6a`
+# - `#c53b53` -> `#cc241d`
+# - `#3e68d7` -> `#458588`
+# - `#589ed7` -> `#458588`
+# - `#fca7ea` -> `#d3869b`
+# - `#ffc777` -> `#fabd2f`
+# - `#c3e88d` -> `#b8bb26`
+# - `#444a73` -> `#504945`
+# - `#86e1fc` -> `#83a598`
+{{ if eq .ui.colorScheme "tokyonight" }}
 [manager]
 # NOTE: can combined with tmTheme (sublime colorshceme file) for preview code highlight
 # highlight = "path/to/tmTheme"
@@ -103,28 +126,160 @@ footer  = { fg = "#c8d3f5", bg = "#222436" }
 [filetype]
 
 rules = [
-	# Images
-	{ mime = "image/*", fg = "#ffc777" },
+  # Images
+  { mime = "image/*", fg = "#ffc777" },
 
-	# Media
-	{ mime = "{audio,video}/*", fg = "#c099ff" },
+  # Media
+  { mime = "{audio,video}/*", fg = "#c099ff" },
 
-	# Archives
-	{ mime = "application/*zip", fg = "#ff757f" },
-	{ mime = "application/x-{tar,bzip*,7z-compressed,xz,rar}", fg = "#ff757f" },
+  # Archives
+  { mime = "application/*zip", fg = "#ff757f" },
+  { mime = "application/x-{tar,bzip*,7z-compressed,xz,rar}", fg = "#ff757f" },
 
-	# Documents
-	{ mime = "application/{pdf,doc,rtf,vnd.*}", fg = "#86e1fc" },
+  # Documents
+  { mime = "application/{pdf,doc,rtf,vnd.*}", fg = "#86e1fc" },
 
-	# Empty files
-	# { mime = "inode/x-empty", fg = "#ff757f" },
+  # Empty files
+  # { mime = "inode/x-empty", fg = "#ff757f" },
 
-	# Special files
-	{ name = "*", is = "orphan", bg = "#ff757f" },
-	{ name = "*", is = "exec"  , fg = "#c3e88d" },
+  # Special files
+  { name = "*", is = "orphan", bg = "#ff757f" },
+  { name = "*", is = "exec"  , fg = "#c3e88d" },
 
-	# Fallback
-	{ name = "*/", fg = "#82aaff" }
+  # Fallback
+  { name = "*/", fg = "#82aaff" }
 ]
-    
-{{/* vim: set filetype=toml: */}}
+{{ end -}}
+
+{{ if eq .ui.colorScheme "gruvbox" }}
+[manager]
+# NOTE: can combined with tmTheme (sublime colorshceme file) for preview code highlight
+# highlight = "path/to/tmTheme"
+
+cwd = { fg = "#83a598", italic = true }
+
+# Hovered
+hovered         = { bg = "#3c3836" }
+preview_hovered = { bg = "#3c3836" }
+
+# Find
+find_keyword  = { fg = "#282828", bg = "#fe8019", bold = true }
+find_position = { fg = "#458588", bg = "#3c3836", bold = true }
+
+# Marker
+marker_copied   = { fg = "#8ec07c", bg = "#8ec07c" }
+marker_cut      = { fg = "#fb4934", bg = "#fb4934" }
+marker_marked   = { fg = "#d3869b", bg = "#d3869b" }
+marker_selected = { fg = "#83a598", bg = "#83a598" }
+
+# Tab
+tab_active   = { fg = "#ebdbb2", bg = "#3c3836" }
+tab_inactive = { fg = "#504945", bg = "#282828" }
+tab_width    = 1
+
+# Count
+count_copied   = { fg = "#ebdbb2", bg = "#689d6a" }
+count_cut      = { fg = "#ebdbb2", bg = "#cc241d" }
+count_selected = { fg = "#ebdbb2", bg = "#458588" }
+# Border
+border_symbol = "│"
+border_style  = { fg = "#458588" }
+
+[status]
+separator_open  = ""
+separator_close = ""
+separator_style = { fg = "#504945", bg = "#504945" }
+
+# Mode
+mode_normal = { fg = "#282828", bg = "#83a598", bold = true }
+mode_select = { fg = "#282828", bg = "#d3869b", bold = true }
+mode_unset  = { fg = "#282828", bg = "#d3869b", bold = true }
+
+# Progress
+progress_label  = { fg = "#83a598", bold = true }
+progress_normal = { fg = "#282828" }
+progress_error  = { fg = "#fb4934" }
+
+# Permissions
+permissions_t = { fg = "#83a598" }
+permissions_r = { fg = "#fabd2f" }
+permissions_w = { fg = "#fb4934" }
+permissions_x = { fg = "#b8bb26" }
+permissions_s = { fg = "#504945" }
+
+[select]
+border   = { fg = "#458588" }
+active   = { fg = "#ebdbb2",  bg = "#3c3836" }
+inactive = { fg = "#ebdbb2" }
+
+# Input
+[input]
+border   = { fg = "#458588" }
+title    = {}
+value    = { fg = "#d3869b" }
+selected = { bg = "#3c3836" }
+
+# Completion
+[completion]
+border   = { fg = "#458588" }
+active   = { fg = "#ebdbb2", bg = "#3c3836" }
+inactive = { fg = "#ebdbb2" }
+
+# Tasks
+[tasks]
+border  = { fg = "#458588" }
+title   = {}
+hovered = { fg = "#ebdbb2", bg="#3c3836" }
+
+# Which
+[which]
+cols = 3
+mask            = { bg = "#282828" }
+cand            = { fg = "#83a598" }
+rest            = { fg = "#83a598" }
+desc            = { fg = "#d3869b" }
+separator       = "  "
+separator_style = { fg = "#504945" }
+
+# Notify
+[notify]
+title_info  = { fg = "#458588" }
+title_warn  = { fg = "#fabd2f" }
+title_error = { fg = "#fb4934" }
+
+# Help
+[help]
+on      = { fg = "#b8bb26" }
+run     = { fg = "#d3869b" }
+hovered = { bg = "#3c3836" }
+footer  = { fg = "#ebdbb2", bg = "#282828" }
+
+[filetype]
+
+rules = [
+  # Images
+  { mime = "image/*", fg = "#fabd2f" },
+
+  # Media
+  { mime = "{audio,video}/*", fg = "#d3869b" },
+
+  # Archives
+  { mime = "application/*zip", fg = "#fb4934" },
+  { mime = "application/x-{tar,bzip*,7z-compressed,xz,rar}", fg = "#fb4934" },
+
+  # Documents
+  { mime = "application/{pdf,doc,rtf,vnd.*}", fg = "#83a598" },
+
+  # Empty files
+  # { mime = "inode/x-empty", fg = "#fb4934" },
+
+  # Special files
+  { name = "*", is = "orphan", bg = "#fb4934" },
+  { name = "*", is = "exec"  , fg = "#b8bb26" },
+
+  # Fallback
+  { name = "*/", fg = "#83a598" }
+]
+{{ end -}}
+
+{{/* vim: set filetype=toml sw=2 ts=2 expandtab: */}}
