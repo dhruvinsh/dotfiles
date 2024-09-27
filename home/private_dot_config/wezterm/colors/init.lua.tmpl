@@ -1,5 +1,5 @@
 local M = {}
-local palette = require("colors.palettes")["gruvbox"]
+local palette = require("colors.palettes")[{{ .ui.colorScheme | quote }}]
 
 M.setup = function(cfg)
   cfg.colors = {
@@ -129,3 +129,5 @@ M.setup = function(cfg)
 end
 
 return M
+
+--[[/* vim: set filetype=lua: */]]
