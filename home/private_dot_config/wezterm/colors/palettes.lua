@@ -107,8 +107,8 @@ M.gruvbox = {
   cursor_border = "#ebdbb2",
   cursor_fg = "#282828",
 
-  selection_bg = "#928374",
-  selection_fg = "#282828",
+  selection_bg = "#665c54",
+  selection_fg = "#ebdbb2",
 
   split = "#83a598",
   compose_cursor = "#fe8019",
