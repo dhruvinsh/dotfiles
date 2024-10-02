@@ -1,0 +1,9 @@
+*Zone.Identifier
+.DS_Store
+.mypy_cache
+.ruff_cache
+.venv
+.vite/**
+__mypy__
+__pycache__
+node_modules/**
