@@ -33,6 +33,8 @@ eval "$(starship init zsh)"
 
 # fzf setup
 eval "$(fzf --zsh)"
+# unset FZF_DEFAULT_OPTS if any
+[[ -z $FZF_DEFAULT_OPTS ]] || unset FZF_DEFAULT_OPTS
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
   --highlight-line \
