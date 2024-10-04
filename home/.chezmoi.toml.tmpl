@@ -80,8 +80,93 @@
   regular = "FiraCode Nerd Font"
   italic = "FiraCode Nerd Font"
 
-[data.ui]
-  colorScheme = "gruvbox"
+{{/* UI Setup: ColorScheme */}}
+{{- $colorSchemChoices := list "gruvbox" "kanagawa" "onedark" "tokyonight" -}}
+{{- $colorScheme := promptChoiceOnce . "colorScheme" "What color scheme to use" $colorSchemChoices }}
+
+[data.colorScheme]
+  name = {{ $colorScheme | quote }}
+
+  {{ if eq $colorScheme "gruvbox" -}}
+  foreground = "#ebdbb2"
+  background = "#282828"
+
+  cursor_bg = "#ebdbb2"
+  cursor_border = "#ebdbb2"
+  cursor_fg = "#282828"
+
+  selection_bg = "#665c54"
+  selection_fg = "#ebdbb2"
+
+  compose_cursor = "#fe8019"
+  scrollbar_thumb = "#928374"
+  split = "#83a598"
+
+  ansi = [ "#282828", "#cc241d", "#98971a", "#d79921", "#458588", "#b16286", "#689d6a", "#a89984" ]
+  brights = [ "#928374", "#fb4934", "#b8bb26", "#fabd2f", "#83a598", "#d3869b", "#8ec07c", "#ebdbb2" ]
+
+  indexed = { 16 = "#ffa066", 17 = "#ff5d62" }
+
+  {{- else if eq $colorScheme "kanagawa" -}}
+  foreground = "#dcd7ba"
+  background = "#1f1f28"
+
+  cursor_bg = "#c8c093"
+  cursor_fg = "#c8c093"
+  cursor_border = "#c8c093"
+
+  selection_fg = "#c8c093"
+  selection_bg = "#2d4f67"
+
+  compose_cursor = "#c8c093"
+  scrollbar_thumb = "#16161d"
+  split = "#16161d"
+
+  ansi = ["#090618", "#c34043", "#76946a", "#c0a36e", "#7e9cd8", "#957fb8", "#6a9589", "#c8c093"]
+  brights = ["#727169", "#e82424", "#98bb6c", "#e6c384", "#7fb4ca", "#938aa9", "#7aa89f", "#dcd7ba"]
+
+  indexed = { 16 = "#ffa066", 17 = "#ff5d62" }
+
+  {{- else if eq $colorScheme "onedark" -}}
+  foreground = "#abb2bf"
+  background = "#16161D"
+
+  cursor_bg = "#abb2bf"
+  cursor_border = "#abb2bf"
+  cursor_fg = "#abb2bf"
+
+  selection_bg = "#abb2bf"
+  selection_fg = "#16161D"
+
+  compose_cursor = "#ff966c"
+  split = "#6b6b6b"
+  visual_bell = "#524f67"
+
+  ansi = [ "#16161D", "#e06c75", "#98c379", "#e5c07b", "#0184bc", "#c678dd", "#56b6c2", "#abb2bf" ]
+  brights = [ "#565c64", "#e06c75", "#98c379", "#e5c07b", "#0184bc", "#c678dd", "#56b6c2", "#c5c8e6" ]
+
+  indexed = { 16 = "#ffa066", 17 = "#ff5d62" }
+
+  {{- else if eq $colorScheme "tokyonight" -}}
+  foreground = "#c8d3f5"
+  background = "#222436"
+
+  cursor_bg = "#c8d3f5"
+  cursor_border = "#c8d3f5"
+  cursor_fg = "#222436"
+
+  selection_bg = "#2d3f76"
+  selection_fg = "#c8d3f5"
+
+  compose_cursor = "#ff966c"
+  scrollbar_thumb = "#2f334d"
+  split = "#82aaff"
+
+  ansi = [ "#1b1d2b", "#ff757f", "#c3e88d", "#ffc777", "#82aaff", "#c099ff", "#86e1fc", "#828bb8" ]
+  brights = [ "#444a73", "#ff757f", "#c3e88d", "#ffc777", "#82aaff", "#c099ff", "#86e1fc", "#c8d3f5" ]
+
+  indexed = { 16 = "#ffa066", 17 = "#ff5d62" }
+  {{- end }}
 
 [github]
     refreshPeriod = "12h"

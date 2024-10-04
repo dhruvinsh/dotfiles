@@ -1,30 +1,55 @@
 local M = {}
-local palette = require("colors.palettes")[{{ .ui.colorScheme | quote }}]
 
 M.setup = function(cfg)
   cfg.colors = {
-    foreground = palette.foreground,
-    background = palette.background,
+    foreground = {{ .colorScheme.foreground | quote }},
+    background = {{ .colorScheme.background | quote }},
 
-    cursor_bg = palette.cursor_bg,
-    cursor_border = palette.cursor_border,
-    cursor_fg = palette.cursor_fg,
+    cursor_bg = {{ .colorScheme.cursor_bg | quote }},
+    cursor_border = {{ .colorScheme.cursor_border | quote }},
+    cursor_fg = {{ .colorScheme.cursor_fg | quote }},
 
-    selection_fg = palette.selection_fg,
-    selection_bg = palette.selection_bg,
+    selection_fg = {{ .colorScheme.selection_fg | quote }},
+    selection_bg = {{ .colorScheme.selection_bg | quote }},
 
-    scrollbar_thumb = palette.scrollbar_thumb or "#6b6b6b",
-    split = palette.split,
-    visual_bell = palette.visual_bell or "#524f67", -- pending
+    scrollbar_thumb = {{ .colorScheme.scrollbar_thumb | quote }},
+    split = {{ .colorScheme.split | quote }},
 
-    ansi = palette.ansi,
-    brights = palette.brights,
+    ansi = {"{{ .colorScheme.ansi | join "\", \""}}"},
+    brights = {"{{ .colorScheme.brights | join "\", \""}}"},
 
-    indexed = palette.indexed or { [136] = "#af8700" },
+    indexed = {{ .colorScheme.indexed | toJson | replaceAllRegex ":" "=" | replaceAllRegex "\"([0-9][0-9])\"" "[${1}]" }},
 
-    compose_cursor = palette.compose_cursor or "#75b5aa",
+    compose_cursor = {{ .colorScheme.compose_cursor | quote }},
+    tab_bar = {
+      inactive_tab_edge = {{ index .colorScheme.ansi 0 | quote }},
+      background = {{ .colorScheme.background | quote }},
+
+      active_tab = {
+        fg_color = {{ index .colorScheme.ansi 0 | quote }},
+        bg_color = {{ index .colorScheme.ansi 4 | quote }},
+      },
+      inactive_tab = {
+        fg_color = {{ index .colorScheme.brights 0 | quote }},
+        bg_color = {{ .colorScheme.split | quote }},
+      },
+      inactive_tab_hover = {
+        fg_color = {{ index .colorScheme.ansi 4 | quote }},
+        bg_color = {{ .colorScheme.split | quote }},
+        italic = true,
+      },
+      new_tab = {
+        fg_color = {{ index .colorScheme.ansi 4 | quote }},
+        bg_color = {{ .colorScheme.background | quote }},
+      },
+      new_tab_hover = {
+        fg_color = {{ index .colorScheme.ansi 4 | quote }},
+        bg_color = {{ .colorScheme.background | quote }},
+        intensity = "Bold",
+      },
+    }
+
   }
-  cfg.colors.tab_bar = palette.tab_bar
 end
 
 return M

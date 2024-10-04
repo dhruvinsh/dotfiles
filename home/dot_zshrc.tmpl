@@ -41,48 +41,27 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
   --layout=reverse \
   --border=none \
 "
-{{ if eq .ui.colorScheme "tokyonight" -}}
-# adding FZF tokyonight color option
+
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
-  --color=bg+:#2d3f76 \
-  --color=bg:#1e2030 \
-  --color=border:#589ed7 \
-  --color=fg:#c8d3f5 \
-  --color=gutter:#1e2030 \
-  --color=header:#ff966c \
-  --color=hl+:#65bcff \
-  --color=hl:#65bcff \
-  --color=info:#545c7e \
-  --color=marker:#ff007c \
-  --color=pointer:#ff007c \
-  --color=prompt:#65bcff \
-  --color=query:#c8d3f5:regular \
-  --color=scrollbar:#589ed7 \
-  --color=separator:#ff966c \
-  --color=spinner:#ff007c \
+  --color=bg+:{{ .colorScheme.selection_bg }} \
+  --color=bg:{{ .colorScheme.background }} \
+  --color=border:{{ index .colorScheme.brights 4 }} \
+  --color=fg: {{ .colorScheme.foreground }} \
+  --color=gutter:{{ .colorScheme.background }} \
+  --color=header:{{ get .colorScheme.indexed "16" }} \
+  --color=hl+:{{ index .colorScheme.brights 4 }} \
+  --color=hl:{{ index .colorScheme.brights 4 }} \
+  --color=info:{{ index .colorScheme.brights 5 }} \
+  --color=marker:{{ index .colorScheme.brights 1 }} \
+  --color=pointer:{{ index .colorScheme.brights 1 }} \
+  --color=prompt:{{ index .colorScheme.brights 4 }} \
+  --color=query:{{ .colorScheme.foreground }}:regular \
+  --color=scrollbar:{{ index .colorScheme.ansi 4 }} \
+  --color=separator:{{ get .colorScheme.indexed "16" }} \
+  --color=spinner:{{ index .colorScheme.brights 1 }} \
 "
-{{ end -}}
-{{ if eq .ui.colorScheme "gruvbox" -}}
-# adding FZF gruvebox color options
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
-  --color=bg+:#3c3836 \
-  --color=bg:#1d2021 \
-  --color=border:#928374 \
-  --color=fg:#bdae93 \
-  --color=gutter:#282828 \
-  --color=header:#83a598 \
-  --color=hl+:#b8bb26 \
-  --color=hl:#83a598 \
-  --color=info:#fabd2f \
-  --color=marker:#8ec07c \
-  --color=pointer:#8ec07c \
-  --color=prompt:#fabd2f \
-  --color=query:#ebdbb2:regular \
-  --color=scrollbar:#928374 \
-  --color=separator:#83a598 \
-  --color=spinner:#8ec07c \
-"
-{{ end -}}
+
+export NVIM_COLORSCHEME={{ .colorScheme.name }}
 
 DISABLE_AUTO_UPDATE="true"
 
