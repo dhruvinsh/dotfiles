@@ -17,7 +17,7 @@ M.setup = function(cfg)
     split = {{ .colorScheme.overlay0 | quote }},
     visual_bell = {{ .colorScheme.surface0 | quote }},
 
-    ansi = [
+    ansi = {
       {{ .colorScheme.surface1 | quote }},
       {{ .colorScheme.red | quote }},
       {{ .colorScheme.green | quote }},
@@ -26,8 +26,8 @@ M.setup = function(cfg)
       {{ .colorScheme.pink | quote }},
       {{ .colorScheme.teal | quote }},
       {{ .colorScheme.subtext1 | quote }},
-    ],
-    brights = [
+    },
+    brights = {
       {{ .colorScheme.surface1 | quote }},
       {{ .colorScheme.red | quote }},
       {{ .colorScheme.green | quote }},
@@ -36,7 +36,7 @@ M.setup = function(cfg)
       {{ .colorScheme.pink | quote }},
       {{ .colorScheme.teal | quote }},
       {{ .colorScheme.subtext1 | quote }},
-    ],
+    },
 
     indexed = {
       [16] = {{ .colorScheme.peach | quote }},
