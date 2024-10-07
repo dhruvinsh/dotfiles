@@ -2,53 +2,96 @@ local M = {}
 
 M.setup = function(cfg)
   cfg.colors = {
-    foreground = {{ .colorScheme.foreground | quote }},
-    background = {{ .colorScheme.background | quote }},
+    foreground = {{ .colorScheme.text | quote }},
+    background = {{ .colorScheme.base | quote }},
 
-    cursor_bg = {{ .colorScheme.cursor_bg | quote }},
-    cursor_border = {{ .colorScheme.cursor_border | quote }},
-    cursor_fg = {{ .colorScheme.cursor_fg | quote }},
+    compose_cursor = {{ .colorScheme.flamingo | quote }},
+    cursor_bg = {{ .colorScheme.rosewater | quote }},
+    cursor_border = {{ .colorScheme.rosewater | quote }},
+    cursor_fg = {{ .colorScheme.crust | quote }},
 
-    selection_fg = {{ .colorScheme.selection_fg | quote }},
-    selection_bg = {{ .colorScheme.selection_bg | quote }},
+    selection_fg = {{ .colorScheme.text | quote }},
+    selection_bg = {{ .colorScheme.surface2 | quote }},
 
-    scrollbar_thumb = {{ .colorScheme.scrollbar_thumb | quote }},
-    split = {{ .colorScheme.split | quote }},
+    scrollbar_thumb = {{ .colorScheme.surface2 | quote }},
+    split = {{ .colorScheme.overlay0 | quote }},
+    visual_bell = {{ .colorScheme.surface0 | quote }},
 
-    ansi = {"{{ .colorScheme.ansi | join "\", \""}}"},
-    brights = {"{{ .colorScheme.brights | join "\", \""}}"},
+    ansi = [
+      {{ .colorScheme.surface1 | quote }},
+      {{ .colorScheme.red | quote }},
+      {{ .colorScheme.green | quote }},
+      {{ .colorScheme.yellow | quote }},
+      {{ .colorScheme.blue | quote }},
+      {{ .colorScheme.pink | quote }},
+      {{ .colorScheme.teal | quote }},
+      {{ .colorScheme.subtext1 | quote }},
+    ],
+    brights = [
+      {{ .colorScheme.surface1 | quote }},
+      {{ .colorScheme.red | quote }},
+      {{ .colorScheme.green | quote }},
+      {{ .colorScheme.yellow | quote }},
+      {{ .colorScheme.blue | quote }},
+      {{ .colorScheme.pink | quote }},
+      {{ .colorScheme.teal | quote }},
+      {{ .colorScheme.subtext1 | quote }},
+    ],
 
-    indexed = {{ .colorScheme.indexed | toJson | replaceAllRegex ":" "=" | replaceAllRegex "\"([0-9][0-9])\"" "[${1}]" }},
+    indexed = {
+      [16] = {{ .colorScheme.peach | quote }},
+      [17] = {{ .colorScheme.rosewater | quote }},
+    },
 
-    compose_cursor = {{ .colorScheme.compose_cursor | quote }},
     tab_bar = {
-      inactive_tab_edge = {{ index .colorScheme.ansi 0 | quote }},
-      background = {{ .colorScheme.background | quote }},
+      background = {{ .colorScheme.crust | quote }},
+      inactive_tab_edge = {{ .colorScheme.surface0 | quote }},
 
       active_tab = {
-        fg_color = {{ index .colorScheme.ansi 0 | quote }},
-        bg_color = {{ index .colorScheme.ansi 4 | quote }},
+        fg_color = {{ .colorScheme.crust | quote }},
+        bg_color = {{ .colorScheme.mauve | quote }},
+        intensity = 'Normal',
+        italic = false,
+        strikethrough = false,
+        underline = 'None',
       },
+
       inactive_tab = {
-        fg_color = {{ index .colorScheme.brights 0 | quote }},
-        bg_color = {{ .colorScheme.split | quote }},
+        fg_color = {{ .colorScheme.text | quote }},
+        bg_color = {{ .colorScheme.mantle | quote }},
+        intensity = 'Normal',
+        italic = false,
+        strikethrough = false,
+        underline = 'None',
       },
+
       inactive_tab_hover = {
-        fg_color = {{ index .colorScheme.ansi 4 | quote }},
-        bg_color = {{ .colorScheme.split | quote }},
+        fg_color = {{ .colorScheme.text | quote }},
+        bg_color = {{ .colorScheme.base | quote }},
+        intensity = 'Normal',
         italic = true,
+        strikethrough = false,
+        underline = 'None',
       },
+
       new_tab = {
-        fg_color = {{ index .colorScheme.ansi 4 | quote }},
-        bg_color = {{ .colorScheme.background | quote }},
+        fg_color = {{ .colorScheme.text | quote }},
+        bg_color = {{ .colorScheme.surface0 | quote }},
+        intensity = 'Normal',
+        italic = false,
+        strikethrough = false,
+        underline = 'None',
       },
+
       new_tab_hover = {
-        fg_color = {{ index .colorScheme.ansi 4 | quote }},
-        bg_color = {{ .colorScheme.background | quote }},
-        intensity = "Bold",
+        fg_color = {{ .colorScheme.text | quote }},
+        bg_color = {{ .colorScheme.surface1 | quote }},
+        intensity = 'Bold',
+        italic = false,
+        strikethrough = false,
+        underline = 'None',
       },
     }
-
   }
 end
 
