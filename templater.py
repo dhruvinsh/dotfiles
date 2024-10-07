@@ -1,11 +1,13 @@
+#!/usr/bin/env python3
+
 """Convert hex color code to catppuccin (for now) template."""
 
+import argparse
 import re
 import sys
 
 # Define the color scheme
 color_scheme = {
-    "#ffffff": "white",
     "#f5e0dc": "rosewater",
     "#f2cdcd": "flamingo",
     "#f5c2e7": "pink",
@@ -32,10 +34,12 @@ color_scheme = {
     "#1e1e2e": "base",
     "#181825": "mantle",
     "#11111b": "crust",
+    # custom codes,
+    "#ffffff": "white",
 }
 
 
-def convert_hex_to_template(input_file: str, output_file: str) -> None:
+def convert_hex_to_template(input_file: str, output_file: str, quote: bool) -> None:
     try:
         with open(input_file, "r") as file:
             data = file.read()
@@ -45,8 +49,14 @@ def convert_hex_to_template(input_file: str, output_file: str) -> None:
 
         for hex_code in hex_codes:
             if hex_code in color_scheme:
-                template = f"{{{{ .colorScheme.{color_scheme[hex_code]} | quote }}}}"
-                data = data.replace(hex_code, template)
+                if quote:
+                    template = (
+                        f"{{{{ .colorScheme.{color_scheme[hex_code]} | quote }}}}"
+                    )
+                    data = re.sub(rf'["\']?{hex_code}["\']?', template, data)
+                else:
+                    template = f"{{{{ .colorScheme.{color_scheme[hex_code]} }}}}"
+                    data = data.replace(hex_code, template)
             else:
                 raise ValueError(f"Hex code {hex_code} not found in color scheme")
 
@@ -61,11 +71,18 @@ def convert_hex_to_template(input_file: str, output_file: str) -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python convert_hex_to_template.py <input_file> <output_file>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Convert hex color codes to template format."
+    )
+    parser.add_argument("--input", help="The input file containing hex color codes.")
+    parser.add_argument("--output", help="The output file to write the converted data.")
+    parser.add_argument(
+        "--quote",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Do not use | quote in the template.",
+    )
 
-    input_file = sys.argv[1]
-    output_file = sys.argv[2]
+    args = parser.parse_args()
 
-    convert_hex_to_template(input_file, output_file)
+    convert_hex_to_template(args.input, args.output, args.quote)
