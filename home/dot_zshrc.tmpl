@@ -42,25 +42,32 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
   --ansi \
   --layout=reverse \
   --border=none \
+  --multi \
 "
 
+# TODO: missing need to add for catppuccin
+# export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+#   --color=border:
+#   --color=gutter:
+#   --color=query:
+#   --color=scrollbar:
+#   --color=separator:
+# "
+
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
-  --color=bg+:{{ .colorScheme.selection_bg }} \
-  --color=bg:{{ .colorScheme.background }} \
-  --color=border:{{ index .colorScheme.brights 4 }} \
-  --color=fg: {{ .colorScheme.foreground }} \
-  --color=gutter:{{ .colorScheme.background }} \
-  --color=header:{{ get .colorScheme.indexed "16" }} \
-  --color=hl+:{{ index .colorScheme.brights 4 }} \
-  --color=hl:{{ index .colorScheme.brights 4 }} \
-  --color=info:{{ index .colorScheme.brights 5 }} \
-  --color=marker:{{ index .colorScheme.brights 1 }} \
-  --color=pointer:{{ index .colorScheme.brights 1 }} \
-  --color=prompt:{{ index .colorScheme.brights 4 }} \
-  --color=query:{{ .colorScheme.foreground }}:regular \
-  --color=scrollbar:{{ index .colorScheme.ansi 4 }} \
-  --color=separator:{{ get .colorScheme.indexed "16" }} \
-  --color=spinner:{{ index .colorScheme.brights 1 }} \
+  --color=bg+:{{ .colorScheme.surface0 | quote }} \
+  --color=bg:{{ .colorScheme.base | quote }} \
+  --color=fg+:{{ .colorScheme.text | quote }} \
+  --color=fg:{{ .colorScheme.text | quote }} \
+  --color=header:{{ .colorScheme.red | quote }} \
+  --color=hl+:{{ .colorScheme.red | quote }} \
+  --color=hl:{{ .colorScheme.red | quote }} \
+  --color=info:{{ .colorScheme.mauve | quote }} \
+  --color=marker:{{ .colorScheme.lavender | quote }} \
+  --color=pointer:{{ .colorScheme.rosewater | quote }} \
+  --color=prompt:{{ .colorScheme.mauve | quote }} \
+  --color=selected-bg:{{ .colorScheme.surface1 | quote }} \
+  --color=spinner:{{ .colorScheme.rosewater | quote }} \
 "
 
 export NVIM_COLORSCHEME={{ .colorScheme.name }}
