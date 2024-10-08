@@ -6,6 +6,29 @@ import argparse
 import re
 import sys
 
+
+def hex_to_rgb(hex_color: str) -> tuple[int, ...]:
+    """Convert hex color to RGB tuple."""
+    hex_color = hex_color.lstrip("#")
+    return tuple(int(hex_color[i : i + 2], 16) for i in (0, 2, 4))
+
+
+def rgb_to_hex(rgb: tuple[int, ...]) -> str:
+    """Convert RGB tuple to hex color."""
+    return "#{:02x}{:02x}{:02x}".format(*rgb)
+
+
+def mix_colors(color1: str, color2: str, ratio: float) -> str:
+    """Mix two hex colors based on the given ratio."""
+    rgb1 = hex_to_rgb(color1)
+    rgb2 = hex_to_rgb(color2)
+
+    mixed_rgb = tuple(
+        round((1 - ratio) * c1 + ratio * c2) for c1, c2 in zip(rgb1, rgb2)
+    )
+    return rgb_to_hex(mixed_rgb)
+
+
 # Define the color scheme
 color_scheme = {
     "#f5e0dc": "rosewater",
@@ -37,6 +60,12 @@ color_scheme = {
     # custom codes,
     "#ffffff": "white",
 }
+
+# custom colors
+color_scheme["#ffffff"] = "white"
+# https://github.com/catppuccin/vscode/blob/54316f9afc31c3b5070a242cd3ca47d66ab0e9ac/packages/catppuccin-vsc/src/theme/uiColors.ts#L136
+color_scheme[mix_colors("#1e1e2e", "#89dceb", 0.3)] = "findHighlight"
+breakpoint()
 
 
 def convert_hex_to_template(input_file: str, output_file: str, quote: bool) -> None:
