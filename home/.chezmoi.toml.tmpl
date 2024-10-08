@@ -89,7 +89,6 @@
   
   # some colors that are not defined
   white = "#ffffff"
-  findHighlight = "#3e5767"
   {{- $colorPallet := (joinPath "home/.chezmoitemplates" (print $colorScheme ".jsonc.tmpl") | includeTemplate  | fromJsonc) }}
   {{- range $key, $val := $colorPallet }}
   {{ $key }} = {{ $val | quote }}
