@@ -24,7 +24,7 @@
           <key>activeGuide</key>
           <string>{{ .colorScheme.surface1 }}</string>
           <key>findHighlight</key>
-          <string>{{ .colorScheme.findHighlight }}</string>
+          <string>{{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.sky 0.3) | quote }}</string>
           <key>gutterForeground</key>
           <string>{{ .colorScheme.overlay1 }}</string>
         </dict>
