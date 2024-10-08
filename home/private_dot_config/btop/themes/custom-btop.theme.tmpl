@@ -1,0 +1,83 @@
+# Main background, empty for terminal default, need to be empty if you want transparent background
+theme[main_bg]={{ .colorScheme.base | quote }}
+
+# Main text color
+theme[main_fg]={{ .colorScheme.text | quote }}
+
+# Title color for boxes
+theme[title]={{ .colorScheme.text | quote }}
+
+# Highlight color for keyboard shortcuts
+theme[hi_fg]={{ .colorScheme.blue | quote }}
+
+# Background color of selected item in processes box
+theme[selected_bg]={{ .colorScheme.surface1 | quote }}
+
+# Foreground color of selected item in processes box
+theme[selected_fg]={{ .colorScheme.blue | quote }}
+
+# Color of inactive/disabled text
+theme[inactive_fg]={{ .colorScheme.overlay1 | quote }}
+
+# Color of text appearing on top of graphs, i.e uptime and current network graph scaling
+theme[graph_text]={{ .colorScheme.rosewater | quote }}
+
+# Background color of the percentage meters
+theme[meter_bg]={{ .colorScheme.surface1 | quote }}
+
+# Misc colors for processes box including mini cpu graphs, details memory graph and details status text
+theme[proc_misc]={{ .colorScheme.rosewater | quote }}
+
+# CPU, Memory, Network, Proc box outline colors
+theme[cpu_box]={{ .colorScheme.mauve | quote }} #Mauve
+theme[mem_box]={{ .colorScheme.green | quote }} #Green
+theme[net_box]={{ .colorScheme.maroon | quote }} #Maroon
+theme[proc_box]={{ .colorScheme.blue | quote }} #Blue
+
+# Box divider line and small boxes line color
+theme[div_line]={{ .colorScheme.overlay0 | quote }}
+
+# Temperature graph color (Green -> Yellow -> Red)
+theme[temp_start]={{ .colorScheme.green | quote }}
+theme[temp_mid]={{ .colorScheme.yellow | quote }}
+theme[temp_end]={{ .colorScheme.red | quote }}
+
+# CPU graph colors (Teal -> Lavender)
+theme[cpu_start]={{ .colorScheme.teal | quote }}
+theme[cpu_mid]={{ .colorScheme.sapphire | quote }}
+theme[cpu_end]={{ .colorScheme.lavender | quote }}
+
+# Mem/Disk free meter (Mauve -> Lavender -> Blue)
+theme[free_start]={{ .colorScheme.mauve | quote }}
+theme[free_mid]={{ .colorScheme.lavender | quote }}
+theme[free_end]={{ .colorScheme.blue | quote }}
+
+# Mem/Disk cached meter (Sapphire -> Lavender)
+theme[cached_start]={{ .colorScheme.sapphire | quote }}
+theme[cached_mid]={{ .colorScheme.blue | quote }}
+theme[cached_end]={{ .colorScheme.lavender | quote }}
+
+# Mem/Disk available meter (Peach -> Red)
+theme[available_start]={{ .colorScheme.peach | quote }}
+theme[available_mid]={{ .colorScheme.maroon | quote }}
+theme[available_end]={{ .colorScheme.red | quote }}
+
+# Mem/Disk used meter (Green -> Sky)
+theme[used_start]={{ .colorScheme.green | quote }}
+theme[used_mid]={{ .colorScheme.teal | quote }}
+theme[used_end]={{ .colorScheme.sky | quote }}
+
+# Download graph colors (Peach -> Red)
+theme[download_start]={{ .colorScheme.peach | quote }}
+theme[download_mid]={{ .colorScheme.maroon | quote }}
+theme[download_end]={{ .colorScheme.red | quote }}
+
+# Upload graph colors (Green -> Sky)
+theme[upload_start]={{ .colorScheme.green | quote }}
+theme[upload_mid]={{ .colorScheme.teal | quote }}
+theme[upload_end]={{ .colorScheme.sky | quote }}
+
+# Process box color gradient for threads, mem and cpu usage (Sapphire -> Mauve)
+theme[process_start]={{ .colorScheme.sapphire | quote }}
+theme[process_mid]={{ .colorScheme.lavender | quote }}
+theme[process_end]={{ .colorScheme.mauve | quote }}
