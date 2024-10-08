@@ -76,14 +76,13 @@ def convert_hex_to_template(input_file: str, output_file: str, quote: bool) -> N
         hex_codes: list[str] = re.findall(r"#[0-9a-fA-F]{6}", data)
 
         for hex_code in hex_codes:
-            if hex_code in color_scheme:
+            matcher = hex_code.lower()
+            if matcher in color_scheme:
                 if quote:
-                    template = (
-                        f"{{{{ .colorScheme.{color_scheme[hex_code]} | quote }}}}"
-                    )
+                    template = f"{{{{ .colorScheme.{color_scheme[matcher]} | quote }}}}"
                     data = re.sub(rf'["\']?{hex_code}["\']?', template, data)
                 else:
-                    template = f"{{{{ .colorScheme.{color_scheme[hex_code]} }}}}"
+                    template = f"{{{{ .colorScheme.{color_scheme[matcher]} }}}}"
                     data = data.replace(hex_code, template)
             else:
                 raise ValueError(f"Hex code {hex_code} not found in color scheme")
@@ -94,6 +93,7 @@ def convert_hex_to_template(input_file: str, output_file: str, quote: bool) -> N
         print("Conversion successful")
 
     except Exception as e:
+        breakpoint()
         print(f"Error: {e}")
         sys.exit(1)
 
