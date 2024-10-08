@@ -1,0 +1,63 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Sets user-defined palette
+# Palettes must be defined _after_ this line
+palette = "custom_starship"
+
+# Starship modules
+#
+# NOTE: this is my old config
+# [character]
+# # Iosevka font needs spacing
+# success_symbol = '[ ](bold green)'
+# error_symbol = '[ ](bold red)'
+[character]
+# Note the use of Catppuccin color 'peach'
+success_symbol = "[[󰄛](green) ❯](peach)"
+error_symbol = "[[󰄛](red) ❯](peach)"
+vimcmd_symbol = "[󰄛 ❮](subtext1)" # For use with zsh-vi-mode
+
+[git_branch]
+style = "bold mauve"
+
+[directory]
+truncation_length = 4
+style = "bold lavender"
+fish_style_pwd_dir_length = 1
+truncate_to_repo = false
+
+[git_status]
+# iosevka font needs spacing
+deleted = '✘ '
+ahead = '⇡ '
+
+[palettes.custom_starship]
+rosewater = {{ .colorScheme.rosewater | quote }}
+flamingo = {{ .colorScheme.flamingo | quote }}
+pink = {{ .colorScheme.pink | quote }}
+mauve = {{ .colorScheme.mauve | quote }}
+red = {{ .colorScheme.red | quote }}
+maroon = {{ .colorScheme.maroon | quote }}
+peach = {{ .colorScheme.peach | quote }}
+yellow = {{ .colorScheme.yellow | quote }}
+green = {{ .colorScheme.green | quote }}
+teal = {{ .colorScheme.teal | quote }}
+sky = {{ .colorScheme.sky | quote }}
+sapphire = {{ .colorScheme.sapphire | quote }}
+blue = {{ .colorScheme.blue | quote }}
+lavender = {{ .colorScheme.lavender | quote }}
+text = {{ .colorScheme.text | quote }}
+subtext1 = {{ .colorScheme.subtext1 | quote }}
+subtext0 = {{ .colorScheme.subtext0 | quote }}
+overlay2 = {{ .colorScheme.overlay2 | quote }}
+overlay1 = {{ .colorScheme.overlay1 | quote }}
+overlay0 = {{ .colorScheme.overlay0 | quote }}
+surface2 = {{ .colorScheme.surface2 | quote }}
+surface1 = {{ .colorScheme.surface1 | quote }}
+surface0 = {{ .colorScheme.surface0 | quote }}
+base = {{ .colorScheme.base | quote }}
+mantle = {{ .colorScheme.mantle | quote }}
+crust = {{ .colorScheme.crust | quote }}
+
+{{- /* vim: set filetype=toml: */}}
