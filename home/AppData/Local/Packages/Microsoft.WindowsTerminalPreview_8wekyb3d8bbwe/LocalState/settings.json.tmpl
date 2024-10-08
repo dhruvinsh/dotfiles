@@ -203,6 +203,23 @@
         }
     ],
     "startOnUserLogin": {{ if .personalmachine -}} false{{ else -}} true{{ end -}},
-    "themes": [],
+    "themes":
+    [
+        {
+          "name": "Custom",
+          "tab": {
+            "background": "{{ .colorScheme.base }}FF",
+            "showCloseButton": "always",
+            "unfocusedBackground": null
+          },
+          "tabRow": {
+            "background": "{{ .colorScheme.mantle }}FF",
+            "unfocusedBackground": "{{ .colorScheme.crust }}FF"
+          },
+          "window": {
+            "applicationTheme": "dark"
+          }
+        }
+    ],
     "windowingBehavior": "useNew"
 }
