@@ -65,7 +65,6 @@ color_scheme = {
 color_scheme["#ffffff"] = "white"
 # https://github.com/catppuccin/vscode/blob/54316f9afc31c3b5070a242cd3ca47d66ab0e9ac/packages/catppuccin-vsc/src/theme/uiColors.ts#L136
 color_scheme[mix_colors("#1e1e2e", "#89dceb", 0.3)] = "findHighlight"
-breakpoint()
 
 
 def convert_hex_to_template(input_file: str, output_file: str, quote: bool) -> None:
