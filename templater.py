@@ -57,45 +57,33 @@ color_scheme = {
     "#1e1e2e": "base",
     "#181825": "mantle",
     "#11111b": "crust",
-    # custom codes,
-    "#ffffff": "white",
 }
-
-# custom colors
-color_scheme["#ffffff"] = "white"
-# https://github.com/catppuccin/vscode/blob/54316f9afc31c3b5070a242cd3ca47d66ab0e9ac/packages/catppuccin-vsc/src/theme/uiColors.ts#L136
-color_scheme[mix_colors("#1e1e2e", "#89dceb", 0.3)] = "findHighlight"
 
 
 def convert_hex_to_template(input_file: str, output_file: str, quote: bool) -> None:
-    try:
-        with open(input_file, "r") as file:
-            data = file.read()
+    """Transform hex to templates."""
+    with open(input_file, "r") as file:
+        data = file.read()
 
-        # Find all hex color codes in the data
-        hex_codes: list[str] = re.findall(r"#[0-9a-fA-F]{6}", data)
+    # Find all hex color codes in the data
+    hex_codes: list[str] = re.findall(r"#[0-9a-fA-F]{6}", data)
 
-        for hex_code in hex_codes:
-            matcher = hex_code.lower()
-            if matcher in color_scheme:
-                if quote:
-                    template = f"{{{{ .colorScheme.{color_scheme[matcher]} | quote }}}}"
-                    data = re.sub(rf'["\']?{hex_code}["\']?', template, data)
-                else:
-                    template = f"{{{{ .colorScheme.{color_scheme[matcher]} }}}}"
-                    data = data.replace(hex_code, template)
+    for hex_code in hex_codes:
+        matcher = hex_code.lower()
+        if matcher in color_scheme:
+            if quote:
+                template = f"{{{{ .colorScheme.{color_scheme[matcher]} | quote }}}}"
+                data = re.sub(rf'["\']?{hex_code}["\']?', template, data)
             else:
-                raise ValueError(f"Hex code {hex_code} not found in color scheme")
+                template = f"{{{{ .colorScheme.{color_scheme[matcher]} }}}}"
+                data = data.replace(hex_code, template)
+        else:
+            print(f"Hex code {hex_code} not found in color scheme")
 
-        with open(output_file, "w") as file:
-            _ = file.write(data)
+    with open(output_file, "w") as file:
+        _ = file.write(data)
 
-        print("Conversion successful")
-
-    except Exception as e:
-        breakpoint()
-        print(f"Error: {e}")
-        sys.exit(1)
+    print("Conversion successful")
 
 
 if __name__ == "__main__":
