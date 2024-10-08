@@ -4,7 +4,6 @@
 
 import argparse
 import re
-import sys
 
 
 def hex_to_rgb(hex_color: str) -> tuple[int, ...]:
