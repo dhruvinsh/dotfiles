@@ -1,29 +1,28 @@
 gui:
   nerdFontsVersion: "3"
+  # lavender.yml from mocha
   theme:
     activeBorderColor:
-      - "#ff966c"
-      - "bold"
+      - {{ .colorScheme.lavender | quote }}
+      - bold
     inactiveBorderColor:
-      - "#589ed7"
-    searchingActiveBorderColor:
-      - "#ff966c"
-      - "bold"
+      - {{ .colorScheme.subtext0 | quote }}
     optionsTextColor:
-      - "#82aaff"
+      - {{ .colorScheme.blue | quote }}
     selectedLineBgColor:
-      - "#2d3f76"
-    cherryPickedCommitFgColor:
-      - "#82aaff"
+      - {{ .colorScheme.surface0 | quote }}
     cherryPickedCommitBgColor:
-      - "#c099ff"
-    markedBaseCommitFgColor:
-      - "#82aaff"
-    markedBaseCommitBgColor:
-      - "#ffc777"
+      - {{ .colorScheme.surface1 | quote }}
+    cherryPickedCommitFgColor:
+      - {{ .colorScheme.lavender | quote }}
     unstagedChangesColor:
-      - "#c53b53"
+      - {{ .colorScheme.red | quote }}
     defaultFgColor:
-      - "#c8d3f5"
+      - {{ .colorScheme.text | quote }}
+    searchingActiveBorderColor:
+      - {{ .colorScheme.yellow | quote }}
+
+  authorColors:
+    '*': {{ .colorScheme.lavender | quote }}
 
 {{/* vim: set filetype=yaml: */}}
