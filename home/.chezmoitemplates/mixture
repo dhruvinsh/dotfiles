@@ -1,0 +1,38 @@
+{{/* TinyColor2 compatible color blender in go templated */}}
+{{- $hex := index . 0  -}}
+{{- $hex = $hex | trimPrefix "#"}}
+{{- $r1 := printf "0x%s" (slice ( $hex | trimPrefix "#" | splitList "" ) 0 2 | join "") | int -}}
+{{- $g1 := printf "0x%s" (slice ( $hex | trimPrefix "#" | splitList "" ) 2 4 | join "") | int -}}
+{{- $b1 := printf "0x%s" (slice ( $hex | trimPrefix "#" | splitList "" ) 4 6 | join "") | int -}}
+
+{{- $hex := index . 1 -}}
+{{- $hex = $hex | trimPrefix "#"}}
+{{- $r2 := printf "0x%s" (slice ( $hex | trimPrefix "#" | splitList "" ) 0 2 | join "") | int -}}
+{{- $g2 := printf "0x%s" (slice ( $hex | trimPrefix "#" | splitList "" ) 2 4 | join "") | int -}}
+{{- $b2 := printf "0x%s" (slice ( $hex | trimPrefix "#" | splitList "" ) 4 6 | join "") | int -}}
+
+{{- $blend := index . 2 -}}
+
+{{- $r := addf (mulf (subf $r2 $r1) $blend) $r1 -}}
+{{- $g := addf (mulf (subf $g2 $g1) $blend) $g1 -}}
+{{- $b := addf (mulf (subf $b2 $b1) $blend) $b1 -}}
+
+{{- if gt (subf $r (floor $r)) 0.5 }}
+{{- $r = round (ceil $r) 0 }}
+{{- else }}
+{{- $r = round (floor $r) 0 }}
+{{- end -}}
+
+{{- if gt (subf $g (floor $g)) 0.5 }}
+{{- $g = round (ceil $g) 0 }}
+{{- else }}
+{{- $g = round (floor $g) 0 }}
+{{- end -}}
+
+{{- if gt (subf $b (floor $b)) 0.5 }}
+{{- $b = round (ceil $b) 0 }}
+{{- else }}
+{{- $b = round (floor $b) 0 }}
+{{- end -}}
+
+{{- printf "#%x%x%x" (int $r) (int $g) (int $b) -}}
