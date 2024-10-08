@@ -74,6 +74,9 @@ export NVIM_COLORSCHEME={{ .colorScheme.name }}
 
 DISABLE_AUTO_UPDATE="true"
 
+# check if .zsh directory present
+[[ -d $HOME/.zsh ]] && source $HOME/.zsh/zsh-syntax-highlighting.zsh
+
 plugins=(
   {{- if eq .chezmoi.os "darwin"}}
   brew
