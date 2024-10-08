@@ -1,0 +1,72 @@
+# vim:ft=kitty
+
+# The basic colors
+foreground              {{ .colorScheme.text }}
+background              {{ .colorScheme.base }}
+selection_foreground    {{ .colorScheme.base }}
+selection_background    {{ .colorScheme.rosewater }}
+
+# Cursor colors
+cursor                  {{ .colorScheme.rosewater }}
+cursor_text_color       {{ .colorScheme.base }}
+
+# URL underline color when hovering with mouse
+url_color               {{ .colorScheme.rosewater }}
+
+# Kitty window border colors
+active_border_color     {{ .colorScheme.lavender }}
+inactive_border_color   {{ .colorScheme.overlay0 }}
+bell_border_color       {{ .colorScheme.yellow }}
+
+# OS Window titlebar colors
+wayland_titlebar_color system
+macos_titlebar_color system
+
+# Tab bar colors
+active_tab_foreground   {{ .colorScheme.crust }}
+active_tab_background   {{ .colorScheme.mauve }}
+inactive_tab_foreground {{ .colorScheme.text }}
+inactive_tab_background {{ .colorScheme.mantle }}
+tab_bar_background      {{ .colorScheme.crust }}
+
+# Colors for marks (marked text in the terminal)
+mark1_foreground {{ .colorScheme.base }}
+mark1_background {{ .colorScheme.lavender }}
+mark2_foreground {{ .colorScheme.base }}
+mark2_background {{ .colorScheme.mauve }}
+mark3_foreground {{ .colorScheme.base }}
+mark3_background {{ .colorScheme.sapphire }}
+
+# The 16 terminal colors
+
+# black
+color0 {{ .colorScheme.surface1 }}
+color8 {{ .colorScheme.surface2 }}
+
+# red
+color1 {{ .colorScheme.red }}
+color9 {{ .colorScheme.red }}
+
+# green
+color2  {{ .colorScheme.green }}
+color10 {{ .colorScheme.green }}
+
+# yellow
+color3  {{ .colorScheme.yellow }}
+color11 {{ .colorScheme.yellow }}
+
+# blue
+color4  {{ .colorScheme.blue }}
+color12 {{ .colorScheme.blue }}
+
+# magenta
+color5  {{ .colorScheme.pink }}
+color13 {{ .colorScheme.pink }}
+
+# cyan
+color6  {{ .colorScheme.teal }}
+color14 {{ .colorScheme.teal }}
+
+# white
+color7  {{ .colorScheme.subtext1 }}
+color15 {{ .colorScheme.subtext0 }}
