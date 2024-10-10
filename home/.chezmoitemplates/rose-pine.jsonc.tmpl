@@ -1,59 +1,119 @@
 // Original proposal converting rose-pine to catppuccin
+// Iteration 1
 //| Catppuccin Name | Rose-Pine Name | Rose-Pine Compatible Color to Catppuccin | Notes                                                          |
 //| --------------- | -------------- | ---------------------------------------- | -------------------------------------------------------------- |
 //| base            | base           | #191724                                  | Direct match.                                                  |
-//| surface0        | surface        | #1f1d2e                                  | Direct match.                                                  |
+//| blue            | —              | #7fa7d4                                  | Mix of pine (#31748f) and iris (#c4a7e7) for soft blue.        |
+//| crust           | —              | #12111a                                  | Darkened highlight_low (#21202e) for the deepest tone.         |
+//| flamingo        | —              | #f0d1d1                                  | Created a lighter red-pink inspired by love (#eb6f92).         |
+//| green           | leaf           | #95b1ac                                  | Direct match.                                                  |
+//| lavender        | —              | #b8b0e3                                  | Lighter variant of iris (#c4a7e7) with text (#e0def4).         |
+//| mantle          | —              | #181621                                  | Darkened version of base (#191724) to create depth.            |
+//| maroon          | —              | #e7988c                                  | Inspired by love (#eb6f92) and rose (#ebbcba).                 |
+//| mauve           | iris           | #c4a7e7                                  | Direct match.                                                  |
 //| overlay0        | overlay        | #26233a                                  | Direct match.                                                  |
 //| overlay1        | highlight_low  | #21202e                                  | Direct match.                                                  |
 //| overlay2        | highlight_med  | #403d52                                  | Direct match.                                                  |
-//| surface1        | highlight_high | #524f67                                  | Direct match.                                                  |
-//| subtext1        | subtle         | #908caa                                  | Direct match.                                                  |
-//| text            | text           | #e0def4                                  | Direct match.                                                  |
-//| red             | love           | #eb6f92                                  | Direct match.                                                  |
 //| peach           | gold           | #f6c177                                  | Direct match.                                                  |
+//| pink            | —              | #f3c5da                                  | Mixture of rose (#ebbcba) and text (#e0def4).                  |
+//| red             | love           | #eb6f92                                  | Direct match.                                                  |
 //| rosewater       | rose           | #ebbcba                                  | Direct match.                                                  |
 //| sapphire        | pine           | #31748f                                  | Direct match.                                                  |
-//| teal            | foam           | #9ccfd8                                  | Direct match.                                                  |
-//| mauve           | iris           | #c4a7e7                                  | Direct match.                                                  |
-//| green           | leaf           | #95b1ac                                  | Direct match.                                                  |
-//| flamingo        | —              | #f0d1d1                                  | Created a lighter red-pink inspired by love (#eb6f92).         |
-//| pink            | —              | #f3c5da                                  | Mixture of rose (#ebbcba) and text (#e0def4).                  |
-//| maroon          | —              | #e7988c                                  | Inspired by love (#eb6f92) and rose (#ebbcba).                 |
-//| yellow          | —              | #f3d9b3                                  | Blend of gold (#f6c177) and foam (#9ccfd8) for warmth.         |
 //| sky             | —              | #8abfd5                                  | Inspired by pine (#31748f) with a lighter tone for sky effect. |
-//| blue            | —              | #7fa7d4                                  | Mix of pine (#31748f) and iris (#c4a7e7) for soft blue.        |
-//| lavender        | —              | #b8b0e3                                  | Lighter variant of iris (#c4a7e7) with text (#e0def4).         |
 //| subtext0        | —              | #a19bb5                                  | Darkened subtle (#908caa) for more contrast with subtext1.     |
+//| subtext1        | subtle         | #908caa                                  | Direct match.                                                  |
+//| surface0        | surface        | #1f1d2e                                  | Direct match.                                                  |
+//| surface1        | highlight_high | #524f67                                  | Direct match.                                                  |
 //| surface2        | —              | #60637a                                  | A softened blend of surface1 (#524f67) and overlay (#26233a).  |
-//| mantle          | —              | #181621                                  | Darkened version of base (#191724) to create depth.            |
-//| crust           | —              | #12111a                                  | Darkened highlight_low (#21202e) for the deepest tone.         |
+//| teal            | foam           | #9ccfd8                                  | Direct match.                                                  |
+//| text            | text           | #e0def4                                  | Direct match.                                                  |
+//| yellow          | —              | #f3d9b3                                  | Blend of gold (#f6c177) and foam (#9ccfd8) for warmth.         |
+
+// Iteration 2
+//| Catppuccin Name | Rose-Pine Name        | Rose-Pine Compatible Color to Catppuccin | Notes                                                    |
+//| --------------- | --------------------- | ---------------------------------------- | -------------------------------------------------------- |
+//| base            | base                  | #191724                                  | Direct match.                                            |
+//| blue            | iris + foam           | #90b7e8                                  | 70% iris (#c4a7e7) + 30% foam (#9ccfd8).                 |
+//| crust           | base + highlight_low  | #12111a                                  | 80% base (#191724) + 20% highlight_low (#21202e).        |
+//| flamingo        | rose + subtle         | #f0c8d1                                  | 70% rose (#ebbcba) + 30% subtle (#908caa).               |
+//| green           | leaf                  | #95b1ac                                  | Direct match.                                            |
+//| lavender        | iris + text           | #bfc4e7                                  | 80% iris (#c4a7e7) + 20% text (#e0def4).                 |
+//| mantle          | base + highlight_low  | #181621                                  | 70% base (#191724) + 30% highlight_low (#21202e).        |
+//| maroon          | love + gold           | #ec8287                                  | 70% love (#eb6f92) + 30% gold (#f6c177) for warmer tone. |
+//| mauve           | iris                  | #c4a7e7                                  | Direct match.                                            |
+//| overlay0        | overlay               | #26233a                                  | Direct match.                                            |
+//| overlay1        | highlight_low         | #21202e                                  | Direct match.                                            |
+//| overlay2        | highlight_med         | #403d52                                  | Direct match.                                            |
+//| peach           | gold                  | #f6c177                                  | Direct match.                                            |
+//| pink            | rose + foam           | #f1c7e0                                  | 60% rose (#ebbcba) + 40% foam (#9ccfd8).                 |
+//| red             | love                  | #eb6f92                                  | Direct match.                                            |
+//| rosewater       | rose                  | #ebbcba                                  | Direct match.                                            |
+//| sapphire        | pine                  | #31748f                                  | Direct match.                                            |
+//| sky             | foam + pine           | #86c6da                                  | 60% foam (#9ccfd8) + 40% pine (#31748f).                 |
+//| subtext0        | subtle + muted        | #a79ab5                                  | 50% subtle (#908caa) + 50% muted (#6e6a86).              |
+//| subtext1        | subtle                | #908caa                                  | Direct match.                                            |
+//| surface0        | surface               | #1f1d2e                                  | Direct match.                                            |
+//| surface1        | highlight_high        | #524f67                                  | Direct match.                                            |
+//| surface2        | highlight_med + muted | #68627a                                  | 60% highlight_med (#403d52) + 40% muted (#6e6a86).       |
+//| teal            | foam                  | #9ccfd8                                  | Direct match.                                            |
+//| text            | text                  | #e0def4                                  | Direct match.                                            |
+//| yellow          | gold + foam           | #f3d5a5                                  | 80% gold (#f6c177) + 20% foam (#9ccfd8).                 |
+//
+// Iteration 3
+//| Catppuccin Name | Rose-Pine Name        | Rose-Pine Compatible Color to Catppuccin | Notes                                              |
+//| --------------- | --------------------- | ---------------------------------------- | -------------------------------------------------- |
+//| base            | base                  | #191724                                  | Direct match.                                      |
+//| blue            | iris + foam           | #98b6de                                  | 60% iris (#c4a7e7) + 40% foam (#9ccfd8).           |
+//| crust           | base + highlight_low  | #12101b                                  | 70% base (#191724) + 30% highlight_low (#21202e).  |
+//| flamingo        | rose + love           | #f0b9b4                                  | 60% rose (#ebbcba) + 40% love (#eb6f92).           |
+//| green           | leaf                  | #95b1ac                                  | Direct match.                                      |
+//| lavender        | iris + subtle         | #b5abdd                                  | 70% iris (#c4a7e7) + 30% subtle (#908caa).         |
+//| mantle          | base + highlight_low  | #1a1723                                  | 80% base (#191724) + 20% highlight_low (#21202e).  |
+//| maroon          | love + muted          | #e5868e                                  | 70% love (#eb6f92) + 30% muted (#6e6a86).          |
+//| mauve           | iris                  | #c4a7e7                                  | Direct match.                                      |
+//| overlay0        | overlay               | #26233a                                  | Direct match.                                      |
+//| overlay1        | highlight_low         | #21202e                                  | Direct match.                                      |
+//| overlay2        | highlight_med         | #403d52                                  | Direct match.                                      |
+//| peach           | gold                  | #f6c177                                  | Direct match.                                      |
+//| pink            | rose + foam           | #eac6d5                                  | 70% rose (#ebbcba) + 30% foam (#9ccfd8).           |
+//| red             | love                  | #eb6f92                                  | Direct match.                                      |
+//| rosewater       | rose                  | #ebbcba                                  | Direct match.                                      |
+//| sapphire        | pine                  | #31748f                                  | Direct match.                                      |
+//| sky             | foam + pine           | #81c3d4                                  | 70% foam (#9ccfd8) + 30% pine (#31748f).           |
+//| subtext0        | subtle + muted        | #a296b1                                  | 60% subtle (#908caa) + 40% muted (#6e6a86).        |
+//| subtext1        | subtle                | #908caa                                  | Direct match.                                      |
+//| surface0        | surface               | #1f1d2e                                  | Direct match.                                      |
+//| surface1        | highlight_high        | #524f67                                  | Direct match.                                      |
+//| surface2        | highlight_med + muted | #675f79                                  | 50% highlight_med (#403d52) + 50% muted (#6e6a86). |
+//| teal            | foam                  | #9ccfd8                                  | Direct match.                                      |
+//| text            | text                  | #e0def4                                  | Direct match.                                      |
+//| yellow          | gold + subtle         | #f4d4a3                                  | 80% gold (#f6c177) + 20% subtle (#908caa).         |
 
 {
   "base"     : "#191724",
-  "blue"     : "#7fa7d4",
-  "crust"    : "#12111a",
-  "flamingo" : "#f0d1d1",
+  "blue"     : "#98b6de",
+  "crust"    : "#12101b",
+  "flamingo" : "#f0b9b4",
   "green"    : "#95b1ac",
-  "lavender" : "#b8b0e3",
-  "mantle"   : "#181621",
-  "maroon"   : "#e7988c",
+  "lavender" : "#b5abdd",
+  "mantle"   : "#1a1723",
+  "maroon"   : "#e5868e",
   "mauve"    : "#c4a7e7",
   "overlay0" : "#26233a",
   "overlay1" : "#21202e",
   "overlay2" : "#403d52",
   "peach"    : "#f6c177",
-  "pink"     : "#f3c5da",
+  "pink"     : "#eac6d5",
   "red"      : "#eb6f92",
   "rosewater": "#ebbcba",
   "sapphire" : "#31748f",
-  "sky"      : "#8abfd5",
-  "subtext0" : "#a19bb5",
+  "sky"      : "#81c3d4",
+  "subtext0" : "#a296b1",
   "subtext1" : "#908caa",
   "surface0" : "#1f1d2e",
   "surface1" : "#524f67",
-  "surface2" : "#60637a",
+  "surface2" : "#675f79",
   "teal"     : "#9ccfd8",
   "text"     : "#e0def4",
-  "yellow"   : "#f3d9b3"
+  "yellow"   : "#f4d4a3"
 }
-
