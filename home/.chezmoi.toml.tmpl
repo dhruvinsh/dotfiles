@@ -92,7 +92,7 @@
   
   # some colors that are not defined
   white = "#ffffff"
-  {{- $colorPallet := (joinPath "home/.chezmoitemplates" (print $colorScheme ".jsonc.tmpl") | includeTemplate  | fromJsonc) }}
+  {{- $colorPallet := (joinPath $templates (print $colorScheme ".jsonc.tmpl") | includeTemplate  | fromJsonc) }}
   {{- range $key, $val := $colorPallet }}
   {{ $key }} = {{ $val | quote }}
   {{- end }}
