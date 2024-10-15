@@ -4,7 +4,7 @@ set -euo pipefail
 
 # if there is change in python version we need to install the package,
 # HACK: just call the python variable to force run this script
-echo "Installed python version is: {{ .pythonVersion }}"
+echo "Installed python version is: {{ .pythonVersion  }}"
 
 PYENV_ROOT="$HOME/.pyenv"
 PATH="$PYENV_ROOT/bin:$PATH"
@@ -17,7 +17,7 @@ pip install -U pip pipx pynvim
 # just perform the cleanup
 pipx uninstall-all
 
-# create some independent envs with packages 
+# create some independent envs with packages
 packages=(
     black
     codespell
@@ -35,8 +35,7 @@ packages=(
 )
 
 # setup poetry env via pipx
-for pkg in "${packages[@]}"
-do
+for pkg in "${packages[@]}"; do
     echo "*** Setting up $pkg ***"
     pipx install "$pkg"
 done

@@ -63,6 +63,8 @@
 {{-   $email = "dshah@evertz.com" -}}
 {{- end -}}
 
+{{- $templates := joinPath "home/.chezmoitemplates" }}
+
 [data]
   personalmachine = {{ $personalmachine }}
   email = {{ $email | quote }}
@@ -75,6 +77,7 @@
   isDesktop = {{ $desktopEnv }}
   chassisType = {{ $chassisType | quote }}
   sshSession = {{ $sshSession }}
+  pythonVersion = {{ includeTemplate (joinPath $templates "python") "3.12" | quote }}
 
 [data.font]
   regular = "FiraCode Nerd Font"

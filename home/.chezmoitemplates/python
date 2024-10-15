@@ -1,0 +1,6 @@
+{{/* Find latest python version */}}
+{{- $query := . -}}
+{{- $url := "https://raw.githubusercontent.com/actions/python-versions/refs/heads/main/versions-manifest.json" }}
+{{- $data := (output "curl" "-fsSL" (printf "%s" $url)) | fromJson }}
+{{- $data | jq (printf ".[] | select(.version|startswith(\"%s\")) | .version" $query) | first | trim -}}
+
