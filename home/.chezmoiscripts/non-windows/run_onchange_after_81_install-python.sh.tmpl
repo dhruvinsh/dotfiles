@@ -32,7 +32,7 @@ install_python() {
 }
 
 # Setup pyenv
-if command -v pyenv &> /dev/null; then
+if command -v pyenv &>/dev/null; then
     # if pyenv found lets just update it
     pyenv update
 else
