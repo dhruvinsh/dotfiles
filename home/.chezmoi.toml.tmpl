@@ -1,7 +1,6 @@
-# chezmoi.toml -*- mode: toml -*-
 # vim: set ft=toml:
 
-# Question mark at the end not required. Chezmoi adds its own.
+{{/* Question mark at the end not required. Chezmoi adds its own. */}}
 {{- $personalmachine := promptBool "Is it personal machine" -}}
 
 {{/* wsl detection */}}
@@ -65,6 +64,14 @@
 
 {{- $templates := joinPath "home/.chezmoitemplates" }}
 
+{{/* python version */}}
+{{- $pythonVersion := "" }}
+{{- if $personalmachine -}}
+{{-   $pythonVersion =  includeTemplate (joinPath $templates "python") "3.12" | quote   -}}
+{{- else -}}
+{{-   $pythonVersion =  includeTemplate (joinPath $templates "python") "3.11" | quote   -}}
+{{- end -}}
+
 [data]
   personalmachine = {{ $personalmachine }}
   email = {{ $email | quote }}
@@ -77,7 +84,7 @@
   isDesktop = {{ $desktopEnv }}
   chassisType = {{ $chassisType | quote }}
   sshSession = {{ $sshSession }}
-  pythonVersion = {{ includeTemplate (joinPath $templates "python") "3.12" | quote }}
+  pythonVersion = {{ $pythonVersion }}
 
 [data.font]
   regular = "FiraCode Nerd Font"
@@ -99,7 +106,7 @@
 
 
 [github]
-    refreshPeriod = "12h"
+  refreshPeriod = "12h"
 
 [age]
   identity = "~/.key.txt"
