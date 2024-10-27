@@ -25,6 +25,7 @@ $apps = @(
     "extras/wezterm"
     "main/ast-grep"
     "main/bat"
+    "main/chafa"
     "main/cmake"
     "main/delta"
     "main/fd"
