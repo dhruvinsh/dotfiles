@@ -38,6 +38,7 @@ $apps = @(
     "main/make"
     "main/neovim"
     "main/nu"
+    "main/rclone"
     "main/ripgrep"
     "main/sed"
     "main/yazi"
