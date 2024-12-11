@@ -68,10 +68,10 @@ encryption = "age"
 {{/* python version */}}
 {{- $pythonVersion := "" }}
 {{- if $personalmachine -}}
-{{-   $pythonVersion =  includeTemplate (joinPath $templates "python") "3.12" | quote   -}}
+{{-   $pythonVersion =  includeTemplate ("python") "3.12" | quote   -}}
 {{- else -}}
-{{-   $pythonVersion =  includeTemplate (joinPath $templates "python") "3.11" | quote   -}}
-{{- end -}}
+{{-   $pythonVersion =  includeTemplate ("python") "3.11" | quote   -}}
+{{- end }}
 
 [data]
   personalmachine = {{ $personalmachine }}
@@ -99,7 +99,7 @@ encryption = "age"
   
   # some colors that are not defined
   white = "#ffffff"
-  {{- $colorPallet := (joinPath $templates (print $colorScheme ".jsonc.tmpl") | includeTemplate  | fromJsonc) }}
+  {{- $colorPallet := (includeTemplate (print $colorScheme ".jsonc.tmpl") | fromJsonc) }}
   {{- range $key, $val := $colorPallet }}
   {{ $key }} = {{ $val | quote }}
   {{- end }}
