@@ -43,13 +43,16 @@ for url in "${arr[@]}"; do
     rm -rf "$SRC" "$TEMP_DST"
 done
 
-CASCADIA=https://github.com/microsoft/cascadia-code/releases/download/v2404.23/CascadiaCode-2404.23.zip
-echo "--> setting $CASCADIA"
-wget -q --show-progress --progress=bar:force 2>&1 "$CASCADIA" -O "/tmp/font.zip"
-mkdir -p "$TEMP_DST"
-unzip "/tmp/font.zip" -d "$TEMP_DST"
-fd . "$TEMP_DST/ttf/" --extension "ttf" -E "static" -x mv {} "$TARGET"
-rm -rf "/tmp/font.zip" "$TEMP_DST"
+CASCADIA=https://github.com/microsoft/cascadia-code/releases/download/v2407.24/CascadiaCode-2407.24.zip
+MAPLE=https://github.com/subframe7536/maple-font/releases/download/{{ (gitHubLatestRelease "subframe7536/maple-font").TagName }}/MapleMono-NF.zip
+for font in $CASCADIA $MAPLE; do
+    echo "--> setting $font"
+    wget -q --show-progress --progress=bar:force 2>&1 "$font" -O "$SRC"
+    mkdir -p "$TEMP_DST"
+    unzip "$SRC" -d "$TEMP_DST"
+    fd . "$TEMP_DST" --extension "ttf" -E "static" -x mv {} "$TARGET"
+    rm -rf "$SRC" "$TEMP_DST"
+done
 
 echo "--> Setting all-the-icons fonts"
 git clone --depth 1 https://github.com/domtronn/all-the-icons.el /tmp/all-the-icons

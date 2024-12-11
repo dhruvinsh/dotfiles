@@ -10,6 +10,7 @@ $fonts = @(
   "nerd-fonts/FiraCode-NF"
   "nerd-fonts/Iosevka-NF"
   "nerd-fonts/JetBrainsMono-NF"
+  "nerd-fonts/Maple-Mono-NF"
   "nerd-fonts/VictorMono-NF"
 );
 
