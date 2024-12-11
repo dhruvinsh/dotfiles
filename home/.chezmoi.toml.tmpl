@@ -1,4 +1,5 @@
 # vim: set ft=toml:
+encryption = "age"
 
 {{/* Question mark at the end not required. Chezmoi adds its own. */}}
 {{- $personalmachine := promptBool "Is it personal machine" -}}
@@ -80,7 +81,6 @@
   wsl2 = {{ $wsl2 }}
   archlinux = {{ $archlinux }}
   ubuntu = {{ $ubuntu }}
-  encryption = "age"
   isDesktop = {{ $desktopEnv }}
   chassisType = {{ $chassisType | quote }}
   sshSession = {{ $sshSession }}
