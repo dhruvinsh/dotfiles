@@ -1,5 +1,6 @@
 *Zone.Identifier
 .DS_Store
+.git
 .mypy_cache
 .ruff_cache
 .venv
