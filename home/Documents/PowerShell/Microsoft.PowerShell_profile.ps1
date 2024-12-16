@@ -9,3 +9,7 @@ if (Get-Command volta -errorAction SilentlyContinue)
 {
   (& volta completions powershell) | Out-String | Invoke-Expression
 }
+
+# adding auto-completion support for uv
+(& uv generate-shell-completion powershell) | Out-String | Invoke-Expression
+(& uvx --generate-shell-completion powershell) | Out-String | Invoke-Expression
