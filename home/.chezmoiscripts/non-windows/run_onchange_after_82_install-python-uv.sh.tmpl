@@ -11,11 +11,8 @@ PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 
 # Some workflow based setup since pip is available
-echo "*** Installing python packages ***"
-pip install -U pip pipx pynvim
-
-# just perform the cleanup
-pipx uninstall-all
+echo "*** Installing uv ***"
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # create some independent envs with packages
 packages=(
@@ -31,13 +28,10 @@ packages=(
     pre-commit
     pylint
     ruff
-    uv
 )
 
 # setup poetry env via pipx
 for pkg in "${packages[@]}"; do
     echo "*** Setting up $pkg ***"
-    pipx install "$pkg"
+    uv tool install "$pkg"
 done
-
-pipx inject poetry poetry-plugin-export

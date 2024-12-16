@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+# shellcheck disable=all
+
+if [ -x "$(command -v pipx)" ]; then
+    echo "Removing pipx packages"
+    pipx uninstall-all
+fi
+
+if [ -x "$(command -v pip)" ]; then
+    echo "Removing pipx"
+    pip uninstall -y pipx
+fi
+
+echo "Clean up finished"
