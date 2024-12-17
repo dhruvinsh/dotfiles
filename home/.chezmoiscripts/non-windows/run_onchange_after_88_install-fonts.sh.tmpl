@@ -10,6 +10,7 @@ TARGET="$HOME"/.local/share/fonts/
 TARGET="$HOME"/Library/Fonts
 # {{ end }}
 
+
 if [ -d "$TARGET" ]; then
     echo "cleaning up fonts.."
     fd . "$TARGET" -x rm -rf {}
@@ -49,7 +50,12 @@ for font in $CASCADIA $MAPLE; do
     echo "--> setting $font"
     wget -q --show-progress --progress=bar:force 2>&1 "$font" -O "$SRC"
     mkdir -p "$TEMP_DST"
+    # {{ if eq .chezmoi.os "linux" }}
     unzip "$SRC" -d "$TEMP_DST"
+    # {{ else }}
+    # on mac I have to use 7zz else I get error "need PK compat. v4.6 (can do v4.5)"
+    7zz x "$SRC" -o"$TEMP_DST"
+    # {{ end }}
     fd . "$TEMP_DST" --extension "ttf" -E "static" -x mv {} "$TARGET"
     rm -rf "$SRC" "$TEMP_DST"
 done
