@@ -1,7 +1,7 @@
 {{ if ne .chezmoi.os "windows" }}
 
 {{- $kanata := ""}}
-{{- if ne .chezmoi.os "darwin" -}}
+{{- if eq .chezmoi.os "darwin" -}}
 {{- $kanata = "kanata_macos_arm64" -}}
 {{- else -}}
 {{- $kanata = "kanata"}}
