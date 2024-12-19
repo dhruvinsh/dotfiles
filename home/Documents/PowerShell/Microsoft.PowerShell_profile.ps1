@@ -1,3 +1,5 @@
+$Env:Path = "$Env:USERPROFILE\.local\bin;$env:Path"
+
 # zoxide
 if (Get-Command zoxide -errorAction SilentlyContinue)
 {
