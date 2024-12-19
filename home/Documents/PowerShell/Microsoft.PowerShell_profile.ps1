@@ -1,4 +1,5 @@
 $Env:Path = "$Env:USERPROFILE\.local\bin;$env:Path"
+$Env:NVIM_COLORSCHEME = "catppuccin"
 
 # zoxide
 if (Get-Command zoxide -errorAction SilentlyContinue)
