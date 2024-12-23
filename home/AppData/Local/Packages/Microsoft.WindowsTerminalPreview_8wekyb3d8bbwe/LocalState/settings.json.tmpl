@@ -9,46 +9,22 @@
                 "action": "copy",
                 "singleLine": false
             },
-            "id": "User.copy.644BA8F2",
-            "keys": "ctrl+shift+c"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+c"
-        },
-        {
-            "command": "unbound",
-            "keys": "alt+shift+plus"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+shift+d"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+v"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+tab"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+shift+tab"
+            "id": "User.copy.644BA8F2"
         },
         {
             "command": "paste",
             "id": "User.paste"
         },
         {
-            "command": "duplicateTab",
-            "id": "User.duplicateTab",
-            "keys": "alt+shift+d"
+            "command":
+            {
+                "action": "prevTab"
+            },
+            "id": "User.prevTab.0"
         },
         {
-            "command": "find",
-            "id": "User.find",
-            "keys": "ctrl+shift+f"
+            "command": "duplicateTab",
+            "id": "User.duplicateTab"
         },
         {
             "command":
@@ -60,12 +36,8 @@
             "id": "User.splitPane.A6751878"
         },
         {
-            "command":
-            {
-                "action": "prevTab"
-            },
-            "id": "User.prevTab.0",
-            "keys": "alt+shift+["
+            "command": "find",
+            "id": "User.find"
         },
         {
             "command":
@@ -74,22 +46,71 @@
                 "split": "right",
                 "splitMode": "duplicate"
             },
-            "id": "User.splitPane.FEF0D40B",
-            "keys": "alt+shift+\\"
+            "id": "User.splitPane.FEF0D40B"
         },
         {
             "command":
             {
                 "action": "nextTab"
             },
-            "id": "User.nextTab.0",
-            "keys": "alt+shift+]"
+            "id": "User.nextTab.0"
         }
     ],
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{2c4de342-38b7-51cf-b940-2309a097f518}",
     "firstWindowPreference": "persistedWindowLayout",
+    "keybindings":
+    [
+        {
+            "id": "User.copy.644BA8F2",
+            "keys": "ctrl+shift+c"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+c"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+d"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+tab"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+tab"
+        },
+        {
+            "id": null,
+            "keys": "alt+shift+plus"
+        },
+        {
+            "id": "User.find",
+            "keys": "ctrl+shift+f"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+v"
+        },
+        {
+            "id": "User.duplicateTab",
+            "keys": "alt+shift+d"
+        },
+        {
+            "id": "User.prevTab.0",
+            "keys": "alt+shift+["
+        },
+        {
+            "id": "User.splitPane.FEF0D40B",
+            "keys": "alt+shift+\\"
+        },
+        {
+            "id": "User.nextTab.0",
+            "keys": "alt+shift+]"
+        }
+    ],
     "newTabMenu":
     [
         {
@@ -104,12 +125,9 @@
             "bellStyle": "none",
             "colorScheme": "Custom",
             "cursorShape": "filledBox",
-            "experimental.retroTerminalEffect": false,
             "font":
             {
-                "builtinGlyphs": true,
-                "colorGlyphs": false,
-                "face": "FiraCode Nerd Font",
+                "face": {{ .font.regular | quote }},
                 "weight": "normal"
             },
             "historySize": 50000,
@@ -140,10 +158,6 @@
                 "altGrAliasing": true,
                 "closeOnExit": "automatic",
                 "commandline": "C:\\\\cygwin64\\\\bin\\\\bash.exe -i -l",
-                "font":
-                {
-                    "size": 12
-                },
                 "guid": "{2e937641-76b0-40f7-bd57-5c88a5919433}",
                 "hidden": false,
                 "icon": "https://www.cygwin.com/favicon.ico",
@@ -154,10 +168,6 @@
                 "altGrAliasing": true,
                 "closeOnExit": "automatic",
                 "commandline": "C:/msys64/msys2_shell.cmd -defterm -here -no-start -msys",
-                "font":
-                {
-                    "size": 12
-                },
                 "guid": "{9da2cf80-a0f1-4a10-9b3f-0e5107373e76}",
                 "hidden": false,
                 "icon": "C:/msys64/msys2.ico",
@@ -210,15 +220,22 @@
           "name": "Custom",
           "tab": {
             "background": "{{ .colorScheme.base }}FF",
+            "iconStyle": "default",
             "showCloseButton": "always",
             "unfocusedBackground": null
           },
-          "tabRow": {
+          "tabRow":
+          {
             "background": "{{ .colorScheme.mantle }}FF",
             "unfocusedBackground": "{{ .colorScheme.crust }}FF"
           },
-          "window": {
-            "applicationTheme": "dark"
+          "window":
+          {
+            "applicationTheme": "dark",
+            "experimental.rainbowFrame": false,
+            "frame": null,
+            "unfocusedFrame": null,
+            "useMica": false
           }
         }
     ],
