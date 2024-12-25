@@ -76,7 +76,7 @@ DISCORD="https://discord.com/api/download?platform={{ .chezmoi.os }}&format=deb"
 deb_installer "$DISCORD" "discord"
 
 # f3d setup
-F3D={{ gitHubLatestReleaseAssetURL "f3d-app/f3d" "F3D-*-Linux-x86_64.deb" | quote }}
+F3D={{ gitHubReleaseAssetURL "f3d-app/f3d" "v2.5.0" "F3D-*-Linux-x86_64.deb" | quote }}
 deb_installer "$F3D" "f3d"
 
 # localsend
