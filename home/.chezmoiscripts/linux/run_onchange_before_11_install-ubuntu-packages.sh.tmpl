@@ -133,7 +133,7 @@ sudo systemctl start tlp.service
 # {{ end }}
 
 echo "install bat(cat)"
-BAT={{ gitHubLatestReleaseAssetURL "sharkdp/bat" (printf "bat-musl_*_%s.deb" .chezmoi.arch) | quote }}
+BAT={{ gitHubLatestReleaseAssetURL "sharkdp/bat" (printf "bat_*_%s.deb" .chezmoi.arch) | quote }}
 wget -q --show-progress --progress=bar:force 2>&1 $BAT -O /tmp/bat.deb
 sudo apt install /tmp/bat.deb
 
