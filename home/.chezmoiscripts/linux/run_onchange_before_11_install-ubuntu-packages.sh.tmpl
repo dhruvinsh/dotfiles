@@ -137,6 +137,14 @@ BAT={{ gitHubLatestReleaseAssetURL "sharkdp/bat" (printf "bat_*_%s.deb" .chezmoi
 wget -q --show-progress --progress=bar:force 2>&1 $BAT -O /tmp/bat.deb
 sudo apt install /tmp/bat.deb
 
+# do not install ripgrep if already found
+if [ ! $(command -v rg) ]; then
+    echo "install ripgrep"
+    RIPGREP=https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep_{{ .ripgrepVersion }}_{{ .chezmoi.arch }}.deb
+    wget -q --show-progress --progress=bar:force 2>&1 $RIPGREP -O /tmp/ripgrep.deb
+    sudo apt install /tmp/ripgrep.deb
+fi
+
 echo "setup fd"
 FD={{ gitHubLatestReleaseAssetURL "sharkdp/fd" (printf "fd_*_%s.deb" .chezmoi.arch) | quote  }}
 wget -q --show-progress --progress=bar:force 2>&1 $FD -O /tmp/fd.deb
