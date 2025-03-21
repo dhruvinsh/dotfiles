@@ -14,7 +14,8 @@ applying the existing setup.
 ```bash
 export BINDIR="$HOME/.local/bin"
 export PATH="$HOME/.local/bin:$PATH"
-sh -c "$(curl -fsLS chezmoi.io/get)" -- init dhruvinsh --apply
+sh -c "$(curl -fsLS chezmoi.io/get)" -- init dhruvinsh --apply --exclude externals
+chezmoi apply
 ```
 
 ### Windows Setup
@@ -28,7 +29,8 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 irm get.scoop.sh | iex
 
 scoop install chezmoi
-chezmoi init dhruvinsh --apply
+chezmoi init dhruvinsh --apply --exclude externals
+chezmoi apply
 ```
 
 ### Mac Setup
@@ -40,7 +42,8 @@ All the installation on mac managed by brew.
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 brew install chezmoi
-chezmoi init dhruvinsh --apply
+chezmoi init dhruvinsh --apply --exclude externals
+chezmoi apply
 ```
 
 ### Arch Installation
