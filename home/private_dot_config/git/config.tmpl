@@ -63,5 +63,8 @@
 [url "git@github.com:dhruvinsh"]
   insteadOf = https://github.com/dhruvinsh
 
+; for work when I work with personal repo
+[includeIf "hasconfig:remote.*.url:git@github.com*/**"]
+  path = public-config
 
 {{/* vim: set filetype=gitconfig: */}}
