@@ -3,8 +3,9 @@
 
 set -euo pipefail
 
-echo '{{ (gitHubLatestRelease "volta-cli/volta").TagName }}'
-echo "Setup node with help of volta () ⚡️"
+# Run is every time volta has update
+# Volta {{ (gitHubLatestRelease "volta-cli/volta").TagName }}
+echo "Setup node with help of volta ⚡️"
 curl https://get.volta.sh | bash -s -- --skip-setup
 VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
