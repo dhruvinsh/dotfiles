@@ -100,6 +100,7 @@ export EDITOR='nvim'
 export HOMEBREW_NO_AUTO_UPDATE=1
 {{- end }}
 
+# Aliases
 alias vim=nvim
 alias lg=lazygit
 
@@ -126,5 +127,10 @@ export DISPLAY=:0
 export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
 export PATH=/usr/lib/wsl/lib:$PATH
 {{- end}}
+
+# User functions
+csv() {
+  uvx visidata "$@"
+}
 
 {{- /* vim: set filetype=zsh ts=2 sw=2: */}}
