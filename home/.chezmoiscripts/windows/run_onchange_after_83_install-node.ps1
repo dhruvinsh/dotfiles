@@ -4,7 +4,7 @@
 scoop install "main/volta"
 
 $vpackages = @(
-    "node"
+    "node@lts"
     "pnpm"
     "vite"
     "yarn"
@@ -13,4 +13,18 @@ $vpackages = @(
 foreach ($vpackage in $vpackages) {
     Write-Output "--> Installing $vpackage.."
     volta install $vpackage
+}
+
+# update npm to latest version
+npm install -g npm
+
+Write-Output "Some node application installation for development"
+$applications = @(
+  "neovim"
+  "prettier"
+  "tree-sitter-cli"
+)
+foreach ($application in $applications) {
+    Write-Output "--> Installing $application globally.."
+    npm install -g $application
 }
