@@ -3,16 +3,17 @@
 
 set -euo pipefail
 
-echo "Setup node with help of volta ⚡️"
+echo '{{ (gitHubLatestRelease "volta-cli/volta").TagName }}'
+echo "Setup node with help of volta () ⚡️"
 curl https://get.volta.sh | bash -s -- --skip-setup
 VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
 vpackages=(
-    node@lts
-    pnpm
-    vite
-    yarn
+    node@22
+    pnpm@latest-10
+    vite@latest
+    yarn@latest
 )
 volta install "${vpackages[@]}"
 
@@ -21,8 +22,8 @@ npm install -g npm
 
 echo "Some node application installation for development"
 applications=(
-  neovim
-  prettier
-  tree-sitter-cli
+  neovim@latest
+  prettier@latest
+  tree-sitter-cli@latest
 )
 npm install -g "${applications[@]}"
