@@ -47,7 +47,7 @@ encryption = "age"
 {{/* chassisType variable set to "desktop" or "laptop" or "vm" */}}
 {{- $chassisType := "unknown" }}
 {{- if eq .chezmoi.os "darwin" }}
-{{-   if contains "MacBook" (output "sysctl" "-n" "hw.model") }}
+{{-   if contains "MacBook" (output "system_profiler" "SPHardwareDataType") }}
 {{-     $chassisType = "laptop" }}
 {{-   else }}
 {{-     $chassisType = "desktop" }}
