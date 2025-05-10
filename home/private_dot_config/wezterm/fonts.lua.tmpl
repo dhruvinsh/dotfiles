@@ -1,0 +1,47 @@
+-- vim: set ft=lua:
+local wezterm = require("wezterm")
+local platform = require("utils.platform")
+
+local regular_font = "{{ .font.regular }}"
+local italic_font = "{{ .font.italic }}"
+local frame_font = "Roboto"
+
+local M = {}
+
+-- for Linux mint somehow behaving weirdly, but not going to chase right now.
+local font_size = platform.is_mac and 15.0 or platform.is_linux and 12.0 or 12.5
+local command_palette_font_size = platform.is_mac and 14.0 or platform.is_linux and 13.0 or 12.5
+
+---@param cfg table
+M.setup = function(cfg)
+  -- set frame fonts, affect the command palette as well
+  cfg.window_frame = {
+    font = wezterm.font({ family = frame_font }),
+  }
+
+  cfg.font = wezterm.font({ family = regular_font, weight = "Regular" })
+
+  cfg.font_rules = {
+    {
+      intensity = "Bold",
+      italic = true,
+      font = wezterm.font({ family = italic_font, weight = "Bold", style = "Italic" }),
+    },
+    {
+      italic = true,
+      intensity = "Half",
+      font = wezterm.font({ family = italic_font, weight = "DemiBold", style = "Italic" }),
+    },
+    {
+      italic = true,
+      intensity = "Normal",
+      font = wezterm.font({ family = italic_font, style = "Italic" }),
+    },
+  }
+
+  -- font size
+  cfg.font_size = font_size
+  cfg.command_palette_font_size = command_palette_font_size
+end
+
+return M

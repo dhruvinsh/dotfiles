@@ -1,0 +1,113 @@
+{{- if eq .chezmoi.os "windows" }}
+[shell]
+program = "wsl"
+args = ["--shell-type", "login", "--cd", "~"]
+{{- end }}
+
+[font]
+{{- if eq .chezmoi.os "windows" }}
+size = 12
+{{- else }}
+size = 15
+{{- end }}
+
+[font.normal]
+family = {{ .font.regular | quote }}
+style = "Regular"
+
+[scrolling]
+history = 10000
+
+[bell]
+duration = 1
+
+[cursor]
+blink_interval = 500
+
+[cursor.style]
+shape = "Block"
+blinking = "On"
+
+# [colors.primary]
+# background = "#16161D"
+# 
+# [colors.normal]
+# black = "#16161D"
+
+[colors.primary]
+background = {{ .colorScheme.base | quote }}
+foreground = {{ .colorScheme.text | quote }}
+dim_foreground = {{ .colorScheme.overlay1 | quote }}
+bright_foreground = {{ .colorScheme.text | quote }}
+
+[colors.cursor]
+text = {{ .colorScheme.base | quote }}
+cursor = {{ .colorScheme.rosewater | quote }}
+
+[colors.vi_mode_cursor]
+text = {{ .colorScheme.base | quote }}
+cursor = {{ .colorScheme.lavender | quote }}
+
+[colors.search.matches]
+foreground = {{ .colorScheme.base | quote }}
+background = {{ .colorScheme.subtext0 | quote }}
+
+[colors.search.focused_match]
+foreground = {{ .colorScheme.base | quote }}
+background = {{ .colorScheme.green | quote }}
+
+[colors.footer_bar]
+foreground = {{ .colorScheme.base | quote }}
+background = {{ .colorScheme.subtext0 | quote }}
+
+[colors.hints.start]
+foreground = {{ .colorScheme.base | quote }}
+background = {{ .colorScheme.yellow | quote }}
+
+[colors.hints.end]
+foreground = {{ .colorScheme.base | quote }}
+background = {{ .colorScheme.subtext0 | quote }}
+
+[colors.selection]
+text = {{ .colorScheme.base | quote }}
+background = {{ .colorScheme.rosewater | quote }}
+
+[colors.normal]
+black = {{ .colorScheme.surface1 | quote }}
+red = {{ .colorScheme.red | quote }}
+green = {{ .colorScheme.green | quote }}
+yellow = {{ .colorScheme.yellow | quote }}
+blue = {{ .colorScheme.blue | quote }}
+magenta = {{ .colorScheme.pink | quote }}
+cyan = {{ .colorScheme.teal | quote }}
+white = {{ .colorScheme.subtext1 | quote }}
+
+[colors.bright]
+black = {{ .colorScheme.surface2 | quote }}
+red = {{ .colorScheme.red | quote }}
+green = {{ .colorScheme.green | quote }}
+yellow = {{ .colorScheme.yellow | quote }}
+blue = {{ .colorScheme.blue | quote }}
+magenta = {{ .colorScheme.pink | quote }}
+cyan = {{ .colorScheme.teal | quote }}
+white = {{ .colorScheme.subtext0 | quote }}
+
+[colors.dim]
+black = {{ .colorScheme.surface1 | quote }}
+red = {{ .colorScheme.red | quote }}
+green = {{ .colorScheme.green | quote }}
+yellow = {{ .colorScheme.yellow | quote }}
+blue = {{ .colorScheme.blue | quote }}
+magenta = {{ .colorScheme.pink | quote }}
+cyan = {{ .colorScheme.teal | quote }}
+white = {{ .colorScheme.subtext1 | quote }}
+
+[[colors.indexed_colors]]
+index = 16
+color = {{ .colorScheme.peach | quote }}
+
+[[colors.indexed_colors]]
+index = 17
+color = {{ .colorScheme.rosewater | quote }}
+
+{{/* vim: set filetype=toml: */}}

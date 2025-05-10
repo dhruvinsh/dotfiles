@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# vim: set expandtab ts=4 sw=4 ft=bash:
+set -euo pipefail
+
+# brew package
+packages=(
+    ast-grep
+    atuin
+    bat
+    bat-extras
+    chafa
+    diffr # better git-diff alternative is difftastic
+    direnv
+    editorconfig
+    fd
+    fzf
+    gh
+    git-cliff
+    git-delta # better git-diff
+    glow
+    gnu-sed
+    helix
+    jq
+    just
+    kopiaui
+    lazydocker
+    lazygit
+    luarocks
+    mas
+    neovim
+    ranger
+    rclone
+    ripgrep
+    sevenzip
+    starship
+    tealdeer
+    tmux
+    tree
+    wget
+    yazi
+    yq
+    zellij
+    zoxide
+)
+
+# some neovim specific, since mason.nvim can't install arm version
+packages+=(
+    selene
+    shellcheck
+)
+
+# some measureing tools
+packages+=(
+    btop
+    htop
+)
+
+# pyenv dependency
+packages+=(
+    openssl
+    readline
+    sqlite3
+    xz
+    zlib
+    tcl-tk
+)
+
+# some cask packages
+casks=(
+    font-maple-mono-nf
+    gitbutler
+    nextcloud
+    obsidian
+    syncthing
+    visual-studio-code
+    wezterm
+)
+
+############################
+# Installation starts here #
+############################
+
+# install all the packages
+brew install ${packages[@]}
+brew install --cask ${casks[@]}

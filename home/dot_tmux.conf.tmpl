@@ -1,0 +1,24 @@
+set -g mouse on
+set -g default-terminal "xterm-256color"
+
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin '27medkamal/tmux-session-wizard'
+set -g @plugin 'sainnhe/tmux-fzf'
+
+set -as terminal-overrides ",$TERM:RGB"
+set -ag terminal-features ",$TERM:usstyle"
+{{- if eq .wsl true }}
+set -sg escape-time 10
+{{- end }}
+
+set-option -g allow-passthrough on # zen-mode.nvim
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.tmux/plugins/tpm/tpm'
+
+{{- /* vim: set filetype=tmux: */}}

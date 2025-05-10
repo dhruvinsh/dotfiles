@@ -1,0 +1,71 @@
+#!/bin/bash
+# vim: set expandtab ts=4 sw=4 ft=sh:
+# shellcheck disable=1083
+
+VERSION={{ (gitHubLatestRelease "ryanoasis/nerd-fonts").TagName }}
+
+# {{ if eq .chezmoi.os "linux" }}
+TARGET="$HOME"/.local/share/fonts/
+# {{ else }}
+TARGET="$HOME"/Library/Fonts
+# {{ end }}
+
+
+if [ -d "$TARGET" ]; then
+    echo "cleaning up fonts.."
+    fd . "$TARGET" -x rm -rf {}
+else
+    mkdir -p "$TARGET"
+fi
+
+# Not using cascadia fonts from nerd-fonts
+# CASCADIA=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/CascadiaCode.tar.xz
+FIRA=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/FiraCode.tar.xz
+IOSEVKA=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/Iosevka.tar.xz
+JETBRAINS=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/JetBrainsMono.tar.xz
+MONASPACE=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/Monaspace.tar.xz
+VICTOR=https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}/VictorMono.tar.xz
+
+arr=("$FIRA" "$IOSEVKA" "$JETBRAINS" "$MONASPACE" "$VICTOR")
+
+SRC=/tmp/font.tar.xz
+TEMP_DST=/tmp/fonts
+
+# just a cleanup if its present
+rm -rf "$SRC" "$TEMP_DST"
+
+for url in "${arr[@]}"; do
+    echo "--> setting $url"
+    wget -q --show-progress --progress=bar:force 2>&1 "$url" -O "$SRC"
+    mkdir -p "$TEMP_DST"
+	tar -xf "$SRC" --directory="$TEMP_DST"
+    fd . "$TEMP_DST" --type file --exclude "*Propo-*" --exclude "*Mono-*" -e "ttf" -e "otf" -x mv {} "$TARGET"
+    # find "$TEMP_DST" -type f -name "*.ttf" -exec mv {} "$TARGET" + 2>/dev/null || find "$TEMP_DST" -type f -name "*.otf" -exec mv {} "$TARGET" \;
+    rm -rf "$SRC" "$TEMP_DST"
+done
+
+CASCADIA=https://github.com/microsoft/cascadia-code/releases/download/v2407.24/CascadiaCode-2407.24.zip
+MAPLE=https://github.com/subframe7536/maple-font/releases/download/{{ (gitHubLatestRelease "subframe7536/maple-font").TagName }}/MapleMono-NF.zip
+for font in $CASCADIA $MAPLE; do
+    echo "--> setting $font"
+    wget -q --show-progress --progress=bar:force 2>&1 "$font" -O "$SRC"
+    mkdir -p "$TEMP_DST"
+    # {{ if eq .chezmoi.os "linux" }}
+    unzip "$SRC" -d "$TEMP_DST"
+    # {{ else }}
+    # on mac I have to use 7zz else I get error "need PK compat. v4.6 (can do v4.5)"
+    7zz x "$SRC" -o"$TEMP_DST"
+    # {{ end }}
+    fd . "$TEMP_DST" --extension "ttf" -E "static" -x mv {} "$TARGET"
+    rm -rf "$SRC" "$TEMP_DST"
+done
+
+echo "--> Setting all-the-icons fonts"
+git clone --depth 1 https://github.com/domtronn/all-the-icons.el /tmp/all-the-icons
+find /tmp/all-the-icons/fonts -type f -name "*.ttf" -exec mv {} "$TARGET" \;
+rm -rf /tmp/all-the-icons
+
+{{ if eq .chezmoi.os "linux" }}
+echo "--> updating fonts cache"
+fc-cache -f
+{{ end }}

@@ -1,0 +1,253 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+# if arch based system
+# {{- if eq .archlinux true }}
+packages=()
+packages_aur=()
+
+# bootstrapping archlinux
+packages=(
+    inotify-tools
+    sddm
+    xorg
+    xorg-xinit
+)
+
+# hardware bring ups like network, audio, graphics, printers
+packages+=(
+    # Installing pipewire-pulse! It will replace pulseaudio and pulseaudio-bluetooth.
+    # NOTE: pipewire replaces pulseaudio
+    # Reboot, re-login or start the pipewire-pulse.service user unit to see the effect.
+    # pulseaudio
+    # pulseaudio-alsa
+    # pulseaudio-bluetooth
+    # pulsemixer
+    acpi
+    acpid
+    alsa-utils
+    blueman
+    bluez
+    bluez-utils
+    cpupower
+    intel-gpu-tools
+    intel-media-driver
+    jack2
+    libva-utils
+    mesa
+    mesa-utils
+    network-manager-applet
+    networkmanager # its already installed but lets keep it here
+    networkmanager-openvpn
+    pipewire
+    pipewire-alsa
+    pipewire-pulse
+    pipewire-zeroconf
+    udisks2
+    udiskie
+    upower
+    vulkan-intel
+    wireplumber
+    xf86-input-libinput
+    xf86-video-intel # I know I will be using it on laptop
+)
+
+# adding some more packages
+packages_aur+=(
+    diffr
+)
+
+# NOTE: xmonad feels alien and hard to learn haskell for now, dropping it for now
+# and switching to diffrent WM (keep changing mind)
+# xmonad setup
+# packages+=(
+#     picom
+#     rofi  # or dmenu
+#     trayer
+#     xmobar
+#     xmonad
+#     xmonad-contrib
+# )
+
+# # i3-gaps setup
+# packages+=(
+#     i3-gaps
+#     picom
+#     polybar
+#     rofi
+# )
+# packages_aur+=(
+#     autotiling
+#     flashfocus
+#     rofi-greenclip
+# )
+
+# qtile setup
+packages+=(
+    lxsession
+    picom
+    qtile
+    rofi
+)
+packages_aur+=(
+    rofi-greenclip
+    flashfocus
+)
+
+# some visual packages like fonts, themes, icons etc
+packages+=(
+    adobe-source-code-pro-fonts
+    adobe-source-sans-fonts
+    arandr
+    git-delta
+    gnu-free-fonts
+    harfbuzz
+    lxappearance
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
+    noto-fonts-extra
+    otf-font-awesome
+    papirus-icon-theme
+    ttf-dejavu
+    ttf-ubuntu-font-family
+)
+
+# some usefule packages
+packages+=(
+    alacritty
+    aspell
+    aspell-en
+    audacity
+    avahi
+    bash-completion
+    capitaine-cursors
+    cmake
+    code
+    conky
+    cronie
+    cups
+    cups-pdf
+    curl
+    dialog
+    direnv
+    dunst
+    fd
+    feh
+    ffmpeg
+    ffmpegthumbnailer
+    firefox
+    fontconfig
+    fzf
+    git
+    glow
+    gnupg
+    gutenprint
+    hplip
+    htop
+    iftop
+    imagemagick
+    jgmenu
+    jq
+    libnotify
+    light
+    lm_sensors
+    lsb-release
+    meson
+    mpc
+    mpd
+    mpv
+    ncmpcpp
+    neofetch
+    neovim
+    ntfs-3g
+    openssh
+    pacman-contrib
+    pavucontrol
+    pcmanfm-gtk3
+    playerctl
+    powertop
+    ranger
+    ranger
+    redshift
+    remmina
+    ripgrep
+    samba
+    scrot
+    shellcheck
+    startup-notification
+    stylua
+    sxiv
+    tar
+    tigervnc
+    tmux
+    unzip
+    wget
+    xclip
+    youtube-dl
+    zathura
+    zathura-pdf-mupdf
+    zsh
+)
+
+# python build packages
+# Arch linux does supports latest python but I will stick to pyenv
+packages+=(
+    base-devel
+    openssl
+    tk
+    xz
+    zlib
+)
+
+# general aur packages
+packages_aur+=(
+    ttf-ms-fonts
+)
+
+# install all the packages
+sudo pacman -S --noconfirm --needed ${packages[@]}
+
+# some variable
+echo "local bin directory setup"
+LOCALBIN=$HOME/.local/bin
+[ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
+
+echo "set ZSH to default"
+if [ "$SHELL" != "/usr/bin/zsh" ]; then
+    sudo chsh -s $(which zsh) $USER
+fi
+
+echo "YAY installation"
+if [ ! -x "$(command -v yay)" ]; then
+    git clone https://aur.archlinux.org/yay-git.git ~/Downloads/yay-git
+    cd ~/Downloads/yay-git
+    makepkg -si
+    cd ~
+fi
+yay -S --nocleanmenu --nodiffmenu --removemake --norebuild --noredownload ${packages_aur[@]}
+
+
+# enable some services
+sudo systemctl enable --now NetworkManager.service
+sudo systemctl enable --now NetworkManager-dispatcher.service
+sudo systemctl enable --now avahi-daemon.service
+sudo systemctl enable --now bluetooth.service
+sudo systemctl enable --now cups.service
+sudo systemctl enable --now sddm.service
+sudo systemctl enable --now sshd.service
+
+# some user services
+systemctl --user enable --now greenclip.service
+systemctl --user enable --now pipewire.service
+systemctl --user enable --now pipewire-pulse.service
+systemctl --user enable --now redshift-gtk.service
+# {{- if stat (joinPath .chezmoi.homeDir ".config/systemd/user/x0vncserver.service") }}
+systemctl --user enable --now x0vncserver.service
+# {{- end }}
+
+sudo sysctl fs.inotify.max_user_watches=100000
+sudo sysctl fs.inotify.max_queued_events=100000
+
+# {{- end }}

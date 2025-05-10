@@ -1,0 +1,47 @@
+{{ if eq .chezmoi.os "linux" }}
+[".local/bin/nvim"]
+  type = "file"
+  url  = {{ gitHubLatestReleaseAssetURL "neovim/neovim" "nvim-linux-x86_64.appimage" | quote }}
+  executable = true
+{{- end }}
+
+#
+# nvim setup
+# 
+{{ $nvimPath := "" }}
+{{ if eq .chezmoi.os "windows" }}
+{{   $nvimPath = "AppData/Local/nvim" }}
+{{ else }}
+{{   $nvimPath = ".config/nvim" }}
+{{ end }}
+
+[{{ $nvimPath | quote }}]
+  type = "git-repo"
+  url = "https://github.com/dhruvinsh/nvim.git"
+  refreshPeriod = "168h"
+
+# 
+# vnvim setup
+# 
+{{ $vnvimPath := "" }}
+{{ if eq .chezmoi.os "windows" }}
+{{   $vnvimPath = "AppData/Local/vnvim" }}
+{{ else }}
+{{   $vnvimPath = ".config/vnvim" }}
+{{ end }}
+
+[{{ $vnvimPath | quote }}]
+  type = "archive"
+  url = "https://github.com/dhruvinsh/nvim/archive/vnvim.tar.gz"
+  exact = true
+  stripComponents = 1
+  refreshPeriod = "168h"
+
+{{ if and (eq .chezmoi.os "linux") (.isDesktop) }}
+[".local/bin/neovide"]
+  type = "file"
+  url = {{ gitHubLatestReleaseAssetURL "neovide/neovide" "neovide.AppImage" | quote }}
+  executable = true
+{{- end }}
+
+{{- /* vim: set filetype=toml: */}}

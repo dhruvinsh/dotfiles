@@ -1,0 +1,9 @@
+# vim: set expandtab ts=4 sw=4 ft=zsh:
+
+{{ if stat "/opt/homebrew/bin/brew" -}}
+fpath+=("{{ output "/opt/homebrew/bin/brew" "--prefix" | trim }}/share/zsh/site-functions")
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+{{ end -}}
+
+{{- /* vim: set filetype=zsh: */}}

@@ -1,0 +1,124 @@
+{{- if ne .chezmoi.os "windows" -}}
+
+{{- $kanata := "" -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{- $kanata = "kanata_macos_arm64" -}}
+{{- else -}}
+{{- $kanata = "kanata" -}}
+{{- end -}}
+[".local/bin/kanata"]
+  type = "file"
+  url  = {{ gitHubLatestReleaseAssetURL "jtroo/kanata" $kanata | quote }}
+  executable = true
+
+{{ if eq .chezmoi.os "linux" }}
+
+[".local/bin/atuin"]
+  type = "archive-file"
+  url  = {{ gitHubLatestReleaseAssetURL "atuinsh/atuin" "atuin-x86_64-unknown-linux-musl.tar.gz" | quote }}
+  executable = true
+  stripComponents = 1
+  path = "atuin"
+
+[".local/bin/delta"]
+  type = "archive-file"
+  url  = {{ gitHubLatestReleaseAssetURL "dandavison/delta" "delta-*-x86_64-unknown-linux-musl.tar.gz" | quote }}
+  executable = true
+  stripComponents = 1
+  path = "delta"
+
+[".local/bin/fswatch"]
+  type = "file"
+  url  = {{ gitHubLatestReleaseAssetURL "dhruvinsh/fswatch" "fswatch" | quote }}
+  executable = true
+
+[".local/bin/fzf"]
+  type = "archive-file"
+  url  = {{ gitHubLatestReleaseAssetURL "junegunn/fzf" (printf "fzf-*-%s_%s.tar.gz" .chezmoi.os .chezmoi.arch) | quote }}
+  executable = true
+  path = "fzf"
+
+[".local/bin/git-cliff"]
+  type = "archive-file"
+  url  = {{ gitHubLatestReleaseAssetURL "orhun/git-cliff" (printf "git-cliff-*-x86_64-unknown-%s-musl.tar.gz" .chezmoi.os) | quote }}
+  executable = true
+  stripComponents = 1
+  path = "git-cliff"
+
+[".local/bin/glow"]
+  type = "archive-file"
+  url = {{ gitHubLatestReleaseAssetURL "charmbracelet/glow" "glow_*_Linux_x86_64.tar.gz" | quote }}
+  executable = true
+  stripComponents = 1
+  path = "glow"
+
+[".local/bin/helix"]
+  type = "file"
+  url = {{ gitHubLatestReleaseAssetURL "helix-editor/helix" "helix-*-x86_64.AppImage" | quote }}
+  executable = true
+
+[".local/bin/lazygit"]
+  type = "archive-file"
+  url = {{ gitHubLatestReleaseAssetURL "jesseduffield/lazygit" "lazygit_*_Linux_x86_64.tar.gz" | quote}}
+  executable = true
+  path = "lazygit"
+
+[".local/bin/lazydocker"]
+  type = "archive-file"
+  url = {{ gitHubLatestReleaseAssetURL "jesseduffield/lazydocker" "lazydocker_*_Linux_x86_64.tar.gz" | quote }}
+  executable = true
+  path = "lazydocker"
+
+[".local/bin/lazysql"]
+  type = "archive-file"
+  url = {{ gitHubLatestReleaseAssetURL "jorgerojas26/lazysql" "lazysql_Linux_x86_64.tar.gz" | quote }}
+  executable = true
+  path = "lazysql"
+
+[".local/bin/jj"]
+  type = "archive-file"
+  url = {{ gitHubLatestReleaseAssetURL "martinvonz/jj" "jj-*-x86_64-unknown-linux-musl.tar.gz" | quote }}
+  executable = true
+  stripComponents = 1
+  path = "jj"
+
+[".local/bin/just"]
+  type = "archive-file"
+  url = {{ gitHubLatestReleaseAssetURL "casey/just" (printf "just-*-x86_64-unknown-%s-musl.tar.gz" .chezmoi.os) | quote }}
+  executable = true
+  path = "just"
+
+[".local/bin/starship"]
+  type = "archive-file"
+  url = {{ gitHubLatestReleaseAssetURL "starship/starship" "starship-x86_64-unknown-*-musl.tar.gz" | quote }}
+  executable = true
+  path = "starship"
+
+[".local/bin/tldr"]
+  type = "file"
+  url = {{ gitHubLatestReleaseAssetURL "dbrgn/tealdeer" (printf "tealdeer-%s-x86_64-musl" .chezmoi.os) | quote }}
+  executable = true
+
+[".local/bin/yazi"]
+  type = "archive-file"
+  url = {{ gitHubLatestReleaseAssetURL "sxyazi/yazi" (printf "yazi-x86_64-unknown-%s-musl.zip" .chezmoi.os ) | quote }}
+  executable = true
+  stripComponents = 1
+  path = "yazi"
+
+[".local/bin/yq"]
+  type = "file"
+  url = {{ gitHubLatestReleaseAssetURL "mikefarah/yq" (printf "yq_%s_amd64" .chezmoi.os ) | quote }}
+  executable = true
+  path = "yq"
+
+[".local/bin/zoxide"]
+  type = "archive-file"
+  url  = {{ gitHubLatestReleaseAssetURL "ajeetdsouza/zoxide" (printf "zoxide-*-x86_64-unknown-%s-musl.tar.gz" .chezmoi.os) | quote}}
+  executable = true
+  path = "zoxide"
+
+{{ end }}
+{{ end }}
+
+{{- /* vim: set filetype=toml: */}}

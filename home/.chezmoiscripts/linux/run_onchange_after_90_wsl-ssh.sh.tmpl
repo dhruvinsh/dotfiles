@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+{{- if eq .wsl true }}
+
+sudo sed -i -e 's/AcceptEnv.*/AcceptEnv LANG LC_* WSLENV TERM* WEZTERM* COLORTERM*/g' /etc/ssh/sshd_config
+sudo systemctl restart ssh.service
+
+{{- end }}
+
+{{- /* vim: set filetype=sh: */}}

@@ -1,0 +1,117 @@
+# vim: set ft=toml:
+encryption = "age"
+
+{{/* Question mark at the end not required. Chezmoi adds its own. */}}
+{{- $personalmachine := promptBool "Is it personal machine" -}}
+
+{{/* wsl detection */}}
+{{- $wsl   := false -}}{{/* wsl 1/2 */}}
+{{- $wsl1  := false -}}{{/* wsl 1 */}}
+{{- $wsl2  := false -}}{{/* wsl 2 */}}
+{{- if (env "WSL_DISTRO_NAME") -}}
+{{-   $wsl = true -}}
+{{- end -}}
+{{- if and $wsl (env "WSL_INTEROP" | not) -}}
+{{-   $wsl1 = true -}}
+{{- end -}}
+{{- if and $wsl (env "WSL_INTEROP") -}}
+{{-   $wsl2 = true -}}
+{{- end }}
+
+{{- $archlinux    := false -}}
+{{- $ubuntu       := false -}}
+{{- $desktopEnv   := false }}
+
+{{- if eq .chezmoi.os "linux" -}}
+{{/*  arch or ubuntu */}}
+{{-   if eq .chezmoi.osRelease.name "Arch Linux" }}
+{{-     $archlinux = true -}}
+{{-     $ubuntu = false -}}
+{{-   else }}
+{{-     $archlinux = false -}}
+{{-     $ubuntu = true -}} 
+{{-   end -}}
+{{/*  is it desktop version linux? */}}
+{{-   if (env "XDG_CURRENT_DESKTOP") -}}
+{{-     $desktopEnv = true -}}
+{{-   end }}
+{{- end -}}
+
+
+{{/* is it a ssh session? */}}
+{{- $sshSession := false }}
+{{- if (env "SSH_CONNECTION") -}}
+{{-   $sshSession = true -}}
+{{- end }}
+
+{{/* chassisType variable set to "desktop" or "laptop" or "vm" */}}
+{{- $chassisType := "unknown" }}
+{{- if eq .chezmoi.os "darwin" }}
+{{-   if contains "MacBook" (output "sysctl" "-n" "hw.model") }}
+{{-     $chassisType = "laptop" }}
+{{-   else }}
+{{-     $chassisType = "desktop" }}
+{{-   end }}
+{{- else if and (not $wsl) (eq .chezmoi.os "linux") }}
+{{-   $chassisType = (output "hostnamectl" "--json=short" | mustFromJson).Chassis }}
+{{- else if eq .chezmoi.os "windows" }}
+{{-   $chassisType = (output "powershell.exe" "-NoProfile" "-NonInteractive" "-Command" "if ((Get-CimInstance -Class Win32_Battery | Measure-Object).Count -gt 0) { Write-Output 'laptop' } else { Write-Output 'desktop' }") | trim }}
+{{- end }}
+
+{{- $email := "dhruvin3@gmail.com" -}}
+{{- if not $personalmachine -}}
+{{-   $email = "dshah@evertz.com" -}}
+{{- end -}}
+
+{{- $templates := joinPath "home/.chezmoitemplates" }}
+
+{{/* python version */}}
+{{- $pythonVersion := "" }}
+{{- if $personalmachine -}}
+{{-   $pythonVersion =  includeTemplate ("python") "3.12" | quote   -}}
+{{- else -}}
+{{-   $pythonVersion =  includeTemplate ("python") "3.11" | quote   -}}
+{{- end }}
+
+[data]
+  personalmachine = {{ $personalmachine }}
+  email = {{ $email | quote }}
+  wsl = {{ $wsl }}
+  wsl1 = {{ $wsl1 }}
+  wsl2 = {{ $wsl2 }}
+  archlinux = {{ $archlinux }}
+  ubuntu = {{ $ubuntu }}
+  isDesktop = {{ $desktopEnv }}
+  chassisType = {{ $chassisType | quote }}
+  sshSession = {{ $sshSession }}
+  pythonVersion = {{ $pythonVersion }}
+
+[data.font]
+  regular = "JetBrainsMono NF"
+  italic = "Maple Mono NF"
+
+{{/* UI Setup: ColorScheme */}}
+{{- $colorSchemChoices := list "catppuccin" "rose-pine" "tokyonight" "nvonedark" "onedark" "moonfly" -}}
+{{- $colorScheme := promptChoiceOnce . "colorScheme" "What color scheme to use" $colorSchemChoices }}
+
+[data.colorScheme]
+  name = {{ $colorScheme | quote }}
+  
+  # some colors that are not defined
+  white = "#ffffff"
+  {{- $colorPallet := (includeTemplate (print $colorScheme ".jsonc.tmpl") | fromJsonc) }}
+  {{- range $key, $val := $colorPallet }}
+  {{ $key }} = {{ $val | quote }}
+  {{- end }}
+
+
+[github]
+  refreshPeriod = "12h"
+
+[age]
+  identity = "~/.key.txt"
+  recipient = "age17yfjyk63433uzr5q2lqxx4sexfnz6e9t648kku5t9sehfye7x4eqy9mhmu"
+
+[interpreters.ps1]
+  command = "pwsh"
+  args = ["-NoLogo"]

@@ -1,0 +1,10 @@
+{{- if ne .chezmoi.os "windows" -}}
+
+[".tmux/plugins/tpm"]
+  type = "git-repo"
+  url = "https://github.com/tmux-plugins/tpm.git"
+  refreshPeriod = "168h"
+
+{{- end -}}
+
+{{- /* vim: set filetype=toml: */}}

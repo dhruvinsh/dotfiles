@@ -1,0 +1,33 @@
+# vim: set ft=powershell
+
+try {
+  if (Get-Command scoop) {
+    $packages = @(
+      "main/nodejs-lts"
+      "nerd-fonts/CascadiaCode-NF"
+      "versions/neovim-nightly"
+    );
+
+    foreach ($package in $packages) {
+      Write-Output "--> Uninstalling $package.."
+      scoop uninstall $package
+    }
+  }
+}
+catch {
+  Write-Output "Scoop not found, assuming new setup."
+}
+
+try {
+  if (Get-Command pipx) {
+    Write-Output "Removing pipx packages."
+    pipx uninstall-all
+    pip uninstall -y pipx
+  }
+}
+catch {
+  Write-Output "pipx not found."
+}
+
+Write-Output "Removing gitconfig.."
+rm ~/.gitconfig

@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+# shellcheck disable=all
+
+# some time I make change in environemnt and residula files needs to be clean
+# manually. This script takes care of that part
+
+[ -f "$HOME/key.txt" ] && rm -rf "$HOME/key.txt"
+
+[ -f "$HOME/.local/bin/bw" ] && rm -rf "$HOME/.local/bin/bw"
+
+# tldr now moved to tealdeer version (rust) cleaning up node version
+if
+    command -v npm &
+    > /dev/null
+then
+    # even if tldr is uninstalled running it again will not harm
+    npm uninstall -g tldr
+fi
+
+# neovim unstable cleanup
+sudo add-apt-repository --remove -y ppa:neovim-ppa/unstable
+if [ -x "$(command -v nvim)" ]; then
+    if nvim --version | grep -q "dev"; then
+        echo "Cleaning up neovim unstable"
+        sudo apt purge neovim neovim-runtime
+    fi
+fi
+# Neovim 0.9.0 migrate to appimage https://github.com/neovim/neovim/pull/22773
+if [ -x "$(command -v nvim)" ]; then
+    if nvim --version | grep -q "0.8"; then
+        echo "Cleaning up neovim 0.8.x"
+        sudo apt purge neovim*
+    fi
+fi
+if [ -f "/usr/bin/nvim" ]; then
+    sudo rm -rf /usr/bin/nvim
+fi
+
+# Change in python workflow hence global poetry installation not required
+echo "Cleaning up Old Poetry..."
+curl -sSL https://install.python-poetry.org | python3 - --uninstall
+
+echo "Cleaning up autojump"
+if [ -x "$(command -v autojump)" ]; then
+    # at this point we can assume that in past dotfiles were installed
+    # and with that git and python is available.
+    AUTOJUMP=https://github.com/wting/autojump.git
+    AUTOJUMP_DIR=/tmp/autojump
+    git clone $AUTOJUMP $AUTOJUMP_DIR
+    cd $AUTOJUMP_DIR
+    ./uninstall.py
+    rm -rf .local/share/autojump/
+fi
+
+echo "removing nvm.."
+rm -rf ~/.nvm
+
+echo "cleaning up syncthing"
+systemctl --user stop syncthing.service
+systemctl --user disable syncthing.service
+rm -rf ~/.config/systemd/user/syncthing.service
+
+echo "cleaning up syncthing"
+sudo rm -rf /usr/bin/syncthing
+
+echo "purge unwanted packages"
+sudo apt purge -y vim vim-common vim-tiny fd-find
+
+echo "cleaning up selene, shfmt and stylua"
+rm -rf "$HOME/.local/bin/shfmt"
+rm -rf "$HOME/.local/bin/selene"
+rm -rf "$HOME/.local/bin/stylua"
+
+echo "cleaning up tmux"
+sudo apt purge -y tmux
+
+echo "remove ~/.gitconfig"
+rm ~/.gitconfig
+
+echo "Clean up finished"

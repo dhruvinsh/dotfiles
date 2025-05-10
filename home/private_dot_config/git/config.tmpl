@@ -1,0 +1,70 @@
+[alias]
+  tree = log --graph --oneline --all
+  tree2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+
+[core]
+  editor = nvim
+  pager = delta
+  whitespace = trailing-space,space-before-tab
+
+[delta "custom-delta"]
+  blame-palette = "{{ .colorScheme.base }} {{ .colorScheme.mantle }} {{ .colorScheme.crust }} {{ .colorScheme.surface0 }} {{ .colorScheme.surface1 }}"
+  commit-decoration-style = box ul
+  dark = true
+  file-decoration-style = {{ .colorScheme.text | quote }}
+  file-style = {{ .colorScheme.text | quote }}
+  hunk-header-decoration-style = box ul
+  hunk-header-file-style = bold
+  hunk-header-line-number-style = bold {{ .colorScheme.subtext0 | quote }}
+  hunk-header-style = file line-number syntax
+  line-numbers-left-style = {{ .colorScheme.overlay0 | quote }}
+  line-numbers-minus-style = bold {{ .colorScheme.red | quote }}
+  line-numbers-plus-style = bold {{ .colorScheme.green | quote }}
+  line-numbers-right-style = {{ .colorScheme.overlay0 | quote }}
+  line-numbers-zero-style = {{ .colorScheme.overlay0 | quote }}
+  # 25% red 75% base
+  minus-emph-style = bold syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.red 0.25) | quote }}
+  # 10% red 90% base
+  minus-style = syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.red 0.1) | quote }}
+  # 25% green 75% base
+  plus-emph-style = bold syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.green 0.25) | quote }}
+  # 10% green 90% base
+  plus-style = syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.green 0.1) | quote }}
+  map-styles = \
+    bold purple => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.mauve 0.25) | quote }}, \
+    bold blue => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.blue 0.25) | quote }}, \
+    bold cyan => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.sky 0.25) | quote }}, \
+    bold yellow => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.yellow 0.25) | quote }}
+  # Should match the name of the bat theme
+  syntax-theme = custom-bat
+
+[delta]
+  navigate = true
+  light = false
+  features = custom-delta
+
+[diff]
+  algorithm = histogram
+  colorMoved = default
+
+[init]
+  defaultBranch = main
+
+[interactive]
+  diffFilter = delta --color-only
+
+[merge]
+  conflictstyle = diff3
+
+[user]
+  name = Dhruvin Shah
+  email = {{ .email }}
+
+[url "git@github.com:dhruvinsh"]
+  insteadOf = https://github.com/dhruvinsh
+
+; for work when I work with personal repo
+[includeIf "hasconfig:remote.*.url:git@github.com*/**"]
+  path = public-config
+
+{{/* vim: set filetype=gitconfig: */}}

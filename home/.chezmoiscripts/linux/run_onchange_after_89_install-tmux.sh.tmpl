@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+
+set -euo pipefail
+
+# get build dependencies
+sudo apt install -y libevent-dev bison flex
+rm -rf /tmp/tmux
+
+wget {{ gitHubLatestReleaseAssetURL "tmux/tmux" "tmux-*.tar.gz" | quote }} -O /tmp/tmux.tar.gz
+
+mkdir /tmp/tmux
+tar xvf /tmp/tmux.tar.gz --strip-components=1 -C /tmp/tmux
+cd /tmp/tmux/
+./configure --with-TERM=screen
+make
+sudo make install
+cd ~
+rm -rf /tmp/tmux

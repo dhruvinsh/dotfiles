@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+
+set -euo pipefail
+
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# install tools only in linux system
+# {{ if eq .chezmoi.os "linux" }}
+cargo_packages=(
+    ast-grep
+    diffr
+)
+
+[ -s "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+cargo install "${cargo_packages[@]}"
+# {{ end }}

@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+# vim: set expandtab ft=sh ts=4 tw=4:
+
+# {{ $ageVersion := (gitHubLatestRelease "FiloSottile/age").TagName }}
+
+LOCALBIN=$HOME/.local/bin
+if ! [ -f "$LOCALBIN/age" ]; then
+    echo "Setting up age!"
+    URL={{ gitHubLatestReleaseAssetURL "FiloSottile/age" (printf "age-*-%s-%s.tar.gz" .chezmoi.os .chezmoi.arch ) | quote }}
+    wget "$URL" -O /tmp/age.tar.gz
+    tar -xf /tmp/age.tar.gz -C /tmp
+    mv /tmp/age/age "$LOCALBIN"
+    mv /tmp/age/age-keygen "$LOCALBIN"
+    chmod +x "$LOCALBIN/age"
+    chmod +x "$LOCALBIN/age-keygen"
+fi
+
+if [ ! -f "$HOME/.key.txt" ]; then
+    "$LOCALBIN/age" --decrypt --output "$HOME/.key.txt" "{{ .chezmoi.sourceDir }}/key.txt.age"
+    chmod 600 "$HOME/.key.txt"
+fi

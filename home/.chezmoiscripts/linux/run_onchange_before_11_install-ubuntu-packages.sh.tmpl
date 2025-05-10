@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+# if ubuntu based system
+# {{- if eq .ubuntu true }}
+# before setting up the dotfiles, lets make sure we setup all the
+# dependency.
+
+repositories=()
+packages=(
+    apt-transport-https
+    aspell
+    ca-certificates
+    chafa
+    curl
+    direnv
+    editorconfig
+    ethtool
+    fontconfig
+    fuse3
+    gnupg-agent
+    graphviz
+    jq
+    libfuse3-3
+    # {{ if ne .wsl true }}
+    linux-tools-common
+    linux-tools-generic
+    linux-tools-`uname -r`
+    # {{ end }}
+    luarocks
+    net-tools
+    openssh-server
+    ranger
+    shellcheck
+    software-properties-common
+    sqlite3
+    tar
+    # {{ if eq .chassisType "laptop" }}
+    tlp
+    # {{ end }}
+    tree
+    unzip
+    wget
+    wordnet
+    zsh
+)
+
+# some networking packages
+packages+=(
+    libpcap-dev
+)
+
+# some measureing tools
+packages+=(
+    btop
+    htop
+    iftop
+    iotop
+)
+
+# some c++ setup
+packages+=(
+    build-essential
+    clang
+    clangd-12
+    cmake
+    make
+)
+
+# unattended upgrades setup
+# https://haydenjames.io/how-to-enable-unattended-upgrades-on-ubuntu-debian/
+packages+=(
+    unattended-upgrades
+    apt-listchanges
+)
+
+# pyenv dependency
+packages+=(
+    make
+    build-essential
+    libssl-dev
+    zlib1g-dev
+    libbz2-dev
+    libreadline-dev
+    libsqlite3-dev
+    llvm
+    libncursesw5-dev
+    xz-utils
+    tk-dev
+    libxml2-dev
+    libxmlsec1-dev
+    libffi-dev
+    liblzma-dev
+)
+
+# latest git version
+repositories+=(
+    ppa:git-core/ppa
+)
+packages+=(
+    git
+)
+
+# neovim lang support
+packages+=(
+    libluajit-5.1-dev
+)
+
+
+############################
+# Installation starts here #
+############################
+sudo apt update
+sudo apt autoremove -y
+
+for repository in ${repositories[@]}; do
+    sudo add-apt-repository -y $repository
+done
+
+# install all the packages
+sudo apt install -y ${packages[@]}
+
+# some variable setups here
+echo "local bin directory setup"
+LOCALBIN=$HOME/.local/bin
+[ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
+
+# enable tlp for laptop
+# {{ if eq .chassisType "laptop" }}
+sudo systemctl enable tlp.service
+sudo systemctl start tlp.service
+# {{ end }}
+
+echo "install bat(cat)"
+BAT={{ gitHubLatestReleaseAssetURL "sharkdp/bat" (printf "bat_*_%s.deb" .chezmoi.arch) | quote }}
+wget -q --show-progress --progress=bar:force 2>&1 $BAT -O /tmp/bat.deb
+sudo apt install /tmp/bat.deb
+
+echo "install ripgrep"
+RIPGREP={{ gitHubLatestReleaseAssetURL "BurntSushi/ripgrep" (printf "ripgrep_*-1_%s.deb" .chezmoi.arch ) | quote }}
+wget -q --show-progress --progress=bar:force 2>&1 $RIPGREP -O /tmp/ripgrep.deb
+sudo apt install /tmp/ripgrep.deb
+
+echo "setup fd"
+FD={{ gitHubLatestReleaseAssetURL "sharkdp/fd" (printf "fd_*_%s.deb" .chezmoi.arch) | quote  }}
+wget -q --show-progress --progress=bar:force 2>&1 $FD -O /tmp/fd.deb
+sudo apt install /tmp/fd.deb
+
+echo "setup gh for github"
+GH={{ gitHubLatestReleaseAssetURL "cli/cli" (printf "gh_*_%s_%s.deb" .chezmoi.os .chezmoi.arch) | quote }}
+wget -q --show-progress --progress=bar:force 2>&1 $GH -O /tmp/gh.deb
+sudo dpkg -i /tmp/gh.deb
+
+echo "install syncthing as service"
+sudo systemctl stop syncthing@{{ .chezmoi.username }}.service || echo "syncthing service not found"
+SYNCTHING={{ gitHubLatestReleaseAssetURL "syncthing/syncthing" (printf "syncthing-%s-%s-v*.tar.gz" .chezmoi.os .chezmoi.arch) | quote }}
+wget -q --show-progress --progress=bar:force 2>&1 $SYNCTHING -O /tmp/syncthing.tar.gz
+# extrac the service
+tar -zxf /tmp/syncthing.tar.gz -C $HOME/.local/bin --strip-components=1 --wildcards --no-anchored 'syncthing' --exclude "etc"
+
+# for wsl systems systemd might not be present
+if [ -d "/run/systemd/system" ]; then
+    sudo tar -zxf /tmp/syncthing.tar.gz -C /etc/systemd/system/ --strip-components=4 --overwrite --wildcards --no-anchored "syncthing@.service"
+    sudo sed -i "s/ExecS.*/ExecStart=\/bin\/bash -c '\$\{HOME\}\/.local\/bin\/syncthing serve --no-browser --no-restart --logflags=0'/g" /etc/systemd/system/syncthing@.service
+
+    sudo systemctl enable syncthing@{{ .chezmoi.username }}.service
+    sudo systemctl start syncthing@{{ .chezmoi.username }}.service
+else
+    echo "Syncthing service is not installed, systemd not found"
+fi
+
+echo "set ZSH to default"
+if [ "$SHELL" != "/usr/bin/zsh" ]; then
+    sudo chsh -s $(which zsh) $USER
+fi
+
+sudo sysctl fs.inotify.max_user_watches=100000
+sudo sysctl fs.inotify.max_queued_events=100000
+# {{- end }}

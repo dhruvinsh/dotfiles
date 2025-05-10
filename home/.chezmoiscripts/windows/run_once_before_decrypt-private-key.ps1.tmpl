@@ -1,0 +1,15 @@
+# vim: set ft=powershell
+
+# NOTE: in order to add extra bucket Git requied.
+# scoop Git is risky since 7zip flagged via antivirus system.
+winget install Git.Git
+
+# NOTE: same shell which installed the scoop and chezmoi, can install other packages
+Write-Output "--> Scoop adding extras"
+scoop bucket add extras
+
+Write-Output "--> Installing Age"
+scoop install extras/age
+
+# decrypt the keys
+age --decrypt --output "{{ .chezmoi.homeDir }}/.key.txt" "{{ .chezmoi.sourceDir }}/key.txt.age"

@@ -1,0 +1,5 @@
+# chezmoixternal -*- mode: yaml -*-
+# vim: set filetype=yaml
+
+# prettier-ignore
+openscadVersion  : "2021.01"

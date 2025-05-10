@@ -1,0 +1,24 @@
+# this script assumes that winget is available by default
+# TODO: look at https://github.com/Kugane/winget/blob/main/winget-basic.ps1
+
+$apps = @(
+    "7zip.7zip"
+    {{ if .personalmachine -}}
+    "Bitwarden.Bitwarden"
+    "Nextcloud.NextcloudDesktop"
+    {{ end -}}
+    "kopia.KopiaUI"
+    "Microsoft.PowerToys"
+    "Obsidian.Obsidian"
+    "SublimeHQ.SublimeText.4"
+    "mulaRahul.Keyviz"
+    "9PMMSR1CGPWG"                      # HEIF-PictureExtension
+    "9MVZQVXJBQ9V"                      # AV1 VideoExtension
+    "9NCTDW2W1BH8"                      # Raw-PictureExtension
+    "9N95Q1ZZPMH4"                      # MPEG-2-VideoExtension
+    "9PGCV4V3BK4W"                      # DevToys
+);
+
+foreach ($app in $apps) {
+    winget install --exact --accept-package-agreements $app
+}
