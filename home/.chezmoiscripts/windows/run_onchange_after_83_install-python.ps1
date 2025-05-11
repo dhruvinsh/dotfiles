@@ -4,19 +4,19 @@ pwsh -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 # create some independent envs with packages
 $packages = @(
-    "black"
+    "aider-chat"
     "codespell"
-    "flake8"
+    "files-to-prompt"
     "httpie"
-    "isort"
     "jupyterlab"
+    "keymap-drawer"
+    "llm"
     "mypy"
     "pipenv"
     "poetry"
     "pre-commit"
-    "pylint"
     "ruff"
-)
+    "vectorcode"
 
 foreach ($package in $packages) {
   Write-Output "--> Installing $package.."
