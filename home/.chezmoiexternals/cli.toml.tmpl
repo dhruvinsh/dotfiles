@@ -45,6 +45,13 @@
   stripComponents = 1
   path = "git-cliff"
 
+[".local/bin/gitleaks"]
+  type = "archive-file"
+  url  = {{ gitHubLatestReleaseAssetURL "gitleaks/gitleaks" (printf "gitleaks_*_%s_x64.tar.gz" .chezmoi.os) | quote }}
+  executable = true
+  stripComponents = 1
+  path = "gitleaks"
+
 [".local/bin/glow"]
   type = "archive-file"
   url = {{ gitHubLatestReleaseAssetURL "charmbracelet/glow" "glow_*_Linux_x86_64.tar.gz" | quote }}

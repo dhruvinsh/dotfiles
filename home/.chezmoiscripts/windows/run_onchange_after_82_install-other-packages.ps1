@@ -32,6 +32,7 @@ $apps = @(
     "main/gcc"
     "main/git"
     "main/git-cliff"
+    "main/gitleaks"
     "main/glow"
     "main/just"
     "main/luarocks"
