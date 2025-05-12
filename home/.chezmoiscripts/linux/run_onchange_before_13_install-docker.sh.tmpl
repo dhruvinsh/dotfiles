@@ -2,20 +2,18 @@
 # vim: set expandtab ft=bash ts=4 tw=4:
 set -euo pipefail
 
-# if ubuntu desktop based system
-# {{- if (and (.isDesktop) (.ubuntu) (.personalmachine)) }}
-
 # docker engine installation
 echo "setup docker"
 
 packages=(
     ca-certificates
     curl
-    gnupg
-    lsb-release
 )
 # install all the packages
-sudo apt install -y ${packages[@]}
+sudo apt install -y "${packages[@]}"
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 # if docker gpg not found then and then get the GPG
 if [ ! -f "/etc/apt/keyrings/docker.gpg" ]; then
@@ -23,25 +21,26 @@ if [ ! -f "/etc/apt/keyrings/docker.gpg" ]; then
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 fi
 
-# NOTE: using jammy forcefully, since I use linux mint 21.2.
-if [ ! -f "/etc/apt/sources.list.d/docker.list" ]; then
-    echo \
-        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-        jammy stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# remove any old sourec file
+if [ -f "/etc/apt/sources.list.d/docker.list" ]; then
+    sudo rm /etc/apt/sources.list.d/docker.list
 fi
+
+# NOTE: using jammy forcefully, since I use linux mint 21.2.
+echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 sudo apt update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-if [ $(getent group docker) ]; then
+if [ "$(getent group docker)" ]; then
     echo "docker group exists."
 else
     sudo groupadd docker
 fi
 
-sudo usermod -aG docker $USER
+sudo usermod -aG docker "$USER"
 
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
-
-# {{- end }}
