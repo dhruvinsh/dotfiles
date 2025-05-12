@@ -1,0 +1,8 @@
+{{ $url := "http://10.16.136.20:4100" -}}
+{{ if .personalmachine -}}
+{{ $url = "https://litellm.ds-nas.com" -}}
+{{ end -}}
+- model_id: azure-gpt-4.1
+  model_name: gpt-4.1
+  api_base: {{ $url }}
+  api_key_name: litellm

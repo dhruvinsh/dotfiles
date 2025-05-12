@@ -1,0 +1,4 @@
+{
+  "// Note": "This file stores secret API credentials. Do not share!",
+  "litellm": {{ includeTemplate ".chezmoitemplates/llm/litellm-key" | decrypt | trim | quote}}
+}
