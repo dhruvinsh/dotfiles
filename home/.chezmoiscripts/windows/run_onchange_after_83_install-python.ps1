@@ -17,6 +17,7 @@ $packages = @(
     "pre-commit"
     "ruff"
     "vectorcode[lsp,mcp]"
+)
 
 foreach ($package in $packages) {
   Write-Output "--> Installing $package.."
