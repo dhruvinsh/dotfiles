@@ -49,7 +49,6 @@
   type = "archive-file"
   url  = {{ gitHubLatestReleaseAssetURL "gitleaks/gitleaks" (printf "gitleaks_*_%s_x64.tar.gz" .chezmoi.os) | quote }}
   executable = true
-  stripComponents = 1
   path = "gitleaks"
 
 [".local/bin/glow"]
