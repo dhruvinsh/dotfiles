@@ -81,13 +81,6 @@
   executable = true
   path = "lazysql"
 
-[".local/bin/jj"]
-  type = "archive-file"
-  url = {{ gitHubLatestReleaseAssetURL "martinvonz/jj" "jj-*-x86_64-unknown-linux-musl.tar.gz" | quote }}
-  executable = true
-  stripComponents = 1
-  path = "jj"
-
 [".local/bin/just"]
   type = "archive-file"
   url = {{ gitHubLatestReleaseAssetURL "casey/just" (printf "just-*-x86_64-unknown-%s-musl.tar.gz" .chezmoi.os) | quote }}
