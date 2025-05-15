@@ -99,7 +99,7 @@ encryption = "age"
   
   # some colors that are not defined
   white = "#ffffff"
-  {{- $colorPallet := (includeTemplate (print $colorScheme ".jsonc.tmpl") | fromJsonc) }}
+  {{- $colorPallet := (includeTemplate (print "colors/" $colorScheme ".jsonc.tmpl") | fromJsonc) }}
   {{- range $key, $val := $colorPallet }}
   {{ $key }} = {{ $val | quote }}
   {{- end }}
