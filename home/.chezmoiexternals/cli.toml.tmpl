@@ -1,12 +1,14 @@
 {{- $lowfi := "" -}}
+{{- $lowfi_name := "lowfi"}}
 {{- if eq .chezmoi.os "darwin" -}}
 {{- $lowfi = "lowfi-darwin-aarch64" -}}
 {{- else if eq .chezmoi.os "linux" -}}
 {{- $lowfi = "lowfi-linux-x86_64" -}}
 {{- else if eq .chezmoi.os "windows" -}}
 {{- $lowfi = "lowfi-windows-x86_64.exe" -}}
+{{- $lowfi_name = "lowfi.exe" -}}
 {{- end -}}
-[".local/bin/lowfi"]
+[".local/bin/{{ $lowfi_name }}"]
   type = "file"
   url = {{ gitHubLatestReleaseAssetURL "talwat/lowfi" $lowfi | quote }}
   executable = true
