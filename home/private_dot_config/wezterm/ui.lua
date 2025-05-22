@@ -33,6 +33,17 @@ M.setup = function(cfg)
     saturation = 0.9,
     brightness = 0.8,
   }
+
+  cfg.window_decorations = "RESIZE"
+  if platform.is_mac then
+    cfg.window_background_opacity = 0.8
+    cfg.macos_window_background_blur = 20
+  end
+
+  if platform.is_win then
+    cfg.window_background_opacity = 0.9
+    cfg.win32_system_backdrop = "Acrylic"
+  end
 end
 
 return M
