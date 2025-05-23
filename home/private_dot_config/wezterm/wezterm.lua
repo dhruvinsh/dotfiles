@@ -4,6 +4,7 @@ local domain = require("events.domain")
 local fonts = require("fonts")
 local full_screen = require("events.full_screen")
 local keymaps = require("keymaps")
+local platform = require("utils.platform")
 local program = require("program")
 local tab_title = require("events.tab_title")
 local ui = require("ui")
@@ -21,7 +22,9 @@ ui.setup(config)
 
 -- Events
 domain.setup()
-full_screen.setup()
+if platform.is_mac then
+  full_screen.setup()
+end
 tab_title.setup(config.colors)
 zen_mode.setup()
 
