@@ -16,6 +16,7 @@ $packages = @(
     "poetry"
     "pre-commit"
     "ruff"
+    "streamdown"
     "vectorcode[lsp,mcp]"
 )
 
