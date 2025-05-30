@@ -46,8 +46,10 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
 "
 
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
-  --color=bg+:{{ .colorScheme.surface0 | quote }} \
-  --color=bg:{{ .colorScheme.base | quote }} \
+  # --color=bg+:{{ .colorScheme.surface0 | quote }} \
+  # --color=bg:{{ .colorScheme.base | quote }} \
+  --color=bg+:-1 \
+  --color=bg:-1 \
   --color=fg+:{{ .colorScheme.text | quote }} \
   --color=fg:{{ .colorScheme.text | quote }} \
   --color=header:{{ .colorScheme.red | quote }} \
