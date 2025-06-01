@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# vim: set expandtab ts=4 sw=4 ft=bash:
 set -euo pipefail
 
 # brew package
@@ -69,7 +68,6 @@ packages+=(
 # some cask packages
 casks=(
     font-maple-mono-nf
-    gitbutler
     nextcloud
     obsidian
     syncthing
@@ -82,5 +80,7 @@ casks=(
 ############################
 
 # install all the packages
-brew install ${packages[@]}
-brew install --cask ${casks[@]}
+brew install "${packages[@]}"
+brew install --cask "${casks[@]}"
+
+# vim: set expandtab ts=4 sw=4 ft=bash:
