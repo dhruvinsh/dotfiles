@@ -27,6 +27,7 @@ $apps = @(
     "main/chafa"
     "main/cmake"
     "main/delta"
+    "main/eza"
     "main/fd"
     "main/fzf"
     "main/gcc"
