@@ -147,6 +147,11 @@ FD={{ gitHubLatestReleaseAssetURL "sharkdp/fd" (printf "fd_*_%s.deb" .chezmoi.ar
 wget -q --show-progress --progress=bar:force 2>&1 $FD -O /tmp/fd.deb
 sudo apt install /tmp/fd.deb
 
+echo "setup hyperfine"
+FD={{ gitHubLatestReleaseAssetURL "sharkdp/hyperfine" (printf "hyperfine_*_%s.deb" .chezmoi.arch) | quote  }}
+wget -q --show-progress --progress=bar:force 2>&1 $FD -O /tmp/hyperfine.deb
+sudo apt install /tmp/hyperfine.deb
+
 echo "setup gh for github"
 GH={{ gitHubLatestReleaseAssetURL "cli/cli" (printf "gh_*_%s_%s.deb" .chezmoi.os .chezmoi.arch) | quote }}
 wget -q --show-progress --progress=bar:force 2>&1 $GH -O /tmp/gh.deb
