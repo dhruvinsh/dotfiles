@@ -2,6 +2,8 @@
 # vim: set expandtab ts=4 sw=4 ft=sh:
 # shellcheck disable=1083
 
+{{ template "scripts/download_helpers.sh" . }}
+
 VERSION={{ (gitHubLatestRelease "ryanoasis/nerd-fonts").TagName }}
 
 # {{ if eq .chezmoi.os "linux" }}
@@ -36,28 +38,18 @@ rm -rf "$SRC" "$TEMP_DST"
 
 for url in "${arr[@]}"; do
     echo "--> setting $url"
-    wget -q --show-progress --progress=bar:force 2>&1 "$url" -O "$SRC"
-    mkdir -p "$TEMP_DST"
-	tar -xf "$SRC" --directory="$TEMP_DST"
+    extract_tar_xz "$url" "$TEMP_DST" 0
     fd . "$TEMP_DST" --type file --exclude "*Propo-*" --exclude "*Mono-*" -e "ttf" -e "otf" -x mv {} "$TARGET"
-    # find "$TEMP_DST" -type f -name "*.ttf" -exec mv {} "$TARGET" + 2>/dev/null || find "$TEMP_DST" -type f -name "*.otf" -exec mv {} "$TARGET" \;
-    rm -rf "$SRC" "$TEMP_DST"
+    rm -rf "$TEMP_DST"
 done
 
 CASCADIA=https://github.com/microsoft/cascadia-code/releases/download/v2407.24/CascadiaCode-2407.24.zip
 MAPLE=https://github.com/subframe7536/maple-font/releases/download/{{ (gitHubLatestRelease "subframe7536/maple-font").TagName }}/MapleMono-NF.zip
 for font in $CASCADIA $MAPLE; do
     echo "--> setting $font"
-    wget -q --show-progress --progress=bar:force 2>&1 "$font" -O "$SRC"
-    mkdir -p "$TEMP_DST"
-    # {{ if eq .chezmoi.os "linux" }}
-    unzip "$SRC" -d "$TEMP_DST"
-    # {{ else }}
-    # on mac I have to use 7zz else I get error "need PK compat. v4.6 (can do v4.5)"
-    7zz x "$SRC" -o"$TEMP_DST"
-    # {{ end }}
+    extract_zip "$font" "$TEMP_DST"
     fd . "$TEMP_DST" --extension "ttf" -E "static" -x mv {} "$TARGET"
-    rm -rf "$SRC" "$TEMP_DST"
+    rm -rf "$TEMP_DST"
 done
 
 echo "--> Setting all-the-icons fonts"

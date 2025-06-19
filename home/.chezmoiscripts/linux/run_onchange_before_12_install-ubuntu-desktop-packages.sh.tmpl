@@ -2,40 +2,13 @@
 # vim: set expandtab ft=bash ts=4 tw=4:
 set -euo pipefail
 
-deb_installer ()
-{
-    # $1: URL
-    # $2: temp file name
-    echo "setup $2"
-
-    url=$1
-    tmp_file="/tmp/$2.deb"
-    wget -q --show-progress --progress=bar:force 2>&1 "$url" -O "$tmp_file"
-    sudo apt install -y "$tmp_file"
-}
-
-appimg_installer ()
-{
-    # $1: URL
-    # $2: filename
-    echo "setup $2"
-    url=$1
-    tmp_file="/tmp/$2.AppImage"
-    wget -q --show-progress --progress=bar:force 2>&1 "$url" -O "$tmp_file"
-
-    # if directory not exists lets create one
-    [ -d "$HOME/Applications" ] || mkdir "$HOME/Applications"
-
-    # make it executable
-    chmod a+x "$tmp_file"
-    mv "$tmp_file" "$HOME/Applications/"
-}
+{{ template "scripts/download_helpers.sh" . }}
 
 # install on all Ubuntu based PC
 # {{- if (and (.isDesktop) (.ubuntu)) }}
 
 WEZTERM={{ gitHubLatestReleaseAssetURL "wez/wezterm" "wezterm-*.Ubuntu22.04.deb" | quote  }}
-deb_installer "$WEZTERM" "wezterm"
+install_deb "$WEZTERM" "wezterm"
 
 
 ########################################################################################################################
@@ -65,27 +38,27 @@ fi
 
 # chrome re-installation is harmless in fact we end up updating it!
 CHROME=https://dl.google.com/{{ .chezmoi.os }}/direct/google-chrome-stable_current_amd64.deb
-deb_installer "$CHROME" "chrome"
+install_deb "$CHROME" "chrome"
 
 # vscode setup
 VSCODE="https://code.visualstudio.com/sha/download?build=stable&os={{ .chezmoi.os }}-deb-x64"
-deb_installer "$VSCODE" "code"
+install_deb "$VSCODE" "code"
 
 # discord setup
 DISCORD="https://discord.com/api/download?platform={{ .chezmoi.os }}&format=deb"
-deb_installer "$DISCORD" "discord"
+install_deb "$DISCORD" "discord"
 
 # f3d setup
 F3D={{ gitHubReleaseAssetURL "f3d-app/f3d" "v2.5.0" "F3D-*-Linux-x86_64.deb" | quote }}
-deb_installer "$F3D" "f3d"
+install_deb "$F3D" "f3d"
 
 # localsend
 LOCALSEND={{ gitHubLatestReleaseAssetURL "localsend/localsend" "LocalSend-*-linux-x86-64.deb" | quote }}
-deb_installer "$LOCALSEND" "localsend"
+install_deb "$LOCALSEND" "localsend"
 
 # snifnet setup
 SNIFFNET={{ gitHubLatestReleaseAssetURL "GyulyVGC/sniffnet" "Sniffnet_LinuxDEB_amd64.deb" | quote }}
-deb_installer "$SNIFFNET" "sniffnet"
+install_deb "$SNIFFNET" "sniffnet"
 
 # {{- if .personalmachine }}
 ########################################################################################################################
@@ -94,10 +67,10 @@ FREECAD={{ gitHubLatestReleaseAssetURL "FreeCAD/FreeCAD" "FreeCAD_*-conda-linux-
 NEXTCLOUD={{ gitHubLatestReleaseAssetURL "nextcloud/desktop" "Nextcloud-*-x86_64.AppImage" | quote }}
 OPENSCAD="https://files.openscad.org/OpenSCAD-{{ .openscadVersion }}-x86_64.AppImage"
 
-appimg_installer "$BITWARDEN" bitwarden
-appimg_installer "$FREECAD" freecad
-appimg_installer "$NEXTCLOUD" nextcloud
-appimg_installer "$OPENSCAD" openscad
+install_appimage "$BITWARDEN" "bitwarden"
+install_appimage "$FREECAD" "freecad"
+install_appimage "$NEXTCLOUD" "nextcloud"
+install_appimage "$OPENSCAD" "openscad"
 
 # {{- end }}
 # {{- end }}

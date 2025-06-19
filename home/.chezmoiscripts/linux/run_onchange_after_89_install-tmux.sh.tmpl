@@ -3,14 +3,15 @@
 
 set -euo pipefail
 
+{{ template "scripts/download_helpers.sh" . }}
+
 # get build dependencies
 sudo apt install -y libevent-dev bison flex
 rm -rf /tmp/tmux
 
-wget {{ gitHubLatestReleaseAssetURL "tmux/tmux" "tmux-*.tar.gz" | quote }} -O /tmp/tmux.tar.gz
+TMUX_URL={{ gitHubLatestReleaseAssetURL "tmux/tmux" "tmux-*.tar.gz" | quote }}
+extract_tar "$TMUX_URL" "/tmp/tmux" 1
 
-mkdir /tmp/tmux
-tar xvf /tmp/tmux.tar.gz --strip-components=1 -C /tmp/tmux
 cd /tmp/tmux/
 ./configure --with-TERM=screen
 make
