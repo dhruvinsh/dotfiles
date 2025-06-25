@@ -23,6 +23,9 @@ $applications = @(
   "neovim"
   "prettier"
   "tree-sitter-cli"
+  "@google/gemini-cli"
+  "@openai/codex"
+  "opencode-ai@latest"
 )
 foreach ($application in $applications) {
     Write-Output "--> Installing $application globally.."
