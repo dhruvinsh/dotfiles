@@ -121,9 +121,13 @@ export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
 export PATH=/usr/lib/wsl/lib:$PATH
 {{- end}}
 
+##################################################################
 # User functions
 csv() {
   uvx visidata "$@"
+}
+llm() {
+  command llm "$@" | streamdown
 }
 
 {{- /* vim: set filetype=zsh ts=2 sw=2: */}}
