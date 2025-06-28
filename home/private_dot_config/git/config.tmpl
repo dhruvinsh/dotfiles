@@ -10,11 +10,11 @@
 
 [delta "custom-delta"]
   blame-palette = "{{ .colorScheme.base }} {{ .colorScheme.mantle }} {{ .colorScheme.crust }} {{ .colorScheme.surface0 }} {{ .colorScheme.surface1 }}"
-  commit-decoration-style = box ul
+  commit-decoration-style = "{{ .colorScheme.overlay0 }}" bold box ul
   dark = true
-  file-decoration-style = {{ .colorScheme.text | quote }}
+  file-decoration-style = {{ .colorScheme.overlay0 | quote }}
   file-style = {{ .colorScheme.text | quote }}
-  hunk-header-decoration-style = box ul
+  hunk-header-decoration-style = "{{ .colorScheme.overlay0 }}" box ul
   hunk-header-file-style = bold
   hunk-header-line-number-style = bold {{ .colorScheme.subtext0 | quote }}
   hunk-header-style = file line-number syntax
