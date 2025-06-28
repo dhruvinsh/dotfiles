@@ -44,7 +44,7 @@ M.setup = function(cfg)
     },
 
     tab_bar = {
-      background = {{ .colorScheme.crust | quote }},
+      background = {{ includeTemplate "hex2rgb" (list .colorScheme.crust 0.8) | quote }},
       inactive_tab_edge = {{ .colorScheme.surface0 | quote }},
 
       active_tab = {

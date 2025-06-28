@@ -16,7 +16,7 @@ M.setup = function()
 
     window:set_right_status(wezterm.format({
       -- First, we draw the arrow...
-      { Background = { Color = "none" } },
+      { Background = { Color = color_scheme.tab_bar.background } },
       { Foreground = { Color = bg } },
       { Text = SOLID_LEFT_ARROW },
       -- Then we draw our text

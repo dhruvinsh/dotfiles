@@ -1,0 +1,10 @@
+{{- $hex := index . 0 | trimPrefix "#" -}}
+{{- $r := printf "0x%s" (slice ($hex | splitList "") 0 2 | join "") | int -}}
+{{- $g := printf "0x%s" (slice ($hex | splitList "") 2 4 | join "") | int -}}
+{{- $b := printf "0x%s" (slice ($hex | splitList "") 4 6 | join "") | int -}}
+{{- if gt (len .) 1 -}}
+  {{- $a := index . 1 -}}
+  rgba({{$r}},{{$g}},{{$b}},{{$a}})
+{{- else -}}
+  rgb({{$r}},{{$g}},{{$b}})
+{{- end -}}
