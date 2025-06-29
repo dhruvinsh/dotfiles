@@ -4,162 +4,162 @@ set -euo pipefail
 
 # if arch based system
 # {{- if eq .archlinux true }}
-# NOTE: modifiy pacman.conf file then start this scrip
+# NOTE: modify pacman.conf file then start this script
 if ! grep -q "ILoveCandy" /etc/pacman.conf; then
-	echo "Modify the pacman.conf file first"
-	echo "Color,VerbosePkgLists,ParallelDownloads=5,ILoveCandy"
-	exit 1
+    echo "Modify the pacman.conf file first"
+    echo "Color,VerbosePkgLists,ParallelDownloads=5,ILoveCandy"
+    exit 1
 fi
 
 sudo pacman -Sy
 sudo pacman -S --noconfirm --needed base-devel archlinux-keyring findutils git
 
 if pacman -Qi dunst &>> /dev/null; then
-	sudo pacman -Rns --noconfirm dunst
+    sudo pacman -Rns --noconfirm dunst
 fi
 
 
 isaur=$(command -v paru)
 if [ -n "$isaur" ]; then
-	echo "Paru is already installed. Skipping..."
+    echo "Paru is already installed. Skipping..."
 else
-	echo "Installing Paru..."
-	git clone https://aur.archlinux.org/paru-bin.git /tmp/paru
-	cd /tmp/paru
-	makepkg -si --noconfirm 2>&1 || { printf "Failed to install"; exit 1; }
+    echo "Installing Paru..."
+    git clone https://aur.archlinux.org/paru-bin.git /tmp/paru
+    cd /tmp/paru
+    makepkg -si --noconfirm 2>&1 || { printf "Failed to install"; exit 1; }
 fi
 
 install_package_pacman() {
-	if pacman -Q "$1" &>/dev/null ; then
-		echo "$1 is already installed. Skipping..."
-	else
-		sudo pacman -S --noconfirm "$1"
-	fi
+    if pacman -Q "$1" &>/dev/null ; then
+        echo "$1 is already installed. Skipping..."
+    else
+        sudo pacman -S --noconfirm "$1"
+    fi
 }
 install_package() {
-	if $isaur -Q "$1" &>/dev/null ; then
-		echo "$1 is already installed. Skipping..."
-	else
-		$isaur -S --noconfirm "$1"
-	fi
+    if $isaur -Q "$1" &>/dev/null ; then
+        echo "$1 is already installed. Skipping..."
+    else
+        $isaur -S --noconfirm "$1"
+    fi
 }
 
 packages=(
-	# Graphics
-	nvidia-utils
-	egl-wayland
+    # Graphics
+    nvidia-utils
+    egl-wayland
 
-	# Hyperland and Wayland
-	cliphist
-	grim
-	hyprland
-	hyprpolkitagent
-	hypridle
-	hyprlock
-	imagemagick
-	kvantum
-	rofi-wayland
-	slurp
-	swappy
-	swaync
-	waybar
-	xdg-desktop-portal-hyprland
-	
-	# Audio
-	pipewire
-	wireplumber
-	pipewire-audio
-	pipewire-alsa
-	pipewire-pulse
-	sof-firmware
-	pavucontrol
-	playerctl
+    # Hyperland and Wayland
+    cliphist
+    grim
+    hyprland
+    hyprpolkitagent
+    hypridle
+    hyprlock
+    imagemagick
+    kvantum
+    rofi-wayland
+    slurp
+    swappy
+    swaync
+    waybar
+    xdg-desktop-portal-hyprland
+    
+    # Audio
+    pipewire
+    wireplumber
+    pipewire-audio
+    pipewire-alsa
+    pipewire-pulse
+    sof-firmware
+    pavucontrol
+    playerctl
 
-	# Fonts
-	adobe-source-code-pro-fonts 
-	noto-fonts-emoji
-	otf-font-awesome 
-	ttf-droid 
-	ttf-fira-code
-	ttf-fantasque-nerd
-	ttf-jetbrains-mono-nerd
-	noto-fonts
+    # Fonts
+    adobe-source-code-pro-fonts 
+    noto-fonts-emoji
+    otf-font-awesome 
+    ttf-droid 
+    ttf-fira-code
+    ttf-fantasque-nerd
+    ttf-jetbrains-mono-nerd
+    noto-fonts
 
-	# Basics
-	chezmoi
-	htop
-	btop
-	mpv
-	mpv-mpris
-	yt-dlp
-	unzip
-	gtk-engine-murrine
-	xdg-user-dirs
-	xdg-utils
-	pacman-contrib
-	wl-clipboard
-	zsh
-	zsh-completions
+    # Basics
+    chezmoi
+    htop
+    btop
+    mpv
+    mpv-mpris
+    yt-dlp
+    unzip
+    gtk-engine-murrine
+    xdg-user-dirs
+    xdg-utils
+    pacman-contrib
+    wl-clipboard
+    zsh
+    zsh-completions
     openssh
 
-	# Networking and Blutooth
-	bluez
-	bluez-utils
-	blueman
-	networkmanager
-	network-manager-applet
+    # Networking and Blutooth
+    bluez
+    bluez-utils
+    blueman
+    networkmanager
+    network-manager-applet
 
-	# File Manager
-	thunar 
-	thunar-volman 
-	tumbler
-	ffmpegthumbnailer 
-	thunar-archive-plugin
-	xarchiver
+    # File Manager
+    thunar 
+    thunar-volman 
+    tumbler
+    ffmpegthumbnailer 
+    thunar-archive-plugin
+    xarchiver
 )
 
 aur_pkgs=(
-	# Hyperland and Wayland
-	wlogout
+    # Hyperland and Wayland
+    wlogout
 )
 
 for pkg in "${packages[@]}"; do
-	install_package_pacman "$pkg"
+    install_package_pacman "$pkg"
 done
 
 for pkg in "${aur_pkgs[@]}"; do
-	install_package "$pkg"
+    install_package "$pkg"
 done
 
 
 services=(
     sshd
-	NetworkManager.service
-	bluetooth.service
+    NetworkManager.service
+    bluetooth.service
 )
 user_services=(
-	pipewire.socket
-	pipewire-pulse.socket
-	wireplumber.service
-	pipewire.service
+    pipewire.socket
+    pipewire-pulse.socket
+    wireplumber.service
+    pipewire.service
 )
 
 echo "Enable some system services.."
 for service in "${services[@]}"; do
-	if sudo systemctl is-active --quite "$service" >/dev/null 2>&1; then
-		pass
-	else
-		sudo systemctl enable --now "$service"
-	fi
+    if sudo systemctl is-active --quite "$service" >/dev/null 2>&1; then
+        pass
+    else
+        sudo systemctl enable --now "$service"
+    fi
 done
 
 echo "Enable some user services.."
 for uservice in "${user_services[@]}"; do
-	if systemctl --user is-active --quite "$uservice" >/dev/null 2>&1; then
-		pass
-	else
-		systemctl --user enable --now "$uservice"
-	fi
+    if systemctl --user is-active --quite "$uservice" >/dev/null 2>&1; then
+        pass
+    else
+        systemctl --user enable --now "$uservice"
+    fi
 done
 
 # Check if the 'input' group exists
