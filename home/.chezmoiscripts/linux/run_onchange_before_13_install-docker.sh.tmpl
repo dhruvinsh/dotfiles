@@ -2,6 +2,7 @@
 # vim: set expandtab ft=bash ts=4 tw=4:
 set -euo pipefail
 
+# {{ if not .archlinux }}
 # docker engine installation
 echo "setup docker"
 
@@ -44,3 +45,4 @@ sudo usermod -aG docker "$USER"
 
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
+# {{ end }}

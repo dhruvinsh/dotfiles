@@ -1,3 +1,4 @@
+{{- if not .archlinux -}}
 {{- $lowfi := "" -}}
 {{- $lowfi_name := "lowfi"}}
 {{- if eq .chezmoi.os "darwin" -}}
@@ -145,6 +146,7 @@
   executable = true
   path = "zoxide"
 
+{{ end }}
 {{ end }}
 {{ end }}
 

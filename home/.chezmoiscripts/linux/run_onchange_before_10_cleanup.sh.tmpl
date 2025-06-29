@@ -5,6 +5,7 @@
 # some time I make change in environemnt and residula files needs to be clean
 # manually. This script takes care of that part
 
+# {{ if not .archlinux }}
 [ -f "$HOME/key.txt" ] && rm -rf "$HOME/key.txt"
 
 [ -f "$HOME/.local/bin/bw" ] && rm -rf "$HOME/.local/bin/bw"
@@ -80,3 +81,4 @@ echo "remove ~/.gitconfig"
 rm ~/.gitconfig
 
 echo "Clean up finished"
+# {{ end }}
