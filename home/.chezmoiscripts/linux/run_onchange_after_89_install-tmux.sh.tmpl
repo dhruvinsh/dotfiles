@@ -3,7 +3,8 @@
 
 set -euo pipefail
 
-{{ template "scripts/download_helpers.sh" . }}
+# {{ if not .archlinux }}
+# {{ template "scripts/download_helpers.sh" . }}
 
 # get build dependencies
 sudo apt install -y libevent-dev bison flex
@@ -18,3 +19,4 @@ make
 sudo make install
 cd ~
 rm -rf /tmp/tmux
+# {{ end }}
