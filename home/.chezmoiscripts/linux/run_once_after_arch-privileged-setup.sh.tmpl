@@ -2,8 +2,8 @@
 # vim: set expandtab ft=bash ts=4 tw=4:
 set -euo pipefail
 
+# {{- if (and (.archlinux) (eq .chassisType "laptop")) }}
 # if arch based system then perform some previleged setups
-# {{- if eq .archlinux true }}
 X11CONFDIR=/etc/X11/xorg.conf.d
 
 # touchpad setup
@@ -32,4 +32,6 @@ Section "Device"
 EndSection
 EOF
 sudo mv /tmp/20-intel.conf "$X11CONFDIR"
+# {{ else }}
+echo "Arch based system detected, but not a laptop. Skipping privileged setup."
 # {{- end }}
