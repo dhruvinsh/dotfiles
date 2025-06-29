@@ -4,210 +4,178 @@ set -euo pipefail
 
 # if arch based system
 # {{- if eq .archlinux true }}
-packages=()
-packages_aur=()
+# NOTE: modifiy pacman.conf file then start this scrip
+if ! grep -q "ILoveCandy" /etc/pacman.conf; then
+	echo "Modify the pacman.conf file first"
+	echo "Color,VerbosePkgLists,ParallelDownloads=5,ILoveCandy"
+	exit 1
+fi
 
-# bootstrapping archlinux
+sudo pacman -Sy
+sudo pacman -S --noconfirm --needed base-devel archlinux-keyring findutils git
+
+if pacman -Qi dunst &>> /dev/null; then
+	sudo pacman -Rns --noconfirm dunst
+fi
+
+
+isaur=$(command -v paru)
+if [ -n "$isaur" ]; then
+	echo "Paru is already installed. Skipping..."
+else
+	echo "Installing Paru..."
+	git clone https://aur.archlinux.org/paru-bin.git /tmp/paru
+	cd /tmp/paru
+	makepkg -si --noconfirm 2>&1 || { printf "Failed to install"; exit 1; }
+fi
+
+install_package_pacman() {
+	if pacman -Q "$1" &>/dev/null ; then
+		echo "$1 is already installed. Skipping..."
+	else
+		sudo pacman -S --noconfirm "$1"
+	fi
+}
+install_package() {
+	if $isaur -Q "$1" &>/dev/null ; then
+		echo "$1 is already installed. Skipping..."
+	else
+		$isaur -S --noconfirm "$1"
+	fi
+}
+
 packages=(
-    inotify-tools
-    sddm
-    xorg
-    xorg-xinit
-)
+	# Graphics
+	nvidia-utils
+	egl-wayland
 
-# hardware bring ups like network, audio, graphics, printers
-packages+=(
-    # Installing pipewire-pulse! It will replace pulseaudio and pulseaudio-bluetooth.
-    # NOTE: pipewire replaces pulseaudio
-    # Reboot, re-login or start the pipewire-pulse.service user unit to see the effect.
-    # pulseaudio
-    # pulseaudio-alsa
-    # pulseaudio-bluetooth
-    # pulsemixer
-    acpi
-    acpid
-    alsa-utils
-    blueman
-    bluez
-    bluez-utils
-    cpupower
-    intel-gpu-tools
-    intel-media-driver
-    jack2
-    libva-utils
-    mesa
-    mesa-utils
-    network-manager-applet
-    networkmanager # its already installed but lets keep it here
-    networkmanager-openvpn
-    pipewire
-    pipewire-alsa
-    pipewire-pulse
-    pipewire-zeroconf
-    udisks2
-    udiskie
-    upower
-    vulkan-intel
-    wireplumber
-    xf86-input-libinput
-    xf86-video-intel # I know I will be using it on laptop
-)
+	# Hyperland and Wayland
+	cliphist
+	grim
+	hyprland
+	hyprpolkitagent
+	hypridle
+	hyprlock
+	imagemagick
+	kvantum
+	rofi-wayland
+	slurp
+	swappy
+	swaync
+	waybar
+	xdg-desktop-portal-hyprland
+	
+	# Audio
+	pipewire
+	wireplumber
+	pipewire-audio
+	pipewire-alsa
+	pipewire-pulse
+	sof-firmware
+	pavucontrol
+	playerctl
 
-# adding some more packages
-packages_aur+=(
-    diffr
-)
+	# Fonts
+	adobe-source-code-pro-fonts 
+	noto-fonts-emoji
+	otf-font-awesome 
+	ttf-droid 
+	ttf-fira-code
+	ttf-fantasque-nerd
+	ttf-jetbrains-mono-nerd
+	noto-fonts
 
-# NOTE: xmonad feels alien and hard to learn haskell for now, dropping it for now
-# and switching to diffrent WM (keep changing mind)
-# xmonad setup
-# packages+=(
-#     picom
-#     rofi  # or dmenu
-#     trayer
-#     xmobar
-#     xmonad
-#     xmonad-contrib
-# )
-
-# # i3-gaps setup
-# packages+=(
-#     i3-gaps
-#     picom
-#     polybar
-#     rofi
-# )
-# packages_aur+=(
-#     autotiling
-#     flashfocus
-#     rofi-greenclip
-# )
-
-# qtile setup
-packages+=(
-    lxsession
-    picom
-    qtile
-    rofi
-)
-packages_aur+=(
-    rofi-greenclip
-    flashfocus
-)
-
-# some visual packages like fonts, themes, icons etc
-packages+=(
-    adobe-source-code-pro-fonts
-    adobe-source-sans-fonts
-    arandr
-    git-delta
-    gnu-free-fonts
-    harfbuzz
-    lxappearance
-    noto-fonts
-    noto-fonts-cjk
-    noto-fonts-emoji
-    noto-fonts-extra
-    otf-font-awesome
-    papirus-icon-theme
-    ttf-dejavu
-    ttf-ubuntu-font-family
-)
-
-# some usefule packages
-packages+=(
-    alacritty
-    aspell
-    aspell-en
-    audacity
-    avahi
-    bash-completion
-    capitaine-cursors
-    cmake
-    code
-    conky
-    cronie
-    cups
-    cups-pdf
-    curl
-    dialog
-    direnv
-    dunst
-    fd
-    feh
-    ffmpeg
-    ffmpegthumbnailer
-    firefox
-    fontconfig
-    fzf
-    git
-    glow
-    gnupg
-    gutenprint
-    hplip
-    htop
-    iftop
-    imagemagick
-    jgmenu
-    jq
-    libnotify
-    light
-    lm_sensors
-    lsb-release
-    meson
-    mpc
-    mpd
-    mpv
-    ncmpcpp
-    neofetch
-    neovim
-    ntfs-3g
+	# Basics
+	chezmoi
+	htop
+	btop
+	mpv
+	mpv-mpris
+	yt-dlp
+	unzip
+	gtk-engine-murrine
+	xdg-user-dirs
+	xdg-utils
+	pacman-contrib
+	wl-clipboard
+	zsh
+	zsh-completions
     openssh
-    pacman-contrib
-    pavucontrol
-    pcmanfm-gtk3
-    playerctl
-    powertop
-    ranger
-    ranger
-    redshift
-    remmina
-    ripgrep
-    samba
-    scrot
-    shellcheck
-    startup-notification
-    stylua
-    sxiv
-    tar
-    tigervnc
-    tmux
-    unzip
-    wget
-    xclip
-    youtube-dl
-    zathura
-    zathura-pdf-mupdf
-    zsh
+
+	# Networking and Blutooth
+	bluez
+	bluez-utils
+	blueman
+	networkmanager
+	network-manager-applet
+
+	# File Manager
+	thunar 
+	thunar-volman 
+	tumbler
+	ffmpegthumbnailer 
+	thunar-archive-plugin
+	xarchiver
 )
 
-# python build packages
-# Arch linux does supports latest python but I will stick to pyenv
-packages+=(
-    base-devel
-    openssl
-    tk
-    xz
-    zlib
+aur_pkgs=(
+	# Hyperland and Wayland
+	wlogout
 )
 
-# general aur packages
-packages_aur+=(
-    ttf-ms-fonts
+for pkg in "${packages[@]}"; do
+	install_package_pacman "$pkg"
+done
+
+for pkg in "${aur_pkgs[@]}"; do
+	install_package "$pkg"
+done
+
+
+services=(
+    sshd
+	NetworkManager.service
+	bluetooth.service
+)
+user_services=(
+	pipewire.socket
+	pipewire-pulse.socket
+	wireplumber.service
+	pipewire.service
 )
 
-# install all the packages
-sudo pacman -S --noconfirm --needed ${packages[@]}
+echo "Enable some system services.."
+for service in "${services[@]}"; do
+	if sudo systemctl is-active --quite "$service" >/dev/null 2>&1; then
+		pass
+	else
+		sudo systemctl enable --now "$service"
+	fi
+done
+
+echo "Enable some user services.."
+for uservice in "${user_services[@]}"; do
+	if systemctl --user is-active --quite "$uservice" >/dev/null 2>&1; then
+		pass
+	else
+		systemctl --user enable --now "$uservice"
+	fi
+done
+
+# Check if the 'input' group exists
+if grep -q '^input:' /etc/group; then
+    echo "input group exists."
+else
+    echo "input group doesn't exist. Creating input group..."
+    sudo groupadd input
+fi
+
+# Add the user to the 'input' group
+sudo usermod -aG input "$(whoami)"
+
+echo "Make Thunar default file manager"
+xdg-mime default thunar.desktop inode/directory
+xdg-mime default thunar.desktop application/x-wayland-gnome-saved-search
 
 # some variable
 echo "local bin directory setup"
@@ -215,37 +183,10 @@ LOCALBIN=$HOME/.local/bin
 [ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
 
 echo "set ZSH to default"
-if [ "$SHELL" != "/usr/bin/zsh" ]; then
-    sudo chsh -s $(which zsh) $USER
+zsh=$(which zsh)
+if [ "$SHELL" != "$zsh" ]; then
+    sudo chsh -s "$zsh" $USER
 fi
-
-echo "YAY installation"
-if [ ! -x "$(command -v yay)" ]; then
-    git clone https://aur.archlinux.org/yay-git.git ~/Downloads/yay-git
-    cd ~/Downloads/yay-git
-    makepkg -si
-    cd ~
-fi
-yay -S --nocleanmenu --nodiffmenu --removemake --norebuild --noredownload ${packages_aur[@]}
-
-
-# enable some services
-sudo systemctl enable --now NetworkManager.service
-sudo systemctl enable --now NetworkManager-dispatcher.service
-sudo systemctl enable --now avahi-daemon.service
-sudo systemctl enable --now bluetooth.service
-sudo systemctl enable --now cups.service
-sudo systemctl enable --now sddm.service
-sudo systemctl enable --now sshd.service
-
-# some user services
-systemctl --user enable --now greenclip.service
-systemctl --user enable --now pipewire.service
-systemctl --user enable --now pipewire-pulse.service
-systemctl --user enable --now redshift-gtk.service
-# {{- if stat (joinPath .chezmoi.homeDir ".config/systemd/user/x0vncserver.service") }}
-systemctl --user enable --now x0vncserver.service
-# {{- end }}
 
 sudo sysctl fs.inotify.max_user_watches=100000
 sudo sysctl fs.inotify.max_queued_events=100000
