@@ -43,7 +43,7 @@ M.setup = function(colors)
     -- https://github.com/wez/wezterm/issues/807
     -- local edge_background = scheme.background
     -- https://github.com/wez/wezterm/blob/61f01f6ed75a04d40af9ea49aa0afe91f08cb6bd/config/src/color.rs#L245
-    local edge_background = colors.background
+    local edge_background = {{ includeTemplate "hex2rgb" (list .colorScheme.base 0.8) | quote }}
     local background = colors.tab_bar.inactive_tab.bg_color or colors.ansi[1]
     local foreground = colors.tab_bar.inactive_tab.fg_color or colors.ansi[5]
 

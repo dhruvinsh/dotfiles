@@ -48,8 +48,8 @@ M.setup = function(cfg)
       inactive_tab_edge = {{ .colorScheme.surface0 | quote }},
 
       active_tab = {
-        fg_color = {{ .colorScheme.crust | quote }},
-        bg_color = {{ .colorScheme.mauve | quote }},
+        fg_color = {{ includeTemplate "hex2rgb" (list .colorScheme.crust 0.8) | quote }},
+        bg_color = {{ includeTemplate "hex2rgb" (list .colorScheme.mauve 0.8) | quote }},
         intensity = 'Normal',
         italic = false,
         strikethrough = false,
