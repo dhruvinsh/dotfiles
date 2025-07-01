@@ -1,0 +1,47 @@
+#!/bin/bash
+# vim: set expandtab ts=4 sw=4 ft=sh:
+# shellcheck disable=1083
+
+{{ template "scripts/download_helpers.sh" . }}
+
+fonts=(
+    ttf-cascadia-code-nerd
+    ttf-firacode-nerd
+    ttf-iosevka-nerd
+    ttf-jetbrains-mono-nerd
+    ttf-nerd-fonts-symbols
+    ttf-victor-mono-nerd
+)
+for font in "${fonts[@]}"; do
+    install_package_pacman "$font"
+done
+
+
+TARGET="/usr/local/share/fonts"
+
+
+if [ -d "$TARGET" ]; then
+    echo "cleaning up fonts.."
+    fd . "$TARGET" -x rm -rf {}
+else
+    mkdir -p "$TARGET"
+fi
+
+SRC=/tmp/font.tar.xz
+TEMP_DST=/tmp/fonts
+
+# just a cleanup if its present
+sudo rm -rf "$SRC" "$TEMP_DST"
+sudo mkdir -p "$TARGET"
+
+MAPLE=https://github.com/subframe7536/maple-font/releases/download/{{ (gitHubLatestRelease "subframe7536/maple-font").TagName }}/MapleMono-NF.zip
+for font in $MAPLE; do
+    echo "--> setting $font"
+    extract_zip "$font" "$TEMP_DST"
+    sudo fd . "$TEMP_DST" --extension "ttf" -E "static" -x mv {} "$TARGET"
+    rm -rf "$TEMP_DST"
+done
+
+
+echo "--> updating fonts cache"
+sudo fc-cache -fv

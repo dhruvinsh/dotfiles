@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+# {{ template "scripts/download_helpers.sh" . }}
+
+sudo pacman -Sy
+
+packages=(
+    atuin
+    eza
+    fd
+    fzf
+    git-delta
+    gitleaks
+    glow
+    go
+    jq
+    just
+    lazygit
+    neovim
+    ripgrep
+    starship
+    tealdeer
+    tldr
+    yq
+    zoxide
+)
+
+aur_pkgs=(
+    fswatch
+    lazysql
+    lowfi
+)
+
+for pkg in "${packages[@]}"; do
+    install_package_pacman "$pkg"
+done
+
+for pkg in "${aur_pkgs[@]}"; do
+    install_package "$pkg"
+done

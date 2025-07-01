@@ -94,3 +94,36 @@ extract_zip() {
     # {{ end }}
     rm -f "$tmp_file"
 }
+
+
+# Install a package using pacman if not already installed
+# Usage: install_package_pacman PACKAGE_NAME
+install_package_pacman() {
+    local pkg="$1"
+    if pacman -Q "$pkg" &>/dev/null; then
+        echo "$pkg is already installed. Skipping..."
+    else
+        sudo pacman -S --noconfirm "$pkg"
+    fi
+}
+
+# Install a package using paru or yay (AUR helper) if not already installed
+# Usage: install_package PACKAGE_NAME
+install_package() {
+    local pkg="$1"
+    local aur_helper=""
+    if command -v paru &>/dev/null; then
+        aur_helper="paru"
+    elif command -v yay &>/dev/null; then
+        aur_helper="yay"
+    else
+        echo "No AUR helper (paru or yay) found. Cannot install $pkg." >&2
+        return 1
+    fi
+
+    if "$aur_helper" -Q "$pkg" &>/dev/null; then
+        echo "$pkg is already installed. Skipping..."
+    else
+        "$aur_helper" -S --noconfirm "$pkg"
+    fi
+}

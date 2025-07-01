@@ -2,6 +2,10 @@
 # vim: set expandtab ts=4 sw=4 ft=sh:
 # shellcheck disable=1083
 
+# {{ if .archlinux }}
+exit 0
+# {{ end }}
+
 {{ template "scripts/download_helpers.sh" . }}
 
 VERSION={{ (gitHubLatestRelease "ryanoasis/nerd-fonts").TagName }}
