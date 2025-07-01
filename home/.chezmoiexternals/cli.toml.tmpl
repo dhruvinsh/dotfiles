@@ -27,12 +27,6 @@
   url  = {{ gitHubLatestReleaseAssetURL "jtroo/kanata" $kanata | quote }}
   executable = true
 
-[".oh-my-zsh/custom/completions/_eza"]
-  type = "archive-file"
-  url  = {{ gitHubLatestReleaseAssetURL "eza-community/eza" "completions-*.tar.gz"  | quote }}
-  stripComponents = 3
-  path = "_eza"
-
 {{ if eq .chezmoi.os "linux" }}
 
 [".local/bin/atuin"]

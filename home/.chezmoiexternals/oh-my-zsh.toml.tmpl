@@ -28,6 +28,12 @@
   stripComponents = 1
   refreshPeriod = "168h"
 
+[".oh-my-zsh/custom/completions/_eza"]
+  type = "archive-file"
+  url  = {{ gitHubLatestReleaseAssetURL "eza-community/eza" "completions-*.tar.gz"  | quote }}
+  stripComponents = 3
+  path = "_eza"
+
 {{- end -}}
 
 {{- /* vim: set filetype=toml: */}}
