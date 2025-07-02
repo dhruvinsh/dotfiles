@@ -27,7 +27,6 @@ AppData/**
 
 {{ if ne .chezmoi.os "linux" }}
 .chezmoiscripts/linux/**
-.chezmoiscripts/arch/**
 .config/fontconfig/**
 .hushlogin
 .profile
@@ -40,4 +39,8 @@ AppData/**
 {{ if ne .chezmoi.os "darwin" }}
 .chezmoiscripts/darwin/**
 Library/**
+{{ end }}
+
+{{ if not .archlinux }}
+.chezmoiscripts/arch/**
 {{ end }}
