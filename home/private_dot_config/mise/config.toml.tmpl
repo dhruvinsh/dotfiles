@@ -16,7 +16,10 @@ yarn                     = "latest"
 usage                    = "latest"
 
 # Python related stuff
-python                   = {{ .pythonVersion | quote }}
+# NOTE: I have to strip "patch" version because windows do not always have update python version
+# mise ERROR failed to install core:python@3.11.13
+# mise ERROR no precompiled python found for core:python@3.11.13 on x86_64-pc-windows-msvc-shared
+python                   = {{ regexReplaceAll "\\.[0-9]+$" .pythonVersion "" | quote }}
 uv                       = "latest"
 
 [settings]
