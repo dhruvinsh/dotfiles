@@ -7,7 +7,9 @@ yarn                     = "latest"
 "npm:@google/gemini-cli" = "latest"
 "npm:@openai/codex"      = "latest"
 "npm:neovim"             = "latest"
+{{ if ne .chezmoi.os "windows" -}}
 "npm:opencode-ai"        = "latest"
+{{ end -}}
 "npm:prettier"           = "latest"
 "npm:tree-sitter-cli"    = "latest"
 "npm:vite"               = "latest"
