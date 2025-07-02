@@ -29,5 +29,11 @@ catch {
   Write-Output "pipx not found."
 }
 
+if (scoop list | Select-String -Pattern '^volta\s') {
+    scoop uninstall volta
+} else {
+    Write-Output "--> Volta is not installed."
+}
+
 Write-Output "Removing gitconfig.."
 rm ~/.gitconfig

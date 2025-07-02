@@ -39,6 +39,7 @@ $apps = @(
     "main/just"
     "main/luarocks"
     "main/make"
+    "main/mise"
     "main/neovim"
     "main/nu"
     "main/rclone"

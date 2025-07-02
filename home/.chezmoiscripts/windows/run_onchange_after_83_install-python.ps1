@@ -1,6 +1,9 @@
 # vim: set ft=powershell
 
-pwsh -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+$shimPath = "$env:USERPROFILE\AppData\Local\mise\shims"
+$currentPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+$newPath = $currentPath + ";" + $shimPath
+[Environment]::SetEnvironmentVariable('Path', $newPath, 'User')
 
 # create some independent envs with packages
 $packages = @(
@@ -17,10 +20,9 @@ $packages = @(
     "pre-commit"
     "ruff"
     "streamdown"
-    "vectorcode[lsp,mcp]"
 )
 
 foreach ($package in $packages) {
   Write-Output "--> Installing $package.."
-  uv tool install $package
+  uv tool install --force $package
 }

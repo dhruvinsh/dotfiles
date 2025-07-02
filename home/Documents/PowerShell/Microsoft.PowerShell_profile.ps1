@@ -21,3 +21,8 @@ if (Get-Command volta -errorAction SilentlyContinue)
 $ENV:STARSHIP_CACHE = "$HOME\AppData\Local\Temp"
 $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
 Invoke-Expression (&starship init powershell)
+
+$shimPath = "$env:USERPROFILE\AppData\Local\mise\shims"
+$currentPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+$newPath = $currentPath + ";" + $shimPath
+[Environment]::SetEnvironmentVariable('Path', $newPath, 'User')
