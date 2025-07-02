@@ -7,6 +7,7 @@ set -euo pipefail
 sudo pacman -Sy
 
 packages=(
+    # day to day tools
     atuin
     eza
     fd
@@ -25,6 +26,16 @@ packages=(
     tldr
     yq
     zoxide
+
+    # night light
+    gammastep
+    geoclue
+
+    # multi-media
+    playerctl
+    mpv
+    mpv-mpris
+    yt-dlp
 )
 
 aur_pkgs=(

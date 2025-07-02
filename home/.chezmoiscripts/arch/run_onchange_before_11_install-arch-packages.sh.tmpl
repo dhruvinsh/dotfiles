@@ -46,6 +46,7 @@ install_package() {
 
 packages=(
     # Graphics
+    # NOTE: must have for hyprland else will not boot
     nvidia-utils
     egl-wayland
 
@@ -74,15 +75,11 @@ packages=(
     pipewire-pulse
     sof-firmware
     pavucontrol
-    playerctl
 
     # Basics
     chezmoi
     htop
     btop
-    mpv
-    mpv-mpris
-    yt-dlp
     unzip
     gtk-engine-murrine
     xdg-user-dirs
@@ -103,11 +100,11 @@ packages=(
     network-manager-applet
 
     # File Manager
+    ffmpegthumbnailer 
     thunar 
+    thunar-archive-plugin
     thunar-volman 
     tumbler
-    ffmpegthumbnailer 
-    thunar-archive-plugin
     xarchiver
 )
 
@@ -125,20 +122,22 @@ for pkg in "${aur_pkgs[@]}"; do
 done
 
 
-services=(
+system_services=(
     sshd
     NetworkManager.service
     bluetooth.service
 )
 user_services=(
-    pipewire.socket
+    hypridle.service
+    hyprpolkitagent.service
     pipewire-pulse.socket
-    wireplumber.service
     pipewire.service
+    pipewire.socket
+    wireplumber.service
 )
 
 echo "Enable some system services.."
-for service in "${services[@]}"; do
+for service in "${system_services[@]}"; do
     if sudo systemctl is-active --quite "$service" >/dev/null 2>&1; then
         pass
     else

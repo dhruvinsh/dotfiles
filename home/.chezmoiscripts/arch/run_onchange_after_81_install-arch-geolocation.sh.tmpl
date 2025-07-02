@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+BASE_DIR=/etc/geoclue/conf.d
+GAMMASTEP="$BASE_DIR"/99-gammastep.conf
+STATIC_LOCATION=/etc/geolocation
+
+# check if directory exists
+[[ -d "$BASE_DIR" ]] || {
+    echo "Directory $BASE_DIR does not exist. Creating it..."
+    sudo mkdir -p "$BASE_DIR"
+}
+
+sudo tee "$GAMMASTEP" << EOF
+[gammastep]
+allowed=true
+system=false
+users=
+EOF
+
+sudo tee "$STATIC_LOCATION" << EOF
+{{ includeTemplate ".chezmoitemplates/encryption/geoclue" | decrypt | trim }}
+EOF
+
+if ! systemctl --user is-enabled --quiet geoclue-agent.service; then
+    systemctl enable --user --now geoclue-agent.service
+fi

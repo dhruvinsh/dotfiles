@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+# {{ template "scripts/download_helpers.sh" . }}
+
+packages=(
+)
+
+aur_pkgs=(
+    bibata-cursor-theme-bin
+)
+
+for pkg in "${packages[@]}"; do
+    install_package_pacman "$pkg"
+done
+
+for pkg in "${aur_pkgs[@]}"; do
+    install_package "$pkg"
+done
