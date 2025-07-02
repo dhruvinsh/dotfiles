@@ -6,7 +6,7 @@ set -euo pipefail
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # install tools only in linux system
-# {{ if eq .chezmoi.os "linux" }}
+# {{ if (and (eq .chezmoi.os "linux") (not .archlinux)) }}
 cargo_packages=(
     ast-grep
     diffr
