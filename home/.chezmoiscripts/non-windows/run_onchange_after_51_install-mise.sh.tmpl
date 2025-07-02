@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# vim: set expandtab ts=4 sw=4 ft=sh:
+
+set -euo pipefail
+
+if [ ! "$(command -v mise)" ]; then
+    echo "Install node with help of mise ⚡️"
+    curl https://mise.run | sh
+fi

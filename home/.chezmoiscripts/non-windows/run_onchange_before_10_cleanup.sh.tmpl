@@ -12,4 +12,14 @@ if [ -x "$(command -v pip)" ]; then
     pip uninstall -y pipx
 fi
 
+if [ -d "$HOME/.pyenv" ]; then
+    echo "Removing pyenv, switched to mise"
+    rm -rf "$HOME/.pyenv"
+fi
+
+if [ -d "$HOME/.volta" ]; then
+    echo "Removing volta, switched to mise"
+    rm -rf "$HOME/.volta"
+fi
+
 echo "Clean up finished"

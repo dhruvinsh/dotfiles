@@ -71,10 +71,11 @@ DISABLE_AUTO_UPDATE="true"
 [[ -d $HOME/.zsh ]] && source $HOME/.zsh/zsh-syntax-highlighting.zsh
 
 plugins=(
-  {{- if eq .chezmoi.os "darwin"}}
+  {{ if eq .chezmoi.os "darwin" -}}
   brew
-  {{ end -}}
+  {{ end }}
   git
+  mise
   zoxide
   zsh-syntax-highlighting
   zsh-autosuggestions
@@ -103,16 +104,8 @@ eval "$(direnv hook zsh)"
 # Atuin Setup
 eval "$(atuin init zsh)"
 
-# pyenv require for interactive shells
-if [ -d "$HOME/.pyenv" ]; then
-  export PYENV_ROOT="$HOME/.pyenv"
-  export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init -)"
-fi
-
-# volta setup
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
+# mise-en-place setup (replaces volta, pyenv)
+eval "$(~/.local/bin/mise activate zsh)"
 
 {{- if .wsl }}
 export DISPLAY=:0

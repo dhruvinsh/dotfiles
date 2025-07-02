@@ -1,0 +1,27 @@
+[tools]
+# Node and JavaScript related stuff
+node                     = { version = "lts", postinstall = "corepack enable"}
+pnpm                     = "latest"
+yarn                     = "latest"
+# Node based tools
+"npm:@google/gemini-cli" = "latest"
+"npm:@openai/codex"      = "latest"
+"npm:neovim"             = "latest"
+"npm:opencode-ai"        = "latest"
+"npm:prettier"           = "latest"
+"npm:tree-sitter-cli"    = "latest"
+"npm:vite"               = "latest"
+
+# Mise related stuff
+usage                    = "latest"
+
+# Python related stuff
+python                   = {{ .pythonVersion | quote }}
+uv                       = "latest"
+
+[settings]
+# support `.python-version` file
+idiomatic_version_file_enable_tools = ["node", "python"]
+
+# "pipx:cowsay" will use uvx to install cowsay
+pipx.uvx = true
