@@ -6,4 +6,7 @@ set -euo pipefail
 if [ ! "$(command -v mise)" ]; then
     echo "Install node with help of mise ⚡️"
     curl https://mise.run | sh
+
+    echo "Install mise packages 📦"
+    mise install
 fi
