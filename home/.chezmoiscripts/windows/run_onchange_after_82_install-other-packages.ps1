@@ -58,3 +58,6 @@ foreach ($app in $apps) {
     Write-Output "--> Installing $app.."
     scoop install $app
 }
+
+Write-Output "--> Handle mise installation"
+mise install
