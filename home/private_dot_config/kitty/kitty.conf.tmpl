@@ -1,5 +1,15 @@
-font_family      family={{ .font.regular | quote }}
-bold_font        auto
-italic_font      auto
-bold_italic_font auto
-include          current-theme.conf
+# Font configuration
+bold_font                  auto
+bold_italic_font           auto
+font_family                {{ .font.regular }}
+font_size                  12
+italic_font                {{ .font.italic }}
+
+# Appearance
+include                    current-theme.conf
+background_opacity         0.7
+background_blur            16
+dynamic_background_opacity yes
+
+# Scrollback
+scrollback_lines           50000
