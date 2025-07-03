@@ -119,8 +119,27 @@ export PATH=/usr/lib/wsl/lib:$PATH
 csv() {
   uvx visidata "$@"
 }
+
 llm() {
   command llm "$@" | streamdown
+}
+
+f() {
+  local cmd=()
+  local fzf_args=()
+  local found_sep=0
+  for arg in "$@"; do
+    if [ "$arg" = "--" ]; then
+      found_sep=1
+      continue
+    fi
+    if [ $found_sep -eq 0 ]; then
+      cmd+=("$arg")
+    else
+      fzf_args+=("$arg")
+    fi
+  done
+  "${cmd[@]}" | fzf "${fzf_args[@]}"
 }
 
 {{- /* vim: set filetype=zsh ts=2 sw=2: */}}
