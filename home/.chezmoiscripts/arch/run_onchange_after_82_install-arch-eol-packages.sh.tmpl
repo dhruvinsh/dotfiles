@@ -5,10 +5,13 @@ set -euo pipefail
 # {{ template "scripts/download_helpers.sh" . }}
 
 packages=(
+    adw-gtk-theme
 )
 
 aur_pkgs=(
     bibata-cursor-theme-bin
+    flat-remix
+    flat-remix-gtk
 )
 
 for pkg in "${packages[@]}"; do
