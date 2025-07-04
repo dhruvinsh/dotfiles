@@ -99,7 +99,7 @@ alias vim=nvim
 alias lg=lazygit
 
 # Direnv Setup
-eval "$(direnv hook zsh)"
+[[ -x $(command -v direnv) ]] && eval "$(direnv hook zsh)"
 
 # Atuin Setup
 eval "$(atuin init zsh)"
