@@ -108,8 +108,8 @@ install_package_pacman() {
 }
 
 # Install a package using paru or yay (AUR helper) if not already installed
-# Usage: install_package PACKAGE_NAME
-install_package() {
+# Usage: install_package_aur PACKAGE_NAME
+install_package_aur() {
     local pkg="$1"
     local aur_helper=""
     if command -v paru &>/dev/null; then
