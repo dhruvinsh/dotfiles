@@ -1,0 +1,22 @@
+palette = 0={{ .colorScheme.surface1 | trimPrefix "#" }}
+palette = 1={{ .colorScheme.red | trimPrefix "#" }}
+palette = 2={{ .colorScheme.green | trimPrefix "#" }}
+palette = 3={{ .colorScheme.yellow | trimPrefix "#" }}
+palette = 4={{ .colorScheme.blue | trimPrefix "#" }}
+palette = 5={{ .colorScheme.pink | trimPrefix "#" }}
+palette = 6={{ .colorScheme.teal | trimPrefix "#" }}
+palette = 7={{ .colorScheme.subtext0 | trimPrefix "#" }}
+palette = 8={{ .colorScheme.surface2 | trimPrefix "#" }}
+palette = 9={{ .colorScheme.red | trimPrefix "#" }}
+palette = 10={{ .colorScheme.green | trimPrefix "#" }}
+palette = 11={{ .colorScheme.yellow | trimPrefix "#" }}
+palette = 12={{ .colorScheme.blue | trimPrefix "#" }}
+palette = 13={{ .colorScheme.pink | trimPrefix "#" }}
+palette = 14={{ .colorScheme.teal | trimPrefix "#" }}
+palette = 15={{ .colorScheme.subtext1 | trimPrefix "#" }}
+background = {{ .colorScheme.base | trimPrefix "#" }}
+foreground = {{ .colorScheme.text | trimPrefix "#" }}
+cursor-color = {{ .colorScheme.rosewater | trimPrefix "#" }}
+cursor-text = {{ .colorScheme.base | trimPrefix "#" }}
+selection-background = {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.overlay2 0.2) | trimPrefix "#" }}
+selection-foreground = {{ .colorScheme.text | trimPrefix "#" }}
