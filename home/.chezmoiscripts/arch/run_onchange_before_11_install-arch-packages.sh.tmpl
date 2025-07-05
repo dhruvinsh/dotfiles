@@ -14,35 +14,16 @@ fi
 sudo pacman -Sy
 sudo pacman -S --noconfirm --needed base-devel archlinux-keyring findutils git
 
-if pacman -Qi dunst &>> /dev/null; then
-    sudo pacman -Rns --noconfirm dunst
-fi
-
-
-isaur=$(command -v paru)
-if [ -n "$isaur" ]; then
-    echo "Paru is already installed. Skipping..."
+if command -v yay 2>/dev/null; then
+    echo "Yay is already installed. Skipping..."
 else
-    echo "Installing Paru..."
-    git clone https://aur.archlinux.org/paru-bin.git /tmp/paru
-    cd /tmp/paru
+    echo "Installing Yay..."
+    git clone https://aur.archlinux.org/yay.git /tmp/yay
+    cd /tmp/yay
     makepkg -si --noconfirm 2>&1 || { printf "Failed to install"; exit 1; }
 fi
 
-install_package_pacman() {
-    if pacman -Q "$1" &>/dev/null ; then
-        echo "$1 is already installed. Skipping..."
-    else
-        sudo pacman -S --noconfirm "$1"
-    fi
-}
-install_package_aur() {
-    if $isaur -Q "$1" &>/dev/null ; then
-        echo "$1 is already installed. Skipping..."
-    else
-        $isaur -S --noconfirm "$1"
-    fi
-}
+# {{ template "scripts/download_helpers.sh" . }}
 
 packages=(
     # Graphics

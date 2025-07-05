@@ -112,9 +112,7 @@ install_package_pacman() {
 install_package_aur() {
     local pkg="$1"
     local aur_helper=""
-    if command -v paru &>/dev/null; then
-        aur_helper="paru"
-    elif command -v yay &>/dev/null; then
+    if command -v yay &>/dev/null; then
         aur_helper="yay"
     else
         echo "No AUR helper (paru or yay) found. Cannot install $pkg." >&2
