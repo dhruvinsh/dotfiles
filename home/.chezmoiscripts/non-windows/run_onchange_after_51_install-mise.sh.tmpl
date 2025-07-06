@@ -7,6 +7,9 @@ if [ ! "$(command -v mise)" ]; then
     echo "Install node with help of mise ⚡️"
     curl https://mise.run | sh
 
-    echo "Install mise packages 📦"
-    mise install
 fi
+
+# mise/config.toml sha256: {{  include "private_dot_config/mise/config.toml.tmpl" | sha256sum }}
+echo "Install/update mise packages 📦"
+mise install
+mise upgrade

@@ -59,5 +59,7 @@ foreach ($app in $apps) {
     scoop install $app
 }
 
+# mise/config.toml sha256: {{  include "private_dot_config/mise/config.toml.tmpl" | sha256sum }}
 Write-Output "--> Handle mise installation"
 mise install
+mise upgrade
