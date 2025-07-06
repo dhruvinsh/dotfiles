@@ -6,6 +6,8 @@ set -euo pipefail
 
 packages=(
     adw-gtk-theme
+    nwg-look
+    syncthing
 )
 
 aur_pkgs=(
@@ -24,4 +26,17 @@ done
 
 for pkg in "${aur_pkgs[@]}"; do
     install_package_aur "$pkg"
+done
+
+
+user_services=(
+    syncthing.service
+)
+
+echo "Enable some user services.."
+for uservice in "${user_services[@]}"; do
+    if ! systemctl --user is-active --quite "$uservice" >/dev/null 2>&1; then
+        echo "Enabling user service: $uservice"
+        systemctl --user enable --now "$uservice"
+    fi
 done
