@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+# if arch based system
+# {{- if eq .archlinux true }}
+
+echo "Removing direnv package..."
+sudo pacman -Rns --noconfirm direnv
+
+# {{- end }}

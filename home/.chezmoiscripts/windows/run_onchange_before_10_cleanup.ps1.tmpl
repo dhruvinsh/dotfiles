@@ -37,3 +37,6 @@ if (scoop list | Select-String -Pattern '^volta\s') {
 
 Write-Output "Removing gitconfig.."
 rm ~/.gitconfig
+
+Write-Output "Removing direnv package.."
+scoop uninstall direnv
