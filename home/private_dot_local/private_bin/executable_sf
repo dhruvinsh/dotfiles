@@ -12,10 +12,26 @@ if [ ! -f ~/.ssh/config ]; then
   exit 1
 fi
 
+if command -v pbcopy >/dev/null 2>&1; then
+  CLIP_CMD="pbcopy"
+elif command -v wl-copy >/dev/null 2>&1; then
+  CLIP_CMD="wl-copy"
+elif command -v win32yank.exe >/dev/null 2>&1; then
+  CLIP_CMD="win32yank.exe -i"
+elif command -v xsel >/dev/null 2>&1; then
+  CLIP_CMD="xsel --clipboard --input"
+else
+  CLIP_CMD=""
+fi
+
+if [ -z "$CLIP_CMD" ]; then
+  echo "No clipboard tool found (xsel, wl-copy, pbcopy required for copy support)." >&2
+fi
+
 # reference: https://www.jamesridgway.co.uk/list-ssh-hosts-from-your-ssh-config/
 data=$(rg -P "^Host ([^*]+)$" "$HOME"/.ssh/config | sed 's/Host //')
 
-selected=$(echo "$data" | fzf --cycle --height=15 --layout=reverse --border)
+selected=$(echo "$data" | fzf --header 'Press CTRL-Y to copy host name to the clipboard' --style full --cycle --height=15 --reverse --multi --bind "ctrl-y:execute-silent(echo -n {+} | $CLIP_CMD )+clear-selection+bell")
 
 if [ -z "$selected" ]; then
   echo "no valid host found"
