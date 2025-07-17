@@ -1,0 +1,12 @@
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": {{ (includeTemplate ".chezmoitemplates/encryption/claude" | decrypt | fromJson).token | quote }},
+    "ANTHROPIC_BEDROCK_BASE_URL": {{ (includeTemplate ".chezmoitemplates/encryption/claude" | decrypt | fromJson).baseUrl | quote }},
+    "AWS_REGION_NAME": "us-east-2",
+    "CLAUDE_CODE_SKIP_BEDROCK_AUTH": "1",
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "CLAUDE_HTTP_TIMEOUT": "600000",
+    "BEDROCK_INVOKE_METHOD": "InvokeModelWithResponseStream"
+  },
+  "model": "sonnet"
+}
