@@ -1,47 +1,47 @@
 [tools]
 # Node and JavaScript related stuff
-node                     = { version = "lts", postinstall = "corepack enable"}
+node                            = { version = "lts", postinstall = "corepack enable"}
 
 # Node based tools and package managers
-"npm:pnpm"               = "latest"
-"npm:yarn"               = "latest"
-"npm:@google/gemini-cli" = "latest"
-"npm:@openai/codex"      = "latest"
-"npm:neovim"             = "latest"
+"npm:pnpm"                      = "latest"
+"npm:yarn"                      = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
+"npm:@google/gemini-cli"        = "latest"
+"npm:@openai/codex"             = "latest"
+"npm:neovim"                    = "latest"
 {{ if ne .chezmoi.os "windows" -}}
-"npm:opencode-ai"        = "latest"
+"npm:opencode-ai"               = "latest"
 {{ end -}}
-"npm:prettier"           = "latest"
-"npm:tree-sitter-cli"    = "latest"
-"npm:vite"               = "latest"
-"npm:mcp-hub"            = "latest"
+"npm:prettier"                  = "latest"
+"npm:tree-sitter-cli"           = "latest"
+"npm:vite"                      = "latest"
+"npm:mcp-hub"                   = "latest"
 
 # Python based tools
-"pipx:ast-grep-cli"      = "latest"
-"pipx:aider-chat"        = "latest"
-"pipx:codespell"         = "latest"
-"pipx:files-to-prompt"   = "latest"
-"pipx:httpie"            = "latest"
-"pipx:jupyterlab"        = "latest"
-"pipx:keymap-drawer"     = "latest"
-"pipx:llm"               = "latest"
-"pipx:mypy"              = "latest"
-"pipx:pipenv"            = "latest"
-"pipx:poetry"            = "latest"
-"pipx:pre-commit"        = "latest"
-"pipx:ruff"              = "latest"
-"pipx:streamdown"        = "latest"
+"pipx:ast-grep-cli"             = "latest"
+"pipx:aider-chat"               = "latest"
+"pipx:codespell"                = "latest"
+"pipx:files-to-prompt"          = "latest"
+"pipx:httpie"                   = "latest"
+"pipx:jupyterlab"               = "latest"
+"pipx:keymap-drawer"            = "latest"
+"pipx:llm"                      = "latest"
+"pipx:mypy"                     = "latest"
+"pipx:pipenv"                   = "latest"
+"pipx:poetry"                   = "latest"
+"pipx:pre-commit"               = "latest"
+"pipx:ruff"                     = "latest"
+"pipx:streamdown"               = "latest"
 
 # Mise related stuff
-usage                    = "latest"
+usage                           = "latest"
 
 # Python related stuff
 # NOTE: I have to strip "patch" version because windows do not always have update python version
 # mise ERROR failed to install core:python@3.11.13
 # mise ERROR no precompiled python found for core:python@3.11.13 on x86_64-pc-windows-msvc-shared
-python                   = {{ regexReplaceAll "\\.[0-9]+$" .pythonVersion "" | quote }}
-uv                       = "latest"
+python                          = {{ regexReplaceAll "\\.[0-9]+$" .pythonVersion "" | quote }}
+uv                              = "latest"
 
 [settings]
 # support `.python-version` file
