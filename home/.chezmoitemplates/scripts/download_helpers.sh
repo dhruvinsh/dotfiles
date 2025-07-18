@@ -125,3 +125,22 @@ install_package_aur() {
         "$aur_helper" -S "$pkg"
     fi
 }
+
+# Install packages from arrays (compatible with existing script patterns)
+# Usage: 
+#   packages=(pkg1 pkg2)
+#   aur_pkgs=(aurpkg1 aurpkg2)
+#   install_packages_from_arrays
+install_packages_from_arrays() {
+    if declare -p packages >/dev/null 2>&1 && [ ${#packages[@]} -gt 0 ]; then
+        for pkg in "${packages[@]}"; do
+            install_package_pacman "$pkg"
+        done
+    fi
+    
+    if declare -p aur_pkgs >/dev/null 2>&1 && [ ${#aur_pkgs[@]} -gt 0 ]; then
+        for pkg in "${aur_pkgs[@]}"; do
+            install_package_aur "$pkg"
+        done
+    fi
+}
