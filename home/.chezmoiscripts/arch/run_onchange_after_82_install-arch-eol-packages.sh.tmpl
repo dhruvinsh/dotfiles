@@ -3,9 +3,14 @@
 set -euo pipefail
 
 # {{ template "scripts/download_helpers.sh" . }}
+# {{ template "scripts/service_helpers.sh" . }}
 
 packages=(
     adw-gtk-theme
+    docker
+    docker-buildx
+    docker-compose
+    nvidia-container-toolkit
     nwg-look
     syncthing
 )
@@ -28,15 +33,33 @@ for pkg in "${aur_pkgs[@]}"; do
     install_package_aur "$pkg"
 done
 
+docker_native_diff="/etc/modprobe.d/disable-overlay-redirect-dir.conf"
+if [ ! -f "$docker_native_diff" ]; then
+    echo "Creating $docker_native_diff to disable overlay redirect dir"
+    echo "options overlay metacopy=off redirect_dir=off" | sudo tee "$docker_native_diff" > /dev/null
+    sudo modprobe -r overlay
+    sudo modprobe overlay
+fi
+docker_daemon="/etc/docker/daemon.json"
+if [ ! -f "$docker_daemon" ]; then
+    echo "Creating $docker_daemon for docker daemon configuration"
+    [ ! -d ${docker_daemon%/*} ] && sudo mkdir -p "${docker_daemon%/*}"
+    sudo tee "$docker_daemon" >/dev/null << EOF
+{
+  "runtimes": {
+    "nvidia": {
+      "path": "/usr/bin/nvidia-container-runtime",
+      "runtimeArgs": []
+    }
+  }
+}
+EOF
+fi
 
+system_services=(
+    docker.socket
+)
 user_services=(
     syncthing.service
 )
-
-echo "Enable some user services.."
-for uservice in "${user_services[@]}"; do
-    if ! systemctl --user is-active --quite "$uservice" >/dev/null 2>&1; then
-        echo "Enabling user service: $uservice"
-        systemctl --user enable --now "$uservice"
-    fi
-done
+enable_services_from_arrays
