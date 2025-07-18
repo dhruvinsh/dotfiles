@@ -13,13 +13,14 @@ This script checks pyproject.toml files for package version information
 and compares current versions with the latest available on PyPI.
 """
 
+import argparse
 import re
-import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
 
 import httpx
+import tomllib
 from diskcache import Cache
 from rich.console import Console
 from rich.table import Table
@@ -220,8 +221,76 @@ def create_comparison_table(packages: list[PackageInfo]) -> Table:
     return table
 
 
+def update_pyproject_versions(file_path: Path, packages: list[PackageInfo]) -> bool:
+    """Update package versions in pyproject.toml file.
+
+    Args:
+        file_path (Path): Path to pyproject.toml file.
+        packages (list[PackageInfo]): List of packages with updated versions.
+
+    Returns:
+        bool: True if any updates were made, False otherwise.
+    """
+    with open(file_path, "r") as f:
+        content = f.read()
+
+    original_content = content
+    updates_made = 0
+
+    for pkg in packages:
+        if not pkg.latest_version or not pkg.current_version:
+            continue
+        if pkg.current_version == pkg.latest_version:
+            continue
+
+        # Update exact version pins (==)
+        old_spec = f"{pkg.name}=={pkg.current_version}"
+        new_spec = f"{pkg.name}=={pkg.latest_version}"
+        if old_spec in content:
+            content = content.replace(old_spec, new_spec)
+            updates_made += 1
+            continue
+
+        # Update other version constraints by replacing the version number
+        patterns = [
+            f"{pkg.name}>={pkg.current_version}",
+            f"{pkg.name}<={pkg.current_version}",
+            f"{pkg.name}~={pkg.current_version}",
+        ]
+
+        replacements = [
+            f"{pkg.name}>={pkg.latest_version}",
+            f"{pkg.name}<={pkg.latest_version}",
+            f"{pkg.name}~={pkg.latest_version}",
+        ]
+
+        for old_pattern, new_pattern in zip(patterns, replacements):
+            if old_pattern in content:
+                content = content.replace(old_pattern, new_pattern)
+                updates_made += 1
+                break
+
+    if content != original_content:
+        with open(file_path, "w") as f:
+            f.write(content)
+        return True
+
+    return False
+
+
 def main():
     """Main function to run the package version checker."""
+    parser = argparse.ArgumentParser(
+        description="Package version checker for pyproject.toml files"
+    )
+    parser.add_argument(
+        "-a",
+        "--apply",
+        action="store_true",
+        help="Apply version updates in-place to pyproject.toml",
+    )
+    args = parser.parse_args()
+
     pyproject_path = Path("pyproject.toml")
 
     if not pyproject_path.exists():
@@ -268,6 +337,18 @@ def main():
         f"{unpinned} unpinned"
     )
 
+    # Apply updates if requested
+    if args.apply and updates_available > 0:
+        console.print("\n🔄 Applying updates...")
+        if update_pyproject_versions(pyproject_path, packages):
+            console.print("✅ pyproject.toml updated successfully")
+        else:
+            console.print("⚠️  No updates were applied")
+    elif args.apply:
+        console.print("\n✅ No updates needed")
+
 
 if __name__ == "__main__":
     main()
+
+# vim: set ft=python:
