@@ -1,0 +1,273 @@
+#!/usr/bin/env -S uv run --script
+#
+# /// script
+# dependencies = [
+#   "httpx",
+#   "diskcache",
+#   "rich",
+# ]
+# ///
+"""Package version checker for pyproject.toml files.
+
+This script checks pyproject.toml files for package version information
+and compares current versions with the latest available on PyPI.
+"""
+
+import re
+import tomllib
+from dataclasses import dataclass
+from pathlib import Path
+from typing import cast
+
+import httpx
+from diskcache import Cache
+from rich.console import Console
+from rich.table import Table
+
+
+@dataclass
+class PackageInfo:
+    """Package information container.
+
+    Args:
+        name (str): Package name.
+        current_version (str | None): Currently specified version.
+        latest_version (str | None): Latest available version from PyPI.
+        is_dev (bool): Whether this is a development dependency.
+    """
+
+    name: str
+    current_version: str | None
+    latest_version: str | None
+    is_dev: bool = False
+
+
+class PyPIClient:
+    """PyPI API client with caching.
+
+    Provides methods to fetch package information from PyPI with
+    local caching to improve performance.
+    """
+
+    def __init__(self, cache_dir: str = ".pkg_cache"):
+        """Initialize the PyPI client.
+
+        Args:
+            cache_dir (str): Directory for caching responses.
+        """
+        self.cache = Cache(cache_dir)
+        self.client = httpx.Client(timeout=10.0)
+
+    def get_latest_version(self, package_name: str) -> str | None:
+        """Get latest version from PyPI with caching.
+
+        Args:
+            package_name (str): Name of the package to check.
+
+        Returns:
+            str | None: Latest version string if found, None otherwise.
+        """
+        cache_key = f"pypi:{package_name}"
+
+        # Check cache first
+        if cache_key in self.cache:
+            return cast(str, self.cache[cache_key])
+
+        try:
+            response = self.client.get(f"https://pypi.org/pypi/{package_name}/json")
+            response.raise_for_status()
+            data = response.json()
+            latest_version = cast(str, data["info"]["version"])
+
+            # Cache for 1 hour
+            self.cache.set(cache_key, latest_version, expire=3600)
+            return latest_version
+
+        except Exception as e:
+            print(f"Error fetching {package_name}: {e}")
+            return None
+
+    def close(self):
+        """Close the HTTP client."""
+        self.client.close()
+
+
+class PyprojectParser:
+    """Parser for pyproject.toml files.
+
+    Provides static methods to parse dependency information from
+    pyproject.toml files following PEP 621 specification.
+    """
+
+    @staticmethod
+    def parse_version_spec(spec: str) -> str | None:
+        """Extract pinned version from dependency specification.
+
+        Args:
+            spec (str): Dependency specification string.
+
+        Returns:
+            str | None: Extracted version if found, None otherwise.
+        """
+        # Handle exact pins (==)
+        if "==" in spec:
+            return spec.split("==")[1].strip()
+
+        # Handle other version specs (>=, <=, ~=, etc.)
+        # For simplicity, treat these as unpinned
+        version_pattern = r"[><=~!]+([\d\.]+(?:\w+)?)"
+        match = re.search(version_pattern, spec)
+        if match:
+            return match.group(1)
+
+        return None
+
+    @staticmethod
+    def parse_pyproject(file_path: Path) -> list[PackageInfo]:
+        """Parse pyproject.toml and extract package information.
+
+        Args:
+            file_path (Path): Path to pyproject.toml file.
+
+        Returns:
+            list[PackageInfo]: List of parsed package information.
+        """
+        packages = []
+
+        with open(file_path, "rb") as f:
+            data = tomllib.load(f)
+
+        # Parse main dependencies
+        if "project" in data and "dependencies" in data["project"]:
+            for dep in data["project"]["dependencies"]:
+                name = (
+                    dep.split("==")[0]
+                    .split(">=")[0]
+                    .split("<=")[0]
+                    .split("~=")[0]
+                    .split("!=")[0]
+                    .split(">")[0]
+                    .split("<")[0]
+                    .split("[")[0]
+                    .strip()
+                )
+                version = PyprojectParser.parse_version_spec(dep)
+                packages.append(
+                    PackageInfo(name=name, current_version=version, latest_version=None)
+                )
+
+        # Parse dev dependencies
+        if "dependency-groups" in data and "dev" in data["dependency-groups"]:
+            for dep in data["dependency-groups"]["dev"]:
+                name = (
+                    dep.split("==")[0]
+                    .split(">=")[0]
+                    .split("<=")[0]
+                    .split("~=")[0]
+                    .split("!=")[0]
+                    .split(">")[0]
+                    .split("<")[0]
+                    .split("[")[0]
+                    .strip()
+                )
+                version = PyprojectParser.parse_version_spec(dep)
+                packages.append(
+                    PackageInfo(
+                        name=name,
+                        current_version=version,
+                        latest_version=None,
+                        is_dev=True,
+                    )
+                )
+
+        return packages
+
+
+def create_comparison_table(packages: list[PackageInfo]) -> Table:
+    """Create a rich table for package comparison.
+
+    Args:
+        packages (list[PackageInfo]): List of package information.
+
+    Returns:
+        Table: Rich table object for display.
+    """
+    table = Table(title="Package Version Comparison")
+
+    table.add_column("Package", style="cyan", no_wrap=True)
+    table.add_column("Type", style="magenta")
+    table.add_column("Current", style="yellow")
+    table.add_column("Latest", style="green")
+    table.add_column("Status", style="bold")
+
+    for pkg in packages:
+        pkg_type = "dev" if pkg.is_dev else "main"
+        current = pkg.current_version or "*"
+        latest = pkg.latest_version or "N/A"
+
+        # Determine status
+        if pkg.latest_version is None:
+            status = "❓ Unknown"
+        elif pkg.current_version is None:
+            status = "📦 Available"
+        elif pkg.current_version == pkg.latest_version:
+            status = "✅ Up to date"
+        else:
+            status = "🔄 Update available"
+
+        table.add_row(pkg.name, pkg_type, current, latest, status)
+
+    return table
+
+
+def main():
+    """Main function to run the package version checker."""
+    pyproject_path = Path("pyproject.toml")
+
+    if not pyproject_path.exists():
+        print("❌ pyproject.toml not found in current directory")
+        return
+
+    console = Console()
+
+    with console.status("[bold green]Parsing pyproject.toml..."):
+        packages = PyprojectParser.parse_pyproject(pyproject_path)
+
+    pypi_client = PyPIClient()
+
+    try:
+        with console.status("[bold green]Fetching latest versions..."):
+            for pkg in packages:
+                pkg.latest_version = pypi_client.get_latest_version(pkg.name)
+    finally:
+        pypi_client.close()
+
+    # Display results
+    table = create_comparison_table(packages)
+    console.print(table)
+
+    # Summary
+    total = len(packages)
+    up_to_date = sum(
+        1
+        for pkg in packages
+        if pkg.current_version and pkg.current_version == pkg.latest_version
+    )
+    updates_available = sum(
+        1
+        for pkg in packages
+        if pkg.current_version
+        and pkg.latest_version
+        and pkg.current_version != pkg.latest_version
+    )
+    unpinned = sum(1 for pkg in packages if pkg.current_version is None)
+
+    console.print(
+        f"\n📊 Summary: {total} packages total, {up_to_date} up to "
+        f"date, {updates_available} updates available, "
+        f"{unpinned} unpinned"
+    )
+
+
+if __name__ == "__main__":
+    main()
