@@ -24,6 +24,7 @@ else
 fi
 
 # {{ template "scripts/download_helpers.sh" . }}
+# {{ template "scripts/service_helpers.sh" . }}
 
 packages=(
     # Graphics
@@ -91,19 +92,11 @@ packages=(
     tumbler
     xarchiver
 )
-
 aur_pkgs=(
     # Hyperland and Wayland
     wlogout
 )
-
-for pkg in "${packages[@]}"; do
-    install_package_pacman "$pkg"
-done
-
-for pkg in "${aur_pkgs[@]}"; do
-    install_package_aur "$pkg"
-done
+install_packages_from_arrays
 
 
 system_services=(
@@ -120,23 +113,7 @@ user_services=(
     wireplumber.service
 )
 
-echo "Enable some system services.."
-for service in "${system_services[@]}"; do
-    if sudo systemctl is-active --quite "$service" >/dev/null 2>&1; then
-        pass
-    else
-        sudo systemctl enable --now "$service"
-    fi
-done
-
-echo "Enable some user services.."
-for uservice in "${user_services[@]}"; do
-    if systemctl --user is-active --quite "$uservice" >/dev/null 2>&1; then
-        pass
-    else
-        systemctl --user enable --now "$uservice"
-    fi
-done
+enable_services_from_arrays
 
 # Check if the 'input' group exists
 if grep -q '^input:' /etc/group; then
@@ -156,12 +133,12 @@ xdg-mime default thunar.desktop application/x-wayland-gnome-saved-search
 # some variable
 echo "local bin directory setup"
 LOCALBIN=$HOME/.local/bin
-[ -d "$LOCALBIN" ] && echo "directory exists" || mkdir -p $LOCALBIN
+[ -d "$LOCALBIN" ] || mkdir -p "$LOCALBIN"
 
 echo "set ZSH to default"
 zsh=$(which zsh)
 if [ "$SHELL" != "$zsh" ]; then
-    sudo chsh -s "$zsh" $USER
+    sudo chsh -s "$zsh" "$(whoami)"
 fi
 
 sudo sysctl fs.inotify.max_user_watches=100000

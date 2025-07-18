@@ -48,10 +48,4 @@ aur_pkgs=(
     lowfi
 )
 
-for pkg in "${packages[@]}"; do
-    install_package_pacman "$pkg"
-done
-
-for pkg in "${aur_pkgs[@]}"; do
-    install_package_aur "$pkg"
-done
+install_packages_from_arrays

@@ -2,6 +2,8 @@
 # vim: set expandtab ft=bash ts=4 tw=4:
 set -euo pipefail
 
+# {{ template "scripts/service_helpers.sh" . }}
+
 BASE_DIR=/etc/geoclue/conf.d
 GAMMASTEP="$BASE_DIR"/99-gammastep.conf
 STATIC_LOCATION=/etc/geolocation
@@ -23,6 +25,4 @@ sudo tee "$STATIC_LOCATION" << EOF
 {{ includeTemplate ".chezmoitemplates/encryption/geoclue" | decrypt | trim }}
 EOF
 
-if ! systemctl --user is-enabled --quiet geoclue-agent.service; then
-    systemctl enable --user --now geoclue-agent.service
-fi
+enable_user_services geoclue-agent.service
