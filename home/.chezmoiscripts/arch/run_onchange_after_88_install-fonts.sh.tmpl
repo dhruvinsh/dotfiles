@@ -5,19 +5,27 @@
 # {{ template "scripts/download_helpers.sh" . }}
 
 fonts=(
+    # Reference: https://github.com/davgar99/arch-linux-font-improvement-guide
+    # Recommended
     adobe-source-code-pro-fonts 
     noto-fonts
+    noto-fonts-cjk
     noto-fonts-emoji
-    otf-font-awesome 
-    ttf-cascadia-code-nerd
+    noto-fonts-extra
+    ttf-liberation
+    ttf-roboto
     ttf-droid 
+    otf-font-awesome 
+
+    # Personal choices
+    ttf-noto-nerd
+    ttf-cascadia-code-nerd
     ttf-fantasque-nerd
     ttf-firacode-nerd
     ttf-iosevka-nerd
     ttf-jetbrains-mono-nerd
     ttf-nerd-fonts-symbols
     ttf-victor-mono-nerd
-
 )
 for font in "${fonts[@]}"; do
     install_package_pacman "$font"
@@ -44,6 +52,107 @@ for font in $MAPLE; do
     rm -rf "$TEMP_DST"
 done
 
+
+# Arch fontconfig configuration
+mkdir -p "$HOME/.config/fontconfig"
+mkdir -p "$HOME/.config/fontconfig/conf.d"
+
+# tee "$HOME/.config/fontconfig/fonts.conf"<<EOF
+# <?xml version="1.0"?>
+# <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+# <fontconfig>
+#   <!-- Apply text rasterization, hinting, and anti-aliasing -->
+#   <match target="font">
+#     <edit name="antialias" mode="assign">
+#       <bool>true</bool>
+#     </edit>
+#     <edit name="hinting" mode="assign">
+#       <bool>true</bool>
+#     </edit>
+#     <edit name="rgba" mode="assign">
+#       <const>rgb</const>
+#     </edit>
+#     <edit name="hintstyle" mode="assign">
+#       <const>hintslight</const>
+#     </edit>
+#     <edit name="lcdfilter" mode="assign">
+#       <const>lcddefault</const>
+#     </edit>
+#   </match>
+#   <!-- Configure default fonts & fallback fonts -->
+#   <!-- Replace fonts with preferred fonts -->
+#   <!-- Noto Emoji allows for emojis to render in all apps including the terminal, remove if not needed  -->
+#   <alias>
+#     <family>serif</family>
+#     <prefer>
+#       <family>Noto Color Emoji</family>
+#       <family>Noto Serif</family>
+#       <family>NotoSerif NF</family>
+#     </prefer>
+#   </alias>
+#   <alias>
+#     <family>sans-serif</family>
+#     <prefer>
+#       <family>Noto Color Emoji</family>
+#       <family>Noto Sans</family>
+#       <family>NotoSans NF</family>
+#     </prefer>
+#   </alias>
+#   <alias>
+#     <family>sans</family>
+#     <prefer>
+#       <family>Noto Color Emoji</family>
+#       <family>Noto Sans</family>
+#       <family>NotoSans NF</family>
+#     </prefer>
+#   </alias>
+#   <alias>
+#     <family>monospace</family>
+#     <prefer>
+#       <family>Noto Color Emoji</family>
+#       <family>JetBrains Mono</family>
+#       <family>JetBrainsMono NF</family>
+#     </prefer>
+#   </alias>
+#   <alias>
+#     <family>mono</family>
+#     <prefer>
+#       <family>Noto Color Emoji</family>
+#       <family>JetBrains Mono</family>
+#       <family>JetBrainsMono NF</family>
+#     </prefer>
+#   </alias>
+# </fontconfig>
+# EOF
+
+tee "$HOME/.config/fontconfig/conf.d/20-no-embedded.conf"<<EOF
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+<fontconfig>
+  <match target="font">
+    <edit name="embeddedbitmap" mode="assign">
+      <bool>false</bool>
+    </edit>
+  </match>
+</fontconfig>
+EOF
+
+# Some symlinks
+sudo ln -s /usr/share/fontconfig/conf.avail/10-sub-pixel-rgb.conf /etc/fonts/conf.d/
+sudo ln -s /usr/share/fontconfig/conf.avail/10-hinting-slight.conf /etc/fonts/conf.d/
+sudo ln -s /usr/share/fontconfig/conf.avail/11-lcdfilter-default.conf /etc/fonts/conf.d/
+
+# freetype2.sh File
+FILE="/etc/profile.d/freetype2.sh"
+LINE='#export FREETYPE_PROPERTIES="truetype:interpreter-version=40"'
+UNCOMMENTED='export FREETYPE_PROPERTIES="truetype:interpreter-version=40"'
+
+if grep -Fxq "$LINE" "$FILE"; then
+    sudo sed -i "s|^$LINE\$|$UNCOMMENTED|" "$FILE"
+    echo "--> freetype2.sh updated to use interpreter version 40"
+else
+    echo "--> freetype2.sh already has the correct interpreter version set"
+fi
 
 echo "--> updating fonts cache"
 sudo fc-cache -fv
