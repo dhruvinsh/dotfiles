@@ -28,10 +28,30 @@ if [ -z "$CLIP_CMD" ]; then
   echo "No clipboard tool found (xsel, wl-copy, pbcopy required for copy support)." >&2
 fi
 
+_ping_host() {
+  local host="$1"
+  if [[ -z "$host" ]]; then
+    return
+  fi
+
+  local hostname
+  hostname=$(ssh -G "$host" 2>/dev/null | rg -oP '^hostname\s+\K.+')
+
+  if [[ -z "$hostname" ]]; then
+    hostname="$host"
+  fi
+
+  ping "$hostname"
+}
+export -f _ping_host
+
 # reference: https://www.jamesridgway.co.uk/list-ssh-hosts-from-your-ssh-config/
 data=$(rg -P "^Host ([^*]+)$" "$HOME"/.ssh/config | sed 's/Host //')
 
-selected=$(echo "$data" | fzf --header 'Press CTRL-Y to copy host name to the clipboard' --style full --cycle --height=15 --reverse --multi --bind "ctrl-y:execute-silent(echo -n {+} | $CLIP_CMD )+clear-selection+bell")
+selected=$(echo "$data" | fzf --header 'Press CTRL-Y to copy, CTRL-P to ping' \
+  --style full --cycle --height=15 --reverse --multi \
+  --bind "ctrl-y:execute-silent(echo -n {+} | $CLIP_CMD )+clear-selection+bell" \
+  --bind "ctrl-p:execute(bash -c '_ping_host "{}"')")
 
 if [ -z "$selected" ]; then
   echo "no valid host found"
