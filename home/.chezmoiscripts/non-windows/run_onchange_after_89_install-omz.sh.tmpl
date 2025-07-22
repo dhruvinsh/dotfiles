@@ -1,0 +1,22 @@
+#!/bin/bash
+# vim: set expandtab ts=4 sw=4 ft=sh:
+
+TARGET="$HOME"/.oh-my-zsh/custom/completions/_semver
+echo "Setting up zsh completion for semver..."
+echo "" > "$TARGET"
+tee "$TARGET" >/dev/null << 'EOF'
+#compdef semver
+
+# zsh completion for the semver script
+
+_semver() {
+    _arguments -s -S \
+        '1:action:(major minor patch)' \
+        '(-f --file)--file=[Path to the version file]:file:_files' \
+        '(-f --file)-f=[Path to the version file]:file:_files' \
+        '--no-git[Skip creating a git tag]' \
+        '--force-file[Force using the version file even in npm/uv projects]'
+}
+
+_semver
+EOF

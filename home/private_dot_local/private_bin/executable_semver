@@ -1,0 +1,309 @@
+#!/usr/bin/env -S uv run --script
+#
+# /// script
+# requires-python = ">=3.12"
+# dependencies = []
+# ///
+"""
+Semantic Version Management Tool
+
+A tool to read version files and bump semantic versions (major.minor.patch).
+"""
+
+import argparse
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+from typing import Optional, Tuple
+
+import tomllib
+
+
+class SemverTool:
+    def __init__(self, version_file: str = "version"):
+        self.version_file = Path(version_file)
+        self.package_json = Path("package.json")
+        self.pyproject_toml = Path("pyproject.toml")
+        self.is_git_repo = self._check_git_repo()
+        self.is_npm_project = self._check_npm_project()
+        self.is_uv_project = self._check_uv_project()
+
+    def _check_git_repo(self) -> bool:
+        """Check if current directory is a git repository."""
+        try:
+            _ = subprocess.run(
+                ["git", "rev-parse", "--git-dir"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return True
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            return False
+
+    def _check_npm_project(self) -> bool:
+        """Check if current directory is an npm project (has package.json)."""
+        return self.package_json.exists()
+
+    def _check_uv_project(self) -> bool:
+        """Check if current directory is a uv project (has pyproject.toml)."""
+        return self.pyproject_toml.exists()
+
+    def read_version(self) -> Optional[Tuple[str, str]]:
+        """Read version from version file. Returns (prefix, version) tuple."""
+        if not self.version_file.exists():
+            return None
+
+        content = self.version_file.read_text().strip()
+        # Support various formats: "1.2.3", "v1.2.3", or just "1.2.3" with extra text
+        version_match = re.search(r"(v?)(\d+\.\d+\.\d+)", content)
+        if version_match:
+            prefix = version_match.group(1)
+            version = version_match.group(2)
+            return prefix, version
+        return None
+
+    def parse_version(self, version: str) -> Tuple[int, int, int]:
+        """Parse semantic version string into major, minor, patch integers."""
+        try:
+            major, minor, patch = map(int, version.split("."))
+            return major, minor, patch
+        except ValueError:
+            raise ValueError(f"Invalid semantic version format: {version}")
+
+    def format_version(self, major: int, minor: int, patch: int) -> str:
+        """Format version tuple into semantic version string."""
+        return f"{major}.{minor}.{patch}"
+
+    def bump_major(self, version: str) -> str:
+        """Bump major version (reset minor and patch to 0)."""
+        major, _, _ = self.parse_version(version)
+        return self.format_version(major + 1, 0, 0)
+
+    def bump_minor(self, version: str) -> str:
+        """Bump minor version (reset patch to 0)."""
+        major, minor, _ = self.parse_version(version)
+        return self.format_version(major, minor + 1, 0)
+
+    def bump_patch(self, version: str) -> str:
+        """Bump patch version."""
+        major, minor, patch = self.parse_version(version)
+        return self.format_version(major, minor, patch + 1)
+
+    def write_version(self, prefix: str, version: str) -> None:
+        """Write version to version file with prefix."""
+        full_version = f"{prefix}{version}"
+        self.version_file.write_text(full_version + "\n")
+
+    def create_git_tag(self, prefix: str, version: str) -> bool:
+        """Create git tag for the version."""
+        if not self.is_git_repo:
+            return False
+
+        tag_name = f"{prefix}{version}"
+        try:
+            subprocess.run(["git", "tag", tag_name], check=True, capture_output=True)
+            print(f"Created git tag: {tag_name}")
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to create git tag: {e.stderr.decode().strip()}")
+            return False
+
+    def get_npm_version(self) -> Optional[str]:
+        """Get version from package.json."""
+        if not self.is_npm_project:
+            return None
+
+        try:
+            with open(self.package_json) as f:
+                package_data = json.load(f)
+                return package_data.get("version")
+        except (json.JSONDecodeError, FileNotFoundError):
+            return None
+
+    def npm_version_bump(self, bump_type: str, no_git: bool = False) -> Optional[str]:
+        """Use npm version to bump version."""
+        if not self.is_npm_project:
+            return None
+
+        cmd = ["npm", "version", bump_type]
+        if no_git:
+            cmd.append("--no-git-tag-version")
+
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+            print(f"npm version failed: {e.stderr.strip()}")
+            return None
+
+    def get_uv_version(self) -> Optional[str]:
+        """Get version from pyproject.toml."""
+        if not self.is_uv_project:
+            return None
+
+        try:
+            with open(self.pyproject_toml, "rb") as f:
+                pyproject_data = tomllib.load(f)
+                return pyproject_data.get("project", {}).get("version")
+        except (tomllib.TOMLDecodeError, FileNotFoundError):
+            return None
+
+    def uv_version_bump(self, bump_type: str) -> Optional[str]:
+        """Use uv version to bump version."""
+        if not self.is_uv_project:
+            return None
+
+        cmd = ["uv", "version", "--bump", bump_type]
+
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            # Parse output like "semver-test 1.0.0 => 1.0.1"
+            output_lines = result.stdout.strip().split("\n")
+            for line in output_lines:
+                if "=>" in line:
+                    parts = line.split(" => ")
+                    if len(parts) >= 2:
+                        new_version = parts[1].strip()
+                        # Validate that the output is a valid version string
+                        if re.fullmatch(r"v?\d+\.\d+\.\d+", new_version):
+                            return new_version
+            print(
+                f"Could not parse new version from uv output: {result.stdout.strip()}"
+            )
+            return None
+        except subprocess.CalledProcessError as e:
+            print(f"uv version failed: {e.stderr.strip()}")
+            return None
+
+    def get_current_version(self) -> Tuple[str, str]:
+        """Get current version or default to ('', '0.0.0')."""
+        # Priority: uv > npm > version file
+        if self.is_uv_project:
+            uv_version = self.get_uv_version()
+            if uv_version:
+                version_match = re.search(r"(v?)(\d+\.\d+\.\d+)", uv_version)
+                if version_match:
+                    return version_match.group(1), version_match.group(2)
+                return "", uv_version
+
+        if self.is_npm_project:
+            npm_version = self.get_npm_version()
+            if npm_version:
+                version_match = re.search(r"(v?)(\d+\.\d+\.\d+)", npm_version)
+                if version_match:
+                    return version_match.group(1), version_match.group(2)
+                return "", npm_version
+
+        # Fall back to version file
+        current = self.read_version()
+        if current is None:
+            print(f"Version file '{self.version_file}' not found, using 0.0.0")
+            return "", "0.0.0"
+        return current
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Semantic version management tool",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  semver                    # Show current version
+  semver major              # Bump major version (uses npm/uv version if available)
+  semver minor              # Bump minor version  
+  semver patch              # Bump patch version
+  semver -f myversion.txt   # Use custom version file
+  semver major --no-git     # Bump version without creating git tag
+  semver patch --force-file # Force use of version file instead of npm/uv version
+        """,
+    )
+
+    parser.add_argument(
+        "action",
+        nargs="?",
+        choices=["major", "minor", "patch"],
+        help="Version bump action (default: show current version)",
+    )
+
+    parser.add_argument(
+        "-f", "--file", default="version", help="Version file path (default: version)"
+    )
+
+    parser.add_argument("--no-git", action="store_true", help="Skip git tag creation")
+
+    parser.add_argument(
+        "--force-file",
+        action="store_true",
+        help="Force use of version file instead of npm/uv version (even in npm/uv projects)",
+    )
+
+    args = parser.parse_args()
+
+    tool = SemverTool(args.file)
+
+    if args.action is None:
+        # Show current version
+        prefix, current = tool.get_current_version()
+        print(f"{prefix}{current}")
+        sys.exit(0)
+
+    prefix, current = tool.get_current_version()
+    print(f"Current version: {prefix}{current}")
+
+    # Determine bump mode
+    use_uv = tool.is_uv_project and not args.force_file
+    use_npm = tool.is_npm_project and not use_uv and not args.force_file
+
+    new_version = None
+    new_version_prefix = prefix
+
+    if use_uv:
+        new_version_str = tool.uv_version_bump(args.action)
+        if new_version_str:
+            match = re.search(r"(v?)((?:\d+\.){2}\d+)", new_version_str)
+            if match:
+                new_version_prefix, new_version = match.groups()
+                print(f"New version: {new_version_prefix}{new_version}")
+                if tool.is_git_repo and not args.no_git:
+                    if not tool.create_git_tag(new_version_prefix, new_version):
+                        sys.exit(1)  # Exit with error if tag fails
+            else:
+                print(f"Failed to parse new version from uv: {new_version_str}")
+                sys.exit(1)
+        else:
+            print("Failed to bump version with uv")
+            sys.exit(1)
+
+    elif use_npm:
+        new_version_output = tool.npm_version_bump(args.action, args.no_git)
+        if new_version_output:
+            print(f"New version: {new_version_output}")
+            # npm with --no-git-tag-version still updates package.json, so no extra git step needed
+        else:
+            print("Failed to bump version with npm")
+            sys.exit(1)
+
+    else:  # Use manual version file approach
+        if args.action == "major":
+            new_version = tool.bump_major(current)
+        elif args.action == "minor":
+            new_version = tool.bump_minor(current)
+        elif args.action == "patch":
+            new_version = tool.bump_patch(current)
+
+        tool.write_version(prefix, new_version)
+        print(f"New version: {prefix}{new_version}")
+
+        if tool.is_git_repo and not args.no_git:
+            if not tool.create_git_tag(prefix, new_version):
+                sys.exit(1)  # Exit with error if tag fails
+
+
+if __name__ == "__main__":
+    main()
+
+# vim: set ft=python:
+
