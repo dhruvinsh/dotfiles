@@ -10,38 +10,43 @@ README.org
 __pycache__/
 key.txt.age
 
-{{ if eq .chezmoi.os "windows" }}
+{{ if eq .chezmoi.os "windows" -}}
 .chezmoiscripts/non-windows/**
 .local/**
 !.local/bin/lowfi.exe
 .tmux.conf
 .zprofile
 .zshrc
-{{ end }}
+{{ end -}}
 
-{{ if ne .chezmoi.os "windows" }}
+{{ if ne .chezmoi.os "windows" -}}
 .chezmoiscripts/windows/**
 Documents/**
 AppData/**
-{{ end }}
+{{ end -}}
 
-{{ if ne .chezmoi.os "linux" }}
-.chezmoiscripts/linux/**
+{{ if ne .chezmoi.os "linux" -}}
 .config/fontconfig/**
 .hushlogin
 .profile
 .wallpaper/**
 .bash_aliases
-.local/share/applications/**
-.local/share/icons/**
-{{ end }}
+{{ end -}}
 
-{{ if ne .chezmoi.os "darwin" }}
+{{ if ne .chezmoi.os "darwin" -}}
 .chezmoiscripts/darwin/**
 Library/**
-{{ end }}
+{{ end -}}
 
-{{ if not .archlinux }}
+{{ if not .archlinux -}}
 .chezmoiscripts/arch/**
 .config/hypr
-{{ end }}
+{{ end -}}
+
+{{ if not .ubuntu -}}
+.chezmoiscripts/ubuntu/**
+{{ end -}}
+
+{{ if not (and (.ubuntu) (.isDesktop)) -}}
+.local/share/**
+{{ end -}}
