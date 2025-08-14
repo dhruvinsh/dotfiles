@@ -1,6 +1,10 @@
 #!/usr/bin/env sh
 # vim: set expandtab ft=sh ts=4 tw=4:
 
+{{- if eq .chezmoi.os "darwin" }}
+exit 0
+{{ end }}
+
 {{ template "scripts/download_helpers.sh" . }}
 
 # {{ $ageVersion := (gitHubLatestRelease "FiloSottile/age").TagName }}
