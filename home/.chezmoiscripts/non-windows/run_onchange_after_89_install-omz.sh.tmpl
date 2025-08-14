@@ -2,6 +2,7 @@
 # vim: set expandtab ts=4 sw=4 ft=sh:
 
 TARGET="$HOME"/.oh-my-zsh/custom/completions/_semver
+{{ if stat (joinPath .chezmoi.homeDir ".oh-my-zsh" "custom" "completions") }}
 echo "Setting up zsh completion for semver..."
 echo "" > "$TARGET"
 tee "$TARGET" >/dev/null << 'EOF'
@@ -20,3 +21,4 @@ _semver() {
 
 _semver
 EOF
+{{ end }}
