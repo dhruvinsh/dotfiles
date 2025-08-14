@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+# before setting up the dotfiles, lets make sure we setup all the
+# dependency.
+
+repositories=(
+    swayfx/swayfx
+    peterwu/rendezvous
+    erikreider/SwayNotificationCenter
+)
+packages=(
+    SwayNotificationCenter
+    bibata-cursor-themes
+    darkman
+    gammastep
+    kitty
+    mpv
+    obs-studio
+    picom
+    remmina
+    rofi
+    swayfx
+    waybar
+    wdisplays
+    wlogout
+)
+
+############################
+# Installation starts here #
+############################
+for repository in "${repositories[@]}"; do
+    # Only enable copr if not already enabled
+    if ! sudo dnf copr list | grep -q "^${repository}$"; then
+        sudo dnf copr enable --assumeyes "${repository}"
+    else
+        echo "Copr ${repository} already enabled. Skipping."
+    fi
+done
+
+# install all the packages
+# Only install packages that are not already installed
+to_install=()
+for pkg in "${packages[@]}"; do
+    if ! rpm -q "$pkg" &>/dev/null; then
+        to_install+=("$pkg")
+    else
+        echo "$pkg is already installed. Skipping."
+    fi
+done
+if [ ${#to_install[@]} -gt 0 ]; then
+    sudo dnf install --assumeyes "${to_install[@]}"
+else
+    echo "All packages already installed."
+fi

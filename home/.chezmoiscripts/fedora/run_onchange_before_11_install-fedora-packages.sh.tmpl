@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+# {{ template "scripts/download_helpers.sh" . }}
+
+repositories=()
+packages=(
+    aspell
+    neovim
+    curl
+    editorconfig
+    ethtool
+    jq
+    luarocks
+    openssh-server
+    ranger
+    tar
+    unzip
+    wget
+    zsh
+)
+
+# some measureing tools
+packages+=(
+    btop
+    htop
+    iftop
+    iotop
+)
+
+# some c++ setup
+packages+=(
+    automake
+    clang
+    clangd
+    cmake
+    make
+    gcc-c++
+)
+
+# pyenv dependency
+packages+=(
+    make
+    gcc
+    patch
+    zlib-devel
+    bzip2
+    bzip2-devel
+    readline-devel
+    sqlite
+    sqlite-devel
+    openssl-devel
+    tk-devel
+    libffi-devel
+    xz-devel
+    libuuid-devel
+    gdbm-libs
+    libnsl2
+)
+
+# neovim lang support
+packages+=(
+    luajit-devel
+)
+
+# tools
+packages+=(
+    bat
+    fd-find
+    gh
+    golang
+    hyperfine
+    ripgrep
+    syncthing
+    tmux
+)
+
+############################
+# Installation starts here #
+############################
+sudo dnf upgrade --refresh
+
+for repository in "${repositories[@]}"; do
+    sudo dnf corp enable --assumeyes "${repository}"
+done
+
+# install all the packages
+sudo dnf install --assumeyes "${packages[@]}"
+
+# some variable setups here
+echo "local bin directory setup"
+LOCALBIN=$HOME/.local/bin
+[ -d "$LOCALBIN" ] || mkdir -p "${LOCALBIN}"
+
+echo "set ZSH to default"
+if [ "$SHELL" != "/usr/bin/zsh" ]; then
+    sudo chsh -s "$(which zsh)" "${USER}"
+fi
+
+# enable sycthing service
+sudo systemctl enable --now syncthing@"${USER}".service
+
+# sudo sysctl fs.inotify.max_user_watches=100000
+# sudo sysctl fs.inotify.max_queued_events=100000
