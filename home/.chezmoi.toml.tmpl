@@ -20,16 +20,17 @@ encryption = "age"
 
 {{- $archlinux    := false -}}
 {{- $ubuntu       := false -}}
+{{- $fedora       := false -}}
 {{- $desktopEnv   := false }}
 
 {{- if eq .chezmoi.os "linux" -}}
 {{/*  arch or ubuntu */}}
 {{-   if eq .chezmoi.osRelease.name "Arch Linux" }}
 {{-     $archlinux = true -}}
-{{-     $ubuntu = false -}}
-{{-   else }}
-{{-     $archlinux = false -}}
+{{-   else if eq .chezmoi.osRelease.name "Ubuntu" }}
 {{-     $ubuntu = true -}} 
+{{-   else if eq .chezmoi.osRelease.name "Fedora Linux" }}
+{{-     $fedora = true -}}
 {{-   end -}}
 {{/*  is it desktop version linux? */}}
 {{-   if (env "XDG_CURRENT_DESKTOP") -}}
@@ -81,6 +82,7 @@ encryption = "age"
   wsl2 = {{ $wsl2 }}
   archlinux = {{ $archlinux }}
   ubuntu = {{ $ubuntu }}
+  fedora = {{ $fedora }}
   isDesktop = {{ $desktopEnv }}
   chassisType = {{ $chassisType | quote }}
   sshSession = {{ $sshSession }}

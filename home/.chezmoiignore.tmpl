@@ -47,6 +47,10 @@ Library/**
 .chezmoiscripts/ubuntu/**
 {{ end -}}
 
+{{ if not .fedora -}}
+.chezmoiscripts/fedora/**
+{{ end -}}
+
 {{ if not (and (.ubuntu) (.isDesktop)) -}}
 .local/share/**
 {{ end -}}
