@@ -1,0 +1,122 @@
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "actions": [],
+    "alwaysShowNotificationIcon": false,
+    "compatibility.allowHeadless": true,
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "defaultProfile": "{51855cb2-8cce-5362-8f54-464b92b32386}",
+    "firstWindowPreference": "persistedWindowLayout",
+    "keybindings":
+    [
+        {
+            "id": null,
+            "keys": "enter"
+        },
+        {
+            "id": "Terminal.DuplicatePaneAuto",
+            "keys": "alt+shift+d"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+d"
+        }
+    ],
+    "newTabMenu":
+    [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
+    "newTabPosition": "afterCurrentTab",
+    "profiles":
+    {
+        "defaults":
+        {
+            "bellStyle": "none",
+            "colorScheme": "Custom",
+            "font":
+            {
+                "face": "JetBrainsMono NF"
+            },
+            "historySize": 100000,
+            "opacity": 80,
+            "useAcrylic": true
+        },
+        "list":
+        [
+            {
+                "commandline": "%SystemRoot%\\System32\\cmd.exe",
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": false,
+                "name": "Command Prompt"
+            },
+            {
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "hidden": false,
+                "name": "PowerShell",
+                "source": "Windows.Terminal.PowershellCore"
+            },
+            {
+                "guid": "{51855cb2-8cce-5362-8f54-464b92b32386}",
+                "hidden": false,
+                "name": "Ubuntu",
+                "source": "CanonicalGroupLimited.Ubuntu_79rhkp1fndgsc"
+            }
+        ]
+    },
+    "schemes":
+    [
+        {
+            "background": "{{ upper .colorScheme.base }}",
+            "black": "{{ upper .colorScheme.surface1 }}",
+            "blue": "{{ upper .colorScheme.blue }}",
+            "brightBlack": "{{ upper .colorScheme.surface2 }}",
+            "brightBlue": "{{ upper .colorScheme.blue }}",
+            "brightCyan": "{{ upper .colorScheme.teal }}",
+            "brightGreen": "{{ upper .colorScheme.green }}",
+            "brightPurple": "{{ upper .colorScheme.pink }}",
+            "brightRed": "{{ upper .colorScheme.red }}",
+            "brightWhite": "{{ upper .colorScheme.subtext0 }}",
+            "brightYellow": "{{ upper .colorScheme.yellow }}",
+            "cursorColor": "{{ upper .colorScheme.rosewater }}",
+            "cyan": "{{ upper .colorScheme.teal }}",
+            "foreground": "{{ upper .colorScheme.text }}",
+            "green": "{{ upper .colorScheme.green }}",
+            "name": "Custom",
+            "purple": "{{ upper .colorScheme.pink }}",
+            "red": "{{ upper .colorScheme.red }}",
+            "selectionBackground": "{{ upper .colorScheme.surface2 }}",
+            "white": "{{ upper .colorScheme.subtext1 }}",
+            "yellow": "{{ upper .colorScheme.yellow }}"
+        }
+    ],
+    "themes":
+    [
+        {
+            "name": "Custom",
+            "tab":
+            {
+                "background": "{{ upper .colorScheme.base }}FF",
+                "iconStyle": "default",
+                "showCloseButton": "always",
+                "unfocusedBackground": null
+            },
+            "tabRow":
+            {
+                "background": "{{ upper .colorScheme.mantle }}FF",
+                "unfocusedBackground": "{{ upper .colorScheme.crust }}FF"
+            },
+            "window":
+            {
+                "applicationTheme": "dark",
+                "experimental.rainbowFrame": false,
+                "frame": null,
+                "unfocusedFrame": null,
+                "useMica": false
+            }
+        }
+    ],
+    "useAcrylicInTabRow": true
+}
