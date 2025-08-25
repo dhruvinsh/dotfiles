@@ -6,11 +6,16 @@ dialect = "us"
 ## enable or disable automatic update checks
 update_check = true
 
-# {{- if eq .personalmachine true }}
+# {{- if .personalmachine }}
 ## enable or disable automatic sync
 auto_sync = true
 ## address of the sync server
 sync_address = "https://atuin.ds-nas.com"
+# {{ else }}
+## enable or disable automatic sync
+auto_sync = true
+## address of the sync server
+sync_address = "http://10.16.136.20:8888"
 # {{- end }}
 
 ## how often to sync history. note that this is only triggered when a command
