@@ -8,3 +8,5 @@
 __mypy__
 __pycache__
 node_modules/**
+
+**/.claude/settings.local.json
