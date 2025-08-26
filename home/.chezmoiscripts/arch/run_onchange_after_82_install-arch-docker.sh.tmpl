@@ -6,24 +6,11 @@ set -euo pipefail
 # {{ template "scripts/service_helpers.sh" . }}
 
 packages=(
-    adw-gtk-theme
     docker
     docker-buildx
     docker-compose
-    emacs-wayland
-    nvidia-container-toolkit
-    nwg-look
-    syncthing
-    zed
 )
 
-aur_pkgs=(
-    bibata-cursor-theme-bin
-    flat-remix
-    flat-remix-gtk
-    visual-studio-code-bin
-    zen-browser-bin
-)
 install_packages_from_arrays
 
 docker_native_diff="/etc/modprobe.d/disable-overlay-redirect-dir.conf"
@@ -49,10 +36,15 @@ if [ ! -f "$docker_daemon" ]; then
 EOF
 fi
 
+if [ "$(getent group docker)" ]; then
+    echo "docker group exists."
+else
+    sudo groupadd docker
+fi
+
+sudo usermod -aG docker "$USER"
+
 system_services=(
     docker.socket
-)
-user_services=(
-    syncthing.service
 )
 enable_services_from_arrays

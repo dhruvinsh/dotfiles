@@ -1,0 +1,11 @@
+
+/* Color-Scheme */
+* {
+    main-bg: #1e1e2ee6; /* A semi-transparent dark background */
+    alt-bg:  #313244e6; /* An alternate background color */
+    main-fg: #cdd6f4ff; /* A light foreground color */
+    main-br: #89b4faff; /* A blueish color for borders */
+    main-ex: #f38ba8ff; /* A reddish color for accents */
+    select-bg: #89b4faff; /* Blueish selection background */
+    select-fg: #1e1e2eff; /* Dark selection foreground */
+}
