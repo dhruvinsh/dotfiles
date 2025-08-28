@@ -151,26 +151,26 @@ f() {
 }
 
 cuda_switch() {
-    local versions=("12.8" "12.9" "13.0")
-    local cuda_root="/usr/local"
-    local target="$1"
+  local versions=("12.8" "12.9" "13.0")
+  local cuda_root="/usr/local"
+  local target="$1"
 
-    if [[ ! " ${versions[*]} " =~ " ${target} " ]]; then
-        echo "Usage: cuda_switch <${versions[*]}>"
-        return 1
-    fi
+  if [[ ! " ${versions[*]} " =~ " ${target} " ]]; then
+      echo "Usage: cuda_switch <${versions[*]}>"
+      return 1
+  fi
 
-    # Remove any existing cuda/bin from PATH
-    PATH=$(echo "$PATH" | tr ':' '\n' | grep -v "^${cuda_root}/cuda" | paste -sd: -)
+  # Remove any existing cuda/bin from PATH
+  PATH=$(echo "$PATH" | tr ':' '\n' | grep -v "^${cuda_root}/cuda" | paste -sd: -)
 
-    export CUDA_HOME="${cuda_root}/cuda-${target}"
-    export PATH="${CUDA_HOME}/bin:$PATH"
-    export LD_LIBRARY_PATH="${CUDA_HOME}/lib64"
+  export CUDA_HOME="${cuda_root}/cuda-${target}"
+  export PATH="${CUDA_HOME}/bin:$PATH"
+  export LD_LIBRARY_PATH="${CUDA_HOME}/lib64"
 
-    # For convenience, you can also make /usr/local/cuda point to the selected version (optional, needs sudo)
-    # sudo ln -sfn "${CUDA_HOME}" "${cuda_root}/cuda"
+  # For convenience, you can also make /usr/local/cuda point to the selected version (optional, needs sudo)
+  # sudo ln -sfn "${CUDA_HOME}" "${cuda_root}/cuda"
 
-    echo "Switched to CUDA ${target}. (PATH updated, LD_LIBRARY_PATH set)"
+  echo "Switched to CUDA ${target}. (PATH updated, LD_LIBRARY_PATH set)"
 }
 
 {{- /* vim: set filetype=zsh ts=2 sw=2: */}}
