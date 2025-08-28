@@ -71,9 +71,9 @@ DISABLE_AUTO_UPDATE="true"
 [[ -d $HOME/.zsh ]] && source $HOME/.zsh/zsh-syntax-highlighting.zsh
 
 plugins=(
-  {{ if eq .chezmoi.os "darwin" -}}
+  {{- if eq .chezmoi.os "darwin" }}
   brew
-  {{ end }}
+  {{- end }}
   git
   mise
   zoxide
