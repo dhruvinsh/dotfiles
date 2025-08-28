@@ -116,6 +116,10 @@ export DISPLAY=:0
 # https://github.com/microsoft/wslg/wiki/GPU-selection-in-WSLg
 export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
 export PATH=/usr/lib/wsl/lib:$PATH
+
+# In wsl some annoying windows paths get added, some are useful and some aren't
+# let's remove the annoying ones
+export PATH=$(echo $PATH | tr ":" "\n" | rg -vi appdata | paste -sd':' -)
 {{- end}}
 
 ##################################################################
