@@ -27,6 +27,11 @@
   url  = {{ gitHubLatestReleaseAssetURL "jtroo/kanata" $kanata | quote }}
   executable = true
 
+[".local/bin/semver"]
+  type = "file"
+  url = "https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver"
+  executable = true
+
 {{ if eq .chezmoi.os "linux" }}
 
 [".local/bin/atuin"]
