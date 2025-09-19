@@ -125,7 +125,7 @@ export PATH=$(echo $PATH | tr ":" "\n" | rg -vi appdata | paste -sd':' -)
 ##################################################################
 # User functions
 csv() {
-  uvx visidata "$@"
+  uvx --with openpyxl visidata "$@"
 }
 
 llm() {
