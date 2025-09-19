@@ -1,7 +1,29 @@
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": [],
+    "actions":
+    [
+        {
+            "command": "duplicateTab",
+            "id": "User.duplicateTab"
+        },
+        {
+            "command":
+            {
+                "action": "splitPane",
+                "split": "right"
+            },
+            "id": "User.splitPane.864CD510"
+        },
+        {
+            "command":
+            {
+                "action": "splitPane",
+                "split": "down"
+            },
+            "id": "User.splitPane.D5151347"
+        }
+    ],
     "alwaysShowNotificationIcon": false,
     "compatibility.allowHeadless": true,
     "copyFormatting": "none",
@@ -15,12 +37,40 @@
             "keys": "enter"
         },
         {
-            "id": "Terminal.DuplicatePaneAuto",
+            "id": "User.duplicateTab",
             "keys": "alt+shift+d"
+        },
+        {
+            "id": "User.splitPane.D5151347",
+            "keys": "alt+shift+minus"
         },
         {
             "id": null,
             "keys": "ctrl+shift+d"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+k"
+        },
+        {
+            "id": "Terminal.ClearBuffer",
+            "keys": "ctrl+l"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+insert"
+        },
+        {
+            "id": null,
+            "keys": "alt+shift+plus"
+        },
+        {
+            "id": "User.splitPane.864CD510",
+            "keys": "alt+shift+\\"
+        },
+        {
+            "id": null,
+            "keys": "shift+insert"
         }
     ],
     "newTabMenu":
@@ -58,6 +108,23 @@
                 "name": "PowerShell",
                 "source": "Windows.Terminal.PowershellCore"
             },
+            {{ if not .personalmachine -}}
+            {
+                "commandline": "C:\\cygwin64\\bin\\bash.exe -i -l",
+                "guid": "{9032051e-c4f9-49b4-9762-5aa3ccecedc5}",
+                "hidden": false,
+                "icon": "C:\\cygwin64\\Cygwin.ico",
+                "name": "Cygwin"
+            },
+            {
+                "commandline": "C:\\msys64\\msys2_shell.cmd -defterm -here -no-start -msys",
+                "guid": "{11e9f256-07d2-4579-9c32-5ae65297d143}",
+                "hidden": false,
+                "icon": "C:\\msys64\\msys2.ico",
+                "name": "Msys2",
+                "startingDirectory": "C:/msys64/home/%USERNAME%"
+            },
+            {{ end -}}
             {
                 "guid": "{51855cb2-8cce-5362-8f54-464b92b32386}",
                 "hidden": false,
