@@ -28,7 +28,7 @@ encryption = "age"
 {{-   if eq .chezmoi.osRelease.name "Arch Linux" }}
 {{-     $archlinux = true -}}
 {{-   else if eq .chezmoi.osRelease.name "Ubuntu" }}
-{{-     $ubuntu = true -}} 
+{{-     $ubuntu = true -}}
 {{-   else if eq .chezmoi.osRelease.name "Fedora Linux" }}
 {{-     $fedora = true -}}
 {{-   end -}}
@@ -93,15 +93,21 @@ encryption = "age"
   italic = "Maple Mono NF"
 
 {{/* UI Setup: ColorScheme */}}
+{{- $colorVariantChoices := list "light" "dark" -}}
+{{- $colorVariant := promptChoiceOnce . "colorVariant" "light or dark" $colorVariantChoices }}
 {{- $colorSchemChoices := list "catppuccin" "rose-pine" "tokyonight" "nvonedark" "onedark" "moonfly" -}}
 {{- $colorScheme := promptChoiceOnce . "colorScheme" "What color scheme to use" $colorSchemChoices }}
 
 [data.colorScheme]
   name = {{ $colorScheme | quote }}
-  
+
   # some colors that are not defined
   white = "#ffffff"
-  {{- $colorPallet := (includeTemplate (print "colors/" $colorScheme ".jsonc.tmpl") | fromJsonc) }}
+  {{- $colorPallets := (includeTemplate (print "colors/" $colorScheme ".jsonc.tmpl") | fromJsonc) }}
+  {{- $colorPallet := $colorPallets | jq (print "." $colorVariant) | first }}
+  {{- if (eq $colorPallet nil) }}
+  {{- $colorPallet = $colorPallets }}
+  {{- end }}
   {{- range $key, $val := $colorPallet }}
   {{ $key }} = {{ $val | quote }}
   {{- end }}
