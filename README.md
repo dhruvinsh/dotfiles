@@ -1,4 +1,6 @@
-# Dotfiles ☕️
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=300&color=gradient&text=~/.dotfiles%20☕&textBg=true&animation=fadeIn&desc=MacOS%20Windows%20Linux&descAlign=50&descSize=16&descAlignY=65&customColorList=16">
+</div>
 
 Collection of personal dotfile, managed via chezmoi.
 
