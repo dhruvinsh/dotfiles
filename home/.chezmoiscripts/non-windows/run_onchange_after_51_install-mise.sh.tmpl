@@ -11,5 +11,6 @@ fi
 
 # mise/config.toml sha256: {{  include "private_dot_config/mise/config.toml.tmpl" | sha256sum }}
 echo "Install/update mise packages 📦"
+mise self-update --yes
 mise install
 mise upgrade
