@@ -60,8 +60,12 @@ install_deb "$LOCALSEND" "localsend"
 SNIFFNET={{ gitHubLatestReleaseAssetURL "GyulyVGC/sniffnet" "Sniffnet_LinuxDEB_amd64.deb" | quote }}
 install_deb "$SNIFFNET" "sniffnet"
 
-# {{- if .personalmachine }}
+# obsidian
+OBSIDIAN={{ gitHubLatestReleaseAssetURL "obsidianmd/obsidian-releases" "obsidian_*_amd64.deb" | quote }}
+install_deb "$OBSIDIAN" "obsidian"
+
 ########################################################################################################################
+# {{- if .personalmachine }}
 BITWARDEN="https://vault.bitwarden.com/download/?app=desktop&platform={{ .chezmoi.os }}"
 FREECAD={{ gitHubLatestReleaseAssetURL "FreeCAD/FreeCAD" "FreeCAD_*-conda-linux-x86-64-py310.AppImage" | quote }}
 NEXTCLOUD={{ gitHubLatestReleaseAssetURL "nextcloud/desktop" "Nextcloud-*-x86_64.AppImage" | quote }}
