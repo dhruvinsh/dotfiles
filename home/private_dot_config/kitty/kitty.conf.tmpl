@@ -16,9 +16,11 @@ symbol_map U+E000-U+F8FF,U+F0000-U+FFFFF,U+100000-U+10ffff JetBrainsMonoNL Nerd 
 
 # Appearance
 include                    current-theme.conf
+{{- if .personalmachine }}
 background_opacity         0.8
 background_blur            16
 dynamic_background_opacity yes
+{{- end }}
 window_padding_width       20
 tab_bar_edge               bottom
 tab_bar_style              powerline
@@ -30,4 +32,3 @@ scrollback_lines           50000
 
 # Feedback
 enable_audio_bell          no
-cursor_trail               1
