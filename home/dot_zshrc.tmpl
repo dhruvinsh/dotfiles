@@ -75,6 +75,9 @@ plugins=(
   brew
   {{- end }}
   git
+  {{- if findExecutable "kubectl" (list "/usr/local/bin") }}
+  kubectl
+  {{- end }}
   mise
   zoxide
   zsh-syntax-highlighting
