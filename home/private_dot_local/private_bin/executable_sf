@@ -37,28 +37,35 @@ fi
 
 _ping_host() {
   local host="$1"
+  echo "Pinging: $host"
   if [[ -z "$host" ]]; then
+    echo "No host specified"
+    read -p "Press Enter to continue..."
     return
   fi
 
   local hostname
-  hostname=$($SSH_CMD -G "$host" 2>/dev/null | rg -oP '^hostname\s+\K.+')
+  hostname=$(ssh -G "$host" 2>/dev/null | rg -ioP '^hostname\s+\K.+')
 
   if [[ -z "$hostname" ]]; then
     hostname="$host"
   fi
 
-  ping "$hostname"
+  echo "Resolved to: $hostname"
+  ping -c 4 "$hostname"
+  echo ""
+  read -p "Press Enter to continue..."
 }
 export -f _ping_host
 
 # reference: https://www.jamesridgway.co.uk/list-ssh-hosts-from-your-ssh-config/
 data=$(rg -P "^Host ([^*]+)$" "$HOME"/.ssh/config | sed 's/Host //')
 
-selected=$(echo "$data" | fzf --header 'Press CTRL-Y to copy, CTRL-P to ping' \
+selected=$(echo "$data" | fzf --header 'Press CTRL-Y to copy, CTRL-P to ping, CTRL-S for plain SSH' \
   --style full --cycle --height=15 --reverse --multi \
   --bind "ctrl-y:execute-silent(echo -n {+} | $CLIP_CMD )+clear-selection+bell" \
-  --bind "ctrl-p:execute(bash -c '_ping_host "{}"')")
+  --bind "ctrl-p:execute(bash -c '_ping_host "{}"')" \
+  --bind "ctrl-s:execute(ssh {})+abort")
 
 if [ -z "$selected" ]; then
   echo "no valid host found"
