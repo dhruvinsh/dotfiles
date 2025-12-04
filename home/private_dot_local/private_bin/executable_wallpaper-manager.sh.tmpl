@@ -1,0 +1,233 @@
+#!/usr/bin/env bash
+
+# Wallpaper Manager for i3/feh with Rofi
+# Generates thumbnails and blurred versions for rofi display
+
+# Configuration
+WALLPAPER_DIR="${WALLPAPER_DIR:-$HOME/Pictures/wallpapers}"
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/wallpapers"
+CURRENT_WALL="$CACHE_DIR/current.txt"
+THUMBNAIL_SIZE=500
+THUMBNAIL_DIR="$CACHE_DIR/thumbs"
+
+# Create necessary directories
+mkdir -p "$CACHE_DIR" "$THUMBNAIL_DIR"
+
+# Generate hash for wallpaper
+get_hash() {
+    echo -n "$1" | sha256sum | cut -d' ' -f1
+}
+
+# Generate thumbnails and blur for a wallpaper
+generate_cache() {
+    local wallpaper="$1"
+    local hash=$(get_hash "$wallpaper")
+    local thumb="$THUMBNAIL_DIR/${hash}.thumb"
+    local blur="$THUMBNAIL_DIR/${hash}.blur"
+
+    # Detect ImageMagick command
+    local img_cmd
+    if command -v magick >/dev/null 2>&1; then
+        img_cmd="magick"
+    elif command -v convert >/dev/null 2>&1; then
+        img_cmd="convert"
+    else
+        echo "Error: Neither 'magick' nor 'convert' found." >&2
+        return 1
+    fi
+
+    # Generate thumbnail if it doesn't exist
+    if [ !  -f "$thumb" ]; then
+        $img_cmd "$wallpaper" -strip -thumbnail ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}^ \
+            -gravity center -extent ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE} "$thumb" 2>/dev/null
+    fi
+
+    # Generate blur if it doesn't exist
+    if [ ! -f "$blur" ]; then
+        $img_cmd "$wallpaper" -strip -scale 10% -blur 0x3 -resize 100% "$blur" 2>/dev/null
+    fi
+
+    echo "$thumb"
+}
+
+# Set wallpaper with feh
+set_wallpaper() {
+    local wallpaper="$1"
+
+    if [ !  -f "$wallpaper" ]; then
+        notify-send "Wallpaper Error" "File not found: $wallpaper"
+        return 1
+    fi
+
+    # Set wallpaper with feh
+    feh --no-fehbg --bg-fill "$wallpaper"
+
+    # Save current wallpaper path
+    echo "$wallpaper" > "$CURRENT_WALL"
+
+    # Update symlinks for current wallpaper
+    local hash=$(get_hash "$wallpaper")
+    ln -sf "$THUMBNAIL_DIR/${hash}.thumb" "$CACHE_DIR/wall.thmb"
+    ln -sf "$THUMBNAIL_DIR/${hash}.blur" "$CACHE_DIR/wall.blur"
+    ln -sf "$wallpaper" "$CACHE_DIR/wall.current"
+
+    notify-send "Wallpaper Changed" "$(basename "$wallpaper")"
+}
+
+# Select wallpaper with rofi
+select_wallpaper() {
+    if [ !  -d "$WALLPAPER_DIR" ]; then
+        notify-send "Wallpaper Error" "Wallpaper directory not found: $WALLPAPER_DIR"
+        exit 1
+    fi
+
+    # Find all image files
+    local wallpapers=()
+    while IFS= read -r -d '' file; do
+        wallpapers+=("$file")
+    done < <(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) -print0 | sort -z)
+
+    if [ ${#wallpapers[@]} -eq 0 ]; then
+        notify-send "Wallpaper Error" "No wallpapers found in $WALLPAPER_DIR"
+        exit 1
+    fi
+
+    # Generate thumbnails and prepare rofi entries
+    local entries=""
+    local -A hash_to_path
+
+    for wall in "${wallpapers[@]}"; do
+        local thumb=$(generate_cache "$wall")
+        local hash=$(get_hash "$wall")
+        local basename=$(basename "$wall")
+
+        # Format: display_name\0icon\x1fthumbnail_path
+        entries+="${basename}\0icon\x1f${thumb}\n"
+        hash_to_path["$basename"]="$wall"
+    done
+    r_override="window{width:100%;}
+    listview{columns:5;spacing:5em;}
+    element{border-radius:10px;
+    orientation:vertical;}
+    element-icon{size:28em;border-radius:0em;}
+    element-text{padding:1em;}"
+
+    # Show rofi menu
+    local selected=$(echo -en "$entries" | rofi -dmenu \
+        -display-column-separator ":::"\
+        -display-columns 1 \
+        -theme-str '* {font: "{{ .font.regular }} 10";}'\
+        -theme-str "${r_override}" \
+        -theme '~/.config/rofi/styles/selector.rasi'\
+        -show-icons)
+
+    if [ -n "$selected" ]; then
+        set_wallpaper "${hash_to_path[$selected]}"
+    fi
+}
+
+# Change to next wallpaper
+next_wallpaper() {
+    local current=$(cat "$CURRENT_WALL" 2>/dev/null)
+    local wallpapers=($(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) | sort))
+
+    if [ ${#wallpapers[@]} -eq 0 ]; then
+        notify-send "Wallpaper Error" "No wallpapers found"
+        return 1
+    fi
+
+    local index=0
+    for i in "${!wallpapers[@]}"; do
+        if [ "${wallpapers[$i]}" = "$current" ]; then
+            index=$(( (i + 1) % ${#wallpapers[@]} ))
+            break
+        fi
+    done
+
+    generate_cache "${wallpapers[$index]}"
+    set_wallpaper "${wallpapers[$index]}"
+}
+
+# Change to previous wallpaper
+prev_wallpaper() {
+    local current=$(cat "$CURRENT_WALL" 2>/dev/null)
+    local wallpapers=($(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*. png" -o -iname "*.webp" \) | sort))
+
+    if [ ${#wallpapers[@]} -eq 0 ]; then
+        notify-send "Wallpaper Error" "No wallpapers found"
+        return 1
+    fi
+
+    local index=0
+    for i in "${! wallpapers[@]}"; do
+        if [ "${wallpapers[$i]}" = "$current" ]; then
+            index=$(( (i - 1 + ${#wallpapers[@]}) % ${#wallpapers[@]} ))
+            break
+        fi
+    done
+
+    generate_cache "${wallpapers[$index]}"
+    set_wallpaper "${wallpapers[$index]}"
+}
+
+# Random wallpaper
+random_wallpaper() {
+    local wallpapers=($(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*. png" -o -iname "*.webp" \)))
+
+    if [ ${#wallpapers[@]} -eq 0 ]; then
+        notify-send "Wallpaper Error" "No wallpapers found"
+        return 1
+    fi
+
+    local random_index=$((RANDOM % ${#wallpapers[@]}))
+    generate_cache "${wallpapers[$random_index]}"
+    set_wallpaper "${wallpapers[$random_index]}"
+}
+
+# Restore last wallpaper (for i3 startup)
+restore_wallpaper() {
+    if [ -f "$CURRENT_WALL" ]; then
+        local wallpaper=$(cat "$CURRENT_WALL")
+        if [ -f "$wallpaper" ]; then
+            feh --no-fehbg --bg-fill "$wallpaper"
+        fi
+    fi
+}
+
+# Main
+case "${1:-select}" in
+    select|s)
+        select_wallpaper
+        ;;
+    set)
+        if [ -z "$2" ]; then
+            echo "Usage: $0 set /path/to/wallpaper. jpg"
+            exit 1
+        fi
+        generate_cache "$2"
+        set_wallpaper "$2"
+        ;;
+    next|n)
+        next_wallpaper
+        ;;
+    prev|p)
+        prev_wallpaper
+        ;;
+    random|r)
+        random_wallpaper
+        ;;
+    restore)
+        restore_wallpaper
+        ;;
+    *)
+        echo "Usage: $0 {select|set|next|prev|random|restore}"
+        echo ""
+        echo "  select  - Show rofi menu to select wallpaper (default)"
+        echo "  set     - Set specific wallpaper"
+        echo "  next    - Switch to next wallpaper"
+        echo "  prev    - Switch to previous wallpaper"
+        echo "  random  - Set random wallpaper"
+        echo "  restore - Restore last wallpaper (for startup)"
+        exit 1
+        ;;
+esac

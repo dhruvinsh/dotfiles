@@ -1,0 +1,38 @@
+#!/bin/sh
+
+BLANK='#00000000'
+CLEAR='{{ .colorScheme.base }}22'          # Base with transparency
+DEFAULT='{{ .colorScheme.blue }}E6'        # Blue
+TEXT='{{ .colorScheme.text }}E6'           # Text
+WRONG='{{ .colorScheme.red }}bb'           # Red
+VERIFYING='{{ .colorScheme.green }}E6'     # Green
+
+i3lock \
+    --insidever-color=$CLEAR \
+    --ringver-color=$VERIFYING \
+    \
+    --insidewrong-color=$CLEAR \
+    --ringwrong-color=$WRONG \
+    \
+    --inside-color=$BLANK \
+    --ring-color=$DEFAULT \
+    --line-color=$BLANK \
+    --separator-color=$DEFAULT \
+    \
+    --verif-color=$TEXT \
+    --wrong-color=$TEXT \
+    --time-color=$TEXT \
+    --date-color=$TEXT \
+    --layout-color=$TEXT \
+    --keyhl-color=$WRONG \
+    --bshl-color=$WRONG \
+    \
+    --screen 1 \
+    --blur 9 \
+    --clock \
+    --indicator \
+    --time-str="%H:%M:%S" \
+    --date-str="%A, %Y-%m-%d" \
+    --keylayout 1
+
+# vim: set ft=sh:

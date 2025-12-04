@@ -1,0 +1,298 @@
+;==========================================================
+;
+;   Polybar Config - Catppuccin Mocha Theme
+;
+;==========================================================
+
+[colors]
+background = {{ .colorScheme.base }}
+background-alt = {{ .colorScheme.surface0 }}
+foreground = {{ .colorScheme.text }}
+primary = {{ .colorScheme.blue }}
+secondary = {{ .colorScheme.pink }}
+alert = {{ .colorScheme.red }}
+disabled = {{ .colorScheme.overlay0 }}
+
+rosewater = {{ .colorScheme.rosewater }}
+flamingo = {{ .colorScheme.flamingo }}
+pink = {{ .colorScheme.pink }}
+mauve = {{ .colorScheme.mauve }}
+red = {{ .colorScheme.red }}
+maroon = {{ .colorScheme.maroon }}
+peach = {{ .colorScheme.peach }}
+yellow = {{ .colorScheme.yellow }}
+green = {{ .colorScheme.green }}
+teal = {{ .colorScheme.teal }}
+sky = {{ .colorScheme.sky }}
+sapphire = {{ .colorScheme.sapphire }}
+blue = {{ .colorScheme.blue }}
+lavender = {{ .colorScheme.lavender }}
+
+surface0 = {{ .colorScheme.surface0 }}
+surface1 = {{ .colorScheme.surface1 }}
+surface2 = {{ .colorScheme.surface2 }}
+
+[bar/bar1]
+monitor = ${env:MONITOR:}
+width = 100%
+height = 30
+radius = 0
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+
+border-size = 0
+border-color = ${colors.background}
+
+padding-left = 1
+padding-right = 1
+
+module-margin = 1
+
+separator = |
+separator-foreground = ${colors.surface1}
+
+font-0 = "{{ .font.regular }}:size=10;2"
+font-1 = "{{ .font.regular }}:size=16;3"
+font-2 = "{{ .font.regular }}:size=12;2"
+
+modules-left = xworkspaces xwindow
+modules-center = date
+modules-right = updates microphone pulseaudio memory cpu temperature wlan systray
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+enable-ipc = true
+
+[bar/bar2]
+monitor = ${env:MONITOR:}
+width = 100%
+height = 30
+radius = 0
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+
+border-size = 0
+border-color = ${colors.background}
+
+padding-left = 1
+padding-right = 1
+
+module-margin = 1
+
+separator = |
+separator-foreground = ${colors.surface1}
+
+font-0 = "{{ .font.regular }}:size=10;2"
+font-1 = "{{ .font.regular }}:size=16;3"
+font-2 = "{{ .font.regular }}:size=12;2"
+
+modules-left = xworkspaces xwindow
+modules-center = date
+modules-right = pulseaudio
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+enable-ipc = true
+
+
+
+[module/xworkspaces]
+type = internal/xworkspaces
+
+; Icon mapping for workspaces
+icon-0 = 1;󰈹
+icon-1 = 2;
+icon-2 = 3;
+icon-3 = 4;
+icon-4 = 5;
+icon-5 = 6;
+icon-6 = 7;
+icon-7 = 8;󰭹
+icon-8 = 9;
+icon-9 = 10;
+
+label-active = %icon% %name%
+label-active-background = ${colors.surface0}
+label-active-foreground = ${colors.blue}
+label-active-underline = ${colors.blue}
+label-active-padding = 1
+
+label-occupied = %icon% %name%
+label-occupied-foreground = ${colors.mauve}
+label-occupied-padding = 1
+
+label-urgent = %icon% %name%
+label-urgent-background = ${colors.alert}
+label-urgent-foreground = ${colors.foreground}
+label-urgent-padding = 1
+
+label-empty = %icon% %name%
+label-empty-foreground = ${colors.disabled}
+label-empty-padding = 1
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:60:...%
+label-foreground = ${colors.lavender}
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+format-volume-prefix = "󰕾 "
+format-volume-prefix-foreground = ${colors.blue}
+format-volume = <label-volume>
+
+label-volume = %percentage%%
+label-volume-foreground = ${colors.foreground}
+
+label-muted = 󰖁 muted
+label-muted-foreground = ${colors.disabled}
+
+click-right = pavucontrol
+click-left = amixer -D pulse set Master toggle
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.pink}
+label = %percentage_used:2%%
+
+click-left = sh -c 'kitty -e htop'
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.peach}
+label = %percentage:2%%
+
+click-left = kitty -e htop
+
+[module/temperature]
+type = internal/temperature
+interval = 5
+format-prefix = " "
+thermal-zone = 2
+warn-temperature = 80
+
+format = <ramp> <label>
+format-warn = <ramp> <label-warn>
+
+label = %temperature-c%
+label-foreground = ${colors.foreground}
+
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.alert}
+
+ramp-0 =
+ramp-1 =
+ramp-2 =
+ramp-3 =
+ramp-4 =
+ramp-foreground = ${colors.teal}
+
+[network-base]
+type = internal/network
+interval = 5
+format-connected = <label-connected>
+format-disconnected = <label-disconnected>
+
+[module/wlan]
+inherit = network-base
+interface-type = wireless
+
+format-connected-prefix = "󰖨 "
+format-connected-prefix-foreground = ${colors.green}
+label-connected = %essid%
+
+format-disconnected-prefix = "󰖪 "
+format-disconnected-prefix-foreground = ${colors.disabled}
+label-disconnected = disconnected
+label-disconnected-foreground = ${colors.disabled}
+
+[module/eth]
+inherit = network-base
+interface-type = wired
+
+format-connected-prefix = "󰈀 "
+format-connected-prefix-foreground = ${colors.green}
+label-connected = %local_ip%
+
+format-disconnected-prefix = "󰈂 "
+format-disconnected-prefix-foreground = ${colors.disabled}
+label-disconnected = disconnected
+label-disconnected-foreground = ${colors.disabled}
+
+[module/date]
+type = internal/date
+interval = 1
+
+date = %A, %d %B %Y
+time = %H:%M:%S
+
+format-prefix = " "
+format-prefix-foreground = ${colors.yellow}
+
+label = %date% %time%
+label-foreground = ${colors.foreground}
+
+[settings]
+screenchange-reload = true
+pseudo-transparency = false
+
+; New modules below
+
+[module/microphone]
+type = custom/script
+exec = ~/.config/polybar/scripts/microphone.sh
+interval = 1
+format-prefix = " "
+format-prefix-foreground = ${colors.red}
+click-left = amixer set Capture toggle
+
+[module/vpn]
+type = custom/script
+exec = ~/.config/polybar/scripts/vpn.sh
+interval = 5
+format-prefix = "󰖂 "
+format-prefix-foreground = ${colors.sapphire}
+
+[module/updates]
+type = custom/script
+exec = ~/.config/polybar/scripts/updates.sh
+interval = 600
+format-prefix = "󰚰 "
+format-prefix-foreground = ${colors.yellow}
+click-left = kitty -e sudo apt update && sudo apt upgrade
+
+[module/filesystem]
+type = internal/fs
+interval = 30
+mount-0 = /
+mount-1 = /home
+
+format-mounted-prefix = "󰋊 "
+format-mounted-prefix-foreground = ${colors.green}
+label-mounted = %percentage_used%%
+label-unmounted = %mountpoint% not mounted
+label-unmounted-foreground = ${colors.disabled}
+
+[module/systray]
+type = internal/tray
+tray-position = right
+tray-size = 60%
+tray-padding = 2
+tray-maxsize = 16
+
+; vim:ft=dosini

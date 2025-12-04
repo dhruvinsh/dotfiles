@@ -91,6 +91,11 @@
   url = {{ gitHubLatestReleaseAssetURL "helix-editor/helix" "helix-*-x86_64.AppImage" | quote }}
   executable = true
 
+[".local/bin/i3lock"]
+  type = "file"
+  url = {{ gitHubLatestReleaseAssetURL "Raymo111/i3lock-color" "i3lock" | quote }}
+  executable = true
+
 [".local/bin/lazygit"]
   type = "archive-file"
   url = {{ gitHubLatestReleaseAssetURL "jesseduffield/lazygit" "lazygit_*_linux_x86_64.tar.gz" | quote}}
