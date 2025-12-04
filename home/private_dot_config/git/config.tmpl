@@ -68,4 +68,8 @@
 [includeIf "hasconfig:remote.*.url:git@github.com*/**"]
   path = public-config
 
+; Personal repos - alternative locations
+[includeIf "gitdir:~/.config/"]
+  path = public-config
+
 {{/* vim: set filetype=gitconfig: */}}
