@@ -16,16 +16,16 @@
 
 {{ if ne .chezmoi.os "windows" -}}
 
-{{- $kanata := "" -}}
-{{- if eq .chezmoi.os "darwin" -}}
-{{- $kanata = "kanata_macos_arm64" -}}
-{{- else -}}
-{{- $kanata = "kanata" -}}
-{{- end -}}
-[".local/bin/kanata"]
-  type = "file"
-  url  = {{ gitHubLatestReleaseAssetURL "jtroo/kanata" $kanata | quote }}
-  executable = true
+# {{- $kanata := "" -}}
+# {{- if eq .chezmoi.os "darwin" -}}
+# {{- $kanata = "kanata_macos_arm64" -}}
+# {{- else -}}
+# {{- $kanata = "kanata" -}}
+# {{- end -}}
+# [".local/bin/kanata"]
+#   type = "file"
+#   url  = {{ gitHubLatestReleaseAssetURL "jtroo/kanata" $kanata | quote }}
+#   executable = true
 
 [".local/bin/semver"]
   type = "file"
