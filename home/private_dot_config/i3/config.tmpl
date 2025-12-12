@@ -299,6 +299,8 @@ bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
 
 # Clipboard manager
 bindsym $mod+c exec --no-startup-id clipmenu
+# Go to next empty workspace
+bindsym $mod+n exec --no-startup-id ~/.config/i3/scripts/goto_empty_workspace.sh
 
 # Assign applications to workspaces
 assign [class="teams-for-linux"] $ws8
