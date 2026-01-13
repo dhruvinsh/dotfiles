@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Wallpaper Manager for i3/feh with Rofi
+# Wallpaper Manager for i3/feh and Hyprland/hyprpaper with Rofi
 # Generates thumbnails and blurred versions for rofi display
 
 # Configuration
@@ -9,6 +9,20 @@ CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/wallpapers"
 CURRENT_WALL="$CACHE_DIR/current.txt"
 THUMBNAIL_SIZE=500
 THUMBNAIL_DIR="$CACHE_DIR/thumbs"
+
+# Detect desktop environment
+detect_de() {
+    if [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+        echo "hyprland"
+    elif [ -n "$I3SOCK" ] || pgrep -x i3 >/dev/null 2>&1; then
+        echo "i3"
+    else
+        # Default to feh if can't detect
+        echo "feh"
+    fi
+}
+
+DESKTOP_ENV=$(detect_de)
 
 # Create necessary directories
 mkdir -p "$CACHE_DIR" "$THUMBNAIL_DIR"
@@ -50,7 +64,7 @@ generate_cache() {
     echo "$thumb"
 }
 
-# Set wallpaper with feh
+# Set wallpaper (supports feh and hyprpaper)
 set_wallpaper() {
     local wallpaper="$1"
 
@@ -59,8 +73,30 @@ set_wallpaper() {
         return 1
     fi
 
-    # Set wallpaper with feh
-    feh --no-fehbg --bg-fill "$wallpaper"
+    # Set wallpaper based on desktop environment
+    case "$DESKTOP_ENV" in
+        hyprland)
+            # Use hyprctl to set wallpaper via hyprpaper IPC
+            if command -v hyprctl >/dev/null 2>&1; then
+                # Preload wallpaper first, then set it for all monitors
+                hyprctl hyprpaper preload "$wallpaper" 2>/dev/null
+                # Set for all monitors (empty monitor name = fallback/all)
+                hyprctl hyprpaper wallpaper ",$wallpaper" 2>/dev/null
+            else
+                notify-send "Wallpaper Error" "hyprctl not found"
+                return 1
+            fi
+            ;;
+        *)
+            # Default to feh for i3 or unknown environments
+            if command -v feh >/dev/null 2>&1; then
+                feh --no-fehbg --bg-fill "$wallpaper"
+            else
+                notify-send "Wallpaper Error" "feh not found"
+                return 1
+            fi
+            ;;
+    esac
 
     # Save current wallpaper path
     echo "$wallpaper" > "$CURRENT_WALL"
@@ -184,12 +220,24 @@ random_wallpaper() {
     set_wallpaper "${wallpapers[$random_index]}"
 }
 
-# Restore last wallpaper (for i3 startup)
+# Restore last wallpaper (for startup)
 restore_wallpaper() {
     if [ -f "$CURRENT_WALL" ]; then
         local wallpaper=$(cat "$CURRENT_WALL")
         if [ -f "$wallpaper" ]; then
-            feh --no-fehbg --bg-fill "$wallpaper"
+            case "$DESKTOP_ENV" in
+                hyprland)
+                    if command -v hyprctl >/dev/null 2>&1; then
+                        hyprctl hyprpaper preload "$wallpaper" 2>/dev/null
+                        hyprctl hyprpaper wallpaper ",$wallpaper" 2>/dev/null
+                    fi
+                    ;;
+                *)
+                    if command -v feh >/dev/null 2>&1; then
+                        feh --no-fehbg --bg-fill "$wallpaper"
+                    fi
+                    ;;
+            esac
         fi
     fi
 }
