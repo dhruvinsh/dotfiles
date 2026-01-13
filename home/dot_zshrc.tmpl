@@ -125,6 +125,8 @@ export PATH=/usr/lib/wsl/lib:$PATH
 export PATH=$(echo $PATH | tr ":" "\n" | rg -vi appdata | paste -sd':' -)
 {{- end}}
 
+{{ includeTemplate ".chezmoitemplates/encryption/jira" | decrypt }}
+
 ##################################################################
 # User functions
 csv() {
