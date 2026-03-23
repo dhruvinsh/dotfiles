@@ -20,6 +20,7 @@ $apps = @(
     "extras/lazygit"
     "extras/putty"
     "extras/selene"
+    "extras/television"
     "extras/vcredist2022" # ripgrep needs it
     "extras/wezterm"
     "main/ast-grep"

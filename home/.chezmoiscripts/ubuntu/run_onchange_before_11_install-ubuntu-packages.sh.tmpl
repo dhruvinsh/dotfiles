@@ -171,6 +171,10 @@ else
     echo "Syncthing service is not installed, systemd not found"
 fi
 
+echo "setup television"
+TELEVISION={{ gitHubLatestReleaseAssetURL "alexpasmantier/television" (printf "tv-*-x86_64-unknown-%s-musl.deb" .chezmoi.os) | quote }}
+install_deb "$TELEVISION" "tv"
+
 echo "set ZSH to default"
 if [ "$SHELL" != "/usr/bin/zsh" ]; then
     sudo chsh -s $(which zsh) $USER
