@@ -29,25 +29,17 @@ ZSH_DISABLE_COMPFIX=true
 
 # starship
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
-eval "$(starship init zsh)"
 
 # fzf setup
 eval "$(fzf --zsh)"
-# unset FZF_DEFAULT_OPTS if any
-[[ -z $FZF_DEFAULT_OPTS ]] || unset FZF_DEFAULT_OPTS
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+export FZF_DEFAULT_OPTS=" \
   --highlight-line \
   --info=inline-right \
   --ansi \
   --layout=reverse \
   --border=none \
   --multi \
-"
-
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
-  # --color=bg+:{{ .colorScheme.surface0 | quote }} \
-  # --color=bg:{{ .colorScheme.base | quote }} \
   --color=bg+:-1 \
   --color=bg:-1 \
   --color=fg+:{{ .colorScheme.text | quote }} \
@@ -65,11 +57,6 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
 
 export NVIM_COLORSCHEME={{ .colorScheme.name }}
 
-DISABLE_AUTO_UPDATE="true"
-
-# check if .zsh directory present
-[[ -d $HOME/.zsh ]] && source $HOME/.zsh/zsh-syntax-highlighting.zsh
-
 plugins=(
   {{- if eq .chezmoi.os "darwin" }}
   brew
@@ -78,7 +65,6 @@ plugins=(
   {{- if findExecutable "kubectl" (list "/usr/local/bin") }}
   kubectl
   {{- end }}
-  mise
   zoxide
   zsh-syntax-highlighting
   zsh-autosuggestions
@@ -90,6 +76,9 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 source $ZSH/oh-my-zsh.sh
 
+# starship must init after oh-my-zsh to override its prompt
+eval "$(starship init zsh)"
+
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export EDITOR='nvim'
@@ -100,9 +89,6 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 # Aliases
 alias vim=nvim
 alias lg=lazygit
-
-# Direnv Setup
-[[ -x $(command -v direnv) ]] && eval "$(direnv hook zsh)"
 
 # Atuin Setup
 eval "$(atuin init zsh)"
