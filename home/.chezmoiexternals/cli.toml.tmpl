@@ -1,4 +1,4 @@
-{{ if ne .chezmoi.os "windows" -}}
+{{- if and (not .archlinux) (ne .chezmoi.os "windows") -}}
 
 # {{- $kanata := "" -}}
 # {{- if eq .chezmoi.os "darwin" -}}
@@ -134,7 +134,6 @@
   executable = true
   path = "zoxide"
 
-{{ end }}
 {{ end }}
 {{ end }}
 
