@@ -58,9 +58,6 @@ export FZF_DEFAULT_OPTS=" \
 export NVIM_COLORSCHEME={{ .colorScheme.name }}
 
 plugins=(
-  {{- if eq .chezmoi.os "darwin" }}
-  brew
-  {{- end }}
   git
   {{- if findExecutable "kubectl" (list "/usr/local/bin") }}
   kubectl
