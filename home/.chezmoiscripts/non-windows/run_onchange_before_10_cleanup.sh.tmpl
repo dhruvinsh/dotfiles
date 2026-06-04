@@ -27,4 +27,18 @@ if [ -d "${HOME}/.oh-my-zsh" ]; then
     rm -rf "${HOME}/.oh-my-zsh"
 fi
 
+# remove neovim bob
+if [ -d "$HOME/.local/bin/bob" ]; then
+    echo "Removing bob..."
+    rm -rf "$HOME/.local/share/bob" || true
+    rm "$HOME/.local/bin/bob" || true
+fi
+
+#
+echo "remove gitconfig..."
+if [ -f "$HOME/.gitconfig" ]; then
+    echo "Removing gitconfig..."
+    rm "$HOME/.gitconfig"
+fi
+
 echo "Clean up finished"
