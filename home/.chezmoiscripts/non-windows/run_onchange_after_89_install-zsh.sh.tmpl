@@ -1,15 +1,14 @@
 #!/bin/bash
 # vim: set expandtab ts=4 sw=4 ft=sh:
 
-TARGET="$HOME"/.oh-my-zsh/custom/completions/_semver
-{{ if stat (joinPath .chezmoi.homeDir ".oh-my-zsh" "custom" "completions") }}
+# {{ if stat (joinPath .chezmoi.homeDir ".zsh" "completions") }}
+TARGET="$HOME"/.zsh/completions/_semver
 echo "Setting up zsh completion for semver..."
 echo "" > "$TARGET"
 tee "$TARGET" >/dev/null << 'EOF'
 #compdef semver
 
 # zsh completion for the semver script
-
 _semver() {
     _arguments -s -S \
         '1:action:(major minor patch)' \
@@ -21,4 +20,20 @@ _semver() {
 
 _semver
 EOF
-{{ end }}
+
+TARGET="$HOME"/.zsh/completions/_t
+echo "Setting up zsh completion for t..."
+echo "" > "$TARGET"
+tee "$TARGET" > /dev/null << 'EOF'
+#compdef t
+
+# Tab completion for `t` using existing tmux session names
+_t_complete() {
+  local -a sessions
+  sessions=(${(f)"$(tmux list-sessions -F '#{session_name}' 2>/dev/null)"})
+  compadd -- $sessions
+}
+compdef _t_complete t
+EOF
+
+# {{ end }}

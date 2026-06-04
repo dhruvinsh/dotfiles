@@ -1,0 +1,11 @@
+{{- if ne .chezmoi.os "windows" -}}
+
+[".zsh/completions/_eza"]
+  type = "archive-file"
+  url  = {{ gitHubLatestReleaseAssetURL "eza-community/eza" "completions-*.tar.gz"  | quote }}
+  stripComponents = 3
+  path = "_eza"
+
+{{- end -}}
+
+{{- /* vim: set filetype=toml: */}}
