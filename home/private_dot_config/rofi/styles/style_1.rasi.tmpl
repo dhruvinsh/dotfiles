@@ -84,11 +84,22 @@ button selected {
 // Inputs //
 inputbar {
     enabled:                     true;
-    children:                    [ "entry" ];
+    orientation:                 vertical;
+    children:                    [ "dummy" , "entry" ];
+    padding:                     1em;
     background-color:            transparent;
 }
 entry {
-    enabled:                     false;
+    enabled:                     true;
+    expand:                      false;
+    padding:                     0.7em 1em;
+    border-radius:               1.5em;
+    background-color:            @main-bg;
+    text-color:                  @main-fg;
+    placeholder:                 "Search...";
+    placeholder-color:           @main-fg;
+    vertical-align:              0.5;
+    cursor:                      text;
 }
 
 
