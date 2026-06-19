@@ -7,22 +7,28 @@ gui:
       - bold
     inactiveBorderColor:
       - {{ .colorScheme.subtext0 | quote }}
+    searchingActiveBorderColor:
+      - {{ .colorScheme.yellow | quote }}
     optionsTextColor:
       - {{ .colorScheme.blue | quote }}
     selectedLineBgColor:
       - {{ .colorScheme.surface0 | quote }}
-    cherryPickedCommitBgColor:
-      - {{ .colorScheme.surface1 | quote }}
+    inactiveViewSelectedLineBgColor:
+      - {{ .colorScheme.overlay0 | quote }}
     cherryPickedCommitFgColor:
       - {{ .colorScheme.lavender | quote }}
+    cherryPickedCommitBgColor:
+      - {{ .colorScheme.surface1 | quote }}
+    markedBaseCommitFgColor:
+      - {{ .colorScheme.blue | quote }}
+    markedBaseCommitBgColor:
+      - {{ .colorScheme.yellow | quote }}
     unstagedChangesColor:
       - {{ .colorScheme.red | quote }}
     defaultFgColor:
       - {{ .colorScheme.text | quote }}
-    searchingActiveBorderColor:
-      - {{ .colorScheme.yellow | quote }}
 
   authorColors:
     '*': {{ .colorScheme.lavender | quote }}
 
-{{/* vim: set filetype=yaml: */}}
+# {{/* vim: set filetype=yaml: */}}
