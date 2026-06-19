@@ -1,0 +1,41 @@
+[delta "custom-delta"]
+  blame-palette = "{{ .colorScheme.base }} {{ .colorScheme.mantle }} {{ .colorScheme.crust }} {{ .colorScheme.surface0 }} {{ .colorScheme.surface1 }}"
+  commit-decoration-style = "{{ .colorScheme.overlay0 }}" bold box ul
+  {{- if eq .colorScheme.variant "dark" }}
+  dark = true
+  {{- else }}
+  light = true
+  {{- end }}
+  file-decoration-style = {{ .colorScheme.overlay0 | quote }}
+  file-style = {{ .colorScheme.text | quote }}
+  hunk-header-decoration-style = "{{ .colorScheme.overlay0 }}" box ul
+  hunk-header-file-style = bold
+  hunk-header-line-number-style = bold {{ .colorScheme.subtext0 | quote }}
+  hunk-header-style = file line-number syntax
+  line-numbers-left-style = {{ .colorScheme.overlay0 | quote }}
+  line-numbers-minus-style = bold {{ .colorScheme.red | quote }}
+  line-numbers-plus-style = bold {{ .colorScheme.green | quote }}
+  line-numbers-right-style = {{ .colorScheme.overlay0 | quote }}
+  line-numbers-zero-style = {{ .colorScheme.overlay0 | quote }}
+  # 35% red 65% base
+  minus-emph-style = bold syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.red 0.35) | quote }}
+  # 20% red 80% base
+  minus-style = syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.red 0.2) | quote }}
+  # 35% green 65% base
+  plus-emph-style = bold syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.green 0.35) | quote }}
+  # 20% green 80% base
+  plus-style = syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.green 0.2) | quote }}
+  map-styles = \
+    bold purple => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.mauve 0.35) | quote }}, \
+    bold blue => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.blue 0.35) | quote }}, \
+    bold cyan => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.sky 0.35) | quote }}, \
+    bold yellow => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.yellow 0.35) | quote }}
+  # Should match the name of the bat theme
+  syntax-theme = custom-bat
+
+[delta]
+  navigate = true
+  light = false
+  features = custom-delta
+
+{{/* vim: set filetype=gitconfig: */}}
