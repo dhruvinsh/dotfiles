@@ -11,7 +11,11 @@
 [delta "custom-delta"]
   blame-palette = "{{ .colorScheme.base }} {{ .colorScheme.mantle }} {{ .colorScheme.crust }} {{ .colorScheme.surface0 }} {{ .colorScheme.surface1 }}"
   commit-decoration-style = "{{ .colorScheme.overlay0 }}" bold box ul
+  {{- if eq .colorScheme.variant "dark" }}
   dark = true
+  {{- else }}
+  light = true
+  {{- end }}
   file-decoration-style = {{ .colorScheme.overlay0 | quote }}
   file-style = {{ .colorScheme.text | quote }}
   hunk-header-decoration-style = "{{ .colorScheme.overlay0 }}" box ul
@@ -23,19 +27,19 @@
   line-numbers-plus-style = bold {{ .colorScheme.green | quote }}
   line-numbers-right-style = {{ .colorScheme.overlay0 | quote }}
   line-numbers-zero-style = {{ .colorScheme.overlay0 | quote }}
-  # 25% red 75% base
-  minus-emph-style = bold syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.red 0.25) | quote }}
-  # 10% red 90% base
-  minus-style = syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.red 0.1) | quote }}
-  # 25% green 75% base
-  plus-emph-style = bold syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.green 0.25) | quote }}
-  # 10% green 90% base
-  plus-style = syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.green 0.1) | quote }}
+  # 35% red 65% base
+  minus-emph-style = bold syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.red 0.35) | quote }}
+  # 20% red 80% base
+  minus-style = syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.red 0.2) | quote }}
+  # 35% green 65% base
+  plus-emph-style = bold syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.green 0.35) | quote }}
+  # 20% green 80% base
+  plus-style = syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.green 0.2) | quote }}
   map-styles = \
-    bold purple => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.mauve 0.25) | quote }}, \
-    bold blue => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.blue 0.25) | quote }}, \
-    bold cyan => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.sky 0.25) | quote }}, \
-    bold yellow => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.yellow 0.25) | quote }}
+    bold purple => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.mauve 0.35) | quote }}, \
+    bold blue => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.blue 0.35) | quote }}, \
+    bold cyan => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.sky 0.35) | quote }}, \
+    bold yellow => syntax {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.yellow 0.35) | quote }}
   # Should match the name of the bat theme
   syntax-theme = custom-bat
 
