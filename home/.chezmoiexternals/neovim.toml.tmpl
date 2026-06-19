@@ -1,10 +1,3 @@
-{{ if and (eq .chezmoi.os "linux") (not .archlinux) }}
-[".local/bin/nvim"]
-  type = "file"
-  url  = {{ gitHubLatestReleaseAssetURL "neovim/neovim" "nvim-linux-x86_64.appimage" | quote }}
-  executable = true
-{{- end }}
-
 #
 # nvim setup
 #

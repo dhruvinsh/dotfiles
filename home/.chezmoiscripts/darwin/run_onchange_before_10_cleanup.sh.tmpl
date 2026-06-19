@@ -2,5 +2,12 @@
 # vim: set expandtab ft=bash ts=4 tw=4:
 
 echo "Removing direnv package..."
-brew uninstall --force direnv selene shellcheck
+brew uninstall --force direnv
+
+echo "Removing selene and shellcheck packages..."
+brew uninstall --force selene shellcheck
+
+echo "Removing neovim package..."
+brew uninstall --force neovim
+
 exit 0

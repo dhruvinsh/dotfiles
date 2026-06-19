@@ -34,6 +34,14 @@ if [ -d "$HOME/.local/bin/bob" ]; then
     rm "$HOME/.local/bin/bob" || true
 fi
 
+{{ if and (eq .chezmoi.os "linux") (not .archlinux) -}}
+# remove neovim appimage (now managed by mise neovim:unstable)
+if [ -f "$HOME/.local/bin/nvim" ]; then
+    echo "Removing neovim appimage..."
+    rm -f "$HOME/.local/bin/nvim"
+fi
+{{- end }}
+
 #
 echo "remove gitconfig..."
 if [ -f "$HOME/.gitconfig" ]; then
