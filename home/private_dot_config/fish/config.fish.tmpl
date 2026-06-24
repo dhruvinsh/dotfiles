@@ -1,0 +1,198 @@
+{{- /* ~/.config/fish/config.fish — managed by chezmoi (fish port of dot_zshrc.tmpl) */ -}}
+# Sourced for every fish shell (interactive, login and scripts). Interactive-only
+# setup (prompt, keybindings, aliases) lives in the `status is-interactive` block.
+
+#### Environment #################################################################
+
+# Prepend personal bin directories, highest priority first. fish_add_path is
+# idempotent and silently skips paths that don't exist, so it replaces the
+# explicit `stat` checks used in the zsh config.
+fish_add_path -gP $HOME/bin $HOME/go/bin $HOME/.cargo/bin $HOME/.local/bin
+
+set -gx LANG en_US.UTF-8
+set -gx LC_ALL en_US.UTF-8
+set -gx EDITOR nvim
+set -gx NVIM_COLORSCHEME {{ .colorScheme.name }}
+{{- if eq .chezmoi.os "darwin" }}
+set -gx HOMEBREW_NO_AUTO_UPDATE 1
+{{- end }}
+
+# fzf source command + theme. Single-quoted so the '#' in hex colours is never
+# read as a fish comment; fish and fzf both split the value on whitespace.
+set -gx FZF_DEFAULT_COMMAND 'fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+set -gx FZF_DEFAULT_OPTS '
+  --highlight-line
+  --info=inline-right
+  --ansi
+  --layout=reverse
+  --border=none
+  --multi
+  --color=bg+:-1
+  --color=bg:-1
+  --color=fg+:{{ .colorScheme.text }}
+  --color=fg:{{ .colorScheme.text }}
+  --color=header:{{ .colorScheme.red }}
+  --color=hl+:{{ .colorScheme.red }}
+  --color=hl:{{ .colorScheme.red }}
+  --color=info:{{ .colorScheme.mauve }}
+  --color=marker:{{ .colorScheme.lavender }}
+  --color=pointer:{{ .colorScheme.rosewater }}
+  --color=prompt:{{ .colorScheme.mauve }}
+  --color=selected-bg:{{ .colorScheme.surface1 }}
+  --color=spinner:{{ .colorScheme.rosewater }}
+'
+{{- if .wsl }}
+
+# ── WSL ─────────────────────────────────────────────────────────────────────
+set -gx DISPLAY :0
+# https://github.com/microsoft/wslg/wiki/GPU-selection-in-WSLg
+set -gx MESA_D3D12_DEFAULT_ADAPTER_NAME NVIDIA
+fish_add_path -gP /usr/lib/wsl/lib
+# WSL injects Windows dirs into PATH; drop the noisy AppData ones ($PATH is a list).
+set -gx PATH (string match --invert --regex --ignore-case appdata -- $PATH)
+{{- end }}
+
+# Jira credentials: age-encrypted, decrypted at apply time. The shared secret is
+# stored as POSIX `export VAR=...`, rewritten here to fish's `set -gx VAR ...`.
+{{ regexReplaceAll "(?m)^export ([A-Za-z_][A-Za-z0-9_]*)=" (includeTemplate "encryption/jira" | decrypt | trim) "set -gx ${1} " }}
+
+# mise-en-place (replaces volta, pyenv). Activated for all shells so tool
+# versions resolve inside scripts too.
+{{- if eq .chezmoi.os "darwin" }}
+if test -x /opt/homebrew/bin/mise
+    /opt/homebrew/bin/mise activate fish | source
+end
+{{- else }}
+if test -x ~/.local/bin/mise
+    ~/.local/bin/mise activate fish | source
+end
+{{- end }}
+
+#### Functions ###################################################################
+
+function csv --description 'Open spreadsheets/CSVs in VisiData'
+    uvx --with openpyxl visidata $argv
+end
+
+function llm --description 'Pipe llm output through streamdown'
+    command llm $argv | streamdown
+end
+
+# Run a command and pipe its output into fzf: `f <cmd…> -- <fzf args…>`
+function f --description 'Pipe a command into fzf (args after -- go to fzf)'
+    set -l cmd
+    set -l fzf_args
+    set -l found_sep 0
+    for arg in $argv
+        if test "$arg" = --
+            set found_sep 1
+            continue
+        end
+        if test $found_sep -eq 0
+            set -a cmd $arg
+        else
+            set -a fzf_args $arg
+        end
+    end
+    $cmd | fzf $fzf_args
+end
+
+# tmux selector powered by fzf
+function t --description 'Attach/create a tmux session (no args = fzf picker)'
+    if test (count $argv) -eq 0
+        set -l session (tmux list-sessions -F '#{session_name}' 2>/dev/null | fzf --prompt='Select tmux session: ')
+        test -n "$session"; or return
+        tmux attach-session -t $session
+    else
+        set -l session $argv[1]
+        if tmux has-session -t=$session 2>/dev/null
+            tmux attach-session -t $session
+        else
+            tmux new-session -s $session
+        end
+    end
+end
+
+{{ $nvidia := output "sh" "-c" "lspci -k 2>/dev/null | grep -iq nvidia && echo 'yes' || echo 'no'" | trim -}}
+{{- if eq $nvidia "yes" -}}
+# Switch the active CUDA toolkit (only present on NVIDIA machines)
+function cuda_switch --description 'Switch active CUDA toolkit on PATH/LD_LIBRARY_PATH'
+    set -l cuda_root /usr/local
+    set -l versions (find $cuda_root -maxdepth 1 ! -type l -name '*cuda*' | awk -F'cuda-' '/cuda-/ {print $2}' | sort)
+    set -l target $argv[1]
+
+    if test -z "$target"
+        echo "Usage: cuda_switch <$versions>"
+        return 1
+    end
+
+    if not string match -qr '^[0-9]+\.[0-9]+$' -- $target
+        echo "Error: Invalid version format '$target'. Expected format: X.Y"
+        return 1
+    end
+
+    if not contains -- $target $versions
+        echo "Usage: cuda_switch <$versions>"
+        return 1
+    end
+
+    # Drop existing cuda entries (PATH/LD_LIBRARY_PATH are colon-lists in fish)
+    set -gx PATH (string match --invert --regex "^$cuda_root/cuda(-[0-9.]+)?/" -- $PATH)
+    if set -q LD_LIBRARY_PATH
+        set -gx LD_LIBRARY_PATH (string match --invert --regex "^$cuda_root/cuda(-[0-9.]+)?/" -- $LD_LIBRARY_PATH)
+    end
+
+    set -gx CUDA_HOME $cuda_root/cuda-$target
+    set -gx PATH $CUDA_HOME/bin $PATH
+    set -gx LD_LIBRARY_PATH $CUDA_HOME/lib64 $LD_LIBRARY_PATH
+
+    echo "Switched to CUDA $target. (PATH updated, LD_LIBRARY_PATH set)"
+end
+
+{{ end -}}
+#### Interactive shell setup #####################################################
+if status is-interactive
+    # Emacs key bindings (fish's default; set explicitly to mirror zsh `bindkey -e`)
+    set -g fish_key_bindings fish_default_key_bindings
+
+    # autocd: typing a bare directory name cd's into it (zsh `setopt autocd`)
+    function fish_command_not_found
+        if test (count $argv) -eq 1; and test -d $argv[1]
+            cd $argv[1]
+        else
+            __fish_default_command_not_found_handler $argv
+        end
+    end
+
+    # Aliases. `ls` is a function using `command` so it doesn't recurse into itself.
+    function ls --description 'ls with colour'
+        command ls {{ if eq .chezmoi.os "darwin" }}-G{{ else }}--color=auto{{ end }} $argv
+    end
+    alias l 'ls -lah'
+    alias la 'ls -lAh'
+    alias ll 'ls -lh'
+    alias lsa 'ls -lah'
+    alias vim nvim
+    alias lg lazygit
+
+    # Tool integrations (guarded so a missing tool can't break shell startup)
+    if type -q fzf
+        fzf --fish | source
+    end
+    if type -q zoxide
+        zoxide init fish | source
+    end
+    if type -q starship
+        set -gx STARSHIP_CONFIG ~/.config/starship/starship.toml
+        starship init fish | source
+    end
+    if type -q atuin
+        atuin init fish | source
+    end
+end
+
+# fish keeps persistent, deduped history at ~/.local/share/fish/fish_history
+# (atuin takes over interactively), auto-loads completions from
+# ~/.config/fish/completions, and offers directory history via prevd/nextd/cdh —
+# so the zsh HISTFILE / compinit / AUTO_PUSHD setup has no fish equivalent here.
+{{- /* vim: set filetype=fish ts=4 sw=4 et: */}}
