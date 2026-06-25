@@ -15,9 +15,6 @@ bun                                                   = "latest"
 "npm:license-checker"                                 = "latest"
 "npm:neovim"                                          = "latest"
 "npm:defuddle"                                        = "latest"
-{{ if ne .chezmoi.os "windows" -}}
-"npm:opencode-ai"                                     = "latest"
-{{ end -}}
 "npm:vite"                                            = "latest"
 "npm:mcp-hub"                                         = "latest"
 "npm:ccusage"                                         = "latest"
@@ -29,6 +26,9 @@ codex                                                 = "latest"
 pi                                                    = "latest"
 tree-sitter                                           = "latest"
 viteplus                                              = "latest"
+{{ if ne .chezmoi.os "windows" -}}
+opencode                                              = "latest"
+{{ end -}}
 
 # Python based tools
 "pipx:ast-grep-cli"                                   = "latest"
