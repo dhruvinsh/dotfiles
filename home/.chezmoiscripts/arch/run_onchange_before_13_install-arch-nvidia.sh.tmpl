@@ -1,0 +1,41 @@
+#!/bin/bash
+set -e
+
+MODPROBE_CONF="/etc/modprobe.d/nvidia.conf"
+MKINITCPIO_CONF="/etc/mkinitcpio.conf"
+BACKUP="${MKINITCPIO_CONF}.backup"
+NVIDIA_CONF_LINE="options nvidia_drm modeset=1"
+NVIDIA_MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"
+
+# 1. Ensure the modprobe conf is set
+grep -Fxq "$NVIDIA_CONF_LINE" "$MODPROBE_CONF" 2>/dev/null || echo "$NVIDIA_CONF_LINE" | sudo tee "$MODPROBE_CONF" >/dev/null
+
+# 2. Make a single backup if not exists
+[ -f "$BACKUP" ] || sudo cp "$MKINITCPIO_CONF" "$BACKUP"
+
+# 3. Prepare new config content (remove old NVIDIA modules and add new ones)
+TMPFILE=$(mktemp)
+awk -v mods="$NVIDIA_MODULES" '
+{
+  if ($0 ~ /^MODULES=\(/) {
+    # remove NVIDIA modules from the array if already present
+    line = $0
+    gsub(/ nvidia_drm| nvidia_uvm| nvidia_modeset| nvidia/, "", line)
+    # add modules at the start
+    sub(/^MODULES=\(\s*/, "MODULES=(" mods " ", line)
+    print line
+  } else {
+    print
+  }
+}' "$MKINITCPIO_CONF" > "$TMPFILE"
+
+# 4. Update config and rebuild initramfs only if changed
+if ! cmp -s "$TMPFILE" "$MKINITCPIO_CONF"; then
+  echo "Updating $MKINITCPIO_CONF and rebuilding initramfs..."
+  sudo cp "$TMPFILE" "$MKINITCPIO_CONF"
+  sudo mkinitcpio -P
+else
+  echo "No changes needed."
+fi
+
+rm "$TMPFILE"

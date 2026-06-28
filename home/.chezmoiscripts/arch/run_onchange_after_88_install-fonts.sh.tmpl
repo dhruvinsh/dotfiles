@@ -7,25 +7,16 @@
 fonts=(
     # Reference: https://github.com/davgar99/arch-linux-font-improvement-guide
     # Recommended
-    adobe-source-code-pro-fonts 
     noto-fonts
     noto-fonts-cjk
     noto-fonts-emoji
     noto-fonts-extra
-    ttf-liberation
-    ttf-roboto
-    ttf-droid 
-    otf-font-awesome 
+    otf-font-awesome
 
     # Personal choices
-    ttf-noto-nerd
-    ttf-cascadia-code-nerd
-    ttf-fantasque-nerd
     ttf-firacode-nerd
     ttf-iosevka-nerd
     ttf-jetbrains-mono-nerd
-    ttf-nerd-fonts-symbols
-    ttf-victor-mono-nerd
 )
 for font in "${fonts[@]}"; do
     install_package_pacman "$font"
@@ -125,22 +116,17 @@ mkdir -p "$HOME/.config/fontconfig/conf.d"
 # </fontconfig>
 # EOF
 
-tee "$HOME/.config/fontconfig/conf.d/20-no-embedded.conf"<<EOF
-<?xml version="1.0"?>
-<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
-<fontconfig>
-  <match target="font">
-    <edit name="embeddedbitmap" mode="assign">
-      <bool>false</bool>
-    </edit>
-  </match>
-</fontconfig>
-EOF
-
-# Some symlinks
-sudo ln -s /usr/share/fontconfig/conf.avail/10-sub-pixel-rgb.conf /etc/fonts/conf.d/
-sudo ln -s /usr/share/fontconfig/conf.avail/10-hinting-slight.conf /etc/fonts/conf.d/
-sudo ln -s /usr/share/fontconfig/conf.avail/11-lcdfilter-default.conf /etc/fonts/conf.d/
+# tee "$HOME/.config/fontconfig/conf.d/20-no-embedded.conf"<<EOF
+# <?xml version="1.0"?>
+# <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+# <fontconfig>
+#   <match target="font">
+#     <edit name="embeddedbitmap" mode="assign">
+#       <bool>false</bool>
+#     </edit>
+#   </match>
+# </fontconfig>
+# EOF
 
 # freetype2.sh File
 FILE="/etc/profile.d/freetype2.sh"

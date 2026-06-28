@@ -7,52 +7,34 @@ set -euo pipefail
 
 packages=(
     adw-gtk-theme
-    docker
-    docker-buildx
-    docker-compose
     emacs-wayland
     nvidia-container-toolkit
     nwg-look
+    obsidian
     syncthing
+    wine
     zed
 )
 
 aur_pkgs=(
     bibata-cursor-theme-bin
+    brave-bin
+    feishin-bin
     flat-remix
     flat-remix-gtk
+    localsend-bin
     visual-studio-code-bin
-    zen-browser-bin
 )
 install_packages_from_arrays
 
-docker_native_diff="/etc/modprobe.d/disable-overlay-redirect-dir.conf"
-if [ ! -f "$docker_native_diff" ]; then
-    echo "Creating $docker_native_diff to disable overlay redirect dir"
-    echo "options overlay metacopy=off redirect_dir=off" | sudo tee "$docker_native_diff" > /dev/null
-    sudo modprobe -r overlay
-    sudo modprobe overlay
-fi
-docker_daemon="/etc/docker/daemon.json"
-if [ ! -f "$docker_daemon" ]; then
-    echo "Creating $docker_daemon for docker daemon configuration"
-    [ ! -d ${docker_daemon%/*} ] && sudo mkdir -p "${docker_daemon%/*}"
-    sudo tee "$docker_daemon" >/dev/null << EOF
-{
-  "runtimes": {
-    "nvidia": {
-      "path": "/usr/bin/nvidia-container-runtime",
-      "runtimeArgs": []
-    }
-  }
-}
-EOF
-fi
-
-system_services=(
-    docker.socket
-)
+system_services=()
 user_services=(
     syncthing.service
 )
 enable_services_from_arrays
+
+# Ensure timezone can be updated without needing to sudo
+sudo tee /etc/sudoers.d/10-tzupdate >/dev/null <<EOF
+%wheel ALL=(root) NOPASSWD: /usr/bin/tzupdate, /usr/bin/timedatectl
+EOF
+sudo chmod 0440 /etc/sudoers.d/10-tzupdate

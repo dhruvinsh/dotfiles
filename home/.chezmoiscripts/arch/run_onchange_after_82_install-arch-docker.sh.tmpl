@@ -21,11 +21,14 @@ if [ ! -f "$docker_native_diff" ]; then
     sudo modprobe overlay
 fi
 docker_daemon="/etc/docker/daemon.json"
-if [ ! -f "$docker_daemon" ]; then
-    echo "Creating $docker_daemon for docker daemon configuration"
-    [ ! -d ${docker_daemon%/*} ] && sudo mkdir -p "${docker_daemon%/*}"
-    sudo tee "$docker_daemon" >/dev/null << EOF
+echo "Creating $docker_daemon for docker daemon configuration"
+[ ! -d ${docker_daemon%/*} ] && sudo mkdir -p "${docker_daemon%/*}"
+sudo tee "$docker_daemon" >/dev/null <<'EOF'
 {
+  "log-driver": "json-file",
+  "log-opts": { "max-size": "10m", "max-file": "5" },
+  "dns": ["172.17.0.1"],
+  "bip": "172.17.0.1/16",
   "runtimes": {
     "nvidia": {
       "path": "/usr/bin/nvidia-container-runtime",
@@ -34,7 +37,6 @@ if [ ! -f "$docker_daemon" ]; then
   }
 }
 EOF
-fi
 
 if [ "$(getent group docker)" ]; then
     echo "docker group exists."
@@ -44,7 +46,21 @@ fi
 
 sudo usermod -aG docker "$USER"
 
+# Expose systemd-resolved to our Docker network
+sudo mkdir -p /etc/systemd/resolved.conf.d
+echo -e '[Resolve]\nDNSStubListenerExtra=172.17.0.1' | sudo tee /etc/systemd/resolved.conf.d/20-docker-dns.conf >/dev/null
+sudo systemctl restart systemd-resolved
+
 system_services=(
     docker.socket
 )
 enable_services_from_arrays
+
+# Prevent Docker from preventing boot for network-online.target
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo tee /etc/systemd/system/docker.service.d/no-block-boot.conf <<'EOF'
+[Unit]
+DefaultDependencies=no
+EOF
+
+sudo systemctl daemon-reload
