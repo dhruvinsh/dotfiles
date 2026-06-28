@@ -14,6 +14,9 @@ italic_font                {{ .font.italic }}
 modify_font cell_height    120%
 symbol_map U+E000-U+F8FF,U+F0000-U+FFFFF,U+100000-U+10ffff JetBrainsMonoNL Nerd Font
 
+# Cursor
+cursor_shape              beam
+
 # Appearance
 include                    current-theme.conf
 {{- if .personalmachine }}
@@ -36,3 +39,6 @@ scrollback_lines           50000
 
 # Feedback
 enable_audio_bell          no
+
+# Keybindings
+map ctrl+f   launch --location=hsplit --allow-remote-control kitty +kitten search.py @active-kitty-window-id
