@@ -3,6 +3,10 @@
 
 set -euo pipefail
 
+# make sure all the necessary binary in path
+[ -s "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+
+
 if [ ! "$(command -v mise)" ]; then
     echo "Install node with help of mise ⚡️"
     curl https://mise.run | sh
