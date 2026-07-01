@@ -38,7 +38,7 @@ fi
 
 echo "setup ghostty terminal"
 if [ ! "$(command -v ghostty)" ]; then
-    curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh
+    curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh | bash
 fi
 
 # chrome re-installation is harmless in fact we end up updating it!
