@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+
+set -euo pipefail
+
+# install claude code
+echo "installing claude code.."
+curl -fsSL https://claude.ai/install.sh | bash
+
+# install cursor cli
+echo "installing cursor agent.."
+curl https://cursor.com/install -fsS | bash
+
+# {{- if (and (.isDesktop) (.ubuntu)) }}
+# install cursor desktop
+{{ template "scripts/download_helpers.sh" . }}
+
+CURSOR=https://api2.cursor.sh/updates/download/golden/linux-x64-deb/cursor/latest
+install_deb "$CURSOR" "cursor"
+# {{ end }}
