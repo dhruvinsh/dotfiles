@@ -36,6 +36,11 @@ if [ ! "$(command -v kitty)" ]; then
     echo 'kitty.desktop' > ~/.config/xdg-terminals.list
 fi
 
+echo "setup ghostty terminal"
+if [ ! "$(command -v ghostty)" ]; then
+    curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh
+fi
+
 # chrome re-installation is harmless in fact we end up updating it!
 CHROME=https://dl.google.com/{{ .chezmoi.os }}/direct/google-chrome-stable_current_amd64.deb
 install_deb "$CHROME" "chrome"
