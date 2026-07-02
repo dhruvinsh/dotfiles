@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+#
+# Builds Emacs from source directly on the host (no Docker). Building
+# on the host guarantees runtime libraries (libgccjit0, libtree-sitter0,
+# etc.) actually end up installed where the resulting binary needs them —
+# a Docker-based build only installs those inside the throwaway container,
+# leaving the host missing the .so files at launch time.
+
+set -euo pipefail
+
+# {{- $toolkit := "--with-x-toolkit=gtk3" -}}
+# {{- if eq (env "XDG_SESSION_TYPE") "wayland" -}}
+# {{- $toolkit = "--with-pgtk" -}}
+# {{- end }}
+
+EMACS_VERSION="30.2"
+EMACS_TARBALL_URL="http://ftp.gnu.org/gnu/emacs/emacs-${EMACS_VERSION}.tar.xz"
+INSTALL_PREFIX="/usr/local"
+BUILD_DIR="/tmp/emacs-build-${EMACS_VERSION}"
+
+# Idempotency: skip if the target version is already installed
+if command -v emacs &>/dev/null && emacs --version 2>/dev/null | grep -q "GNU Emacs ${EMACS_VERSION}"; then
+    echo "Emacs ${EMACS_VERSION} already installed, skipping."
+    exit 0
+fi
+
+BUILD_DEPS=(
+    curl xz-utils build-essential autoconf texinfo pkg-config
+    libgtk-3-dev libgnutls28-dev libjansson-dev libgccjit-13-dev
+    libtree-sitter-dev libsqlite3-dev libxml2-dev zlib1g-dev
+    libtiff-dev libgif-dev libjpeg-dev libpng-dev librsvg2-dev
+    libncurses-dev libmagickwand-dev libharfbuzz-dev libotf-dev
+    libsystemd-dev libwebp-dev mailutils libgccjit0
+    libtiff5-dev libxpm-dev
+)
+
+CONFIGURE_FLAGS=(
+    --with-native-compilation=aot
+    --with-tree-sitter
+    --with-json
+    --with-sqlite3
+    {{ $toolkit }}
+    --with-mailutils
+    --with-modules
+    --with-rsvg
+    --with-webp
+    --with-imagemagick
+    --with-threads
+)
+
+cleanup() {
+    rm -rf "${BUILD_DIR}"
+}
+trap cleanup EXIT
+
+echo "Installing build dependencies..."
+sudo apt-get update -qq
+# -dev packages pull in their matching runtime .so packages as dependencies
+# (e.g. libgccjit-13-dev -> libgccjit0, libtree-sitter-dev -> libtree-sitter0),
+# so the host ends up with everything the built binary needs at runtime too.
+sudo apt-get install -y "${BUILD_DEPS[@]}"
+
+rm -rf "${BUILD_DIR}"
+mkdir -p "${BUILD_DIR}"
+curl -fL "${EMACS_TARBALL_URL}" | tar -xJ -C "${BUILD_DIR}" --strip-components=1
+
+cd "${BUILD_DIR}"
+./configure --prefix="${INSTALL_PREFIX}" "${CONFIGURE_FLAGS[@]}"
+make -j"$(nproc)"
+sudo make install
+
+echo "Emacs ${EMACS_VERSION} installed successfully."
+emacs --version
