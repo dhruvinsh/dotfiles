@@ -3,3 +3,23 @@ repos:
     rev: v8.26.0
     hooks:
       - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: shellcheck (plain shell scripts)
+        entry: shellcheck -s bash -x
+        language: system
+        files: \.(sh|bash)$
+
+      - id: shfmt
+        name: shfmt (shell auto-format)
+        entry: shfmt -i 2 -ci -w
+        language: system
+        files: \.(sh|bash)$
+
+      - id: chezmoi-template
+        name: chezmoi template validation
+        entry: scripts/chezmoi-template-check.bash
+        language: system
+        files: \.tmpl$
