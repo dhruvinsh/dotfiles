@@ -39,6 +39,9 @@ else
   compinit -C  # skip audit, use cached dump
 fi
 
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg={{ .colorScheme.overlay0 }}'
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 # The most important aliases ever (the only thing I borrowed from OMZ)
 alias l='ls -lah'
 alias la='ls -lAh'
