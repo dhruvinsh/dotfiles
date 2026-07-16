@@ -8,31 +8,28 @@ node                                                  = { version = "lts", posti
 zig                                                   = "latest"
 
 # Node based tools and package managers
-"npm:pnpm"                                            = "latest"
+"npm:defuddle"                                        = "latest"
+"npm:license-checker"                                 = "latest"
+"npm:typescript"                                      = "latest"
+"npm:typescript-language-server"                      = "latest"
+"npm:vite"                                            = "latest"
+pnpm                                                  = "latest"
+tree-sitter                                           = "latest"
+yarn                                                  = "latest"
+
+# AI toolings
 "npm:@agentclientprotocol/claude-agent-acp"           = "latest"
 "npm:@google/gemini-cli"                              = "latest"
 "npm:@qwen-code/qwen-code"                            = "latest"
 "npm:ccusage"                                         = "latest"
-"npm:defuddle"                                        = "latest"
-"npm:license-checker"                                 = "latest"
-"npm:mcp-hub"                                         = "latest"
-"npm:neovim"                                          = "latest"
-"npm:pyright"                                         = "latest"
-"npm:typescript"                                      = "latest"
-"npm:typescript-language-server"                      = "latest"
-"npm:vite"                                            = "latest"
-"npm:yarn"                                            = "latest"
 codex                                                 = "latest"
 copilot                                               = "latest"
 pi                                                    = "latest"
-tree-sitter                                           = "latest"
-viteplus                                              = "latest"
 {{ if ne .chezmoi.os "windows" -}}
 opencode                                              = "latest"
 {{ end -}}
 
 # Python based tools
-"pipx:httpie"                                         = "latest"
 "pipx:jupyterlab"                                     = "latest"
 "pipx:keymap-drawer"                                  = "latest"
 "pipx:llm"                                            = "latest"
@@ -42,13 +39,14 @@ opencode                                              = "latest"
 "pipx:streamdown"                                     = "latest"
 
 # LSP, Lint tools for neovim
-"cargo:https://github.com/feel-ix-343/markdown-oxide" = { version = "tag:{{ (gitHubLatestTag "feel-ix-343/markdown-oxide").Name }}", bin = "markdown-oxide" }
+"cargo:https://github.com/feel-ix-343/markdown-oxide" = "latest"
 "cargo:selene"                                        = "latest"
 "go:github.com/owenrumney/make-ls/cmd/make-ls"        = "latest"
 "go:golang.org/x/tools/cmd/goimports"                 = "latest"
 "go:golang.org/x/tools/gopls"                         = "latest"
 "npm:@vtsls/language-server"                          = "latest"
 "npm:bash-language-server"                            = "latest"
+"npm:pyright"                                         = "latest"
 "npm:vscode-json-languageserver"                      = "latest"
 "npm:vscode-langservers-extracted"                    = "latest"
 "npm:yaml-language-server"                            = "latest"
@@ -83,6 +81,8 @@ python                                                = {{ regexReplaceAll "\\.[
 uv                                                    = "latest"
 
 [settings]
+cargo.binstall = true
+cargo.binstall_native = true
 experimental = true
 idiomatic_version_file_enable_tools = ["node", "python"]
 minimum_release_age = "3d"
