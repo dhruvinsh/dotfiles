@@ -90,7 +90,7 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop.
 
 ## Managed app configs (`home/private_dot_config/`)
 
-- **Shell/mux:** zsh (primary; `dot_zshrc.tmpl`), bash, fish, tmux, zellij
+- **Shell/mux:** zsh (primary; `dot_zshrc.tmpl`), bash, fish, tmux
 - **Terminals:** kitty, wezterm, ghostty (alacritty removed)
 - **Wayland/WM:** hypr (Hyprland, Lua), sway, i3; bars: waybar, polybar; rofi, dunst,
   picom, wlogout
