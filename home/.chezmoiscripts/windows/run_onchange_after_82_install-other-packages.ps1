@@ -48,7 +48,6 @@ $apps = @(
     "main/sed"
     "main/starship"
     "main/win32yank"
-    "main/yazi"
     "main/yq"
     "main/zoxide"
 );
