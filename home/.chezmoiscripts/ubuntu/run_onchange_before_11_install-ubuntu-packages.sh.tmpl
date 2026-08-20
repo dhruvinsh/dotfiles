@@ -108,6 +108,26 @@ packages+=(
     libluajit-5.1-dev
 )
 
+# iGPU specific — only when an Intel integrated GPU is detected via lspci
+# {{ $intelGpu := output "sh" "-c" "lspci 2>/dev/null | grep -iE 'vga|display|3d' | grep -i intel || true" }}
+# {{ if $intelGpu }}
+packages+=(
+    # VA-API video decode/encode (iHD driver + backends)
+    intel-gpu-tools
+    intel-media-va-driver-non-free
+    libva-drm2
+    libva-x11-2
+    vainfo
+    # OpenGL / Vulkan acceleration + verification tools
+    libgl1-mesa-dri
+    mesa-utils
+    mesa-vulkan-drivers
+    vulkan-tools
+    # VDPAU->VA-API shim for apps that only speak VDPAU
+    libvdpau-va-gl1
+)
+# {{ end }}
+
 
 ############################
 # Installation starts here #
