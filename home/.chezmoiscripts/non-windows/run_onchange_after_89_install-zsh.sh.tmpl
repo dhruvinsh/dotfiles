@@ -1,7 +1,8 @@
 #!/bin/bash
 # vim: set expandtab ts=4 sw=4 ft=sh:
 
-# {{ if stat (joinPath .chezmoi.homeDir ".zsh" "completions") }}
+mkdir -p "$HOME"/.zsh/completions
+
 TARGET="$HOME"/.zsh/completions/_semver
 echo "Setting up zsh completion for semver..."
 echo "" > "$TARGET"
@@ -36,4 +37,9 @@ _t_complete() {
 compdef _t_complete t
 EOF
 
-# {{ end }}
+TARGET="$HOME"/.zsh/completions/_acli
+echo "Setting up zsh completion for acli..."
+echo "" > "$TARGET"
+if command -v acli >/dev/null 2>&1; then
+    acli completion zsh > "$TARGET"
+fi
