@@ -1,5 +1,49 @@
-set -g mouse on
+set -ogq @thm_bg {{ .colorScheme.base | quote }}
+set -ogq @thm_fg {{ .colorScheme.text | quote }}
+
+# Colors
+set -ogq @thm_rosewater {{ .colorScheme.rosewater | quote }}
+set -ogq @thm_flamingo {{ .colorScheme.flamingo | quote }}
+set -ogq @thm_pink {{ .colorScheme.pink | quote }}
+set -ogq @thm_mauve {{ .colorScheme.mauve | quote }}
+set -ogq @thm_red {{ .colorScheme.red | quote }}
+set -ogq @thm_maroon {{ .colorScheme.maroon | quote }}
+set -ogq @thm_peach {{ .colorScheme.peach | quote }}
+set -ogq @thm_yellow {{ .colorScheme.yellow | quote }}
+set -ogq @thm_green {{ .colorScheme.green | quote }}
+set -ogq @thm_teal {{ .colorScheme.teal | quote }}
+set -ogq @thm_sky {{ .colorScheme.sky | quote }}
+set -ogq @thm_sapphire {{ .colorScheme.sapphire | quote }}
+set -ogq @thm_blue {{ .colorScheme.blue | quote }}
+set -ogq @thm_lavender {{ .colorScheme.lavender | quote }}
+
+# Surfaces and overlays
+set -ogq @thm_subtext_1 {{ .colorScheme.subtext1 | quote }}
+set -ogq @thm_subtext_0 {{ .colorScheme.subtext0 | quote }}
+set -ogq @thm_overlay_2 {{ .colorScheme.overlay2 | quote }}
+set -ogq @thm_overlay_1 {{ .colorScheme.overlay1 | quote }}
+set -ogq @thm_overlay_0 {{ .colorScheme.overlay0 | quote }}
+set -ogq @thm_surface_2 {{ .colorScheme.surface2 | quote }}
+set -ogq @thm_surface_1 {{ .colorScheme.surface1 | quote }}
+set -ogq @thm_surface_0 {{ .colorScheme.surface0 | quote }}
+set -ogq @thm_mantle {{ .colorScheme.mantle | quote }}
+set -ogq @thm_crust {{ .colorScheme.crust | quote }}
+set -ogq @thm_text {{ .colorScheme.text | quote }}
+
+#############
+
 set -g default-terminal "xterm-256color"
+set -g extended-keys on
+set -g extended-keys-format csi-u
+set -g mouse on
+set-option -g set-titles on
+set-option -g set-titles-string "#{session_name} · #{window_name}"
+
+# New windows and splits open in the current pane's directory instead of
+# the session's original cwd.
+bind c new-window -c "#{pane_current_path}"
+bind '"' split-window -c "#{pane_current_path}"
+bind % split-window -h -c "#{pane_current_path}"
 
 # List of plugins
 set -g @plugin 'tmux-plugins/tpm'
@@ -9,6 +53,7 @@ set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin '27medkamal/tmux-session-wizard'
 set -g @plugin 'sainnhe/tmux-fzf'
+set -g @plugin 'catppuccin/tmux#v2.3.0'
 
 set -as terminal-overrides ",$TERM:RGB"
 set -ag terminal-features ",$TERM:usstyle"
@@ -20,5 +65,15 @@ set-option -g allow-passthrough on # zen-mode.nvim
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
+
+# Since tmux 3.7, message-style/message-command-style must include `fill` to
+# clear the whole status line width, otherwise `prefix + :` and other prompts
+# draw over the old status bar content instead of replacing it. catppuccin/tmux
+# v2.3.0 doesn't set `fill` yet (catppuccin/tmux#600), so override here after
+# the plugin loads. `align=centre` is dropped: pre-3.7 it was a no-op for the
+# command line, but with `fill` doing real overlay drawing now it would center
+# the prompt instead of the usual left-aligned ":".
+set -gF message-style "fg=#{@thm_text},bg=#{@thm_crust},fill=#{@thm_crust}"
+set -gF message-command-style "fg=#{@thm_text},bg=#{@thm_crust},fill=#{@thm_crust}"
 
 {{- /* vim: set filetype=tmux: */}}
