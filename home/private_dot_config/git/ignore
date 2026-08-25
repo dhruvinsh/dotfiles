@@ -10,3 +10,5 @@ __pycache__
 node_modules/**
 
 **/.claude/settings.local.json
+
+.playwright-cli/
