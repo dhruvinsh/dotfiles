@@ -109,6 +109,10 @@ enable-ipc = true
 [module/xworkspaces]
 type = internal/xworkspaces
 
+; Only show workspaces belonging to the monitor this bar is on, so the
+; left (non-primary) bar shows 7 & 8 and the right (primary) bar shows the rest.
+pin-workspaces = true
+
 ; Icon mapping for workspaces
 icon-0 = 1;󰈹
 icon-1 = 2;

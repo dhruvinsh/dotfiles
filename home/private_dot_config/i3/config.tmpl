@@ -38,7 +38,7 @@ exec --no-startup-id dex --autostart --environment i3
 exec_always --no-startup-id xrdb -merge ~/.Xresources
 
 # start picom
-exec --no-startup-id picom -b
+exec_always --no-startup-id picom -b --config ~/.config/picom/picom.conf
 
 # Set cursor theme
 exec_always --no-startup-id xsetroot -cursor_name left_ptr
@@ -64,7 +64,7 @@ bindsym XF86AudioLowerVolume exec --no-startup-id amixer -D pulse sset Master 5%
 bindsym XF86AudioMute exec --no-startup-id amixer -D pulse set Master toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id amixer set Capture toggle && $refresh_i3status
 
-# Display configuration
+# Display configuration (iGPU: DP-1 left / HDMI-2 primary right)
 exec_always --no-startup-id ~/.config/i3/scripts/monitor_setup.sh
 
 # Wallpaper
@@ -177,7 +177,7 @@ for_window [title="Event Tester"] floating enable
 # Exception for Outlook PWA - force tiling
 for_window [class="Google-chrome" instance="crx_faolnafnngnfdaknnbpnkhgohbobgegn"] floating disable
 
-# Ensure Firefox PiP window is always floating, sticky, above, and on DP-4
+# Ensure Firefox PiP window is always floating, sticky, above, and on the primary (HDMI-2)
 for_window [window_role="PictureInPicture"] \
     floating enable, \
     sticky enable, \
@@ -198,16 +198,23 @@ set $ws7  "7"
 set $ws8  "8"
 set $ws9  "9"
 
-# Assign workspaces to displays
-workspace $ws1 output primary
-workspace $ws2 output primary
-workspace $ws3 output primary
-workspace $ws4 output primary
-workspace $ws5 output primary
-workspace $ws6 output primary
-workspace $ws7 output primary
-workspace $ws8 output nonprimary primary
-workspace $ws9 output primary
+# Assign workspaces to displays.
+# i3 has no "nonprimary" keyword — outputs must be named (or the literal
+# "primary"). We list explicit output names so placement is stable regardless
+# of when xrandr marks the primary output at boot (avoids the startup race
+# where "primary" is still unresolved). First name = iGPU, second = old dGPU,
+# then a "primary" fallback so single-monitor setups still work.
+#   Right / primary     : HDMI-2 (iGPU) or DP-4 (dGPU)
+#   Left  / non-primary : DP-1   (iGPU) or DP-6 (dGPU)  -> workspaces 7 & 8
+workspace $ws1 output HDMI-2 DP-4 primary
+workspace $ws2 output HDMI-2 DP-4 primary
+workspace $ws3 output HDMI-2 DP-4 primary
+workspace $ws4 output HDMI-2 DP-4 primary
+workspace $ws5 output HDMI-2 DP-4 primary
+workspace $ws6 output HDMI-2 DP-4 primary
+workspace $ws7 output DP-1 DP-6 primary
+workspace $ws8 output DP-1 DP-6 primary
+workspace $ws9 output HDMI-2 DP-4 primary
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -305,7 +312,8 @@ bindsym $mod+n exec --no-startup-id ~/.config/i3/scripts/goto_empty_workspace.sh
 # Assign applications to workspaces
 assign [class="teams-for-linux"] $ws8
 assign [class="Google-chrome" instance="crx_faolnafnngnfdaknnbpnkhgohbobgegn"] $ws8
-assign [class="obsidain"] $ws7
+assign [class="obsidian"] $ws7
+assign [class="(?i)^playwrightchrome$"] $ws6
 
 # Start teams-for-linux and chrome PWA on workspace 8 (secondary monitor if available)
 exec --no-startup-id "i3-msg 'workspace number 8'; sleep 0.5; teams-for-linux"
