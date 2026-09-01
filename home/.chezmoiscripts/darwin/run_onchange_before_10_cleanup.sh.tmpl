@@ -10,4 +10,7 @@ brew uninstall --force selene shellcheck
 echo "Removing neovim package..."
 brew uninstall --force neovim
 
+echo "Removing mise package (brew)..."
+brew uninstall --force mise 2>/dev/null || true
+
 exit 0

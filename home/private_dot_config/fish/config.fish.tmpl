@@ -58,15 +58,9 @@ set -gx PATH (string match --invert --regex --ignore-case appdata -- $PATH)
 
 # mise-en-place (replaces volta, pyenv). Activated for all shells so tool
 # versions resolve inside scripts too.
-{{- if eq .chezmoi.os "darwin" }}
-if test -x /opt/homebrew/bin/mise
-    /opt/homebrew/bin/mise activate fish | source
-end
-{{- else }}
 if test -x ~/.local/bin/mise
     ~/.local/bin/mise activate fish | source
 end
-{{- end }}
 
 #### Functions ###################################################################
 

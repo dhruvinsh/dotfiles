@@ -87,11 +87,7 @@ eval "$(starship init zsh)"
 eval "$(atuin init zsh)"
 
 # mise-en-place setup (replaces volta, pyenv)
-{{ if eq .chezmoi.os "darwin" -}}
-eval "$(/opt/homebrew/bin/mise activate zsh)"
-{{ else -}}
 eval "$(~/.local/bin/mise activate zsh)"
-{{- end }}
 
 export NVIM_COLORSCHEME={{ .colorScheme.name }}
 export LANG=en_US.UTF-8
