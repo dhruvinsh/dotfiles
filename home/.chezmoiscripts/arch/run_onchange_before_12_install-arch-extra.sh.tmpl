@@ -3,6 +3,7 @@
 set -euo pipefail
 
 # {{ template "scripts/download_helpers.sh" . }}
+# {{ template "scripts/service_helpers.sh" . }}
 
 sudo pacman -Sy
 
@@ -10,6 +11,7 @@ packages=(
     # day to day tools
     atuin
     bat
+    dua-cli
     eza
     fd
     feh
@@ -24,7 +26,9 @@ packages=(
     kitty
     lazygit
     ripgrep
+    satty
     starship
+    swayosd
     tealdeer
     television
     tldr
@@ -32,8 +36,8 @@ packages=(
     zoxide
 
     # night light
-    gammastep
     geoclue
+    hyprsunset
 
     # multi-media
     mpv
@@ -43,7 +47,11 @@ packages=(
 
     # system tools
     bind # do not need to enable the bind.service keep using system-resolved
+    gpu-screen-recorder
     impala
+    linux-headers
+    tailscale
+    udiskie
     usbutils
     wiremix
 )
@@ -51,6 +59,16 @@ packages=(
 aur_pkgs=(
     fswatch
     lazysql
+    localsend-bin
 )
 
 install_packages_from_arrays
+
+
+system_services=(
+    swayosd-libinput-backend.service
+)
+user_services=(
+)
+
+enable_services_from_arrays
