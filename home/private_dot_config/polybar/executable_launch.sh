@@ -6,6 +6,16 @@ polybar-msg cmd quit
 # Wait until the processes have been shut down
 while pgrep -u "$UID" -x polybar >/dev/null; do sleep 0.5; done
 
+# On a fresh login this script races monitor_setup.sh: i3 starts both with
+# exec_always and does not wait in between, so xrandr may not have marked an
+# output primary yet. Without this wait the fallback below picks the first
+# connected output (DP-1) and the full bar lands on the wrong monitor.
+# Wait up to ~5s for the primary flag to appear.
+for _ in $(seq 1 10); do
+  xrandr --query | grep -q " connected primary" && break
+  sleep 0.5
+done
+
 # Detect the primary output (HDMI-2 on this machine); fall back to the first
 # connected output if none is marked primary.
 mapfile -t CONNECTED_MONITORS < <(xrandr --query | grep " connected" | cut -d' ' -f1)
