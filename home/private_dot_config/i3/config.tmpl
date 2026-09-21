@@ -176,6 +176,8 @@ for_window [title="Event Tester"] floating enable
 
 # Exception for Outlook PWA - force tiling
 for_window [class="Google-chrome" instance="crx_faolnafnngnfdaknnbpnkhgohbobgegn"] floating disable
+for_window [class="^Google-chrome$"] floating disable
+for_window [class="^Chromium$"] floating disable
 
 # Ensure Firefox PiP window is always floating, sticky, above, and on the primary (HDMI-2)
 for_window [window_role="PictureInPicture"] \
