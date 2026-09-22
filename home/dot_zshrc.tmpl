@@ -139,13 +139,24 @@ f() {
 
 # tmux selector powered by fzf
 t() {
+  local session
+
   if [ $# -eq 0 ]; then
     # No args: pick a session via fzf
-    local session
     session=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | fzf --prompt='Select tmux session: ') || return
-    tmux attach-session -t "$session"
   else
-    local session="$1"
+    session="$1"
+  fi
+
+  if [ -n "$TMUX" ]; then
+    # Already inside tmux: switch the client instead of nesting
+    if [ "$session" = "$(tmux display-message -p '#S')" ]; then
+      echo "no-op: same session detected ($session)"
+      return
+    fi
+    tmux has-session -t="$session" 2>/dev/null || tmux new-session -d -s "$session"
+    tmux switch-client -t "$session"
+  else
     if tmux has-session -t="$session" 2>/dev/null; then
       tmux attach-session -t "$session"
     else
