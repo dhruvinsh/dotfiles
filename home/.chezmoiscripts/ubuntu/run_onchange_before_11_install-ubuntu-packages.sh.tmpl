@@ -169,10 +169,6 @@ echo "setup hyperfine"
 HYPERFINE={{ gitHubLatestReleaseAssetURL "sharkdp/hyperfine" (printf "hyperfine_*_%s.deb" .chezmoi.arch) | quote  }}
 install_deb "$HYPERFINE" "hyperfine"
 
-echo "setup gh for github"
-GH={{ gitHubLatestReleaseAssetURL "cli/cli" (printf "gh_*_%s_%s.deb" .chezmoi.os .chezmoi.arch) | quote }}
-install_deb "$GH" "gh"
-
 echo "install syncthing as service"
 sudo systemctl stop syncthing@{{ .chezmoi.username }}.service || echo "syncthing service not found"
 SYNCTHING={{ gitHubLatestReleaseAssetURL "syncthing/syncthing" (printf "syncthing-%s-%s-v*.tar.gz" .chezmoi.os .chezmoi.arch) | quote }}

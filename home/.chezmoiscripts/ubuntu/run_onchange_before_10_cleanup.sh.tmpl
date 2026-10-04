@@ -80,5 +80,10 @@ sudo apt purge -y tmux
 echo "Removing direnv package..."
 sudo apt purge -y direnv
 
+echo "Removing gh package..."
+if [ -x "$(command -v gh)" ]; then
+    sudo apt purge -y gh
+fi
+
 echo "Clean up finished"
 # {{ end }}
