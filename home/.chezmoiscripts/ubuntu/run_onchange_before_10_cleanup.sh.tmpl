@@ -85,5 +85,8 @@ if [ -x "$(command -v gh)" ]; then
     sudo apt purge -y gh
 fi
 
+echo "Removing mise migrated package..."
+rm -rf "$HOME/.local/bin/git-cliff" "$HOME/.local/bin/gitleaks" "$HOME/.local/bin/glow"
+
 echo "Clean up finished"
 # {{ end }}

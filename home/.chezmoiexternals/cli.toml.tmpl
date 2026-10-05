@@ -50,26 +50,6 @@
   executable = true
   path = "fzf"
 
-[".local/bin/git-cliff"]
-  type = "archive-file"
-  url  = {{ gitHubLatestReleaseAssetURL "orhun/git-cliff" (printf "git-cliff-*-x86_64-unknown-%s-musl.tar.gz" .chezmoi.os) | quote }}
-  executable = true
-  stripComponents = 1
-  path = "git-cliff"
-
-[".local/bin/gitleaks"]
-  type = "archive-file"
-  url  = {{ gitHubLatestReleaseAssetURL "gitleaks/gitleaks" (printf "gitleaks_*_%s_x64.tar.gz" .chezmoi.os) | quote }}
-  executable = true
-  path = "gitleaks"
-
-[".local/bin/glow"]
-  type = "archive-file"
-  url = {{ gitHubLatestReleaseAssetURL "charmbracelet/glow" "glow_*_Linux_x86_64.tar.gz" | quote }}
-  executable = true
-  stripComponents = 1
-  path = "glow"
-
 [".local/bin/helix"]
   type = "file"
   url = {{ gitHubLatestReleaseAssetURL "helix-editor/helix" "helix-*-x86_64.AppImage" | quote }}

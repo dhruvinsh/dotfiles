@@ -39,3 +39,8 @@ rm ~/.gitconfig
 
 Write-Output "Removing direnv package.."
 scoop uninstall direnv
+
+Write-Output "Removing mise migrated packages..."
+scoop uninstall "main/glow"
+scoop uninstall "main/gitleaks"
+scoop uninstall "main/git-cliff"
