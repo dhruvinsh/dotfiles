@@ -67,12 +67,7 @@ encryption = "age"
 {{- $templates := joinPath "home/.chezmoitemplates" }}
 
 {{/* python version */}}
-{{- $pythonVersion := "" }}
-{{- if $personalmachine -}}
-{{-   $pythonVersion =  includeTemplate ("python") "3.12" | quote   -}}
-{{- else -}}
-{{-   $pythonVersion =  includeTemplate ("python") "3.12" | quote   -}}
-{{- end }}
+{{- $pythonVersion :=  includeTemplate ("python") "3.14" | quote   -}}
 
 [data]
   personalmachine = {{ $personalmachine }}
