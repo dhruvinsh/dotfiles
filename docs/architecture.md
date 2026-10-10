@@ -47,7 +47,7 @@ script's content changes.
 - `after_82_install-misc`, `after_88_install-go`, `after_89_install-tmux`,
   `after_90_wsl-ssh`, `after_91_install-rclone`
 - `desktop/after_61_install-ubuntu-desktop-packages`,
-  `desktop/after_62_install-ubuntu-desktop-emacs` (builds Emacs from source)
+  `desktop/after_62_install-ubuntu-desktop-emacs` (installs the Emacs .deb from the `dhruvinsh/emacs-builds` releases)
 
 ### `fedora/`
 - `before_11_install-fedora-packages`, `before_13_install-docker`

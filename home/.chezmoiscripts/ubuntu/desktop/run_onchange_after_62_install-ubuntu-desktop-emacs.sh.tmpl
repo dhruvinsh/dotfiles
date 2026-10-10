@@ -1,74 +1,81 @@
 #!/usr/bin/env bash
 # vim: set expandtab ft=bash ts=4 tw=4:
 #
-# Builds Emacs from source directly on the host (no Docker). Building
-# on the host guarantees runtime libraries (libgccjit0, libtree-sitter0,
-# etc.) actually end up installed where the resulting binary needs them —
-# a Docker-based build only installs those inside the throwaway container,
-# leaving the host missing the .so files at launch time.
+# Installs Emacs from https://github.com/dhruvinsh/emacs-builds, which builds
+# native-compiled .debs per Ubuntu release in CI (emacs-wayland = pgtk,
+# emacs-x11 = GTK3). The release asset is resolved when chezmoi renders this
+# script, so a new release changes the script and run_onchange_ reinstalls.
 
 set -euo pipefail
 
-# {{- $toolkit := "--with-x-toolkit=gtk3" -}}
+{{ template "scripts/download_helpers.sh" . }}
+
+# {{- $flavour := "emacs-x11" -}}
 # {{- if eq (env "XDG_SESSION_TYPE") "wayland" -}}
-# {{- $toolkit = "--with-pgtk" -}}
+# {{-   $flavour = "emacs-wayland" -}}
+# {{- end -}}
+# {{- $asset := printf "^%s_.*~ubuntu%s_amd64\\.deb$" $flavour (.chezmoi.osRelease.versionID | regexQuoteMeta) -}}
+# {{- $url := "" -}}
+# {{- $tag := "" -}}
+# {{- range (gitHubReleases "dhruvinsh/emacs-builds") -}}
+# {{-   if and (not $url) (not .GetDraft) (not .GetPrerelease) -}}
+# {{-     range .Assets -}}
+# {{-       if regexMatch $asset .GetName -}}
+# {{-         $url = .GetBrowserDownloadURL -}}
+# {{-       end -}}
+# {{-     end -}}
+# {{-     if $url -}}
+# {{-       $tag = .GetTagName -}}
+# {{-     end -}}
+# {{-   end -}}
 # {{- end }}
 
-EMACS_VERSION="30.2"
-EMACS_TARBALL_URL="http://ftp.gnu.org/gnu/emacs/emacs-${EMACS_VERSION}.tar.xz"
-INSTALL_PREFIX="/usr/local"
-BUILD_DIR="/tmp/emacs-build-${EMACS_VERSION}"
+EMACS_PKG={{ $flavour | quote }}
+EMACS_RELEASE={{ $tag | quote }}
+EMACS_DEB_URL={{ $url | quote }}
 
-# Idempotency: skip if the target version is already installed
-if command -v emacs &>/dev/null && emacs --version 2>/dev/null | grep -q "GNU Emacs ${EMACS_VERSION}"; then
-    echo "Emacs ${EMACS_VERSION} already installed, skipping."
+if [[ -z "${EMACS_DEB_URL}" ]]; then
+    echo "No ${EMACS_PKG} release for Ubuntu {{ .chezmoi.osRelease.versionID }} in dhruvinsh/emacs-builds yet, skipping."
     exit 0
 fi
 
-BUILD_DEPS=(
-    curl xz-utils build-essential autoconf texinfo pkg-config
-    libgtk-3-dev libgnutls28-dev libjansson-dev libgccjit-13-dev
-    libtree-sitter-dev libsqlite3-dev libxml2-dev zlib1g-dev
-    libtiff-dev libgif-dev libjpeg-dev libpng-dev librsvg2-dev
-    libncurses-dev libmagickwand-dev libharfbuzz-dev libotf-dev
-    libsystemd-dev libwebp-dev mailutils libgccjit0
-    libtiff5-dev libxpm-dev
-)
+# Emacs used to be built from source into /usr/local, which comes first on
+# PATH and would shadow the package. Remove whatever the package now ships
+# under /usr from /usr/local, plus the old versioned trees.
+remove_old_source_build() {
+    [[ -e /usr/local/bin/emacs ]] || return 0
+    echo "Removing old source-built Emacs from /usr/local"
 
-CONFIGURE_FLAGS=(
-    --with-native-compilation=aot
-    --with-tree-sitter
-    --with-json
-    --with-sqlite3
-    {{ $toolkit }}
-    --with-mailutils
-    --with-modules
-    --with-rsvg
-    --with-webp
-    --with-imagemagick
-    --with-threads
-)
+    local file old
+    while read -r file; do
+        case "${file}" in
+        /usr/share/emacs/* | /usr/lib/emacs/* | /usr/libexec/emacs/*) continue ;;
+        /usr/*) ;;
+        *) continue ;;
+        esac
+        old="/usr/local${file#/usr}"
+        if [[ -f "${old}" || -L "${old}" ]]; then
+            sudo rm -f "${old}"
+        fi
+    done < <(dpkg-query -L "${EMACS_PKG}")
 
-cleanup() {
-    rm -rf "${BUILD_DIR}"
+    # The gschema is only installed by pgtk builds, so emacs-x11 can't match it.
+    sudo rm -rf /usr/local/bin/emacs-[0-9]* /usr/local/lib/emacs /usr/local/libexec/emacs \
+        /usr/local/share/emacs/[0-9]* /usr/local/share/emacs/site-lisp/subdirs.el \
+        /usr/local/share/glib-2.0/schemas/org.gnu.emacs.defaults.gschema.xml
+    sudo rmdir --ignore-fail-on-non-empty /usr/local/share/emacs/site-lisp /usr/local/share/emacs 2>/dev/null || true
+
+    local schemas=/usr/local/share/glib-2.0/schemas
+    if compgen -G "${schemas}/*.xml" >/dev/null; then
+        sudo glib-compile-schemas "${schemas}"
+    else
+        sudo rm -f "${schemas}/gschemas.compiled"
+    fi
 }
-trap cleanup EXIT
 
-echo "Installing build dependencies..."
-sudo apt-get update -qq
-# -dev packages pull in their matching runtime .so packages as dependencies
-# (e.g. libgccjit-13-dev -> libgccjit0, libtree-sitter-dev -> libtree-sitter0),
-# so the host ends up with everything the built binary needs at runtime too.
-sudo apt-get install -y "${BUILD_DEPS[@]}"
+echo "Installing ${EMACS_PKG} from emacs-builds ${EMACS_RELEASE}"
+install_deb "${EMACS_DEB_URL}" "${EMACS_PKG}"
+remove_old_source_build
 
-rm -rf "${BUILD_DIR}"
-mkdir -p "${BUILD_DIR}"
-curl -fL "${EMACS_TARBALL_URL}" | tar -xJ -C "${BUILD_DIR}" --strip-components=1
-
-cd "${BUILD_DIR}"
-./configure --prefix="${INSTALL_PREFIX}" "${CONFIGURE_FLAGS[@]}"
-make -j"$(nproc)"
-sudo make install
-
-echo "Emacs ${EMACS_VERSION} installed successfully."
-emacs --version
+hash -r
+emacs --version | head -1
