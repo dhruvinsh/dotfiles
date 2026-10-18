@@ -40,6 +40,12 @@ if [ -f "$HOME/.local/bin/nvim" ]; then
     echo "Removing neovim appimage..."
     rm -f "$HOME/.local/bin/nvim"
 fi
+
+# remove starship external binary (now managed by mise)
+if [ -f "$HOME/.local/bin/starship" ]; then
+    echo "Removing starship binary..."
+    rm -f "$HOME/.local/bin/starship"
+fi
 {{- end }}
 
 #

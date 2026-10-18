@@ -51,6 +51,10 @@ alias lsa='ls -lah'
 alias vim=nvim
 alias lg=lazygit
 
+# mise-en-place setup (replaces volta, pyenv). Activated before tool inits below
+# so mise-managed binaries (e.g. starship) are already on PATH.
+[[ -x "$HOME/.local/bin/mise" ]] && eval "$("$HOME/.local/bin/mise" activate zsh)"
+
 # Set up fzf key bindings and fuzzy completion
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
 export FZF_DEFAULT_OPTS=" \
@@ -85,9 +89,6 @@ eval "$(starship init zsh)"
 
 # Atuin Setup
 eval "$(atuin init zsh)"
-
-# mise-en-place setup (replaces volta, pyenv)
-eval "$(~/.local/bin/mise activate zsh)"
 
 export NVIM_COLORSCHEME={{ .colorScheme.name }}
 export LANG=en_US.UTF-8

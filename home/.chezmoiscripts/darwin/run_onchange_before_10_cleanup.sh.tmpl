@@ -16,4 +16,7 @@ brew uninstall --force mise 2> /dev/null || true
 echo "Removing git/md related tools..."
 brew uninstall --force gh git-cliff gitleaks glow 2> /dev/null || true
 
+echo "Removing starship package (mise migrated)..."
+brew uninstall --force starship 2> /dev/null || true
+
 exit 0

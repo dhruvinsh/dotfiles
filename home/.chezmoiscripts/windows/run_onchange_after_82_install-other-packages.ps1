@@ -46,7 +46,6 @@ $apps = @(
     "main/rclone"
     "main/ripgrep"
     "main/sed"
-    "main/starship"
     "main/win32yank"
     "main/yq"
     "main/zoxide"
