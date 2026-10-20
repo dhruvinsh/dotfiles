@@ -31,7 +31,7 @@ Prompted: `personalmachine` (bool), `colorVariant` (light/dark), `colorScheme`
 
 Auto-detected: `wsl`/`wsl1`/`wsl2`, `archlinux`/`ubuntu`/`fedora`, `isDesktop`
 (XDG_CURRENT_DESKTOP), `sshSession` (SSH_CONNECTION), `chassisType`
-(laptop/desktop/vm), `pythonVersion`.
+(laptop/desktop/vm), `pythonVersion` (latest `3.14.x`, looked up from the actions/python-versions manifest).
 
 Derived: `email` = `dhruvin3@gmail.com` if personal else `dshah@evertz.com`.
 `.font.regular` = JetBrainsMono NF, `.font.italic` = Maple Mono NF.
@@ -42,7 +42,7 @@ Derived: `email` = `dhruvin3@gmail.com` if personal else `dshah@evertz.com`.
 - Encryption: **age**, identity `~/.key.txt`, recipient in `.chezmoi.toml.tmpl`.
 - Encrypted key bootstrapped by `run_once_before_decrypt-private-key.*` per OS.
 - Encrypted template snippets: `.chezmoitemplates/encryption/{jira,geoclue}`,
-  `.chezmoitemplates/llm/{keys.json,litellm-key}` → consumed via `... | decrypt`.
+  `.chezmoitemplates/llm/{keys.json.tmpl,litellm-key}` → consumed via `... | decrypt`.
 - Never commit plaintext secrets. `gitleaks` runs as a pre-commit hook.
 
 ## Tooling center of gravity
@@ -77,7 +77,8 @@ Derived: `email` = `dhruvin3@gmail.com` if personal else `dshah@evertz.com`.
 
 ## Gotchas
 
-- CI (`.github/workflows/lint.yml`) triggers on **`master`**, but the local branch is
-  **`main`** — pushes to `main` won't run CI as configured. Flag before relying on it.
 - README `chezmoi init` uses `--exclude externals` on first apply (externals pulled after).
 - Two `82_` scripts coexist in `arch/` (docker + eol-packages) — same stage, both run.
+- Hyprland runs a Lua config and reaps its children, so `os.execute()` always fails there (`nil, "No child processes"`) — don't use it for probes; `io.open` is safe.
+- uwsm does not export `UWSM_ACTIVE`; detect it via `UWSM_FINALIZE_VARNAMES` (as `hypr/execs.lua` does), and use `uwsm check is-active` in scripts.
+- Legacy `hyprctl dispatch <name> args` is rejected in Lua mode — use `hyprctl dispatch 'hl.dsp.x({...})'`; `hl.dsp.dpms()` with a missing/unknown action toggles the display.

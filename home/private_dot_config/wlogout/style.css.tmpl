@@ -1,69 +1,52 @@
+{{ includeTemplate "gtk-colors.css" . }}
 
+* {
+    font-family: "{{ .font.regular }}";
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+/* Full-screen layer (namespace: logout_dialog); Hyprland layerrule adds the blur. */
 window {
-    font-family: {{ .font.regular }};
-    font-size: 14pt;
-    color:  {{ .colorScheme.text }}; /* text */
-    background-color: {{ includeTemplate "hex2rgb" (list .colorScheme.base 0.5) }};
-
+    background-color: alpha(@crust, 0.55);
+    color: @text;
 }
 
 button {
+    color: @subtext1;
+    background-color: alpha(@surface0, 0.75);
     background-repeat: no-repeat;
-    background-position: center;
-    background-size: 20%;
-    background-color: transparent;
-    animation: gradient_f 20s ease-in infinite;
-    transition: all 0.3s ease-in;
-    box-shadow: 0 0 10px 2px transparent;
-    border-radius: 36px;
-    margin: 10px;
-}
-
-button:focus {
+    background-position: center 14%;
+    background-size: 34%;
+    border: 2px solid alpha(@surface2, 0.6);
+    border-radius: 24px;
     box-shadow: none;
-    background-size : 20%;
+    text-shadow: none;
+    outline-style: none;
+    transition: all 0.25s cubic-bezier(.25, .8, .25, 1);
 }
 
+button:focus,
 button:hover {
-    background-size: 50%;
-    box-shadow: 0 0 10px 3px rgba(0,0,0,.4);
-    background-color: {{ .colorScheme.surface2 }};
-    color: transparent;
-    transition: all 0.3s cubic-bezier(.55, 0.0, .28, 1.682), box-shadow 0.5s ease-in;
+    background-color: @accent;
+    border-color: @accent;
+    color: @crust;
+    background-size: 40%;
+    box-shadow: 0 8px 32px alpha(@crust, 0.6);
 }
 
-#shutdown {
-    background-image: image(url("./icons/power.png"));
-}
-#shutdown:hover {
-  background-image: image(url("./icons/power-hover.png"));
-}
+#lock       { background-image: image(url("./icons/lock.png")); }
+#logout     { background-image: image(url("./icons/logout.png")); }
+#suspend    { background-image: image(url("./icons/sleep.png")); }
+#reboot     { background-image: image(url("./icons/restart.png")); }
+#shutdown   { background-image: image(url("./icons/power.png")); }
 
-#logout {
-    background-image: image(url("./icons/logout.png"));
+#lock:hover,   #lock:focus   { background-image: image(url("./icons/lock-hover.png")); }
+#logout:hover, #logout:focus { background-image: image(url("./icons/logout-hover.png")); }
+#suspend:hover, #suspend:focus { background-image: image(url("./icons/sleep-hover.png")); }
+#reboot:hover, #reboot:focus { background-image: image(url("./icons/restart-hover.png")); }
+#shutdown:hover, #shutdown:focus { background-image: image(url("./icons/power-hover.png")); }
 
-}
-#logout:hover {
-  background-image: image(url("./icons/logout-hover.png"));
-}
-
-#reboot {
-    background-image: image(url("./icons/restart.png"));
-}
-#reboot:hover {
-  background-image: image(url("./icons/restart-hover.png"));
-}
-
-#lock {
-    background-image: image(url("./icons/lock.png"));
-}
-#lock:hover {
-  background-image: image(url("./icons/lock-hover.png"));
-}
-
-#hibernate {
-    background-image: image(url("./icons/hibernate.png"));
-}
-#hibernate:hover {
-  background-image: image(url("./icons/hibernate-hover.png"));
-}
+#logout:hover,  #logout:focus  { background-color: @accent2; border-color: @accent2; }
+#reboot:hover,  #reboot:focus  { background-color: @peach; border-color: @peach; }
+#shutdown:hover, #shutdown:focus { background-color: @red; border-color: @red; }

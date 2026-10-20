@@ -1,0 +1,81 @@
+{{ includeTemplate "gtk-colors.css" . }}
+
+/* swayosd theme: rounded translucent pill with an accent progress bar. */
+
+* {
+  font-family: "{{ .font.regular }}", sans-serif;
+}
+
+window#osd {
+  border-radius: 999px;
+  border: 1px solid alpha(@accent, 0.35);
+  background: alpha(@base, 0.85);
+  box-shadow: 0 6px 18px alpha(@crust, 0.45);
+}
+
+window#osd #container {
+  margin: 14px 22px;
+}
+
+window#osd image,
+window#osd label {
+  color: @text;
+  -gtk-icon-shadow: none;
+}
+
+window#osd image {
+  color: @accent;
+}
+
+window#osd label {
+  font-weight: 600;
+  min-width: 3.2em;
+}
+
+window#osd image:disabled,
+window#osd progressbar:disabled {
+  opacity: 0.5;
+}
+
+window#osd progressbar,
+window#osd segmentedprogress {
+  min-height: 8px;
+  border-radius: 999px;
+  background: transparent;
+  border: none;
+}
+
+window#osd trough,
+window#osd segment {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  background: alpha(@surface1, 0.9);
+}
+
+window#osd progress,
+window#osd segment.active {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  background: @accent;
+  transition: background 180ms ease-in-out;
+}
+
+window#osd progress.overamplified,
+window#osd segment.overamplified {
+  background: @peach;
+}
+
+window#osd progress.muted,
+window#osd segment.muted {
+  background: @overlay0;
+}
+
+window#osd segment {
+  margin-left: 6px;
+}
+
+window#osd segment:first-child {
+  margin-left: 0;
+}

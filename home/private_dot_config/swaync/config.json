@@ -1,0 +1,103 @@
+{
+  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "ignore-gtk-theme": true,
+  "positionX": "right",
+  "positionY": "top",
+  "layer": "overlay",
+  "control-center-layer": "top",
+  "layer-shell": true,
+  "layer-shell-cover-screen": true,
+  "cssPriority": "user",
+  "control-center-positionX": "right",
+  "control-center-positionY": "top",
+  "control-center-margin-top": 56,
+  "control-center-margin-bottom": 12,
+  "control-center-margin-right": 12,
+  "control-center-margin-left": 0,
+  "control-center-width": 420,
+  "control-center-height": 700,
+  "control-center-exclusive-zone": false,
+  "notification-window-width": 400,
+  "notification-2fa-action": true,
+  "notification-inline-replies": false,
+  "notification-body-image-height": 100,
+  "notification-body-image-width": 200,
+  "notification-grouping": true,
+  "timeout": 6,
+  "timeout-low": 6,
+  "timeout-critical": 0,
+  "fit-to-screen": true,
+  "relative-timestamps": true,
+  "keyboard-shortcuts": true,
+  "image-visibility": "when-available",
+  "transition-time": 200,
+  "hide-on-clear": false,
+  "hide-on-action": true,
+  "text-empty": "No Notifications",
+  "script-fail-notify": true,
+  "widgets": [
+    "title",
+    "dnd",
+    "mpris",
+    "volume",
+    "buttons-grid",
+    "notifications"
+  ],
+  "widget-config": {
+    "title": {
+      "text": "Notifications",
+      "clear-all-button": true,
+      "button-text": "Clear All"
+    },
+    "dnd": {
+      "text": "Do Not Disturb"
+    },
+    "mpris": {
+      "blacklist": [],
+      "autohide": false,
+      "show-album-art": "always",
+      "loop-carousel": false
+    },
+    "volume": {
+      "label": "Volume",
+      "show-per-app": false
+    },
+    "buttons-grid": {
+      "buttons-per-row": 3,
+      "actions": [
+        {
+          "label": "  Wi-Fi",
+          "type": "toggle",
+          "active": true,
+          "command": "sh -c '[ \"$SWAYNC_TOGGLE_STATE\" = true ] && nmcli radio wifi on || nmcli radio wifi off'",
+          "update-command": "sh -c '[ \"$(nmcli radio wifi)\" = enabled ] && echo true || echo false'"
+        },
+        {
+          "label": "  Bluetooth",
+          "type": "toggle",
+          "active": true,
+          "command": "sh -c '[ \"$SWAYNC_TOGGLE_STATE\" = true ] && bluetoothctl power on || bluetoothctl power off'",
+          "update-command": "sh -c 'bluetoothctl show | grep -q \"Powered: yes\" && echo true || echo false'"
+        },
+        {
+          "label": "  Mic",
+          "type": "toggle",
+          "active": true,
+          "command": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+          "update-command": "sh -c 'wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | grep -q MUTED && echo false || echo true'"
+        },
+        {
+          "label": "  Night Light",
+          "type": "toggle",
+          "active": false,
+          "command": "sh -c 'pkill -x hyprsunset || (hyprsunset &)'",
+          "update-command": "sh -c 'pgrep -x hyprsunset >/dev/null && echo true || echo false'"
+        },
+        {
+          "label": "  Screenshot",
+          "command": "flameshot gui"
+        }
+      ]
+    }
+  }
+}

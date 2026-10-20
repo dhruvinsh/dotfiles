@@ -1,7 +1,19 @@
 {
-    "label" : "shutdown",
-    "action" : "systemctl poweroff",
-    "text" : "Shutdown",
+    "label" : "lock",
+    "action" : "loginctl lock-session",
+    "text" : "Lock",
+    "keybind" : "l"
+}
+{
+    "label" : "logout",
+    "action" : "if uwsm check is-active >/dev/null 2>&1; then uwsm stop; else loginctl terminate-session \"$XDG_SESSION_ID\"; fi",
+    "text" : "Logout",
+    "keybind" : "e"
+}
+{
+    "label" : "suspend",
+    "action" : "systemctl suspend",
+    "text" : "Suspend",
     "keybind" : "s"
 }
 {
@@ -11,20 +23,8 @@
     "keybind" : "r"
 }
 {
-    "label" : "logout",
-    "action" : "loginctl kill-session $XDG_SESSION_ID",
-    "text" : "Logout",
-    "keybind" : "e"
-}
-{
-    "label" : "hibernate",
-    "action" : "swaylock -f && systemctl hibernate",
-    "text" : "Hibernate",
-    "keybind" : "h"
-}
-{
-    "label" : "lock",
-    "action" : "hyprlock",
-    "text" : "Lock",
-    "keybind" : "l"
+    "label" : "shutdown",
+    "action" : "systemctl poweroff",
+    "text" : "Shutdown",
+    "keybind" : "p"
 }

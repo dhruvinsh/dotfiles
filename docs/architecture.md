@@ -13,7 +13,7 @@ noted.
 | `README.md` | Per-OS bootstrap (`chezmoi init dhruvinsh --apply`) |
 | `Installation.md` | Arch base-system install walkthrough |
 | `.pre-commit-config.yaml` | prek hooks: gitleaks, shellcheck, shfmt, chezmoi template check |
-| `.github/workflows/lint.yml` | shellcheck + shfmt (triggers on `master`) |
+| `.github/workflows/lint.yml` | shellcheck + shfmt (triggers on push to `main` and on PRs) |
 | `scripts/shellcheck.bash`, `scripts/shfmt.bash` | Lint entrypoints used by CI |
 | `scripts/chezmoi-template-check.bash` | Renders `*.tmpl` to catch template errors (hook) |
 | `.claude/agents/{doc-sync,chezmoi-reviewer}.md` | Project subagents (see CLAUDE.md) |
@@ -64,14 +64,16 @@ script's content changes.
 ## Templates (`home/.chezmoitemplates/`)
 
 - `colors/*.jsonc.tmpl` — palette definitions per scheme; parsed in `.chezmoi.toml.tmpl`
-  into `.colorScheme.*` and re-injected into app configs (fzf, nvim, kitty, wezterm,
-  lazygit, rofi, waybar, yazi, …).
+  into `.colorScheme.*` and re-injected into app configs (kitty, wezterm, lazygit, rofi,
+  waybar, hypr, …).
+- `gtk-colors.css` — shared GTK `@define-color` palette from `.colorScheme`, included by
+  the waybar, swaync, swayosd, and wlogout `style.css.tmpl` files.
 - `encryption/{jira,geoclue}` — age-encrypted secret blobs; used via `| decrypt`.
 - `llm/{keys.json.tmpl, extra-openai-models.yaml.tmpl, default_model.txt, litellm-key}` —
   Simon Willison `llm` CLI config.
 - `scripts/{download_helpers.sh, service_helpers.sh}` — shared script functions.
 - `python`, `mixture`, `hex2rgb` — helper snippets (e.g. python version resolution).
-- `lazygit.yml.tmpl`, `yazi-theme.toml.tmpl` — themed config fragments.
+- `lazygit.yml.tmpl` — themed config fragment.
 
 ## Externals (`home/.chezmoiexternals/`)
 
@@ -85,18 +87,19 @@ script's content changes.
 
 Excludes by platform: Windows drops non-windows scripts/`.local`/zsh files; non-Windows
 drops `AppData`/`Documents`; non-Linux drops fontconfig/wallpaper/bash; non-macOS drops
-`Library`/darwin; non-Arch drops arch scripts + `hypr`; non-Ubuntu/non-Fedora drop their
+`Library`/darwin; non-Arch drops arch scripts + `hypr`, `swaync`, `swayosd`, `networkmanager-dmenu`; non-Ubuntu/non-Fedora drop their
 script dirs; `.local/share/**` only kept on Ubuntu desktop.
 
 ## Managed app configs (`home/private_dot_config/`)
 
 - **Shell/mux:** zsh (primary; `dot_zshrc.tmpl`), bash, fish, tmux
 - **Terminals:** kitty, wezterm, ghostty (alacritty removed)
-- **Wayland/WM:** hypr (Hyprland, Lua), sway, i3; bars: waybar, polybar; rofi, dunst,
-  picom, wlogout
+- **Wayland/WM:** hypr (Hyprland, Lua; `hyprland.lua.tmpl`, plus hyprlock, hypridle, hyprpaper),
+  sway, i3; bars: waybar, polybar; notifications/OSD: swaync, swayosd; rofi, dunst,
+  picom, wlogout, networkmanager-dmenu
 - **Prompt/history/nav:** starship, atuin, zoxide
 - **Git:** git (`config.tmpl`, `delta.tmpl`, `ignore`), lazygit
-- **Files/CLI:** yazi, bat, fd, btop, tealdeer
+- **Files/CLI:** bat, fd, btop, tealdeer
 - **Dev:** mise, direnv, io.datasette.llm, vectorcode
 - **System:** pacman, gtk-2.0/3.0, `dot_Xresources`
 

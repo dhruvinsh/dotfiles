@@ -1,0 +1,86 @@
+{{- $c := .colorScheme -}}
+general {
+    hide_cursor = true
+    ignore_empty_input = true
+}
+
+background {
+    monitor =
+    path = ~/.cache/wallpapers/wall.current
+    blur_passes = 3
+    blur_size = 6
+    noise = 0.02
+    brightness = 0.7
+    vibrancy = 0.2
+}
+
+# Clock
+label {
+    monitor =
+    text = cmd[update:1000] date +"%H:%M"
+    color = {{ includeTemplate "hex2rgb" (list $c.text) }}
+    font_size = 140
+    font_family = {{ .font.regular }} ExtraBold
+    position = 0, 280
+    halign = center
+    valign = center
+}
+
+# Date
+label {
+    monitor =
+    text = cmd[update:60000] date +"%A, %d %B %Y"
+    color = {{ includeTemplate "hex2rgb" (list $c.subtext1) }}
+    font_size = 24
+    font_family = {{ .font.regular }}
+    position = 0, 170
+    halign = center
+    valign = center
+}
+
+# Greeting
+label {
+    monitor =
+    text = Welcome back, $USER
+    color = {{ includeTemplate "hex2rgb" (list $c.mauve) }}
+    font_size = 20
+    font_family = {{ .font.regular }}
+    position = 0, 40
+    halign = center
+    valign = center
+}
+
+input-field {
+    monitor =
+    size = 320, 56
+    outline_thickness = 3
+    dots_size = 0.25
+    dots_spacing = 0.3
+    dots_center = true
+    outer_color = {{ includeTemplate "hex2rgb" (list $c.mauve) }}
+    inner_color = {{ includeTemplate "hex2rgb" (list $c.surface0 0.85) }}
+    font_color = {{ includeTemplate "hex2rgb" (list $c.text) }}
+    check_color = {{ includeTemplate "hex2rgb" (list $c.yellow) }}
+    fail_color = {{ includeTemplate "hex2rgb" (list $c.red) }}
+    capslock_color = {{ includeTemplate "hex2rgb" (list $c.peach) }}
+    fade_on_empty = false
+    rounding = 28
+    # "##" is hyprlang's escape for a literal "#" (a single "#" starts a comment)
+    placeholder_text = <span foreground="##{{ $c.subtext0 | trimPrefix "#" }}">Password</span>
+    fail_text = <i>$FAIL ($ATTEMPTS)</i>
+    position = 0, -60
+    halign = center
+    valign = center
+}
+
+# Now playing
+label {
+    monitor =
+    text = cmd[update:2000] playerctl metadata --format '󰎆  {{ "{{" }} artist {{ "}}" }} - {{ "{{" }} title {{ "}}" }}' 2>/dev/null || true
+    color = {{ includeTemplate "hex2rgb" (list $c.subtext1) }}
+    font_size = 16
+    font_family = {{ .font.regular }}
+    position = 0, 60
+    halign = center
+    valign = bottom
+}

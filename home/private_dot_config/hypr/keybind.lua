@@ -13,10 +13,15 @@ local menu = "rofi -show drun"
 
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + C", hl.dsp.window.close())
--- hl.bind(mainMod .. " + M",   hl.dsp.exit())
+-- Session: power menu (wlogout; logout/reboot/shutdown live there) and lock
+hl.bind(mainMod .. " + ESCAPE", hl.dsp.exec_cmd("~/.local/bin/__wlogout.sh"))
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("loginctl lock-session"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("sh -c 'cliphist list | rofi -dmenu -p Clipboard | cliphist decode | wl-copy'"))
+hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw"))
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("~/.local/bin/wallpaper-manager.sh select"))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo()) -- dwindle
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle (replaces removed togglesplit dispatcher)
 
@@ -35,7 +40,12 @@ end
 
 -- Special workspace (scratchpad)
 hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(mainMod .. " + SHIFT + grave", hl.dsp.window.move({ workspace = "special:magic" }))
+
+-- Screenshots (flameshot daemon is started in execs.lua)
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("flameshot gui")) -- region + annotate
+hl.bind("Print", hl.dsp.exec_cmd("flameshot screen -c")) -- focused screen -> clipboard
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd("flameshot gui"))
 
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
@@ -45,29 +55,22 @@ hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
--- Laptop multimedia keys for volume and LCD brightness
+-- Volume / mic keys go through swayosd so the on-screen display shows.
+-- Mute toggles must not repeat (holding the key would flap mute on/off).
+local osd = "swayosd-client"
 hl.bind(
   "XF86AudioRaiseVolume",
-  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),
+  hl.dsp.exec_cmd(osd .. " --output-volume raise --max-volume 100"),
   { locked = true, repeating = true }
 )
-hl.bind(
-  "XF86AudioLowerVolume",
-  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
-  { locked = true, repeating = true }
-)
-hl.bind(
-  "XF86AudioMute",
-  hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),
-  { locked = true, repeating = true }
-)
-hl.bind(
-  "XF86AudioMicMute",
-  hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
-  { locked = true, repeating = true }
-)
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(osd .. " --output-volume lower"), { locked = true, repeating = true })
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd(osd .. " --output-volume mute-toggle"), { locked = true })
+hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd(osd .. " --input-volume mute-toggle"), { locked = true })
+-- Keyboards without media keys
+hl.bind(mainMod .. " + equal", hl.dsp.exec_cmd(osd .. " --output-volume raise --max-volume 100"), { locked = true, repeating = true })
+hl.bind(mainMod .. " + minus", hl.dsp.exec_cmd(osd .. " --output-volume lower"), { locked = true, repeating = true })
+hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd(osd .. " --input-volume mute-toggle"), { locked = true })
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd(osd .. " --output-volume mute-toggle"), { locked = true })
 
 -- Requires playerctl
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })

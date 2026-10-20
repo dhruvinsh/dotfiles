@@ -1,1 +1,8 @@
+configuration {
+    /* Mouse: hover highlights, single left-click accepts (rofi 2.0 defaults to double-click). */
+    hover-select:    true;
+    me-select-entry: "";
+    me-accept-entry: "MousePrimary";
+}
+
 @import "~/.config/rofi/styles/style_1.rasi"

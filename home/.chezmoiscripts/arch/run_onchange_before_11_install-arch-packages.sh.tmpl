@@ -35,11 +35,13 @@ packages=(
 
     # Hyperland and Wayland
     cliphist
+    flameshot
     gnome-keyring
     grim
     hypridle
     hyprland
     hyprlock
+    hyprpaper
     hyprpicker
     hyprpolkitagent
     hyprshot
@@ -51,9 +53,9 @@ packages=(
     rofi
     slurp
     swappy
+    libnotify
     swaync
     uwsm
-    waybar
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
     
@@ -103,6 +105,7 @@ packages=(
     net-tools
     network-manager-applet
     networkmanager
+    networkmanager-dmenu
 
     # File Manager
     ffmpegthumbnailer 
@@ -128,6 +131,11 @@ packages=(
 aur_pkgs=(
     tumbler-stl-thumbnailer
     # Hyperland and Wayland
+    # waybar 0.15.0 (repo) can't click workspaces or track windows on Lua-config
+    # Hyprland >= 0.55 (fixed upstream after 0.15.0). Swap back to repo `waybar`
+    # once a release > 0.15.0 lands. First switch needs a manual `yay -S waybar-git`
+    # (it replaces waybar; --noconfirm declines that removal).
+    waybar-git
     wlogout
 )
 install_packages_from_arrays

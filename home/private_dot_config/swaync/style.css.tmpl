@@ -1,0 +1,340 @@
+{{ includeTemplate "gtk-colors.css" . }}
+
+/* swaync theme: rounded, translucent cards with accent borders. */
+
+* {
+  font-family: "{{ .font.regular }}", sans-serif;
+}
+
+@define-color card-bg alpha(@base, 0.85);
+@define-color card-bg-hover alpha(@surface0, 0.9);
+@define-color card-border alpha(@accent, 0.35);
+@define-color text-muted @subtext0;
+@define-color accent-soft alpha(@accent, 0.22);
+
+
+/* Popups (notification-window namespace) */
+notificationwindow,
+blankwindow {
+  background: transparent;
+}
+
+.floating-notifications {
+  background: transparent;
+}
+
+.floating-notifications .notification {
+  box-shadow: none;
+}
+
+/* Control center (swaync-control-center namespace) */
+.control-center {
+  background: alpha(@base, 0.80);
+  color: @text;
+  border-radius: 16px;
+  border: 1px solid @card-border;
+  box-shadow: 0 6px 18px alpha(@crust, 0.45);
+  padding: 4px;
+}
+
+.control-center .control-center-list-placeholder {
+  opacity: 0.5;
+}
+
+.control-center .control-center-list {
+  background: transparent;
+}
+
+.blank-window {
+  background: transparent;
+}
+
+/* Cards */
+.notification-row {
+  background: none;
+  outline: none;
+}
+
+.notification-row:focus {
+  background: transparent;
+}
+
+.notification-row .notification-background {
+  padding: 6px 10px;
+}
+
+.notification-row .notification-background .notification {
+  border-radius: 16px;
+  border: 1px solid @card-border;
+  padding: 0;
+  background: @card-bg;
+  box-shadow: 0 6px 18px alpha(@crust, 0.45);
+  transition: background 180ms ease-in-out;
+}
+
+.notification-row .notification-background .notification.critical {
+  border-color: alpha(@red, 0.7);
+}
+
+.notification-row .notification-background .notification .notification-default-action {
+  padding: 8px;
+  margin: 0;
+  box-shadow: none;
+  background: transparent;
+  border: none;
+  color: @text;
+  border-radius: 16px;
+  transition: background 180ms ease-in-out;
+}
+
+.notification-row .notification-background .notification .notification-default-action:hover {
+  background: @card-bg-hover;
+}
+
+.notification-row .notification-background .notification .notification-default-action .notification-content .image {
+  border-radius: 10px;
+  margin: 4px;
+}
+
+.notification-row .notification-background .notification .notification-default-action .notification-content .app-icon {
+  margin: 6px;
+}
+
+.notification-row .notification-background .notification .notification-alt-actions {
+  padding: 0 8px 8px 8px;
+}
+
+.notification-row .notification-background .notification .notification-action {
+  border: none;
+  box-shadow: none;
+  background: alpha(@surface0, 0.7);
+  color: @text;
+  border-radius: 10px;
+  margin: 0 4px;
+  transition: background 180ms ease-in-out;
+}
+
+.notification-row .notification-background .notification .notification-action:hover {
+  background: @accent-soft;
+}
+
+.notification-row .notification-background .notification .notification-action > button {
+  color: @text;
+}
+
+.close-button {
+  background: alpha(@surface1, 0.8);
+  color: @text;
+  text-shadow: none;
+  padding: 0;
+  border-radius: 100%;
+  margin-top: 8px;
+  margin-right: 8px;
+  box-shadow: none;
+  border: none;
+  min-width: 24px;
+  min-height: 24px;
+  transition: background 180ms ease-in-out;
+}
+
+.close-button:hover {
+  background: alpha(@red, 0.6);
+  box-shadow: none;
+  border: none;
+}
+
+/* Notification groups */
+.notification-group {
+  border-radius: 16px;
+}
+
+.notification-group .notification-group-headers .notification-group-header {
+  color: @text;
+}
+
+.notification-group .notification-group-close-button .close-button {
+  margin-right: 12px;
+}
+
+.control-center .control-center-list .notification {
+  box-shadow: none;
+}
+
+.control-center .control-center-list .notification .notification-default-action:hover,
+.control-center .control-center-list .notification .notification-action:hover {
+  background-color: @card-bg-hover;
+}
+
+/* Widgets */
+.widget {
+  margin: 6px 8px;
+  padding: 10px;
+  border-radius: 16px;
+  background: @card-bg;
+  border: 1px solid @card-border;
+  box-shadow: 0 6px 18px alpha(@crust, 0.45);
+}
+
+/* Title */
+.widget-title {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 6px 10px;
+}
+
+.widget-title > label {
+  margin-right: 8px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: @text;
+}
+
+.widget-title > button {
+  margin-left: 8px;
+  padding: 4px 12px;
+  border-radius: 10px;
+  background: alpha(@surface1, 0.8);
+  color: @text;
+  border: none;
+  box-shadow: none;
+  transition: background 180ms ease-in-out, color 180ms ease-in-out;
+}
+
+.widget-title > button:hover {
+  background: alpha(@red, 0.55);
+  color: @crust;
+}
+
+/* DND */
+.widget-dnd {
+  padding: 8px 12px;
+}
+
+.widget-dnd label {
+  color: @text;
+  margin-right: 8px;
+  font-size: 1.05rem;
+}
+
+.widget-dnd switch {
+  border-radius: 999px;
+  margin-left: 8px;
+  background: alpha(@surface1, 0.9);
+  border: none;
+  transition: background 180ms ease-in-out;
+}
+
+.widget-dnd switch:checked {
+  background: @accent;
+}
+
+.widget-dnd switch slider {
+  border-radius: 999px;
+  background: @text;
+  box-shadow: none;
+}
+
+/* MPRIS */
+.widget-mpris {
+  background: @card-bg;
+}
+
+.widget-mpris .widget-mpris-player {
+  border-radius: 10px;
+}
+
+.widget-mpris .widget-mpris-player .mpris-overlay .widget-mpris-title {
+  color: @text;
+  font-weight: 700;
+}
+
+.widget-mpris .widget-mpris-player .mpris-overlay .widget-mpris-subtitle {
+  color: @text-muted;
+}
+
+.widget-mpris > box > button {
+  border-radius: 999px;
+  background: alpha(@surface1, 0.6);
+  color: @text;
+  transition: background 180ms ease-in-out;
+}
+
+.widget-mpris > box > button:hover {
+  background: @accent-soft;
+}
+
+/* Volume */
+.widget-volume {
+  padding: 10px 12px;
+}
+
+.widget-volume row image {
+  color: @accent;
+}
+
+.widget-volume scale trough {
+  min-height: 6px;
+  border-radius: 999px;
+  background: alpha(@surface1, 0.9);
+  border: none;
+}
+
+.widget-volume scale highlight {
+  border-radius: 999px;
+  background: @accent;
+}
+
+.widget-volume scale slider {
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 999px;
+  background: @text;
+  box-shadow: none;
+  border: none;
+}
+
+.widget-volume label {
+  color: @text;
+}
+
+/* Buttons grid */
+.widget-buttons-grid {
+  padding: 8px;
+}
+
+.widget-buttons-grid flowboxchild > button {
+  margin: 4px;
+  padding: 10px 8px;
+  border-radius: 10px;
+  background: alpha(@surface0, 0.85);
+  color: @text;
+  border: 1px solid transparent;
+  box-shadow: none;
+  transition: background 180ms ease-in-out, border-color 180ms ease-in-out, color 180ms ease-in-out;
+}
+
+.widget-buttons-grid flowboxchild > button:hover {
+  background: @card-bg-hover;
+  border-color: @card-border;
+}
+
+.widget-buttons-grid flowboxchild > button:active {
+  background: @accent-soft;
+}
+
+.widget-buttons-grid flowboxchild > button.toggle:checked {
+  background: alpha(@accent, 0.35);
+  border-color: @accent;
+  color: @text;
+}
+
+.widget-buttons-grid flowboxchild > button.toggle:checked:hover {
+  background: alpha(@accent, 0.45);
+}
+
+/* Label widget */
+.widget-label > label {
+  font-size: 1.05rem;
+  color: @text;
+}
