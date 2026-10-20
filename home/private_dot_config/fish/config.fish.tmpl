@@ -1,12 +1,11 @@
-{{- /* ~/.config/fish/config.fish — managed by chezmoi (fish port of dot_zshrc.tmpl) */ -}}
+{{- /* ~/.config/fish/config.fish — managed by chezmoi (fish port of ~/.zsh/rc.d/*.zsh; keep in sync) */ -}}
 # Sourced for every fish shell (interactive, login and scripts). Interactive-only
 # setup (prompt, keybindings, aliases) lives in the `status is-interactive` block.
 
 #### Environment #################################################################
 
 # Prepend personal bin directories, highest priority first. fish_add_path is
-# idempotent and silently skips paths that don't exist, so it replaces the
-# explicit `stat` checks used in the zsh config.
+# idempotent and silently skips paths that don't exist (zsh: `path=(…(N-/))`).
 fish_add_path -gP $HOME/bin $HOME/go/bin $HOME/.cargo/bin $HOME/.local/bin
 
 set -gx LANG en_US.UTF-8
@@ -62,88 +61,10 @@ if test -x ~/.local/bin/mise
     ~/.local/bin/mise activate fish | source
 end
 
-#### Functions ###################################################################
+# User functions (csv, llm, f, t, cuda_switch) live one per file in
+# ~/.config/fish/functions and are autoloaded on first use — mirroring
+# ~/.zsh/functions on the zsh side.
 
-function csv --description 'Open spreadsheets/CSVs in VisiData'
-    uvx --with openpyxl visidata $argv
-end
-
-function llm --description 'Pipe llm output through streamdown'
-    command llm $argv | streamdown
-end
-
-# Run a command and pipe its output into fzf: `f <cmd…> -- <fzf args…>`
-function f --description 'Pipe a command into fzf (args after -- go to fzf)'
-    set -l cmd
-    set -l fzf_args
-    set -l found_sep 0
-    for arg in $argv
-        if test "$arg" = --
-            set found_sep 1
-            continue
-        end
-        if test $found_sep -eq 0
-            set -a cmd $arg
-        else
-            set -a fzf_args $arg
-        end
-    end
-    $cmd | fzf $fzf_args
-end
-
-# tmux selector powered by fzf
-function t --description 'Attach/create a tmux session (no args = fzf picker)'
-    if test (count $argv) -eq 0
-        set -l session (tmux list-sessions -F '#{session_name}' 2>/dev/null | fzf --prompt='Select tmux session: ')
-        test -n "$session"; or return
-        tmux attach-session -t $session
-    else
-        set -l session $argv[1]
-        if tmux has-session -t=$session 2>/dev/null
-            tmux attach-session -t $session
-        else
-            tmux new-session -s $session
-        end
-    end
-end
-
-{{ $nvidia := output "sh" "-c" "lspci -k 2>/dev/null | grep -iq nvidia && echo 'yes' || echo 'no'" | trim -}}
-{{- if eq $nvidia "yes" -}}
-# Switch the active CUDA toolkit (only present on NVIDIA machines)
-function cuda_switch --description 'Switch active CUDA toolkit on PATH/LD_LIBRARY_PATH'
-    set -l cuda_root /usr/local
-    set -l versions (find $cuda_root -maxdepth 1 ! -type l -name '*cuda*' | awk -F'cuda-' '/cuda-/ {print $2}' | sort)
-    set -l target $argv[1]
-
-    if test -z "$target"
-        echo "Usage: cuda_switch <$versions>"
-        return 1
-    end
-
-    if not string match -qr '^[0-9]+\.[0-9]+$' -- $target
-        echo "Error: Invalid version format '$target'. Expected format: X.Y"
-        return 1
-    end
-
-    if not contains -- $target $versions
-        echo "Usage: cuda_switch <$versions>"
-        return 1
-    end
-
-    # Drop existing cuda entries (PATH/LD_LIBRARY_PATH are colon-lists in fish)
-    set -gx PATH (string match --invert --regex "^$cuda_root/cuda(-[0-9.]+)?/" -- $PATH)
-    if set -q LD_LIBRARY_PATH
-        set -gx LD_LIBRARY_PATH (string match --invert --regex "^$cuda_root/cuda(-[0-9.]+)?/" -- $LD_LIBRARY_PATH)
-    end
-
-    set -gx CUDA_HOME $cuda_root/cuda-$target
-    set -gx PATH $CUDA_HOME/bin $PATH
-    set -gx LD_LIBRARY_PATH $CUDA_HOME/lib64 $LD_LIBRARY_PATH
-
-    echo "Switched to CUDA $target. (PATH updated, LD_LIBRARY_PATH set)"
-end
-
-{{ end -}}
 #### Interactive shell setup #####################################################
 if status is-interactive
     # Emacs key bindings (fish's default; set explicitly to mirror zsh `bindkey -e`)

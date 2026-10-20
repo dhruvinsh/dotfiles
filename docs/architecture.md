@@ -92,7 +92,8 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop.
 
 ## Managed app configs (`home/private_dot_config/`)
 
-- **Shell/mux:** zsh (primary; `dot_zshrc.tmpl`), bash, fish, tmux
+- **Shell/mux:** zsh (primary; lives outside `.config` — loader `dot_zshrc` +
+  `private_dot_zsh/{exact_rc.d,exact_functions}`), bash, fish (`config.fish.tmpl` + `functions/`), tmux
 - **Terminals:** kitty, wezterm, ghostty (alacritty removed)
 - **Wayland/WM:** hypr (Hyprland, Lua; `hyprland.lua.tmpl`, plus hyprlock, hypridle, hyprpaper),
   sway, i3; bars: waybar, polybar; notifications/OSD: swaync, swayosd; rofi, dunst,
@@ -107,5 +108,14 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop.
 
 - `home/.chezmoi.toml.tmpl` — data/prompts/age/github/diff config
 - `home/private_dot_config/mise/config.toml.tmpl` — the ~70-tool manifest
-- `home/dot_zshrc.tmpl` — shell init (mise, fzf, zoxide, starship, atuin) + secret decrypt
+- `home/dot_zshenv` — sets `skip_global_compinit=1` (Ubuntu's `/etc/zsh/zshrc` would
+  otherwise run its own compinit and clobber `~/.zcompdump`) + sources rustup's `~/.cargo/env`
+- `home/dot_zshrc` — thin non-templated loader: autoloads `~/.zsh/functions/*`, sources
+  `~/.zsh/rc.d/*.zsh` in numeric order
+- `home/private_dot_zsh/exact_rc.d/` — zsh config snippets `10-env` … `60-aliases`; tool init
+  (mise, fzf, zoxide, starship, atuin) in `50-tools.zsh.tmpl`; jira secret decrypt in
+  `private_70-secrets.zsh.tmpl` (0600)
+- `home/private_dot_zsh/exact_functions/` — autoloaded zsh functions (`csv`, `llm`, `f`, `t`,
+  `cuda_switch.tmpl` — renders empty, so absent, on non-NVIDIA); fish mirrors these in
+  `private_dot_config/fish/functions/*.fish`
 - `home/private_dot_config/git/config.tmpl` — git identity (email templated by machine)

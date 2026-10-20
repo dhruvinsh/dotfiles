@@ -1,0 +1,11 @@
+# The most important aliases ever (the only thing I borrowed from OMZ)
+alias l='ls -lah'
+alias la='ls -lAh'
+alias ll='ls -lh'
+# Colour flag differs: BSD ls uses -G, while on GNU ls -G means --no-group.
+alias ls='ls {{ if eq .chezmoi.os "darwin" }}-G{{ else }}--color=auto{{ end }}'
+alias lsa='ls -lah'
+alias vim=nvim
+alias lg=lazygit
+
+{{- /* vim: set filetype=zsh ts=2 sw=2: */}}

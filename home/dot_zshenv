@@ -1,0 +1,12 @@
+# ~/.zshenv — read by every zsh (interactive or not). Keep it minimal; interactive
+# setup lives in ~/.zshrc and ~/.zsh/rc.d.
+
+# Ubuntu's /etc/zsh/zshrc runs a full compinit before ~/.zshrc (with ~/.zsh/*
+# not yet on fpath) and overwrites ~/.zcompdump. Our own once-a-day compinit
+# lives in ~/.zsh/rc.d/30-completion.zsh.
+skip_global_compinit=1
+
+# rustup (it looks for this line and won't re-append it)
+[[ -r "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
+
+# vim: set filetype=zsh ts=2 sw=2:

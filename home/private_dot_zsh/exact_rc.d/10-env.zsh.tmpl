@@ -1,0 +1,27 @@
+# Environment: PATH and exported variables.
+
+# Personal bin dirs, highest priority first. `(N-/)` keeps only existing
+# directories (checked at shell start, not at `chezmoi apply` time) and
+# `typeset -U` drops duplicates when the shell is nested.
+typeset -U path fpath
+path=(~/bin(N-/) ~/go/bin(N-/) ~/.cargo/bin(N-/) ~/.local/bin(N-/) $path)
+
+export NVIM_COLORSCHEME={{ .colorScheme.name }}
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export EDITOR='nvim'
+{{- if eq .chezmoi.os "darwin" }}
+export HOMEBREW_NO_AUTO_UPDATE=1
+{{- end }}
+{{- if .wsl }}
+
+# ── WSL ─────────────────────────────────────────────────────────────────────
+export DISPLAY=:0
+# https://github.com/microsoft/wslg/wiki/GPU-selection-in-WSLg
+export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
+path=(/usr/lib/wsl/lib $path)
+# WSL injects Windows dirs into PATH; drop the noisy AppData ones.
+() { setopt localoptions extendedglob; path=(${path:#(#i)*appdata*}) }
+{{- end }}
+
+{{- /* vim: set filetype=zsh ts=2 sw=2: */}}

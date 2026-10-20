@@ -1,0 +1,42 @@
+# Tool integrations, each guarded so a missing binary can't break startup.
+
+# mise-en-place (replaces volta, pyenv). Activated first so mise-managed
+# binaries (e.g. starship) are already on PATH for the inits below.
+[[ -x ~/.local/bin/mise ]] && eval "$(~/.local/bin/mise activate zsh)"
+
+# fzf: source command, theme, key bindings and fuzzy completion
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+export FZF_DEFAULT_OPTS=" \
+  --highlight-line \
+  --info=inline-right \
+  --ansi \
+  --layout=reverse \
+  --border=none \
+  --multi \
+  --color=bg+:-1 \
+  --color=bg:-1 \
+  --color=fg+:{{ .colorScheme.text | quote }} \
+  --color=fg:{{ .colorScheme.text | quote }} \
+  --color=header:{{ .colorScheme.red | quote }} \
+  --color=hl+:{{ .colorScheme.red | quote }} \
+  --color=hl:{{ .colorScheme.red | quote }} \
+  --color=info:{{ .colorScheme.mauve | quote }} \
+  --color=marker:{{ .colorScheme.lavender | quote }} \
+  --color=pointer:{{ .colorScheme.rosewater | quote }} \
+  --color=prompt:{{ .colorScheme.mauve | quote }} \
+  --color=selected-bg:{{ .colorScheme.surface1 | quote }} \
+  --color=spinner:{{ .colorScheme.rosewater | quote }} \
+"
+(( $+commands[fzf] )) && eval "$(fzf --zsh)"
+
+# zoxide: jump between folders efficiently
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
+
+# Starship prompt
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
+(( $+commands[starship] )) && eval "$(starship init zsh)"
+
+# Atuin history search
+(( $+commands[atuin] )) && eval "$(atuin init zsh)"
+
+{{- /* vim: set filetype=zsh ts=2 sw=2: */}}

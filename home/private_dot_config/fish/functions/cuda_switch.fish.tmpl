@@ -1,0 +1,37 @@
+{{- /* Only rendered on NVIDIA machines; an empty render means chezmoi skips the file. */ -}}
+{{- $nvidia := output "sh" "-c" "lspci -k 2>/dev/null | grep -iq nvidia && echo 'yes' || echo 'no'" | trim -}}
+{{- if eq $nvidia "yes" -}}
+# Switch the active CUDA toolkit (only present on NVIDIA machines)
+function cuda_switch --description 'Switch active CUDA toolkit on PATH/LD_LIBRARY_PATH'
+    set -l cuda_root /usr/local
+    set -l versions (find $cuda_root -maxdepth 1 ! -type l -name '*cuda*' | awk -F'cuda-' '/cuda-/ {print $2}' | sort)
+    set -l target $argv[1]
+
+    if test -z "$target"
+        echo "Usage: cuda_switch <$versions>"
+        return 1
+    end
+
+    if not string match -qr '^[0-9]+\.[0-9]+$' -- $target
+        echo "Error: Invalid version format '$target'. Expected format: X.Y"
+        return 1
+    end
+
+    if not contains -- $target $versions
+        echo "Usage: cuda_switch <$versions>"
+        return 1
+    end
+
+    # Drop existing cuda entries (PATH/LD_LIBRARY_PATH are colon-lists in fish)
+    set -gx PATH (string match --invert --regex "^$cuda_root/cuda(-[0-9.]+)?/" -- $PATH)
+    if set -q LD_LIBRARY_PATH
+        set -gx LD_LIBRARY_PATH (string match --invert --regex "^$cuda_root/cuda(-[0-9.]+)?/" -- $LD_LIBRARY_PATH)
+    end
+
+    set -gx CUDA_HOME $cuda_root/cuda-$target
+    set -gx PATH $CUDA_HOME/bin $PATH
+    set -gx LD_LIBRARY_PATH $CUDA_HOME/lib64 $LD_LIBRARY_PATH
+
+    echo "Switched to CUDA $target. (PATH updated, LD_LIBRARY_PATH set)"
+end
+{{ end -}}

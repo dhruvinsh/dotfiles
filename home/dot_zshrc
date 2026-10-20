@@ -1,0 +1,16 @@
+# ~/.zshrc — thin loader, managed by chezmoi.
+#
+#   ~/.zsh/rc.d/NN-*.zsh   config snippets, sourced in numeric order (order matters:
+#                          env → options → completion → plugins → tools → aliases)
+#   ~/.zsh/functions/      user functions, one per file, autoloaded on first call
+#   ~/.zsh/completions/    extra completion functions (_eza, _t, _semver, …)
+
+fpath=(~/.zsh/functions ~/.zsh/completions $fpath)
+() { (( $# )) && autoload -Uz "$@" } ~/.zsh/functions/*(N.:t)
+
+for _rc in ~/.zsh/rc.d/*.zsh(N); do
+  source "$_rc"
+done
+unset _rc
+
+# vim: set filetype=zsh ts=2 sw=2:
