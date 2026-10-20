@@ -8,7 +8,7 @@
   "margin-right": 8,
   "spacing": 6,
   "reload_style_on_change": true,
-  "modules-left": ["hyprland/workspaces", "hyprland/window", "group/music"],
+  "modules-left": ["hyprland/workspaces", "hyprland/window", "custom/media"],
   "modules-center": ["clock"],
   "modules-right": [
     "privacy",
@@ -81,44 +81,20 @@
       "^$": "",
     },
   },
-  "group/music": {
-    "orientation": "horizontal",
-    "drawer": {
-      "transition-duration": 500,
-      "children-class": "music-child",
-      "transition-left-to-right": true,
-      "click-to-reveal": false,
-    },
-    "modules": ["mpris", "custom/prev", "custom/next"],
-  },
-  "mpris": {
-    "format": "{player_icon} {dynamic}",
-    "format-paused": "{status_icon} <i>{dynamic}</i>",
-    "dynamic-order": ["title", "artist"],
-    "dynamic-len": 40,
-    "player-icons": {
-      "default": "▶",
-      "mpv": "",
-      "spotify": "",
-      "firefox": "󰈹",
-    },
-    "status-icons": {
-      "paused": "⏸",
-    },
-    "ignored-players": ["firefox"],
+  // Polled script instead of the built-in mpris module: Brave/Chromium leave a
+  // "Stopped" player with empty metadata behind after a tab closes, which mpris
+  // kept showing as the last track. Empty output hides the pill.
+  "custom/media": {
+    "exec": "~/.local/bin/waybar-media.sh",
+    "return-type": "json",
+    "interval": 2,
     "max-length": 50,
-    "tooltip-format": "{player}: {artist} - {title}\n{album}",
-    "tooltip-format-paused": "{player} (paused): {artist} - {title}\n{album}",
-  },
-  "custom/prev": {
-    "format": "󰒮",
-    "on-click": "playerctl previous",
-    "tooltip": false,
-  },
-  "custom/next": {
-    "format": "󰒭",
-    "on-click": "playerctl next",
-    "tooltip": false,
+    "escape": true,
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next",
+    "on-click-middle": "playerctl previous",
+    "on-scroll-up": "playerctl next",
+    "on-scroll-down": "playerctl previous",
   },
 
   // -------------------------------------------------------------- center

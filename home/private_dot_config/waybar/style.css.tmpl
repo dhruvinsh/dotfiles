@@ -27,7 +27,7 @@ tooltip label {
 /* ---- island pills ---- */
 #workspaces,
 #window,
-#music,
+#custom-media,
 #clock,
 #privacy,
 #systemd-failed-units,
@@ -50,7 +50,6 @@ tooltip label {
 }
 
 /* groups: inner modules carry no extra chrome */
-#music > *,
 #systray > *,
 #hw > *,
 #audio > * {
@@ -108,24 +107,13 @@ window#waybar.empty #window {
   color: @overlay0;
 }
 
-/* ---- music ---- */
-#mpris {
+/* ---- music (custom/media; hidden when nothing is playing) ---- */
+#custom-media {
   color: @green;
 }
 
-#mpris.paused {
+#custom-media.paused {
   color: @overlay1;
-}
-
-#custom-prev,
-#custom-next {
-  color: @subtext0;
-  padding-left: 8px;
-}
-
-#custom-prev:hover,
-#custom-next:hover {
-  color: @accent;
 }
 
 /* ---- center ---- */
@@ -303,7 +291,7 @@ window#waybar.empty #window {
 
 /* ---- hover ---- */
 #window:hover,
-#music:hover,
+#custom-media:hover,
 #privacy:hover,
 #custom-updates:hover,
 #systray:hover,

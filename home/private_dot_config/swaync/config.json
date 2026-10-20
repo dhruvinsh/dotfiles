@@ -53,8 +53,10 @@
       "text": "Do Not Disturb"
     },
     "mpris": {
-      "blacklist": [],
-      "autohide": false,
+      "blacklist": [
+        "playerctld"
+      ],
+      "autohide": true,
       "show-album-art": "always",
       "loop-carousel": false
     },
