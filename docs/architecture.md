@@ -41,6 +41,7 @@ script's content changes.
 - `after_81_install-arch-geolocation`, `after_82_install-arch-docker`,
   `after_82_install-arch-eol-packages`, `after_88_install-fonts`
 - `run_once_after_arch-privileged-setup` — sudo/privileged one-time setup
+- `run_once_after_bluetooth-setup`, `run_once_after_networking-setup`, `run_once_after_sddm-pam` — one-time system setup
 
 ### `ubuntu/`
 - `before_10_cleanup`, `before_11_install-ubuntu-packages`, `before_13_install-docker`
@@ -87,7 +88,7 @@ script's content changes.
 
 Excludes by platform: Windows drops non-windows scripts/`.local`/zsh files; non-Windows
 drops `AppData`/`Documents`; non-Linux drops fontconfig/wallpaper/bash; non-macOS drops
-`Library`/darwin; non-Arch drops arch scripts + `hypr`, `swaync`, `swayosd`, `networkmanager-dmenu`; non-Ubuntu/non-Fedora drop their
+`Library`/darwin; non-Arch drops arch scripts + `hypr`, `uwsm`, `swaync`, `swayosd`, `networkmanager-dmenu`; non-Ubuntu/non-Fedora drop their
 script dirs; `.local/share/**` only kept on Ubuntu desktop.
 
 ## Managed app configs (`home/private_dot_config/`)
@@ -96,7 +97,7 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop.
   `private_dot_zsh/{exact_rc.d,exact_functions}`), bash, fish (`config.fish.tmpl` + `functions/`), tmux
 - **Terminals:** kitty, wezterm, ghostty (alacritty removed)
 - **Wayland/WM:** hypr (Hyprland, Lua; `hyprland.lua.tmpl`, plus hyprlock, hypridle, hyprpaper),
-  sway, i3; bars: waybar, polybar; notifications/OSD: swaync, swayosd; rofi, dunst,
+  uwsm, sway, i3; bars: waybar, polybar; notifications/OSD: swaync, swayosd; rofi, dunst,
   picom, wlogout, networkmanager-dmenu
 - **Prompt/history/nav:** starship, atuin, zoxide
 - **Git:** git (`config.tmpl`, `delta.tmpl`, `ignore`), lazygit

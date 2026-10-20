@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+# {{- if eq .archlinux true }}
+
+PAM_SDDM="/etc/pam.d/sddm"
+
+if [ -f "$PAM_SDDM" ]; then
+    echo "Configuring SDDM PAM to unlock gnome-keyring (idempotent setup)..."
+    
+    # We will use python3 to parse and safely replace sections in the file
+    sudo python3 - << 'EOF'
+import re
+import sys
+
+pam_file = "/etc/pam.d/sddm"
+
+try:
+    with open(pam_file, "r") as f:
+        content = f.read()
+except Exception as e:
+    print(f"Error reading {pam_file}: {e}")
+    sys.exit(1)
+
+# Step 1: Clean up any existing pam_gnome_keyring lines and chezmoi tags
+lines = content.splitlines()
+new_lines = []
+skip = False
+for line in lines:
+    stripped = line.strip()
+    if stripped.startswith("# BEGIN chezmoi") and "keyring" in stripped:
+        skip = True
+        continue
+    if stripped.startswith("# END chezmoi") and "keyring" in stripped:
+        skip = False
+        continue
+    if skip:
+        continue
+    # remove untagged gnome keyring lines too
+    if "pam_gnome_keyring.so" in line:
+        continue
+    new_lines.append(line)
+
+content = "\n".join(new_lines) + "\n"
+
+# Step 2: Inject tagged blocks after system-login includes
+auth_block = "\n# BEGIN chezmoi auth keyring\n-auth       optional     pam_gnome_keyring.so\n# END chezmoi auth keyring"
+password_block = "\n# BEGIN chezmoi password keyring\n-password   optional     pam_gnome_keyring.so     use_authtok\n# END chezmoi password keyring"
+session_block = "\n# BEGIN chezmoi session keyring\n-session    optional     pam_gnome_keyring.so     auto_start\n# END chezmoi session keyring"
+
+if re.search(r"auth\s+include\s+system-login", content):
+    content = re.sub(r"(auth\s+include\s+system-login)", r"\1" + auth_block, content, count=1)
+
+if re.search(r"password\s+include\s+system-login", content):
+    content = re.sub(r"(password\s+include\s+system-login)", r"\1" + password_block, content, count=1)
+
+if re.search(r"session\s+include\s+system-login", content):
+    content = re.sub(r"(session\s+include\s+system-login)", r"\1" + session_block, content, count=1)
+
+try:
+    with open(pam_file, "w") as f:
+        f.write(content)
+    print("SDDM PAM keyring unlock configured successfully with tags.")
+except Exception as e:
+    print(f"Error writing to {pam_file}: {e}")
+    sys.exit(1)
+EOF
+else
+    echo "SDDM PAM configuration file not found at $PAM_SDDM. Skipping setup."
+fi
+
+# {{- end }}
