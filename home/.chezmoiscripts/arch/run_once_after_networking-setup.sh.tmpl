@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+{{/*
+  Hardware gate: this whole script is scoped to machines carrying an Intel
+  Wireless-AC 9260 (PCI 8086:2526) -- a combo WiFi+Bluetooth radio whose two halves
+  share one 2.4 GHz front end. Everything below is tuned around that fact, so it
+  should not leak onto a machine with different wireless hardware.
+
+  Detection walks sysfs rather than shelling out to lspci, so it needs no extra
+  package. The trailing `true` keeps the command exit-0 when no match is found --
+  `output` aborts the whole render on a non-zero exit. The .chezmoi.os check keeps
+  `sh` off the critical path on Windows, where /sys does not exist.
+
+  Follows the card, not the hostname: move the AC 9260 into another box and the
+  config moves with it.
+*/}}
+{{- $hasAc9260 := "" -}}
+{{- if eq .chezmoi.os "linux" -}}
+{{-   $hasAc9260 = output "sh" "-c" "for d in /sys/bus/pci/devices/*/; do [ \"$(cat $d/vendor 2>/dev/null)\" = 0x8086 ] && [ \"$(cat $d/device 2>/dev/null)\" = 0x2526 ] && echo yes; done; true" -}}
+{{- end -}}
+
+# {{- if and (eq .archlinux true) (contains "yes" $hasAc9260) }}
+
+echo "Configuring NetworkManager with iwd Wi-Fi backend for stability..."
+
+NM_CONF_DIR="/etc/NetworkManager/conf.d"
+WIFI_BACKEND_CONF="$NM_CONF_DIR/wifi_backend.conf"
+WANTED_CONTENT=$(cat <<'EOF'
+[device]
+wifi.backend=iwd
+EOF
+)
+
+CURRENT_CONTENT=""
+if [ -f "$WIFI_BACKEND_CONF" ]; then
+    CURRENT_CONTENT=$(cat "$WIFI_BACKEND_CONF")
+fi
+
+CHANGES_MADE=0
+
+# Ensure the config directory exists and write the config if different
+if [ "$CURRENT_CONTENT" != "$WANTED_CONTENT" ]; then
+    echo "Writing $WIFI_BACKEND_CONF..."
+    sudo mkdir -p "$NM_CONF_DIR"
+    echo "$WANTED_CONTENT" | sudo tee "$WIFI_BACKEND_CONF" >/dev/null
+    CHANGES_MADE=1
+fi
+
+{{ if eq .chassisType "desktop" -}}
+# Pin Wi-Fi to 5 GHz. DESKTOP ONLY -- a laptop needs 2.4 GHz as a range/compatibility
+# fallback, and this is a hard disable, not a preference. This second guard still earns
+# its place under the AC 9260 gate above: that card shipped in a great many laptops.
+#
+# Why at the iwd layer rather than NetworkManager's 802-11-wireless.band: NM's band
+# property only filters which AP it *associates* with, so iwd would still periodically
+# scan 2.4 GHz. On this board the Wi-Fi and Bluetooth halves of the AC 9260 share one
+# 2.4 GHz front end, and a scan steals airtime from Bluetooth exactly like an
+# association does -- it shows up as a recurring blip in A2DP audio. Per iwd.config(5):
+# "A value of 0.0 will disable the 2.4GHz band and prevent scanning or connecting on
+# those frequencies."
+IWD_CONF="/etc/iwd/main.conf"
+IWD_WANTED=$(cat <<'EOF'
+[Rank]
+# 0.0 disables the band outright -- no scanning, no association.
+# Raise to ~0.3 to keep 2.4 GHz as a weak fallback instead (it will scan again).
+BandModifier2_4GHz=0.0
+EOF
+)
+
+IWD_CURRENT=""
+if [ -f "$IWD_CONF" ]; then
+    IWD_CURRENT=$(cat "$IWD_CONF")
+fi
+
+if [ "$IWD_CURRENT" != "$IWD_WANTED" ]; then
+    echo "Writing $IWD_CONF (pinning Wi-Fi to 5 GHz)..."
+    sudo mkdir -p "${IWD_CONF%/*}"
+    echo "$IWD_WANTED" | sudo tee "$IWD_CONF" >/dev/null
+    # iwd reads main.conf at startup only, and restarting NetworkManager does not
+    # restart an already-running iwd -- bounce it directly.
+    if systemctl is-active --quiet iwd; then
+        echo "Restarting iwd to apply the band setting..."
+        sudo systemctl restart iwd || true
+    fi
+fi
+{{ end -}}
+
+# Disable wpa_supplicant to prevent conflicts
+if systemctl is-active --quiet wpa_supplicant.service || systemctl is-enabled --quiet wpa_supplicant.service; then
+    echo "Disabling conflicting wpa_supplicant service..."
+    sudo systemctl disable --now wpa_supplicant.service || true
+fi
+
+# Disable iwd standalone service (NetworkManager manages it via DBus activation)
+if systemctl is-active --quiet iwd.service || systemctl is-enabled --quiet iwd.service; then
+    echo "Disabling standalone iwd service (will be dbus-activated by NetworkManager)..."
+    sudo systemctl disable --now iwd.service || true
+fi
+
+# Restart NetworkManager if configuration changed
+if [ "$CHANGES_MADE" -eq 1 ]; then
+    if systemctl is-active --quiet NetworkManager.service; then
+        echo "Restarting NetworkManager to apply the new Wi-Fi backend..."
+        sudo systemctl restart NetworkManager.service
+    fi
+else
+    echo "NetworkManager is already configured with iwd backend."
+fi
+
+# {{- end }}

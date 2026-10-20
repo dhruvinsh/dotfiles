@@ -1,14 +1,41 @@
 #!/bin/bash
 set -e
 
+# {{- if eq .archlinux true }}
+
 MODPROBE_CONF="/etc/modprobe.d/nvidia.conf"
 MKINITCPIO_CONF="/etc/mkinitcpio.conf"
 BACKUP="${MKINITCPIO_CONF}.backup"
-NVIDIA_CONF_LINE="options nvidia_drm modeset=1"
 NVIDIA_MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"
 
-# 1. Ensure the modprobe conf is set
-grep -Fxq "$NVIDIA_CONF_LINE" "$MODPROBE_CONF" 2>/dev/null || echo "$NVIDIA_CONF_LINE" | sudo tee "$MODPROBE_CONF" >/dev/null
+# 1. Ensure the modprobe conf is set.
+#
+# Managed as a whole file: the previous `grep -Fxq ... || echo ... | tee` pattern used
+# `tee` rather than `tee -a`, so the file could never hold more than the one line it
+# tested for -- adding a second line would have been clobbered on the next run.
+read -r -d '' NVIDIA_CONF_CONTENT <<'EOF' || true
+# Required for Wayland / DRM KMS.
+options nvidia_drm modeset=1
+
+# Turing (and later) boards expose a USB-C/VirtualLink port behind an i2c-attached
+# Cypress PD controller. On boards where that port isn't wired up, the probe just
+# times out at every boot:
+#   nvidia-gpu 0000:26:00.3: i2c timeout error e0000000
+#   ucsi_ccg 6-0008: probe with driver ucsi_ccg failed with error -110
+# Blocking the i2c shim stops the ucsi_ccg device from ever being created.
+# Drop this line if a USB-C display/dock is ever plugged into the GPU itself.
+blacklist i2c_nvidia_gpu
+EOF
+
+REBUILD_INITRAMFS=0
+
+if [ "$(cat "$MODPROBE_CONF" 2>/dev/null || true)" != "$NVIDIA_CONF_CONTENT" ]; then
+  echo "Updating $MODPROBE_CONF..."
+  printf '%s\n' "$NVIDIA_CONF_CONTENT" | sudo tee "$MODPROBE_CONF" >/dev/null
+  # mkinitcpio bakes a copy of /etc/modprobe.d into the image, so a change here has to
+  # reach the initramfs too -- otherwise early userspace keeps using the old options.
+  REBUILD_INITRAMFS=1
+fi
 
 # 2. Make a single backup if not exists
 [ -f "$BACKUP" ] || sudo cp "$MKINITCPIO_CONF" "$BACKUP"
@@ -29,13 +56,23 @@ awk -v mods="$NVIDIA_MODULES" '
   }
 }' "$MKINITCPIO_CONF" > "$TMPFILE"
 
-# 4. Update config and rebuild initramfs only if changed
+# 4. Update config, and rebuild the initramfs if *either* input changed.
+#
+# Previously this rebuilt only when mkinitcpio.conf itself changed, so an edit to
+# nvidia.conf alone silently left a stale image behind.
 if ! cmp -s "$TMPFILE" "$MKINITCPIO_CONF"; then
-  echo "Updating $MKINITCPIO_CONF and rebuilding initramfs..."
+  echo "Updating $MKINITCPIO_CONF..."
   sudo cp "$TMPFILE" "$MKINITCPIO_CONF"
+  REBUILD_INITRAMFS=1
+fi
+
+rm "$TMPFILE"
+
+if [ "$REBUILD_INITRAMFS" -eq 1 ]; then
+  echo "Rebuilding initramfs..."
   sudo mkinitcpio -P
 else
   echo "No changes needed."
 fi
 
-rm "$TMPFILE"
+# {{- end }}

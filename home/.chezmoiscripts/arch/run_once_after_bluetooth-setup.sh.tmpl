@@ -1,0 +1,152 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+# {{- if eq .archlinux true }}
+
+echo "Configuring system Bluetooth settings for stability..."
+
+CHANGES_MADE=0
+RELOAD_BTUSB=0
+
+# write_conf <path> <content> -- returns 0 if the file was (re)written, 1 if unchanged
+write_conf() {
+    local path="$1" wanted="$2" current=""
+    [ -f "$path" ] && current=$(cat "$path")
+    if [ "$current" != "$wanted" ]; then
+        echo "Updating $path..."
+        sudo mkdir -p "${path%/*}"
+        printf '%s\n' "$wanted" | sudo tee "$path" >/dev/null
+        return 0
+    fi
+    return 1
+}
+
+# 1. Kernel module options for the Bluetooth stack.
+#
+# NOTE: there is no `power_save` parameter on the `bluetooth` module (it only has
+# disable_esco / disable_ertm / enable_ecred), so the old `options bluetooth
+# power_save=0` was silently discarded -- the kernel logged
+#   "bluetooth: unknown parameter 'power_save' ignored"
+# The knob that actually stops the radio from sleeping lives on `btusb`.
+BT_MODPROBE="/etc/modprobe.d/bluetooth.conf"
+read -r -d '' WANTED_MODPROBE_CONTENT <<'EOF' || true
+# Keep the USB Bluetooth radio powered: USB autosuspend on the controller is the
+# usual cause of A2DP stuttering and random dropouts. (Desktop on AC -- nothing to save.)
+options btusb enable_autosuspend=0
+# Disable ERTM (Enhanced Re-transmission Mode) to fix Xbox controller and headset
+# connection issues.
+options bluetooth disable_ertm=1
+EOF
+
+if write_conf "$BT_MODPROBE" "$WANTED_MODPROBE_CONTENT"; then
+    CHANGES_MADE=1
+    RELOAD_BTUSB=1
+fi
+
+{{ if eq .chassisType "desktop" -}}
+# 2. WiFi/Bluetooth coexistence. DESKTOP ONLY -- this disables WiFi power management,
+#    which is a real battery cost on a laptop. Mains-powered machines only.
+#
+# The Intel Wireless-AC 9260 is a *combo* radio: the WiFi half (PCIe 8086:2526) and the
+# Bluetooth half (USB 8087:0025) share one 2.4 GHz front end and time-slice it. When the
+# WiFi side enters power save the coexistence scheduler gets bursty, which shows up as
+# Bluetooth audio stuttering the moment WiFi associates. Pin WiFi to "active" PM.
+#
+# bt_coex_active MUST stay enabled (its default). Guides that tell you to set
+# bt_coex_active=0 are written for separate radios; on a combo card it makes audio worse.
+#
+# Harmless on machines without an Intel wireless card -- modprobe just never reads it.
+WIFI_MODPROBE="/etc/modprobe.d/iwlwifi.conf"
+read -r -d '' WANTED_WIFI_CONTENT <<'EOF' || true
+# Combo WiFi+BT radio (AC 9260): keep WiFi out of power save so BT coexistence
+# scheduling stays predictable. 1 = active/CAM, 2 = balanced (default), 3 = low power.
+options iwlmvm power_scheme=1
+options iwlwifi power_save=0
+EOF
+
+if write_conf "$WIFI_MODPROBE" "$WANTED_WIFI_CONTENT"; then
+    CHANGES_MADE=1
+fi
+{{ end -}}
+
+# 3. Configure BlueZ (main.conf).
+#
+# Keys must land in the right section: Experimental belongs to [General], AutoEnable to
+# [Policy]. The previous version appended both to [General], which silently did nothing
+# for AutoEnable whenever the commented-out default was missing.
+BT_MAIN="/etc/bluetooth/main.conf"
+if [ -f "$BT_MAIN" ]; then
+    RESULT=$(sudo python3 - <<'EOF'
+import re
+import sys
+
+filename = "/etc/bluetooth/main.conf"
+try:
+    with open(filename) as f:
+        content = f.read()
+except OSError as e:
+    print(f"Error reading {filename}: {e}", file=sys.stderr)
+    sys.exit(2)
+
+
+def set_key(text, section, key, value):
+    """Set key=value inside [section], creating the section if needed."""
+    line = f"{key}={value}"
+    # An existing (possibly commented) key anywhere in the file wins -- BlueZ ships the
+    # defaults commented out in their correct sections, so editing in place is right.
+    pattern = rf"^\s*#?\s*{re.escape(key)}\s*=.*$"
+    if re.search(pattern, text, re.MULTILINE):
+        return re.sub(pattern, line, text, count=1, flags=re.MULTILINE)
+    # Otherwise insert directly under the section header.
+    header = rf"^\[{re.escape(section)}\]\s*$"
+    if re.search(header, text, re.MULTILINE):
+        return re.sub(header, lambda m: f"{m.group(0)}\n{line}", text, count=1, flags=re.MULTILINE)
+    # Section missing entirely -- append it.
+    return text.rstrip("\n") + f"\n\n[{section}]\n{line}\n"
+
+
+original = content
+content = set_key(content, "General", "Experimental", "true")
+content = set_key(content, "Policy", "AutoEnable", "true")
+
+if content != original:
+    try:
+        with open(filename, "w") as f:
+            f.write(content)
+        print("1")
+    except OSError as e:
+        print(f"Error writing to {filename}: {e}", file=sys.stderr)
+        sys.exit(2)
+else:
+    print("0")
+EOF
+    )
+    if [ "$RESULT" = "1" ]; then
+        echo "Updated $BT_MAIN configuration."
+        CHANGES_MADE=1
+    fi
+else
+    echo "Warning: $BT_MAIN not found. Skipping main.conf configuration."
+fi
+
+# 4. Apply. Module options only take effect on reload, so bounce btusb when its
+#    options changed; bluetoothd just needs a restart for main.conf.
+if [ "$CHANGES_MADE" -eq 1 ]; then
+    if [ "$RELOAD_BTUSB" -eq 1 ]; then
+        echo "Reloading btusb to pick up new module options..."
+        if sudo modprobe -r btusb 2>/dev/null && sudo modprobe btusb; then
+            echo "btusb reloaded."
+        else
+            echo "Could not reload btusb (device busy?) -- reboot to apply."
+        fi
+    fi
+    if systemctl is-active --quiet bluetooth; then
+        echo "Restarting bluetooth service to apply new settings..."
+        sudo systemctl restart bluetooth
+    fi
+else
+    echo "Bluetooth settings are already up to date. No restart needed."
+fi
+
+# {{- end }}

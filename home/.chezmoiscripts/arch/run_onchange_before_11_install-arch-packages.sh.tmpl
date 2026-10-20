@@ -106,6 +106,7 @@ packages=(
     network-manager-applet
     networkmanager
     networkmanager-dmenu
+    wireless-regdb
 
     # File Manager
     ffmpegthumbnailer 
@@ -198,9 +199,32 @@ fi
 sudo sysctl fs.inotify.max_user_watches=100000
 sudo sysctl fs.inotify.max_queued_events=100000
 
-# Disable USB autosuspend to prevent peripheral disconnection issues
-if [[ ! -f /etc/modprobe.d/disable-usb-autosuspend.conf ]]; then
-  echo "options usbcore autosuspend=-1" | sudo tee /etc/modprobe.d/disable-usb-autosuspend.conf
+# Disable USB autosuspend to prevent peripheral disconnection issues.
+#
+# usbcore is built into the Arch kernel (`modinfo usbcore` -> "filename: (builtin)"), so
+# /etc/modprobe.d/ is never consulted for it -- the old drop-in here was dead code and
+# /sys/module/usbcore/parameters/autosuspend stayed at the 2s default. Built-in modules
+# only take parameters from the kernel command line.
+if [[ -f /etc/modprobe.d/disable-usb-autosuspend.conf ]]; then
+  echo "Removing ineffective usbcore modprobe drop-in (usbcore is builtin)..."
+  sudo rm -f /etc/modprobe.d/disable-usb-autosuspend.conf
 fi
+
+{{ if eq .chassisType "desktop" -}}
+# DESKTOP ONLY: this disables runtime power management for *every* USB device, which is
+# a meaningful battery cost on a laptop. Mains-powered machines only.
+# Skipped automatically on systemd-boot machines (no /etc/default/grub).
+USB_PARAM="usbcore.autosuspend=-1"
+GRUB_DEFAULT_CONF="/etc/default/grub"
+if [[ -f $GRUB_DEFAULT_CONF ]] && ! grep -q "$USB_PARAM" "$GRUB_DEFAULT_CONF"; then
+  echo "Adding $USB_PARAM to the kernel command line..."
+  sudo cp -n "$GRUB_DEFAULT_CONF" "${GRUB_DEFAULT_CONF}.backup"
+  sudo sed -i -E "s|^(GRUB_CMDLINE_LINUX=\")(.*)(\")|\1\2 $USB_PARAM\3|" "$GRUB_DEFAULT_CONF"
+  # Collapse any leading/double spaces the substitution may have introduced.
+  sudo sed -i -E 's|^(GRUB_CMDLINE_LINUX=")\s+|\1|; s|(GRUB_CMDLINE_LINUX="[^"]*)  +|\1 |g' "$GRUB_DEFAULT_CONF"
+  echo "Regenerating grub.cfg (takes effect on next boot)..."
+  sudo grub-mkconfig -o /boot/grub/grub.cfg
+fi
+{{ end -}}
 
 # {{- end }}
