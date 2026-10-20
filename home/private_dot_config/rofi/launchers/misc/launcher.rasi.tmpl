@@ -1,0 +1,109 @@
+/**
+ * Rofi Launcher Theme - colors from chezmoi .colorScheme (catppuccin palette names)
+ */
+
+* {
+    bg: {{ .colorScheme.base }};
+    bg-alt: {{ .colorScheme.mantle }};
+    fg: {{ .colorScheme.text }};
+    fg-alt: {{ .colorScheme.subtext1 }};
+    
+    background-color: transparent;
+    text-color: @fg;
+    
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    background-color: @bg;
+    width: 600px;
+    border: 2px;
+    border-color: {{ .colorScheme.blue }};
+    border-radius: 8px;
+}
+
+mainbox {
+    padding: 12px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border-color: {{ .colorScheme.blue }};
+    border: 2px;
+    border-radius: 4px;
+    padding: 8px 16px;
+    spacing: 8px;
+    children: [prompt, entry];
+}
+
+prompt {
+    text-color: {{ .colorScheme.blue }};
+}
+
+entry {
+    placeholder: "Search applications...";
+    placeholder-color: @fg-alt;
+}
+
+message {
+    margin: 12px 0 0;
+    border-radius: 4px;
+    border-color: @bg-alt;
+    background-color: @bg-alt;
+}
+
+textbox {
+    padding: 8px 12px;
+}
+
+listview {
+    background-color: transparent;
+    margin: 12px 0 0;
+    lines: 8;
+    columns: 1;
+    fixed-height: false;
+}
+
+element {
+    padding: 8px 12px;
+    spacing: 8px;
+    border-radius: 4px;
+}
+
+element normal normal {
+    text-color: @fg;
+}
+
+element normal urgent {
+    text-color: {{ .colorScheme.red }};
+}
+
+element normal active {
+    text-color: {{ .colorScheme.blue }};
+}
+
+element selected normal {
+    background-color: {{ .colorScheme.blue }};
+    text-color: {{ .colorScheme.base }};
+}
+
+element selected urgent {
+    background-color: {{ .colorScheme.red }};
+    text-color: {{ .colorScheme.base }};
+}
+
+element selected active {
+    background-color: {{ .colorScheme.teal }};
+    text-color: {{ .colorScheme.base }};
+}
+
+element-icon {
+    size: 1em;
+    vertical-align: 0.5;
+}
+
+element-text {
+    text-color: inherit;
+}

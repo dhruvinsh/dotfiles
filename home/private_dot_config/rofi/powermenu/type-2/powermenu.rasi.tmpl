@@ -1,0 +1,146 @@
+/**
+ * Rofi Power Menu Theme
+ * Inspired by Hyprland Hall of Fame aesthetic
+ */
+
+* {
+    background-color: transparent;
+    text-color:       {{ .colorScheme.text }};
+
+    bg:               {{ .colorScheme.base }}e6;
+    bg-alt:           {{ .colorScheme.surface0 }}cc;
+    bg-card:          {{ .colorScheme.surface0 }}80;
+    fg:               {{ .colorScheme.text }};
+    fg-dim:           {{ .colorScheme.subtext0 }};
+    border-col:       {{ .colorScheme.surface1 }};
+    accent:           {{ .colorScheme.blue }};
+    urgent:           {{ .colorScheme.red }};
+    active:           {{ .colorScheme.green }};
+}
+
+configuration {
+    show-icons: false;
+}
+
+window {
+    transparency:     "real";
+    location:         center;
+    anchor:           center;
+    fullscreen:       false;
+    width:            820px;
+    border:           2px;
+    border-color:     @accent;
+    border-radius:    22px;
+    background-color: @bg;
+    padding:          0px;
+}
+
+mainbox {
+    enabled:          true;
+    orientation:      vertical;
+    children:         [ "inputbar", "listview" ];
+    spacing:          18px;
+    padding:          24px;
+    background-color: transparent;
+}
+
+inputbar {
+    enabled:          true;
+    orientation:      horizontal;
+    children:         [ "textbox-prompt-colon", "prompt" ];
+    spacing:          12px;
+    background-color: transparent;
+}
+
+textbox-prompt-colon {
+    enabled:          true;
+    expand:           false;
+    str:              "󰐥";
+    border-radius:    14px;
+    background-color: @bg-alt;
+    text-color:       @urgent;
+    padding:          10px 16px;
+    font:             "{{ .font.regular }} 14";
+    vertical-align:   0.5;
+    horizontal-align: 0.5;
+}
+
+prompt {
+    enabled:          true;
+    expand:           true;
+    background-color: @bg-alt;
+    text-color:       @fg;
+    border-radius:    14px;
+    padding:          10px 20px;
+    font:             "{{ .font.regular }} 12";
+    vertical-align:   0.5;
+    horizontal-align: 0.0;
+}
+
+listview {
+    enabled:          true;
+    columns:          5;
+    lines:            1;
+    cycle:            true;
+    dynamic:          true;
+    scrollbar:        false;
+    layout:           vertical;
+    fixed-height:     true;
+    fixed-columns:    true;
+    spacing:          14px;
+    background-color: transparent;
+    cursor:           "default";
+}
+
+element {
+    enabled:          true;
+    padding:          18px 10px;
+    border:           1px solid;
+    border-radius:    16px;
+    background-color: @bg-card;
+    border-color:     {{ .colorScheme.surface1 }}40;
+    text-color:       @fg;
+    cursor:           pointer;
+    orientation:      horizontal;
+    children:         [ "element-text" ];
+}
+
+element-text {
+    font:             "{{ .font.regular }} 12";
+    background-color: transparent;
+    text-color:       inherit;
+    cursor:           inherit;
+    vertical-align:   0.5;
+    horizontal-align: 0.5;
+}
+
+/* Hover and selection states */
+element selected.normal {
+    background-color: @accent;
+    border-color:     @accent;
+    text-color:       {{ .colorScheme.base }};
+}
+
+element normal.urgent {
+    background-color: @bg-card;
+    border-color:     {{ .colorScheme.red }}50;
+    text-color:       @urgent;
+}
+
+element selected.urgent {
+    background-color: @urgent;
+    border-color:     @urgent;
+    text-color:       {{ .colorScheme.base }};
+}
+
+element normal.active {
+    background-color: @bg-card;
+    border-color:     {{ .colorScheme.green }}50;
+    text-color:       @active;
+}
+
+element selected.active {
+    background-color: @active;
+    border-color:     @active;
+    text-color:       {{ .colorScheme.base }};
+}
