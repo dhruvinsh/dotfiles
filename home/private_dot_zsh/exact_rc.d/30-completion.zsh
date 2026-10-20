@@ -10,7 +10,7 @@ autoload -Uz compinit
   local dump=${ZDOTDIR:-$HOME}/.zcompdump
   # Glob qualifiers aren't expanded inside [[ ]], so test staleness via an array.
   local -a stale=($dump(N.mh+24))
-  if [[ ! -s $dump ]] || (( $#stale )); then
+  if [[ ! -s $dump ]] || (($#stale)); then
     compinit -d "$dump"
     # compinit leaves the dump untouched when nothing changed; bump its mtime
     # so the next shell takes the fast path.
