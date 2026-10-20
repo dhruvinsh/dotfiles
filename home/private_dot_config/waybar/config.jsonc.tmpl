@@ -14,7 +14,7 @@
     "privacy",
     "systemd-failed-units",
     "custom/updates",
-    "group/tray",
+    "group/systray",
     "group/hw",
     "group/audio",
     "pulseaudio#mic",
@@ -173,7 +173,8 @@
     "hide-empty-text": true,
     "on-click": "ghostty --class=dev.ds.floating -e yay -Syu; pkill -RTMIN+8 waybar",
   },
-  "group/tray": {
+  // id "systray": a group named "tray" would share #tray with the tray module
+  "group/systray": {
     "orientation": "horizontal",
     "drawer": {
       "transition-duration": 400,

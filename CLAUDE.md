@@ -82,3 +82,6 @@ Derived: `email` = `dhruvin3@gmail.com` if personal else `dshah@evertz.com`.
 - Hyprland runs a Lua config and reaps its children, so `os.execute()` always fails there (`nil, "No child processes"`) — don't use it for probes; `io.open` is safe.
 - uwsm does not export `UWSM_ACTIVE`; detect it via `UWSM_FINALIZE_VARNAMES` (as `hypr/execs.lua` does), and use `uwsm check is-active` in scripts.
 - Legacy `hyprctl dispatch <name> args` is rejected in Lua mode — use `hyprctl dispatch 'hl.dsp.x({...})'`; `hl.dsp.dpms()` with a missing/unknown action toggles the display.
+- hyprlang (hyprlock/hypridle/hyprpaper): `#` starts a comment (write `##` for a literal `#`),
+  and `{{ ... }}` is parsed as an arithmetic expression — put such commands in a script.
+  A hyprlock label whose `text` fails to parse renders "Sample Text".

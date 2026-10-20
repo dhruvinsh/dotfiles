@@ -16,6 +16,7 @@ hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- Session: power menu (wlogout; logout/reboot/shutdown live there) and lock
 hl.bind(mainMod .. " + ESCAPE", hl.dsp.exec_cmd("~/.local/bin/__wlogout.sh"))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("loginctl lock-session"))
+hl.bind(mainMod .. " + X", hl.dsp.exec_cmd("loginctl lock-session")) -- same as i3
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))

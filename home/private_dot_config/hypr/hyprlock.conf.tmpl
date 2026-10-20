@@ -73,14 +73,27 @@ input-field {
     valign = center
 }
 
-# Now playing
+# Now playing (in a script: hyprlang parses playerctl's double-brace format as an expression)
 label {
     monitor =
-    text = cmd[update:2000] playerctl metadata --format '󰎆  {{ "{{" }} artist {{ "}}" }} - {{ "{{" }} title {{ "}}" }}' 2>/dev/null || true
+    text = cmd[update:2000] ~/.local/bin/lock-nowplaying.sh
     color = {{ includeTemplate "hex2rgb" (list $c.subtext1) }}
     font_size = 16
     font_family = {{ .font.regular }}
     position = 0, 60
     halign = center
     valign = bottom
+}
+
+# Quote: random from a local cache, refreshed online in the background (lock-quote.sh)
+label {
+    monitor =
+    text = cmd[update:300000] ~/.local/bin/lock-quote.sh
+    color = {{ includeTemplate "hex2rgb" (list $c.subtext0) }}
+    font_size = 15
+    font_family = {{ .font.italic }}
+    text_align = center
+    position = 0, -190
+    halign = center
+    valign = center
 }

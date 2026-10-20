@@ -32,7 +32,7 @@ tooltip label {
 #privacy,
 #systemd-failed-units,
 #custom-updates,
-#tray-group,
+#systray,
 #hw,
 #audio,
 #pulseaudio.mic,
@@ -51,7 +51,7 @@ tooltip label {
 
 /* groups: inner modules carry no extra chrome */
 #music > *,
-#tray-group > *,
+#systray > *,
 #hw > *,
 #audio > * {
   background: transparent;
@@ -164,8 +164,17 @@ window#waybar.empty #window {
 }
 
 #custom-tray-arrow {
-  color: @subtext0;
-  padding-right: 6px;
+  color: @accent;
+  font-size: 15px;
+  padding: 0 2px;
+}
+
+#systray:hover #custom-tray-arrow {
+  color: @text;
+}
+
+#tray {
+  padding-left: 8px;
 }
 
 #tray > .passive {
@@ -297,7 +306,7 @@ window#waybar.empty #window {
 #music:hover,
 #privacy:hover,
 #custom-updates:hover,
-#tray-group:hover,
+#systray:hover,
 #hw:hover,
 #audio:hover,
 #pulseaudio.mic:hover,
