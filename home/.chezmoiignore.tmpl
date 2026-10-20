@@ -44,7 +44,10 @@ Library/**
 .config/hypr
 .config/swaync
 .config/swayosd
-.config/networkmanager-dmenu
+.config/waybar
+.config/wlogout
+.local/bin/__wlogout.sh
+.local/bin/waybar-updates.sh
 {{ end -}}
 
 {{ if not .ubuntu -}}
@@ -57,4 +60,8 @@ Library/**
 
 {{ if not (and (.ubuntu) (.isDesktop)) -}}
 .local/share/**
+{{ end -}}
+
+{{ if not (or .archlinux (and .ubuntu .isDesktop)) -}}
+.config/networkmanager-dmenu
 {{ end -}}

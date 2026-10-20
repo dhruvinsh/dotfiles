@@ -1,38 +1,107 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# i3 lock screen (i3lock-color). Called by i3 binds and by
+#   xss-lock --transfer-sleep-lock -- ~/.config/i3/scripts/i3lock.sh
+# Follows xss-lock's transfer-sleep-lock-i3lock.sh: i3lock forks once the screen
+# is locked, then we close XSS_SLEEP_LOCK_FD so suspend may proceed.
 
-BLANK='#00000000'
-CLEAR='{{ .colorScheme.base }}22'          # Base with transparency
-DEFAULT='{{ .colorScheme.blue }}E6'        # Blue
-TEXT='{{ .colorScheme.text }}E6'           # Text
-WRONG='{{ .colorScheme.red }}bb'           # Red
-VERIFYING='{{ .colorScheme.green }}E6'     # Green
+set -u
 
-i3lock \
-    --insidever-color=$CLEAR \
-    --ringver-color=$VERIFYING \
-    \
-    --insidewrong-color=$CLEAR \
-    --ringwrong-color=$WRONG \
-    \
-    --inside-color=$BLANK \
-    --ring-color=$DEFAULT \
-    --line-color=$BLANK \
-    --separator-color=$DEFAULT \
-    \
-    --verif-color=$TEXT \
-    --wrong-color=$TEXT \
-    --time-color=$TEXT \
-    --date-color=$TEXT \
-    --layout-color=$TEXT \
-    --keyhl-color=$WRONG \
-    --bshl-color=$WRONG \
-    \
-    --screen 1 \
-    --blur 9 \
-    --clock \
-    --indicator \
-    --time-str="%H:%M:%S" \
-    --date-str="%A, %Y-%m-%d" \
-    --keylayout 1
+# i3lock-color lives in ~/.local/bin (chezmoi external); a display manager may not
+# put that on i3's PATH. PAM needs /etc/pam.d/i3lock, which the apt `i3lock`
+# package provides (installed by the Ubuntu desktop script).
+export PATH="$HOME/.local/bin:$PATH"
 
-# vim: set ft=sh:
+pgrep -x i3lock >/dev/null && exit 0
+
+{{- /* palette hex without '#'; alpha appended below (RRGGBBAA) */}}
+BASE='{{ .colorScheme.base | trimPrefix "#" }}'
+TEXT='{{ .colorScheme.text | trimPrefix "#" }}'
+RING='{{ .colorScheme.mauve | trimPrefix "#" }}'
+OK='{{ .colorScheme.green | trimPrefix "#" }}'
+BAD='{{ .colorScheme.red | trimPrefix "#" }}'
+SUBTLE='{{ .colorScheme.overlay0 | trimPrefix "#" }}'
+FONT='{{ .font.regular }}'
+FONT_ITALIC='{{ .font.italic }}'
+
+bin="$HOME/.local/bin"
+
+# Greeter extras. Bounded by `timeout` so a hung MPRIS player or slow network
+# can never delay the lock (xss-lock's sleep inhibitor only lasts ~5s), and run
+# with xss-lock's inhibitor fd closed so background children can't hold it.
+extras() {
+  quote=$(timeout 2 "$bin/lock-quote.sh" 2>/dev/null |
+    sed -e 's/<[^>]*>//g' -e 's/&lt;/</g' -e 's/&gt;/>/g' -e 's/&amp;/\&/g' |
+    tr '\n' ' ' | sed -e 's/  */ /g' -e 's/^ //' -e 's/ $//' -e 's/\\//g')
+  np=$(timeout 2 "$bin/lock-nowplaying.sh" 2>/dev/null | tr -d '\n' | sed -e 's/\\//g' -e 's/%/%%/g')
+}
+quote='' np=''
+if [[ -n ${XSS_SLEEP_LOCK_FD:-} ]]; then
+  extras {XSS_SLEEP_LOCK_FD}<&-
+else
+  extras
+fi
+((${#quote} > 90)) && quote="${quote:0:89}…"
+np=${np#"${np%%[! ]*}"}
+date_str='%A, %d %B'
+[[ -n $np ]] && date_str="$date_str  ·  $np"
+
+lock_args=(
+  --blur 9
+  --clock --force-clock
+  --time-str='%H:%M'
+  --date-str="$date_str"
+  --greeter-text="$quote"
+  --time-font="$FONT" --time-size=96 --time-color="${TEXT}ff"
+  --date-font="$FONT" --date-size=24 --date-color="${TEXT}dd"
+  --greeter-font="$FONT_ITALIC" --greeter-size=18 --greeter-color="${SUBTLE}ff"
+  --time-pos='x+w/2:y+h*0.42'
+  --date-pos='tx:ty+40'
+  --greeter-pos='x+w/2:y+h*0.88'
+  --ind-pos='x+w/2:y+h*0.65'
+  --radius=70 --ring-width=6
+  --inside-color="${BASE}66" --ring-color="${RING}ff"
+  --insidever-color="${BASE}66" --ringver-color="${OK}ff"
+  --insidewrong-color="${BASE}66" --ringwrong-color="${BAD}ff"
+  --line-color=00000000 --separator-color="${RING}ff"
+  --keyhl-color="${OK}ff" --bshl-color="${BAD}ff"
+  --verif-color="${TEXT}ff" --wrong-color="${BAD}ff" --modif-color="${TEXT}ff"
+  --layout-color="${TEXT}ff"
+  --verif-text='' --wrong-text='wrong' --noinput-text='' --lock-text='' --lockfailed-text='lock failed'
+  --no-modkey-text
+)
+
+# No version sniffing (i3lock-color prints e.g. "version 2.13.c.5", not its name):
+# try the styled lock and fall back to a plain colour lock if any flag is rejected.
+plain_args=(-c "$BASE")
+
+command -v dunstctl >/dev/null && dunstctl set-paused true
+
+if [[ -e /dev/fd/${XSS_SLEEP_LOCK_FD:--1} ]]; then
+  # xss-lock holds a sleep inhibitor; release it only once the screen is locked.
+  # i3lock forks once locked, so it returns only after the lock is up.
+  kill_locker() { pkill -xu "$EUID" "$@" i3lock; }
+  trap kill_locker TERM INT
+
+  i3lock "${lock_args[@]}" {XSS_SLEEP_LOCK_FD}<&- ||
+    i3lock "${plain_args[@]}" {XSS_SLEEP_LOCK_FD}<&-
+  # close our (only remaining) copy: signals xss-lock we are ready to sleep
+  exec {XSS_SLEEP_LOCK_FD}<&-
+
+  while kill_locker -0; do
+    sleep 0.5
+  done
+else
+  i3lock --nofork "${lock_args[@]}" &
+  pid=$!
+  trap 'kill "$pid" 2>/dev/null' TERM INT
+  wait "$pid"
+  rc=$?
+  # non-zero exit with no locker left (e.g. a rejected flag): lock plainly instead
+  if ((rc != 0)) && ! pgrep -x i3lock >/dev/null; then
+    i3lock --nofork "${plain_args[@]}" &
+    pid=$!
+    wait "$pid"
+  fi
+fi
+
+command -v dunstctl >/dev/null && dunstctl set-paused false

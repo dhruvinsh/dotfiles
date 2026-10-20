@@ -51,18 +51,26 @@ exec_always --no-startup-id gsettings set org.gnome.desktop.interface cursor-siz
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
 exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/i3/scripts/i3lock.sh
-bindsym $mod+x exec ~/.config/i3/scripts/i3lock.sh
+bindsym $mod+x exec --no-startup-id ~/.config/i3/scripts/i3lock.sh
+# Power menu (rofi; lock/suspend/logout/reboot/shutdown)
+bindsym $mod+Escape exec --no-startup-id ~/.config/rofi/powermenu/type-2/powermenu.sh
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
-# Use amixer to adjust volume
-set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -D pulse sset Master 5%+ && $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id amixer -D pulse sset Master 5%- && $refresh_i3status
-bindsym XF86AudioMute exec --no-startup-id amixer -D pulse set Master toggle && $refresh_i3status
-bindsym XF86AudioMicMute exec --no-startup-id amixer set Capture toggle && $refresh_i3status
+# Volume / mic via wpctl with an xob on-screen bar (falls back to dunst)
+exec_always --no-startup-id ~/.local/bin/xob-start.sh
+bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.local/bin/osd-volume.sh up
+bindsym XF86AudioLowerVolume exec --no-startup-id ~/.local/bin/osd-volume.sh down
+bindsym XF86AudioMute exec --no-startup-id ~/.local/bin/osd-volume.sh mute
+bindsym XF86AudioMicMute exec --no-startup-id ~/.local/bin/osd-volume.sh mic-mute
+
+# Media keys
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym XF86AudioPause exec --no-startup-id playerctl play-pause
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 
 # Display configuration (iGPU: DP-1 left / HDMI-2 primary right)
 exec_always --no-startup-id ~/.config/i3/scripts/monitor_setup.sh
@@ -248,7 +256,7 @@ bindsym $mod+Shift+r restart
 # Power management mode
 set $mode_system System: (l) lock, (e) logout, (s) suspend, (r) reboot, (p) poweroff
 mode "$mode_system" {
-    bindsym l exec --no-startup-id /home/dshah/.local/bin/__i3lock.sh, mode "default"
+    bindsym l exec --no-startup-id ~/.config/i3/scripts/i3lock.sh, mode "default"
     bindsym e exec --no-startup-id i3-msg exit, mode "default"
     bindsym s exec --no-startup-id systemctl suspend, mode "default"
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
@@ -296,6 +304,9 @@ exec --no-startup-id dunst
 # Clipboard manager
 exec --no-startup-id clipmenud
 
+# Screenshot daemon (makes `flameshot gui` open instantly)
+exec --no-startup-id flameshot
+
 # custom keybindings
 set $screenshot-tool flameshot
 bindsym $mod+Shift+s exec $screenshot-tool gui
@@ -331,7 +342,9 @@ for_window [class="dropdown-term"] floating enable, move scratchpad, resize set 
 bindsym $mod+grave [class="dropdown-term"] scratchpad show, move position center
 
 
-# do not turn off screen
-exec --no-startup-id xset s off -dpms
+# Idle (matches Hyprland's hypridle): the X screensaver fires after 5 min and
+# xss-lock (above) locks on it; DPMS turns the screen off after 10 min.
+exec --no-startup-id xset s 300 300
+exec --no-startup-id xset dpms 600 600 600
 
 # vim:set ft=i3config:

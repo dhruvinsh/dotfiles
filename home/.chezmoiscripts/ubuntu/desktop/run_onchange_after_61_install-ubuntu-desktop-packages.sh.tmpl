@@ -19,6 +19,30 @@ packages+=(
     tshark
     wireshark
     xsensors
+
+    # i3 (X11) desktop: bar, compositor, notifications, OSD, lock/idle, menus
+    # i3lock-color itself comes from .chezmoiexternals (~/.local/bin/i3lock); the apt
+    # `i3lock` is still required: it ships /etc/pam.d/i3lock (without it every
+    # password is rejected) and pulls in the xcb/libev runtime libraries.
+    # clipmenu isn't packaged for Ubuntu.
+    blueman
+    dex
+    dunst
+    feh
+    flameshot
+    i3-wm
+    i3lock
+    libnotify-bin
+    network-manager-gnome
+    pavucontrol
+    picom
+    playerctl
+    polybar
+    python3-gi
+    rofi
+    x11-xserver-utils
+    xob
+    xss-lock
 )
 
 # install all the packages

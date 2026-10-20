@@ -60,6 +60,14 @@
   url = {{ gitHubLatestReleaseAssetURL "Raymo111/i3lock-color" "i3lock" | quote }}
   executable = true
 
+{{ if and .ubuntu .isDesktop -}}
+# rofi Wi-Fi menu (polybar network click); not packaged for Ubuntu. Needs python3-gi.
+[".local/bin/networkmanager_dmenu"]
+  type = "file"
+  url = "https://raw.githubusercontent.com/firecat53/networkmanager-dmenu/{{ (gitHubLatestRelease "firecat53/networkmanager-dmenu").TagName }}/networkmanager_dmenu"
+  executable = true
+{{ end -}}
+
 [".local/bin/lazygit"]
   type = "archive-file"
   url = {{ gitHubLatestReleaseAssetURL "jesseduffield/lazygit" "lazygit_*_linux_x86_64.tar.gz" | quote}}

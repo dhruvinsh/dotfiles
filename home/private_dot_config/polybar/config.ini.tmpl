@@ -1,302 +1,316 @@
+{{- /*
+  Polybar - "floating island pills" (mirrors the Waybar look).
+
+  Glyphs are written as Go escapes so no Private Use Area character has to be
+  typed into this file:
+     /   = powerline half-circle caps (left / right)
+    \U000fXXXX       = Material Design icons (Nerd Font, supplementary PUA)
+
+  Pill technique: bar background is fully transparent; every module sets
+  format-background to the pill colour and draws its own rounded ends with the
+  half-circle glyphs (font index 3 = %{T3}). Modules that share a pill (cpu +
+  memory + temperature) only draw the cap on the outer ends.
+*/ -}}
+{{- $b := trimPrefix "#" .colorScheme.base -}}
+{{- $pill := printf "#cc%s" $b -}}
+{{- $solid := .colorScheme.base -}}
+{{- /* caps: B- resets to the transparent bar bg, F paints the glyph in pill colour, B restores pill bg */ -}}
+{{- $cl := printf "%%{B-}%%{F%s}%%{T3}%s%%{T-}%%{B%s}%%{F-}" $pill "" $pill -}}
+{{- $cg := printf "%%{B-}%%{O8}%%{F%s}%%{T3}%s%%{T-}%%{B%s}%%{F-}" $pill "" $pill -}}
+{{- $cr := printf "%%{B-}%%{F%s}%%{T3}%s%%{T-}%%{F-}" $pill "" -}}
+{{- /* same, but opaque (tray cannot use true transparency) */ -}}
+{{- $tg := printf "%%{B-}%%{O8}%%{F%s}%%{T3}%s%%{T-}%%{B%s}%%{F-}" $solid "" $solid -}}
+{{- $tr := printf "%%{B-}%%{F%s}%%{T3}%s%%{T-}%%{F-}" $solid "" -}}
+{{- /* inner "active workspace" capsule: accent colour in, pill colour out */ -}}
+{{- define "ic" -}}%{F{{ index . 0 }}}%{T2}{{ index . 1 }}%{T-}%{F-}{{- end -}}
+{{- define "ws" -}}%{F{{ index . 0 }}}%{T3}{{ "" }}%{T-}%{B{{ index . 0 }}}%{F{{ index . 1 }}} %index% %{B{{ index . 2 }}}%{F{{ index . 0 }}}%{T3}{{ "" }}%{T-}%{F-}{{- end -}}
 ;==========================================================
 ;
-;   Polybar Config - Catppuccin Mocha Theme
+;   Polybar Config - floating pills (colours from .colorScheme)
 ;
 ;==========================================================
 
 [colors]
-background = {{ .colorScheme.base }}
-background-alt = {{ .colorScheme.surface0 }}
-foreground = {{ .colorScheme.text }}
-primary = {{ .colorScheme.blue }}
-secondary = {{ .colorScheme.pink }}
-alert = {{ .colorScheme.red }}
-disabled = {{ .colorScheme.overlay0 }}
-
-rosewater = {{ .colorScheme.rosewater }}
-flamingo = {{ .colorScheme.flamingo }}
-pink = {{ .colorScheme.pink }}
-mauve = {{ .colorScheme.mauve }}
+transparent = #00000000
+pill = {{ $pill }}
+pill-solid = {{ $solid }}
+text = {{ .colorScheme.text }}
+subtext = {{ .colorScheme.subtext0 }}
+dim = {{ .colorScheme.overlay0 }}
+surface1 = {{ .colorScheme.surface1 }}
+base = {{ .colorScheme.base }}
 red = {{ .colorScheme.red }}
-maroon = {{ .colorScheme.maroon }}
 peach = {{ .colorScheme.peach }}
 yellow = {{ .colorScheme.yellow }}
 green = {{ .colorScheme.green }}
 teal = {{ .colorScheme.teal }}
-sky = {{ .colorScheme.sky }}
 sapphire = {{ .colorScheme.sapphire }}
 blue = {{ .colorScheme.blue }}
 lavender = {{ .colorScheme.lavender }}
+mauve = {{ .colorScheme.mauve }}
+pink = {{ .colorScheme.pink }}
 
-surface0 = {{ .colorScheme.surface0 }}
-surface1 = {{ .colorScheme.surface1 }}
-surface2 = {{ .colorScheme.surface2 }}
+; ---------------------------------------------------------------------------
+; Bars
+;
+; The window spans the full monitor width so i3 treats it as a normal dock and
+; reserves space (override-redirect = false). The floating look comes from
+; fully transparent borders: 8px left/right, 6px top, 2px bottom. Struts are
+; computed from height + borders, so the gap is reserved automatically.
+; ---------------------------------------------------------------------------
 
-[bar/bar1]
+[bar/base]
 monitor = ${env:MONITOR:}
-width = 100%
-height = 30
-radius = 0
+monitor-strict = false
+override-redirect = false
+wm-restack = i3
+bottom = false
 fixed-center = true
 
-background = ${colors.background}
-foreground = ${colors.foreground}
+width = 100%
+height = 34
+radius = 0
 
-line-size = 3
+background = ${colors.transparent}
+foreground = ${colors.text}
 
-border-size = 0
-border-color = ${colors.background}
+border-top-size = 6
+border-bottom-size = 2
+border-left-size = 8
+border-right-size = 8
+border-color = ${colors.transparent}
 
-padding-left = 1
-padding-right = 1
+padding = 0
+module-margin = 0
+separator =
 
-module-margin = 1
-
-separator = |
-separator-foreground = ${colors.surface1}
-
-font-0 = "{{ .font.regular }}:size=10;2"
-font-1 = "{{ .font.regular }}:size=16;3"
-font-2 = "{{ .font.regular }}:size=12;2"
-
-modules-left = xworkspaces xwindow
-modules-center = date
-modules-right = updates microphone pulseaudio memory cpu temperature wlan systray
+; font-0 text, font-1 icons (%{T2}), font-2 pill caps (%{T3}).
+; Cap font: a powerline glyph fills the whole font cell, so its size is chosen
+; so the cell is ~ the bar height (34px ~ JetBrainsMono 1.32 line height).
+; Tune size/offset of font-2 if the caps do not line up with the pills.
+font-0 = "{{ .font.regular }}:size=11;3"
+font-1 = "{{ .font.regular }}:size=13;3"
+font-2 = "{{ .font.regular }}:size=20;4"
 
 cursor-click = pointer
 cursor-scroll = ns-resize
 
 enable-ipc = true
 
+[bar/bar1]
+inherit = bar/base
+modules-left = i3 xwindow
+modules-center = date
+modules-right = updates cpu memory temperature pulseaudio microphone wlan tray power
+
 [bar/bar2]
-monitor = ${env:MONITOR:}
-width = 100%
-height = 30
-radius = 0
-fixed-center = true
-
-background = ${colors.background}
-foreground = ${colors.foreground}
-
-line-size = 3
-
-border-size = 0
-border-color = ${colors.background}
-
-padding-left = 1
-padding-right = 1
-
-module-margin = 1
-
-separator = |
-separator-foreground = ${colors.surface1}
-
-font-0 = "{{ .font.regular }}:size=10;2"
-font-1 = "{{ .font.regular }}:size=16;3"
-font-2 = "{{ .font.regular }}:size=12;2"
-
-modules-left = xworkspaces xwindow
+inherit = bar/base
+modules-left = i3
 modules-center = date
 modules-right = pulseaudio
 
-cursor-click = pointer
-cursor-scroll = ns-resize
+; ---------------------------------------------------------------------------
+; Left
+; ---------------------------------------------------------------------------
 
-enable-ipc = true
-
-
-
-[module/xworkspaces]
-type = internal/xworkspaces
-
-; Only show workspaces belonging to the monitor this bar is on, so the
-; left (non-primary) bar shows 7 & 8 and the right (primary) bar shows the rest.
+[module/i3]
+type = internal/i3
 pin-workspaces = true
+show-urgent = true
+index-sort = true
+enable-click = true
+enable-scroll = true
+wrapping-scroll = false
+reverse-scroll = false
 
-; Icon mapping for workspaces
-icon-0 = 1;󰈹
-icon-1 = 2;
-icon-2 = 3;
-icon-3 = 4;
-icon-4 = 5;
-icon-5 = 6;
-icon-6 = 7;
-icon-7 = 8;󰭹
-icon-8 = 9;
-icon-9 = 10;
+format = <label-state><label-mode>
+format-background = ${colors.pill}
+format-prefix = "{{ $cl }} "
+format-suffix = " {{ $cr }}"
 
-label-active = %icon% %name%
-label-active-background = ${colors.surface0}
-label-active-foreground = ${colors.blue}
-label-active-underline = ${colors.blue}
-label-active-padding = 1
+; Focused workspace = accent (mauve) capsule inside the pill
+label-focused = {{ template "ws" (list .colorScheme.mauve .colorScheme.base $pill) }}
+label-unfocused = %index%
+label-unfocused-foreground = {{ .colorScheme.overlay1 }}
+label-unfocused-padding = 1
+label-visible = %index%
+label-visible-foreground = {{ .colorScheme.lavender }}
+label-visible-padding = 1
+label-urgent = {{ template "ws" (list .colorScheme.red .colorScheme.base $pill) }}
 
-label-occupied = %icon% %name%
-label-occupied-foreground = ${colors.mauve}
-label-occupied-padding = 1
-
-label-urgent = %icon% %name%
-label-urgent-background = ${colors.alert}
-label-urgent-foreground = ${colors.foreground}
-label-urgent-padding = 1
-
-label-empty = %icon% %name%
-label-empty-foreground = ${colors.disabled}
-label-empty-padding = 1
+label-mode = %mode%
+label-mode-foreground = {{ .colorScheme.peach }}
+label-mode-padding = 1
 
 [module/xwindow]
 type = internal/xwindow
-label = %title:0:60:...%
-label-foreground = ${colors.lavender}
+format = <label>
+format-background = ${colors.pill}
+format-prefix = "{{ $cg }}  "
+format-suffix = "  {{ $cr }}"
+label = %title:0:50:...%
+label-empty = Desktop
+label-empty-foreground = ${colors.dim}
 
-[module/pulseaudio]
-type = internal/pulseaudio
-
-format-volume-prefix = "󰕾 "
-format-volume-prefix-foreground = ${colors.blue}
-format-volume = <label-volume>
-
-label-volume = %percentage%%
-label-volume-foreground = ${colors.foreground}
-
-label-muted = 󰖁 muted
-label-muted-foreground = ${colors.disabled}
-
-click-right = pavucontrol
-click-left = amixer -D pulse set Master toggle
-
-[module/memory]
-type = internal/memory
-interval = 2
-format-prefix = " "
-format-prefix-foreground = ${colors.pink}
-label = %percentage_used:2%%
-
-click-left = sh -c 'kitty -e htop'
-
-[module/cpu]
-type = internal/cpu
-interval = 2
-format-prefix = " "
-format-prefix-foreground = ${colors.peach}
-label = %percentage:2%%
-
-click-left = kitty -e htop
-
-[module/temperature]
-type = internal/temperature
-interval = 5
-format-prefix = " "
-thermal-zone = 2
-warn-temperature = 80
-
-format = <ramp> <label>
-format-warn = <ramp> <label-warn>
-
-label = %temperature-c%
-label-foreground = ${colors.foreground}
-
-label-warn = %temperature-c%
-label-warn-foreground = ${colors.alert}
-
-ramp-0 =
-ramp-1 =
-ramp-2 =
-ramp-3 =
-ramp-4 =
-ramp-foreground = ${colors.teal}
-
-[network-base]
-type = internal/network
-interval = 5
-format-connected = <label-connected>
-format-disconnected = <label-disconnected>
-
-[module/wlan]
-inherit = network-base
-interface-type = wireless
-
-format-connected-prefix = "󰖨 "
-format-connected-prefix-foreground = ${colors.green}
-label-connected = %essid%
-
-format-disconnected-prefix = "󰖪 "
-format-disconnected-prefix-foreground = ${colors.disabled}
-label-disconnected = disconnected
-label-disconnected-foreground = ${colors.disabled}
-
-[module/eth]
-inherit = network-base
-interface-type = wired
-
-format-connected-prefix = "󰈀 "
-format-connected-prefix-foreground = ${colors.green}
-label-connected = %local_ip%
-
-format-disconnected-prefix = "󰈂 "
-format-disconnected-prefix-foreground = ${colors.disabled}
-label-disconnected = disconnected
-label-disconnected-foreground = ${colors.disabled}
+; ---------------------------------------------------------------------------
+; Center
+; ---------------------------------------------------------------------------
 
 [module/date]
 type = internal/date
-interval = 1
-
-date = %A, %d %B %Y
-time = %H:%M:%S
-
-format-prefix = " "
-format-prefix-foreground = ${colors.yellow}
-
-label = %date% %time%
-label-foreground = ${colors.foreground}
-
-[settings]
-screenchange-reload = true
-pseudo-transparency = false
-
-; New modules below
-
-[module/microphone]
-type = custom/script
-exec = ~/.config/polybar/scripts/microphone.sh
-interval = 1
-format-prefix = " "
-format-prefix-foreground = ${colors.red}
-click-left = amixer set Capture toggle
-
-[module/vpn]
-type = custom/script
-exec = ~/.config/polybar/scripts/vpn.sh
 interval = 5
-format-prefix = "󰖂 "
-format-prefix-foreground = ${colors.sapphire}
+
+; Click toggles the long date in front of the time
+date =
+time = %H:%M
+date-alt = " %A, %d %B %Y  "
+time-alt = %H:%M
+
+format = <label>
+format-background = ${colors.pill}
+format-prefix = "{{ $cl }} "
+format-suffix = " {{ $cr }}"
+label = {{ template "ic" (list .colorScheme.yellow "\U000f0150") }} %date%%time%
+
+; ---------------------------------------------------------------------------
+; Right
+; ---------------------------------------------------------------------------
 
 [module/updates]
 type = custom/script
 exec = ~/.config/polybar/scripts/updates.sh
 interval = 600
-format-prefix = "󰚰 "
-format-prefix-foreground = ${colors.yellow}
-click-left = kitty -e sudo apt update && sudo apt upgrade
+format = <label>
+format-background = ${colors.pill}
+format-prefix = "{{ $cg }} "
+format-suffix = " {{ $cr }}"
+label = {{ template "ic" (list .colorScheme.yellow "\U000f06b0") }} %output%
+click-left = ghostty -e bash -c 'sudo apt update && sudo apt upgrade; read -n1 -p "Done. Press a key"'
 
-[module/filesystem]
-type = internal/fs
-interval = 30
-mount-0 = /
-mount-1 = /home
+; cpu + memory + temperature share one pill: cap only on the outer ends.
+[module/cpu]
+type = internal/cpu
+interval = 2
+format = <label>
+format-background = ${colors.pill}
+format-prefix = "{{ $cg }} "
+label = {{ template "ic" (list .colorScheme.peach "\U000f061a") }} %percentage:2%%
+click-left = ghostty -e htop
 
-format-mounted-prefix = "󰋊 "
-format-mounted-prefix-foreground = ${colors.green}
-label-mounted = %percentage_used%%
-label-unmounted = %mountpoint% not mounted
-label-unmounted-foreground = ${colors.disabled}
+[module/memory]
+type = internal/memory
+interval = 2
+format = <label>
+format-background = ${colors.pill}
+format-prefix = "  "
+label = {{ template "ic" (list .colorScheme.pink "\U000f035b") }} %percentage_used:2%%
+click-left = ghostty -e htop
 
-[module/systray]
+[module/temperature]
+type = internal/temperature
+interval = 5
+; launch.sh exports the CPU hwmon sensor (coretemp / k10temp); when unset the
+; module falls back to thermal-zone.
+hwmon-path = ${env:POLYBAR_HWMON_PATH:}
+thermal-zone = 0
+warn-temperature = 80
+units = true
+
+format = <label>
+format-warn = <label-warn>
+format-background = ${colors.pill}
+format-warn-background = ${colors.pill}
+format-prefix = "  "
+format-suffix = " {{ $cr }}"
+format-warn-prefix = "  "
+format-warn-suffix = " {{ $cr }}"
+label = {{ template "ic" (list .colorScheme.teal "\U000f050f") }} %temperature-c%
+label-warn = %{F{{ .colorScheme.red }}}%{T2}{{ "\U000f050f" }}%{T-} %temperature-c%%{F-}
+
+[module/pulseaudio]
+type = internal/pulseaudio
+use-ui-max = false
+interval = 5
+
+format-volume = <ramp-volume> <label-volume>
+format-volume-background = ${colors.pill}
+format-volume-prefix = "{{ $cg }} "
+format-volume-suffix = " {{ $cr }}"
+format-muted = <label-muted>
+format-muted-background = ${colors.pill}
+format-muted-prefix = "{{ $cg }} "
+format-muted-suffix = " {{ $cr }}"
+
+label-volume = %percentage%%
+label-muted = %{F{{ .colorScheme.overlay0 }}}%{T2}{{ "\U000f0581" }}%{T-} muted%{F-}
+ramp-volume-0 = {{ template "ic" (list .colorScheme.blue "\U000f057f") }}
+ramp-volume-1 = {{ template "ic" (list .colorScheme.blue "\U000f0580") }}
+ramp-volume-2 = {{ template "ic" (list .colorScheme.blue "\U000f057e") }}
+
+; left click toggles mute (built in)
+click-right = pavucontrol
+click-middle = ~/.local/bin/audio-switch.sh
+
+[module/microphone]
+type = custom/script
+; args: unmuted colour, muted colour
+exec = ~/.config/polybar/scripts/microphone.sh {{ .colorScheme.sapphire }} {{ .colorScheme.red }}
+interval = 1
+format = <label>
+format-background = ${colors.pill}
+format-prefix = "{{ $cg }} "
+format-suffix = " {{ $cr }}"
+label = %output%
+click-left = wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+; left click toggles mute (built in)
+click-right = pavucontrol
+
+[module/wlan]
+type = internal/network
+interface-type = wireless
+interval = 5
+
+format-connected = <label-connected>
+format-connected-background = ${colors.pill}
+format-connected-prefix = "{{ $cg }} "
+format-connected-suffix = " {{ $cr }}"
+format-disconnected = <label-disconnected>
+format-disconnected-background = ${colors.pill}
+format-disconnected-prefix = "{{ $cg }} "
+format-disconnected-suffix = " {{ $cr }}"
+
+label-connected = {{ template "ic" (list .colorScheme.green "\U000f05a9") }} %essid:0:20:...%
+label-disconnected = %{F{{ .colorScheme.overlay0 }}}%{T2}{{ "\U000f05aa" }}%{T-} offline%{F-}
+
+click-left = sh -c 'command -v networkmanager_dmenu >/dev/null && exec networkmanager_dmenu || exec nm-connection-editor'
+
+; The tray cannot use true transparency (polybar uses pseudo-transparency for
+; a transparent tray background, which breaks on a transparent bar), so this
+; pill is opaque.
+[module/tray]
 type = internal/tray
-tray-position = right
 tray-size = 60%
-tray-padding = 2
-tray-maxsize = 16
+tray-padding = 3
+tray-spacing = 2
+tray-background = ${colors.pill-solid}
+format = <tray>
+format-background = ${colors.pill-solid}
+format-prefix = "{{ $tg }} "
+format-suffix = " {{ $tr }}"
+
+[module/power]
+type = custom/script
+exec = echo "{{ "\U000f0425" }}"
+interval = 3600
+format = <label>
+format-background = ${colors.pill}
+format-prefix = "{{ $cg }} "
+format-suffix = " {{ $cr }}"
+label = %{F{{ .colorScheme.red }}}%output%%{F-}
+click-left = ~/.config/rofi/powermenu/type-2/powermenu.sh
+
+[settings]
+screenchange-reload = true
+pseudo-transparency = false
 
 ; vim:ft=dosini

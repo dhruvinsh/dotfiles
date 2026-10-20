@@ -1,0 +1,19 @@
+{{- /* xob styles, palette colours. Bottom-centre bar, like swayosd. */ -}}
+default = {
+    x           = {relative = 0.5; offset = 0;};
+    y           = {relative = 0.92; offset = 0;};
+    length      = {relative = 0.25; offset = 0;};
+    thickness   = 16;
+    outline     = 0;
+    border      = 2;
+    padding     = 3;
+    orientation = "horizontal";
+    overflow    = "proportional";
+
+    color = {
+        normal      = {fg = "{{ .colorScheme.mauve }}"; bg = "{{ .colorScheme.base }}"; border = "{{ .colorScheme.surface1 }}";};
+        alt         = {fg = "{{ .colorScheme.overlay0 }}"; bg = "{{ .colorScheme.base }}"; border = "{{ .colorScheme.surface1 }}";};
+        overflow    = {fg = "{{ .colorScheme.red }}"; bg = "{{ .colorScheme.base }}"; border = "{{ .colorScheme.red }}";};
+        altoverflow = {fg = "{{ .colorScheme.overlay0 }}"; bg = "{{ .colorScheme.base }}"; border = "{{ .colorScheme.red }}";};
+    };
+};
