@@ -76,4 +76,10 @@ run '~/.tmux/plugins/tpm/tpm'
 set -gF message-style "fg=#{@thm_text},bg=#{@thm_crust},fill=#{@thm_crust}"
 set -gF message-command-style "fg=#{@thm_text},bg=#{@thm_crust},fill=#{@thm_crust}"
 
+# Since tmux 3.8, window-status-current-style defaults to `underscore` (it was
+# `default` through 3.7), which underlines the active window on top of
+# catppuccin's pill highlight. catppuccin/tmux never sets this option, so reset
+# it to `default` to let the pill (window-status-current-format) do the work.
+set -wgF window-status-current-style "default"
+
 {{- /* vim: set filetype=tmux: */}}
