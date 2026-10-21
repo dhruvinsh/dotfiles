@@ -22,7 +22,7 @@
 {{- $tg := printf "%%{B-}%%{O8}%%{F%s}%%{T3}%s%%{T-}%%{B%s}%%{F-}" $solid "" $solid -}}
 {{- $tr := printf "%%{B-}%%{F%s}%%{T3}%s%%{T-}%%{F-}" $solid "" -}}
 {{- /* inner "active workspace" capsule: accent colour in, pill colour out */ -}}
-{{- define "ic" -}}%{F{{ index . 0 }}}%{T2}{{ index . 1 }}%{T-}%{F-}{{- end -}}
+{{- define "ic" -}}%{F{{ index . 0 }}}%{T2}{{ index . 1 }} %{T-}%{F-}{{- end -}}
 {{- define "ws" -}}%{F{{ index . 0 }}}%{T3}{{ "" }}%{T-}%{B{{ index . 0 }}}%{F{{ index . 1 }}} %index% %{B{{ index . 2 }}}%{F{{ index . 0 }}}%{T3}{{ "" }}%{T-}%{F-}{{- end -}}
 ;==========================================================
 ;
@@ -170,7 +170,7 @@ format = <label>
 format-background = ${colors.pill}
 format-prefix = "{{ $cl }} "
 format-suffix = " {{ $cr }}"
-label = {{ template "ic" (list .colorScheme.yellow "\U000f0150") }} %date%%time%
+label = {{ template "ic" (list .colorScheme.yellow "\U000f0150") }}%date%%time%
 
 ; ---------------------------------------------------------------------------
 ; Right
@@ -184,7 +184,7 @@ format = <label>
 format-background = ${colors.pill}
 format-prefix = "{{ $cg }} "
 format-suffix = " {{ $cr }}"
-label = {{ template "ic" (list .colorScheme.yellow "\U000f06b0") }} %output%
+label = {{ template "ic" (list .colorScheme.yellow "\U000f06b0") }}%output%
 click-left = ghostty -e bash -c 'sudo apt update && sudo apt upgrade; read -n1 -p "Done. Press a key"'
 
 ; cpu + memory + temperature share one pill: cap only on the outer ends.
@@ -194,7 +194,7 @@ interval = 2
 format = <label>
 format-background = ${colors.pill}
 format-prefix = "{{ $cg }} "
-label = {{ template "ic" (list .colorScheme.peach "\U000f061a") }} %percentage:2%%
+label = {{ template "ic" (list .colorScheme.peach "\U000f061a") }}%percentage:2%%
 click-left = ghostty -e htop
 
 [module/memory]
@@ -203,7 +203,7 @@ interval = 2
 format = <label>
 format-background = ${colors.pill}
 format-prefix = "  "
-label = {{ template "ic" (list .colorScheme.pink "\U000f035b") }} %percentage_used:2%%
+label = {{ template "ic" (list .colorScheme.pink "\U000f035b") }}%percentage_used:2%%
 click-left = ghostty -e htop
 
 [module/temperature]
@@ -224,15 +224,15 @@ format-prefix = "  "
 format-suffix = " {{ $cr }}"
 format-warn-prefix = "  "
 format-warn-suffix = " {{ $cr }}"
-label = {{ template "ic" (list .colorScheme.teal "\U000f050f") }} %temperature-c%
-label-warn = %{F{{ .colorScheme.red }}}%{T2}{{ "\U000f050f" }}%{T-} %temperature-c%%{F-}
+label = {{ template "ic" (list .colorScheme.teal "\U000f050f") }}%temperature-c%
+label-warn = %{F{{ .colorScheme.red }}}%{T2}{{ "\U000f050f" }} %{T-}%temperature-c%%{F-}
 
 [module/pulseaudio]
 type = internal/pulseaudio
 use-ui-max = false
 interval = 5
 
-format-volume = <ramp-volume> <label-volume>
+format-volume = <ramp-volume><label-volume>
 format-volume-background = ${colors.pill}
 format-volume-prefix = "{{ $cg }} "
 format-volume-suffix = " {{ $cr }}"
@@ -242,7 +242,7 @@ format-muted-prefix = "{{ $cg }} "
 format-muted-suffix = " {{ $cr }}"
 
 label-volume = %percentage%%
-label-muted = %{F{{ .colorScheme.overlay0 }}}%{T2}{{ "\U000f0581" }}%{T-} muted%{F-}
+label-muted = %{F{{ .colorScheme.overlay0 }}}%{T2}{{ "\U000f0581" }} %{T-}muted%{F-}
 ramp-volume-0 = {{ template "ic" (list .colorScheme.blue "\U000f057f") }}
 ramp-volume-1 = {{ template "ic" (list .colorScheme.blue "\U000f0580") }}
 ramp-volume-2 = {{ template "ic" (list .colorScheme.blue "\U000f057e") }}
@@ -279,8 +279,8 @@ format-disconnected-background = ${colors.pill}
 format-disconnected-prefix = "{{ $cg }} "
 format-disconnected-suffix = " {{ $cr }}"
 
-label-connected = {{ template "ic" (list .colorScheme.green "\U000f05a9") }} %essid:0:20:...%
-label-disconnected = %{F{{ .colorScheme.overlay0 }}}%{T2}{{ "\U000f05aa" }}%{T-} offline%{F-}
+label-connected = {{ template "ic" (list .colorScheme.green "\U000f05a9") }}%essid:0:20:...%
+label-disconnected = %{F{{ .colorScheme.overlay0 }}}%{T2}{{ "\U000f05aa" }} %{T-}offline%{F-}
 
 click-left = sh -c 'command -v networkmanager_dmenu >/dev/null && exec networkmanager_dmenu || exec nm-connection-editor'
 
@@ -306,7 +306,7 @@ format = <label>
 format-background = ${colors.pill}
 format-prefix = "{{ $cg }} "
 format-suffix = " {{ $cr }}"
-label = %{F{{ .colorScheme.red }}}%output%%{F-}
+label = %{F{{ .colorScheme.red }}}%output% %{F-}
 click-left = ~/.config/rofi/powermenu/type-2/powermenu.sh
 
 [settings]
