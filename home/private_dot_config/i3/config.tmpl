@@ -72,8 +72,11 @@ bindsym XF86AudioPause exec --no-startup-id playerctl play-pause
 bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 
-# Display configuration (iGPU: DP-1 left / HDMI-2 primary right)
-exec_always --no-startup-id ~/.config/i3/scripts/monitor_setup.sh
+# Display configuration (iGPU: DP-1 left / HDMI-2 primary right), then polybar.
+# Chained so polybar only starts once HDMI-2 is primary: Xorg marks the first
+# output (DP-1) primary at startup, so a separately launched polybar sees DP-1
+# as primary and puts the full bar on the left monitor.
+exec_always --no-startup-id sh -c '~/.config/i3/scripts/monitor_setup.sh; ~/.config/polybar/launch.sh'
 
 # Wallpaper
 # exec_always feh --bg-fill ~/Pictures/wallpapers/1.png
@@ -294,9 +297,6 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
-
-# Launch polybar
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 # Notification daemon
 exec --no-startup-id dunst
