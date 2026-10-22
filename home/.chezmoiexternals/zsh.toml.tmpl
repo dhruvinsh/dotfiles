@@ -1,10 +1,12 @@
 {{- if ne .chezmoi.os "windows" -}}
 
+{{- $ezaVersion := (gitHubLatestRelease "eza-community/eza").TagName | trimPrefix "v" }}
 [".zsh/completions/_eza"]
   type = "archive-file"
   url  = {{ gitHubLatestReleaseAssetURL "eza-community/eza" "completions-*.tar.gz"  | quote }}
-  stripComponents = 3
-  path = "_eza"
+  # Full path, not stripComponents: the tarball's entries start with "./", which
+  # chezmoi >= 2.7x normalizes away, so a strip count can't work on both old and new.
+  path = "./target/completions-{{ $ezaVersion }}/_eza"
 
 [".zsh/zsh-autosuggestions"]
   type = "git-repo"
