@@ -4,12 +4,12 @@ set -euo pipefail
 
 # {{ template "scripts/download_helpers.sh" . }}
 # {{ template "scripts/service_helpers.sh" . }}
+# {{ template "scripts/gpu_helpers.sh" . }}
 
 packages=(
     adw-gtk-theme
     emacs-wayland
     loupe
-    nvidia-container-toolkit
     nwg-look
     obsidian
     seahorse
@@ -27,6 +27,9 @@ aur_pkgs=(
     localsend-bin
     visual-studio-code-bin
 )
+# GPU passthrough for containers -- any NVIDIA host, display or compute-only.
+[[ "$(nvidia_gpu_mode)" != none ]] && packages+=(nvidia-container-toolkit)
+
 install_packages_from_arrays
 
 system_services=()

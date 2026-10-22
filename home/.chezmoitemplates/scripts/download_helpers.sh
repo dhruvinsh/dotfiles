@@ -121,7 +121,7 @@ install_package_aur() {
   if "$aur_helper" -Q "$pkg" &>/dev/null; then
     echo "$pkg is already installed. Skipping..."
   else
-    "$aur_helper" -S "$pkg"
+    "$aur_helper" -S --needed --noconfirm "$pkg"
   fi
 }
 

@@ -4,7 +4,9 @@ set -euo pipefail
 
 # Install the "lumen" SDDM theme (hyprlock look-alike, colored from .colorScheme).
 # Re-runs whenever the theme, palette or current wallpaper changes:
-# wallpaper: {{ output "readlink" "-f" (joinPath .chezmoi.homeDir ".cache/wallpapers/wall.current") | trim }}
+# (`|| true`: on a fresh install the wallpaper cache doesn't exist yet, and a failing
+# `output` would abort the whole apply.)
+# wallpaper: {{ output "sh" "-c" (printf "readlink -f %s || true" (joinPath .chezmoi.homeDir ".cache/wallpapers/wall.current" | squote)) | trim }}
 
 if ! pacman -Q sddm &> /dev/null; then
     echo "SDDM not installed. Skipping theme setup."

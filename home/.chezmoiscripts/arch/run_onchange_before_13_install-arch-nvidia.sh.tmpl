@@ -3,6 +3,35 @@ set -e
 
 # {{- if eq .archlinux true }}
 
+# {{ template "scripts/gpu_helpers.sh" . }}
+
+# display: NVIDIA drives the screen -> early KMS (initramfs modules, modeset=1).
+# compute: display on the iGPU, NVIDIA cards only for CUDA/LLMs -> driver loaded late,
+#          no DRM modesetting, so Hyprland/aquamarine never picks up those cards.
+# none:    nothing to do. (Without this gate, MODULES=(nvidia ...) on an Intel/AMD box
+#          makes mkinitcpio fail.)
+MODE=$(nvidia_gpu_mode)
+echo "NVIDIA mode: $MODE"
+if [ "$MODE" = none ]; then
+  echo "No NVIDIA GPU detected. Skipping NVIDIA setup."
+  exit 0
+fi
+
+# 0. Kernel module. nvidia-open-dkms (Turing and newer) builds for every installed
+#    kernel, so it needs the matching headers -- a fresh install has neither.
+for kernel in linux linux-lts linux-zen linux-hardened; do
+  if pacman -Q "$kernel" &>/dev/null && ! pacman -Q "$kernel-headers" &>/dev/null; then
+    sudo pacman -S --noconfirm --needed "$kernel-headers"
+  fi
+done
+has_module=0
+for pkg in nvidia-open-dkms nvidia-open nvidia-open-lts nvidia-dkms nvidia nvidia-lts; do
+  pacman -Q "$pkg" &>/dev/null && has_module=1
+done
+if [ "$has_module" -eq 0 ]; then
+  sudo pacman -S --noconfirm --needed nvidia-open-dkms
+fi
+
 MODPROBE_CONF="/etc/modprobe.d/nvidia.conf"
 MKINITCPIO_CONF="/etc/mkinitcpio.conf"
 BACKUP="${MKINITCPIO_CONF}.backup"
@@ -13,9 +42,16 @@ NVIDIA_MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"
 # Managed as a whole file: the previous `grep -Fxq ... || echo ... | tee` pattern used
 # `tee` rather than `tee -a`, so the file could never hold more than the one line it
 # tested for -- adding a second line would have been clobbered on the next run.
-read -r -d '' NVIDIA_CONF_CONTENT <<'EOF' || true
-# Required for Wayland / DRM KMS.
-options nvidia_drm modeset=1
+if [ "$MODE" = display ]; then
+  MODESET_CONTENT="# Required for Wayland / DRM KMS.
+options nvidia_drm modeset=1"
+else
+  MODESET_CONTENT="# Compute-only: the display runs on the iGPU. No KMS on the NVIDIA cards keeps the
+# compositor off them; CUDA does not need DRM modesetting.
+options nvidia_drm modeset=0 fbdev=0"
+fi
+read -r -d '' NVIDIA_CONF_CONTENT <<EOF || true
+$MODESET_CONTENT
 
 # Turing (and later) boards expose a USB-C/VirtualLink port behind an i2c-attached
 # Cypress PD controller. On boards where that port isn't wired up, the probe just
@@ -42,15 +78,22 @@ fi
 
 # 3. Prepare new config content (remove old NVIDIA modules and add new ones)
 TMPFILE=$(mktemp)
+[ "$MODE" = display ] || NVIDIA_MODULES=""
 awk -v mods="$NVIDIA_MODULES" '
 {
   if ($0 ~ /^MODULES=\(/) {
-    # remove NVIDIA modules from the array if already present
-    line = $0
-    gsub(/ nvidia_drm| nvidia_uvm| nvidia_modeset| nvidia/, "", line)
-    # add modules at the start
-    sub(/^MODULES=\(\s*/, "MODULES=(" mods " ", line)
-    print line
+    # rebuild the array token by token: drop every nvidia* module (wherever it sits --
+    # a substring gsub missed the first one and duplicated it on each run), then put
+    # the wanted ones first (compute mode: mods is empty, so they are only removed)
+    inner = $0
+    sub(/^MODULES=\(/, "", inner)
+    sub(/\).*$/, "", inner)
+    n = split(inner, tok, /[ \t]+/)
+    out = mods
+    for (i = 1; i <= n; i++)
+      if (tok[i] != "" && tok[i] !~ /^nvidia(_modeset|_uvm|_drm)?$/)
+        out = out (out == "" ? "" : " ") tok[i]
+    print "MODULES=(" out ")"
   } else {
     print
   }
@@ -73,6 +116,11 @@ if [ "$REBUILD_INITRAMFS" -eq 1 ]; then
   sudo mkinitcpio -P
 else
   echo "No changes needed."
+fi
+
+# Compute-only: keep the driver initialised between CUDA jobs (no display holds it open).
+if [ "$MODE" = compute ]; then
+  sudo systemctl enable --now nvidia-persistenced.service
 fi
 
 # {{- end }}

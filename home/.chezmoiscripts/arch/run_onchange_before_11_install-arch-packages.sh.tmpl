@@ -4,15 +4,25 @@ set -euo pipefail
 
 # if arch based system
 # {{- if eq .archlinux true }}
-# NOTE: modify pacman.conf file then start this script
-if ! grep -q "ILoveCandy" /etc/pacman.conf; then
-    echo "Modify the pacman.conf file first"
-    echo "Color,VerbosePkgLists,ParallelDownloads=5,ILoveCandy"
-    exit 1
+# pacman.conf tweaks: Color, VerbosePkgLists, ParallelDownloads=5, ILoveCandy, and
+# the [multilib] repo (steam, lib32-nvidia-utils). Idempotent, so a fresh install no
+# longer has to hand-edit the file before the first apply.
+PACMAN_CONF=/etc/pacman.conf
+if ! grep -q "^ILoveCandy" "$PACMAN_CONF" || ! grep -q "^\[multilib\]" "$PACMAN_CONF"; then
+    echo "Configuring $PACMAN_CONF..."
+    sudo cp -n "$PACMAN_CONF" "${PACMAN_CONF}.backup"
+    sudo sed -i -E \
+        -e 's/^#(Color|VerbosePkgLists)$/\1/' \
+        -e 's/^#?ParallelDownloads.*/ParallelDownloads = 5/' \
+        "$PACMAN_CONF"
+    grep -q "^ILoveCandy" "$PACMAN_CONF" ||
+        sudo sed -i 's/^ParallelDownloads = 5$/&\nILoveCandy/' "$PACMAN_CONF"
+    # uncomment the [multilib] header and the Include line right after it
+    sudo sed -i '/^#\[multilib\]$/{s/^#//;n;s/^#//}' "$PACMAN_CONF"
 fi
 
-sudo pacman -Sy
-sudo pacman -S --noconfirm --needed base-devel archlinux-keyring findutils git
+sudo pacman -Syu --noconfirm
+sudo pacman -S --noconfirm --needed base-devel archlinux-keyring findutils git curl wget unzip
 
 if command -v yay 2>/dev/null; then
     echo "Yay is already installed. Skipping..."
@@ -25,14 +35,9 @@ fi
 
 # {{ template "scripts/download_helpers.sh" . }}
 # {{ template "scripts/service_helpers.sh" . }}
+# {{ template "scripts/gpu_helpers.sh" . }}
 
 packages=(
-    # Graphics
-    # NOTE: must have for hyprland else will not boot
-    egl-wayland
-    libva-nvidia-driver
-    nvidia-utils
-
     # Hyperland and Wayland
     cliphist
     flameshot
@@ -77,7 +82,6 @@ packages=(
     btop
     chezmoi
     fontconfig
-    gtk-engine-murrine
     htop
     inotify-tools
     less
@@ -85,6 +89,7 @@ packages=(
     man-db
     man-pages
     openssh
+    pciutils
     libfido2
     pacman-contrib
     pam-u2f
@@ -97,6 +102,9 @@ packages=(
     zip
     zsh
     zsh-completions
+
+    # Display manager (themed by run_onchange_after_83_install-arch-sddm-theme)
+    sddm
 
     # Networking and Bluetooth
     bluez
@@ -140,6 +148,23 @@ aur_pkgs=(
     waybar-git
     wlogout
 )
+# NVIDIA userspace. The Wayland/VA-API bits only when NVIDIA drives the display --
+# Hyprland will not start on NVIDIA without them; compute-only cards (display on the
+# iGPU) just need the driver + CUDA. The kernel module is handled by the 13_ script.
+case "$(nvidia_gpu_mode)" in
+    display) packages+=(nvidia-utils egl-wayland libva-nvidia-driver) ;;
+    compute) packages+=(nvidia-utils) ;;
+esac
+
+# Intel/AMD GPUs: Mesa (OpenGL) comes with hyprland; add Vulkan + VA-API video decode.
+for dev in /sys/bus/pci/devices/*; do
+    [[ "$(cat "$dev/class" 2>/dev/null)" == 0x03* ]] || continue
+    case "$(cat "$dev/vendor" 2>/dev/null)" in
+        0x8086) packages+=(vulkan-intel intel-media-driver) ;;
+        0x1002) packages+=(vulkan-radeon) ;;
+    esac
+done
+
 install_packages_from_arrays
 
 # Actiona to take before starting serviecs
@@ -170,6 +195,10 @@ user_services=(
 )
 
 enable_services_from_arrays
+
+# Enable (but don't start) the display manager -- starting it mid-apply would grab the
+# console out from under this script. It takes over on the next boot.
+sudo systemctl enable sddm.service
 
 # Check if the 'input' group exists
 if grep -q '^input:' /etc/group; then

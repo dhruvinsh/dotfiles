@@ -1,0 +1,6 @@
+{{- /* Template-time twin of nvidia_gpu_mode (scripts/gpu_helpers.sh): display | compute | none. */ -}}
+{{- if eq .chezmoi.os "linux" -}}
+{{-   output "sh" "-c" "m=none; for d in /sys/bus/pci/devices/*; do [ \"$(cat $d/vendor 2>/dev/null)\" = 0x10de ] || continue; case \"$(cat $d/class 2>/dev/null)\" in 0x03*) ;; *) continue ;; esac; [ \"$(cat $d/boot_vga 2>/dev/null)\" = 1 ] && { echo display; exit 0; }; m=compute; done; echo $m" | trim -}}
+{{- else -}}
+none
+{{- end -}}

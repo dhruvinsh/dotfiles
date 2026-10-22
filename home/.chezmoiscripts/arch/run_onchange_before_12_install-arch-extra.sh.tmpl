@@ -28,7 +28,6 @@ packages=(
     swayosd
     tealdeer
     television
-    tldr
     yq
     zoxide
 
@@ -46,12 +45,16 @@ packages=(
     bind # do not need to enable the bind.service keep using system-resolved
     gpu-screen-recorder
     impala
-    linux-headers
     tailscale
     udiskie
     usbutils
     wiremix
 )
+
+# headers for every installed kernel (dkms modules need them; Arch here runs linux-lts)
+for kernel in linux linux-lts linux-zen linux-hardened; do
+    pacman -Q "$kernel" &>/dev/null && packages+=("$kernel-headers")
+done
 
 aur_pkgs=(
     fswatch

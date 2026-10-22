@@ -13,10 +13,11 @@ if pacman -Qq neovim &>/dev/null; then
 fi
 
 echo "Removing packages: mise migrated..."
-sudo pacman -Rns --noconfirm glow gitleaks
-# separate + guarded: pacman aborts the whole removal if any target is missing
-if pacman -Qq starship &>/dev/null; then
-    sudo pacman -Rns --noconfirm starship
-fi
+# one at a time + guarded: pacman aborts the whole removal if any target is missing
+for pkg in glow gitleaks starship; do
+    if pacman -Qq "$pkg" &>/dev/null; then
+        sudo pacman -Rns --noconfirm "$pkg"
+    fi
+done
 
 # {{- end }}
