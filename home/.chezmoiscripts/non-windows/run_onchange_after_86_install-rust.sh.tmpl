@@ -3,7 +3,9 @@
 
 set -euo pipefail
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# -y: no prompt; --no-modify-path: .zshenv already sources ~/.cargo/env, and rustup
+# appending to the managed ~/.profile makes it drift from chezmoi.
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 
 # install tools only in linux system
 # {{ if (and (eq .chezmoi.os "linux") (not .archlinux)) }}

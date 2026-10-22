@@ -37,7 +37,34 @@ fi
 # {{ template "scripts/service_helpers.sh" . }}
 # {{ template "scripts/gpu_helpers.sh" . }}
 
+# GPU userspace, installed FIRST: hyprland/aquamarine/zed depend on the virtual
+# `vulkan-driver`, and with --noconfirm pacman resolves that to the first provider
+# (nvidia-utils) -- so without this, every machine ends up with the NVIDIA stack.
+gpu_packages=()
+
+# NVIDIA: the Wayland/VA-API bits only when NVIDIA drives the display -- Hyprland will
+# not start on NVIDIA without them; compute-only cards (display on the iGPU) just need
+# the driver + CUDA. The kernel module is handled by the 13_ script.
+case "$(nvidia_gpu_mode)" in
+    display) gpu_packages+=(nvidia-utils egl-wayland libva-nvidia-driver) ;;
+    compute) gpu_packages+=(nvidia-utils) ;;
+esac
+
+# Intel/AMD/virtio: Mesa (OpenGL) comes with hyprland; add Vulkan + VA-API video decode.
+for dev in /sys/bus/pci/devices/*; do
+    [[ "$(cat "$dev/class" 2>/dev/null)" == 0x03* ]] || continue
+    case "$(cat "$dev/vendor" 2>/dev/null)" in
+        0x8086) gpu_packages+=(vulkan-intel intel-media-driver) ;;
+        0x1002) gpu_packages+=(vulkan-radeon) ;;
+        0x1af4) gpu_packages+=(vulkan-virtio) ;;
+    esac
+done
+# nothing matched (unknown GPU): CPU Vulkan fallback rather than nvidia-utils
+[ ${#gpu_packages[@]} -gt 0 ] || gpu_packages+=(vulkan-swrast)
+
 packages=(
+    "${gpu_packages[@]}"
+
     # Hyperland and Wayland
     cliphist
     flameshot
@@ -148,23 +175,6 @@ aur_pkgs=(
     waybar-git
     wlogout
 )
-# NVIDIA userspace. The Wayland/VA-API bits only when NVIDIA drives the display --
-# Hyprland will not start on NVIDIA without them; compute-only cards (display on the
-# iGPU) just need the driver + CUDA. The kernel module is handled by the 13_ script.
-case "$(nvidia_gpu_mode)" in
-    display) packages+=(nvidia-utils egl-wayland libva-nvidia-driver) ;;
-    compute) packages+=(nvidia-utils) ;;
-esac
-
-# Intel/AMD GPUs: Mesa (OpenGL) comes with hyprland; add Vulkan + VA-API video decode.
-for dev in /sys/bus/pci/devices/*; do
-    [[ "$(cat "$dev/class" 2>/dev/null)" == 0x03* ]] || continue
-    case "$(cat "$dev/vendor" 2>/dev/null)" in
-        0x8086) packages+=(vulkan-intel intel-media-driver) ;;
-        0x1002) packages+=(vulkan-radeon) ;;
-    esac
-done
-
 install_packages_from_arrays
 
 # Actiona to take before starting serviecs

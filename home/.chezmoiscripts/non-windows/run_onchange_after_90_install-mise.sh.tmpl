@@ -3,8 +3,10 @@
 
 set -euo pipefail
 
-# make sure all the necessary binary in path
+# make sure all the necessary binary in path. ~/.local/bin is where mise.run installs
+# mise; on a fresh install the first-login shell doesn't have it on PATH yet.
 [ -s "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+export PATH="$HOME/.local/bin:$PATH"
 
 
 if [ ! "$(command -v mise)" ]; then
