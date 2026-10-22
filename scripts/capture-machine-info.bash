@@ -88,11 +88,16 @@ run timedatectl
 run localectl
 
 # Secrets: NetworkManager profiles (root-only) + any certificates they reference.
+# Ubuntu 23.10+ stores NM profiles as netplan YAML (/etc/netplan/90-NM-*.yaml), not keyfiles.
 if sudo -v; then
   sudo cp /etc/NetworkManager/system-connections/*.nmconnection "$OUT/secrets/" 2>/dev/null
-  sudo grep -hoE '^(ca-cert|client-cert|private-key|phase2-ca-cert)=.*' \
-    /etc/NetworkManager/system-connections/*.nmconnection 2>/dev/null |
-    cut -d= -f2- | sed 's|^file://||' | sort -u | while read -r cert; do
+  sudo cp /etc/netplan/*.yaml "$OUT/secrets/" 2>/dev/null
+  {
+    sudo grep -hoE '^(ca-cert|client-cert|private-key|phase2-ca-cert)=.*' \
+      /etc/NetworkManager/system-connections/*.nmconnection 2>/dev/null | cut -d= -f2-
+    sudo grep -hoE '^\s*(ca-certificate|client-certificate|client-key|phase2-ca-certificate):.*' \
+      /etc/netplan/*.yaml 2>/dev/null | cut -d: -f2- | tr -d " \"'"
+  } | sed 's|^file://||' | sort -u | while read -r cert; do
     sudo cp "$cert" "$OUT/secrets/" 2>/dev/null && echo "copied cert: $cert" >>"$REPORT"
   done
   sudo chown -R "$(id -u):$(id -g)" "$OUT/secrets"
