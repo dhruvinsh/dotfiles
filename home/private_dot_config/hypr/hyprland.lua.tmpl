@@ -136,7 +136,7 @@ hl.config({
     disable_splash_rendering = true,
     background_color = "rgb({{ .colorScheme.crust | trimPrefix "#" }})",
     middle_click_paste = false, -- Disable middle click paste
-    -- hypridle only turns the display off; input turns it back on
+    -- if the display is ever turned off (hl.dsp.dpms), input turns it back on
     key_press_enables_dpms = true,
     mouse_move_enables_dpms = true,
   },
