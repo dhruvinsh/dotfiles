@@ -119,8 +119,15 @@ else
 fi
 
 # Compute-only: keep the driver initialised between CUDA jobs (no display holds it open).
+# On a fresh install the module was only just built and isn't loaded, so there are no
+# /dev/nvidia* nodes yet and starting the daemon fails -- enable it for the next boot.
 if [ "$MODE" = compute ]; then
-  sudo systemctl enable --now nvidia-persistenced.service
+  sudo systemctl enable nvidia-persistenced.service
+  if [ -e /dev/nvidiactl ]; then
+    sudo systemctl start nvidia-persistenced.service
+  else
+    echo "NVIDIA driver not loaded yet -- nvidia-persistenced starts after a reboot."
+  fi
 fi
 
 # {{- end }}
