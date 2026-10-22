@@ -14,7 +14,8 @@ set -euo pipefail
 # {{- if eq (env "XDG_SESSION_TYPE") "wayland" -}}
 # {{-   $flavour = "emacs-wayland" -}}
 # {{- end -}}
-# {{- $asset := printf "^%s_.*~ubuntu%s_amd64\\.deb$" $flavour (.chezmoi.osRelease.versionID | regexQuoteMeta) -}}
+# {{- /* GitHub rewrites "~" in asset names to ".", so foo_31.1-1~ubuntu26.04_amd64.deb is published as foo_31.1-1.ubuntu26.04_amd64.deb */ -}}
+# {{- $asset := printf "^%s_.*[~.]ubuntu%s_amd64\\.deb$" $flavour (.chezmoi.osRelease.versionID | regexQuoteMeta) -}}
 # {{- $url := "" -}}
 # {{- $tag := "" -}}
 # {{- range (gitHubReleases "dhruvinsh/emacs-builds") -}}
