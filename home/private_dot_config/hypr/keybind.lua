@@ -48,6 +48,12 @@ hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("flameshot gui")) -- region +
 hl.bind("Print", hl.dsp.exec_cmd("flameshot screen -c")) -- focused screen -> clipboard
 hl.bind("SHIFT + Print", hl.dsp.exec_cmd("flameshot gui"))
 
+-- Handy speech-to-text: its own global shortcuts can't grab keys on Wayland, so drive
+-- the running instance (XDG autostart) through its CLI. Toggle: press once to start, again to stop.
+hl.bind(mainMod .. " + H", hl.dsp.exec_cmd("handy --toggle-transcription"))
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.exec_cmd("handy --toggle-post-process"))
+hl.bind(mainMod .. " + CTRL + H", hl.dsp.exec_cmd("handy --cancel"))
+
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
