@@ -27,6 +27,7 @@ DISK=""
 NEW_HOSTNAME=""
 USERNAME="ds"
 TIMEZONE="America/Toronto"
+MIRROR_COUNTRIES="CA,US"
 NM_IMPORT_DIR=""
 ASSUME_YES=0
 
@@ -41,6 +42,7 @@ Usage: $0 --disk /dev/XXX --hostname NAME [options]
   --hostname NAME    hostname (use the whitelisted one on MAC/hostname-filtered Wi-Fi)
   --user NAME        login user (default: $USERNAME)
   --timezone TZ      default: $TIMEZONE
+  --mirrors LIST     reflector mirror countries (default: $MIRROR_COUNTRIES)
   --nm-import DIR    copy *.nmconnection files from DIR (e.g. exported from Ubuntu)
   --yes              skip the confirmation prompt
 EOF
@@ -59,6 +61,7 @@ while [ $# -gt 0 ]; do
     --hostname) NEW_HOSTNAME="$2" && shift ;;
     --user) USERNAME="$2" && shift ;;
     --timezone) TIMEZONE="$2" && shift ;;
+    --mirrors) MIRROR_COUNTRIES="$2" && shift ;;
     --nm-import) NM_IMPORT_DIR="$2" && shift ;;
     --yes) ASSUME_YES=1 ;;
     *) usage ;;
@@ -84,6 +87,30 @@ if lsblk -nrpo MOUNTPOINTS "$DISK" | grep -q .; then
   die "$DISK has mounted partitions (is it the live USB?)"
 fi
 curl -fsS --max-time 10 -o /dev/null https://archlinux.org || die "no internet -- connect first (iwctl)"
+
+# The ISO's own reflector run sorts mirrors by sync age, not speed, so a slow or stalled
+# mirror can end up first ("Operation too slow"). Replace it with the fastest recent
+# HTTPS mirrors; pacstrap copies this mirrorlist into the new system too.
+log "Selecting fast mirrors ($MIRROR_COUNTRIES)"
+systemctl stop reflector.service 2>/dev/null || true
+reflector --protocol https --country "$MIRROR_COUNTRIES" --age 12 --latest 20 \
+  --fastest 8 --download-timeout 5 --save /etc/pacman.d/mirrorlist ||
+  echo "reflector failed -- keeping the ISO's mirrorlist"
+grep -m 3 '^Server' /etc/pacman.d/mirrorlist
+
+# pacstrap verifies packages against the live ISO's keyring, which pacman-init.service
+# builds in the background after boot. Wait for it, build it here if it never appeared,
+# then refresh archlinux-keyring so an older ISO trusts the current packager keys.
+log "Preparing the pacman keyring"
+for _ in {1..30}; do
+  systemctl is-active --quiet pacman-init.service && break
+  sleep 2
+done
+if [ ! -r /etc/pacman.d/gnupg/pubring.gpg ] || [ ! -r /etc/pacman.d/gnupg/trustdb.gpg ]; then
+  pacman-key --init
+  pacman-key --populate archlinux
+fi
+pacman -Sy --needed --noconfirm archlinux-keyring
 
 # Other operating systems' ESPs: never on the target disk.
 # Each entry: "<menu title>|<fs uuid>|<loader path>"
