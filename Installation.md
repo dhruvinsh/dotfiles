@@ -1,150 +1,92 @@
 # Arch Linux installation
 
-## Arch Installation
+UEFI only. Arch goes on its **own disk** with its own ESP; any other OS (e.g. Ubuntu on
+a second drive) is left untouched and booted from Arch's GRUB via a chainload entry.
+The base install is scripted: [`scripts/arch-install.bash`](scripts/arch-install.bash).
 
-Simply follow this steps/cmds to install arch linux with LTS kernel.
+Resulting system: `linux-lts`, btrfs (`@`, `@home`, `@log`, `@pkg`, zstd), ESP at `/boot`,
+zram swap, GRUB, NetworkManager pinned to the permanent MAC.
 
-- Obtain latest iso image for Arch linux from
-  [Here (latest version)](http://mirror.csclub.uwaterloo.ca/archlinux/iso/latest/archlinux-x86_64.iso)
-  and boot to it.
-- Verify EFI boot mode: `ls /sys/firmware/efi/efivars`. All of my system should
-  be EFI.
-- Connect to Internet via Ethernet or `iwctl`. In below example we are using
-  wifi over wlan0 but we can have different network type
+## 1. Before: capture the old system (on the existing OS)
 
-```bash
-  iwctl
-  device list
-  station wlan0 scan
-  station wlan0 get-networks
-  station wlan0 connect "Name of Network/WiFi"
-```
-
-- Update the clock: `timedatectl set-ntp true`
-- Disk partition:
-  Mount Point Partition Partition Type Size
-
-  _mnt/boot_ /dev/sda1 fat32 512MiB (1MiB to 512MiB)
-  swap /dev/sda2 linux-swap 1.5GiB (512MiB to 2GiB)
-  /mnt /dev/sda3 ext4 remaining (2GiB to 100%)
-
-  Use `parted` to create the partitions
-
-  ```bash
-  parted /dev/sda -- mklabel gpt
-  parted /dev/sda -- mkpart ESP fat32 1MiB 512MiB
-  parted /dev/sda -- set 1 esp on
-  parted /dev/sda -- mkpart primary linux-swap 512MiB 2GiB
-  parted /dev/sda -- mkpart primary 2GiB 100%
-  ```
-
-  Formatting the disks:
-
-  ```bash
-  mkfs.fat -F 32 -n BOOT /dev/sda1
-  mkswap -L SWAP /dev/sda2
-  mkfs.ext4 -L ARCH /dev/sda3
-  ```
-
-- Mounting partitions:
+Run on the machine's current OS (e.g. Ubuntu), with a USB stick mounted:
 
 ```bash
-mount /dev/sda3 /mnt
-swapon /dev/sda2
+bash scripts/capture-machine-info.bash /media/$USER/USB/machine-info
 ```
 
-- Install archlinux:
+It records hostname, permanent Wi-Fi MAC, the active Wi-Fi profile (incl. 802.1X/EAP
+details), proxy + corporate CA certificates, GPUs, disks/ESPs, and `efibootmgr -v`.
+`secrets/` holds the NetworkManager profiles and certificates; delete it after install.
+
+Check from the report:
+
+- **Hostname** + **permanent MAC** of the Wi-Fi card: what the network whitelists.
+- **Which disk is Ubuntu's** (model/serial): the Arch target must be the *other* one.
+- **Secure Boot** (`mokutil --sb-state`): the Arch ISO doesn't boot with it on. Make
+  sure you can get into firmware setup to disable it (IT-locked BIOS = stop here).
+  Ubuntu keeps booting with Secure Boot off.
+- **Proxy / custom CA** sections: if present, pacman and curl need them too.
+
+## 2. Install (from the live ISO)
+
+Boot the ISO in UEFI mode (firmware boot menu, often F12/F11/F8), then:
 
 ```bash
-pacstrap /mnt base base-devel linux-lts linux-firmware neovim sudo
+# Present the whitelisted identity BEFORE joining the network: the live ISO's DHCP
+# client sends the hostname ("archiso" by default). The MAC is the card's own.
+hostnamectl hostname <work-hostname>
+ip link                                     # confirm the wlan MAC matches the report
+
+iwctl station wlan0 connect "<SSID>"        # PSK networks
+ping -c2 archlinux.org
+
+curl -fsSLO https://raw.githubusercontent.com/dhruvinsh/dotfiles/main/scripts/arch-install.bash
+lsblk -o NAME,SIZE,MODEL,SERIAL             # pick the NON-Ubuntu disk
+bash arch-install.bash --disk /dev/nvme1n1 --hostname <work-hostname>
 ```
 
-- Fstab setup:
+- Asks to retype the disk path, then root + user passwords.
+- **Refuses** a disk whose ESP holds another OS's bootloader (protects the Ubuntu disk).
+- A PSK network joined with `iwctl` is carried over to NetworkManager automatically.
+  For WPA2-Enterprise (802.1X), mount the USB stick and add
+  `--nm-import /path/to/machine-info/secrets`. Certificate paths inside the
+  `.nmconnection` files must exist on Arch: copy the certs to the same paths,
+  or edit `ca-cert=` after boot.
 
-  ```bash
-  genfstab -U /mnt >>/mnt/etc/fstab
-  ```
+Then `umount -R /mnt && reboot`, and remove the USB stick.
 
-- Change root: \~\~
+### How dual boot works
 
-  ```bash
-  arch-chroot /mnt
-  ```
+- GRUB is installed to **Arch's ESP only**: NVRAM entry `GRUB` (made first in
+  BootOrder) + the fallback `EFI/BOOT/BOOTX64.EFI` for firmware that forgets entries.
+- Ubuntu gets a menu entry that **chainloads `EFI/ubuntu/shimx64.efi`** from Ubuntu's
+  ESP (`/etc/grub.d/45_other_os`, matched by filesystem UUID). Ubuntu's own GRUB then
+  boots Ubuntu, so Ubuntu kernel updates never make the entry stale, and it works even
+  with an encrypted Ubuntu root. os-prober is not used.
+- The firmware boot menu can still pick `ubuntu` directly.
+- If an Ubuntu GRUB update ever puts `ubuntu` back first in BootOrder, fix it from Arch:
+  `efibootmgr` (find GRUB's `BootXXXX`) then `sudo efibootmgr -o XXXX,YYYY`.
 
-- Zoneinfo update:
+## 3. First boot: dotfiles
 
-  ```bash
-  ln -sf /usr/share/zoneinfo/America/Toronto /etc/localtime
-  ```
+Log in on the TTY as your user:
 
-- Localization: `nvim /etc/locale.gen` and un-comment
-  `en_US.UTF-8 UTF-8` once that done generate locale by `locale-gen`
-
-- Update language:
-
-  ```bash
-  echo "LANG=en_US.UTF-8" >/etc/locale.conf
-  export LANG=en_US.UTF-8
-  ```
-
-- Update hostname:
-
-  ```bash
-  echo "<hostname>" >/etc/hostname
-  ```
-
-- Update hosts file with `nvim /etc/hosts`:
-
-```text
-127.0.0.1     localhost
-::1           localhost
-127.0.1.1     ds-laptop
+```bash
+nmcli device                                # Wi-Fi should already be connected
+chezmoi init dhruvinsh --apply --exclude externals
+chezmoi apply                               # second pass pulls the externals
+sudo reboot                                 # SDDM -> Hyprland
 ```
 
-- Setup root password: `passwd`
+`chezmoi init` asks: personal machine (work = `n`), light/dark, color scheme. It prompts
+for the age passphrase once (decrypts `~/.key.txt`) and for sudo along the way; AUR
+builds and `mise install` take a while.
 
-- Adding a user:
+Hardware handled automatically by the scripts:
 
-  ```bash
-  useradd -m ds
-  passwd ds
-  usermod -aG wheel,audio,video,storage,power ds
-  EDITOR=nvim visuod
-  # uncomment this line: %wheel ALL=(ALL:ALL) ALL
-  ```
-
-- Install Grub
-
-  ```bash
-  pacman -S grub efibootmgr os-prober mtools
-  mount --mkdir /dev/sda1 /boot/efi
-  grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
-  grub-mkconfig -o /boot/grub/grub.cfg
-  ```
-
-- Install microcode and few extra essential software:
-
-  ```bash
-  pacman -S intel-ucode curl wget git xdg-user-dirs networkmanager
-  ```
-
-- Enable Some services
-
-  ```bash
-  systemctl enable NetworkManager
-  ```
-
-- Exit and shutdown
-
-  ```bash
-  exit
-  umount -R /mnt
-  swapoff /dev/sda2
-  shutdown now
-  ```
-
-## Graphical Desktop/Windows manager Installation
-
-All packages installation are taken care by `chezmoi` so look at the
-[Arch Installation](home/.chezmoiscripts/linux/run_onchange_before_11_install-arch-packages.sh.tmpl)
-script.
+- **NVIDIA driving the display**: driver, early KMS, Wayland env vars.
+- **NVIDIA compute-only** (display on the iGPU, e.g. CUDA/LLM cards): driver +
+  `nvidia-container-toolkit` + `nvidia-persistenced`, no DRM modesetting, no NVIDIA env
+  vars. Hyprland stays on the iGPU.
+- **Intel/AMD GPU**: Vulkan + VA-API drivers.

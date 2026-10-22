@@ -16,6 +16,8 @@ noted.
 | `.github/workflows/lint.yml` | shellcheck + shfmt (triggers on push to `main` and on PRs) |
 | `scripts/shellcheck.bash`, `scripts/shfmt.bash` | Lint entrypoints used by CI |
 | `scripts/chezmoi-template-check.bash` | Renders `*.tmpl` to catch template errors (hook) |
+| `scripts/arch-install.bash` | Base Arch install from the live ISO (btrfs, GRUB, chainloads other OSes) — see `Installation.md` |
+| `scripts/capture-machine-info.bash` | Run on the old OS first: records hostname/MAC/Wi-Fi/disks for the reinstall |
 | `.claude/agents/{doc-sync,chezmoi-reviewer}.md` | Project subagents (see CLAUDE.md) |
 | `color_match.py`, `templater.py` | Local color/template helper utilities |
 | `.stylua.toml`, `.cbfmt.toml`, `.editorconfig` | Formatter configs |
@@ -40,7 +42,6 @@ script's content changes.
   `before_13_install-arch-nvidia`
 - `after_81_install-arch-geolocation`, `after_82_install-arch-docker`,
   `after_82_install-arch-eol-packages`, `after_83_install-arch-sddm-theme`, `after_88_install-fonts`
-- `run_once_after_arch-privileged-setup` — sudo/privileged one-time setup
 - `run_once_after_bluetooth-setup`, `run_once_after_networking-setup`, `run_once_after_sddm-pam` — one-time system setup
 
 ### `ubuntu/`
@@ -76,7 +77,8 @@ script's content changes.
   from `.colorScheme`); embedded via `includeTemplate` by arch `after_83_install-arch-sddm-theme`,
   which installs to `/usr/share/sddm/themes/lumen` + writes `/etc/sddm.conf.d/10-theme.conf`
   (re-runs on palette/theme/wallpaper change).
-- `scripts/{download_helpers.sh, service_helpers.sh}` — shared script functions.
+- `scripts/{download_helpers.sh, service_helpers.sh, gpu_helpers.sh}` — shared script functions.
+- `nvidia-mode` — template-time NVIDIA detection: `display` | `compute` | `none`.
 - `python`, `mixture`, `hex2rgb` — helper snippets (e.g. python version resolution).
 - `lazygit.yml.tmpl` — themed config fragment.
 
