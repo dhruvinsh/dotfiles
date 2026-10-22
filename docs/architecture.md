@@ -39,7 +39,7 @@ script's content changes.
 - `before_10-cleanup`, `before_11_install-arch-packages`, `before_12_install-arch-extra`,
   `before_13_install-arch-nvidia`
 - `after_81_install-arch-geolocation`, `after_82_install-arch-docker`,
-  `after_82_install-arch-eol-packages`, `after_88_install-fonts`
+  `after_82_install-arch-eol-packages`, `after_83_install-arch-sddm-theme`, `after_88_install-fonts`
 - `run_once_after_arch-privileged-setup` — sudo/privileged one-time setup
 - `run_once_after_bluetooth-setup`, `run_once_after_networking-setup`, `run_once_after_sddm-pam` — one-time system setup
 
@@ -72,6 +72,10 @@ script's content changes.
 - `encryption/{jira,geoclue}` — age-encrypted secret blobs; used via `| decrypt`.
 - `llm/{keys.json.tmpl, extra-openai-models.yaml.tmpl, default_model.txt, litellm-key}` —
   Simon Willison `llm` CLI config.
+- `sddm/{Main.qml, theme.conf}` — custom "lumen" SDDM theme sources (`theme.conf` themed
+  from `.colorScheme`); embedded via `includeTemplate` by arch `after_83_install-arch-sddm-theme`,
+  which installs to `/usr/share/sddm/themes/lumen` + writes `/etc/sddm.conf.d/10-theme.conf`
+  (re-runs on palette/theme/wallpaper change).
 - `scripts/{download_helpers.sh, service_helpers.sh}` — shared script functions.
 - `python`, `mixture`, `hex2rgb` — helper snippets (e.g. python version resolution).
 - `lazygit.yml.tmpl` — themed config fragment.
