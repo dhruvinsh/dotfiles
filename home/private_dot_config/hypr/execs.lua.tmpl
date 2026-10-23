@@ -70,4 +70,35 @@ hl.on("hyprland.start", function()
 
   -- screenshot daemon (flameshot); SUPER+SHIFT+S -> flameshot gui
   run("flameshot &")
+  -- {{ if not .personalmachine }}
+
+  -- Work PC: Outlook (Brave PWA) and Teams side by side on workspace 8 (left
+  -- screen); window rules in hyprland.lua send them there. They map in whatever
+  -- order they finish starting, so once both are up make sure Outlook is on the left.
+  local outlook = "brave-faolnafnngnfdaknnbpnkhgohbobgegn-Default"
+  local teams = "teams-for-linux"
+  local function find(class)
+    for _, w in ipairs(hl.get_workspace_windows(8)) do
+      if w.class == class then
+        return w
+      end
+    end
+  end
+  local sub
+  sub = hl.on("window.open", function()
+    if not (find(outlook) and find(teams)) then
+      return
+    end
+    sub:remove()
+    -- let the layout settle before reading positions
+    hl.timer(function()
+      local o, t = find(outlook), find(teams)
+      if o and t and t.at.x < o.at.x then
+        hl.dispatch(hl.dsp.window.swap({ window = t, with = o }))
+      end
+    end, { timeout = 500, type = "oneshot" })
+  end)
+  run("brave --profile-directory=Default --app-id=faolnafnngnfdaknnbpnkhgohbobgegn &")
+  run("teams-for-linux &")
+  -- {{ end }}
 end)
