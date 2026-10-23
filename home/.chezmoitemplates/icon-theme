@@ -1,2 +1,5 @@
-{{- /* Flat Remix icon theme name, e.g. Flat-Remix-Blue-Dark (see .chezmoidata.yaml). */ -}}
-{{- printf "Flat-Remix-%s-%s" .flatRemixColor (.colorScheme.variant | title) -}}
+{{- /* Flat Remix icon theme name, e.g. Flat-Remix-Blue-Dark (see .chezmoidata.yaml).
+       Mode is .mode ("light"/"dark") when given, else colorScheme.variant. */ -}}
+{{- $mode := .colorScheme.variant -}}
+{{- if hasKey . "mode" }}{{ $mode = .mode }}{{ end -}}
+{{- printf "Flat-Remix-%s-%s" .flatRemixColor ($mode | title) -}}

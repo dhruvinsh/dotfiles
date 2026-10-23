@@ -1,0 +1,6 @@
+#!/bin/sh
+# Make teams-for-linux follow the system light/dark mode (theme-mode); every other
+# setting in config.json is left as the user has it. Read at Teams startup.
+in=$(cat)
+[ -n "$in" ] || in='{}'
+printf '%s\n' "$in" | jq '.appearance.followSystemTheme = true'

@@ -42,11 +42,9 @@ hl.on("hyprland.start", function()
   -- appearance: cursor (directly in compositor)
   hl.exec_cmd("hyprctl setcursor Bibata-Modern-Classic 24")
 
-  -- GTK4 / libadwaita apps
-  hl.exec_cmd('gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"')
-  -- GTK3 apps (requires adw-gtk3 theme)
-  hl.exec_cmd('gsettings set org.gnome.desktop.interface gtk-theme "{{ includeTemplate "gtk-theme" . }}"')
-  hl.exec_cmd('gsettings set org.gnome.desktop.interface icon-theme "{{ includeTemplate "icon-theme" . }}"')
+  -- GUI light/dark mode (GTK3/4 theme, icons, portal color-scheme); the mode
+  -- persists in dconf, this re-syncs the themes with it. Toggle: swaync button.
+  hl.exec_cmd("~/.local/bin/theme-mode apply")
 
   -- appearance: top bar, wallpaper
   run("waybar &")

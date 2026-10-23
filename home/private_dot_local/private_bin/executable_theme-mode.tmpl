@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# Light/dark mode for GUI apps (GTK3/4, icons, and anything that follows the XDG
+# portal's color-scheme: Brave + PWAs, Electron apps like Teams, Firefox, ...).
+# The desktop shell (waybar, swaync, rofi, hyprlock) and terminal/CLI apps keep
+# the chezmoi palette and are not touched.
+#
+# The mode lives in gsettings' color-scheme (persisted in dconf), which
+# xdg-desktop-portal-gtk republishes as org.freedesktop.appearance color-scheme.
+#
+# usage: theme-mode light|dark|toggle|get|apply
+set -euo pipefail
+
+GTK_LIGHT="{{ includeTemplate "gtk-theme" (merge (dict "mode" "light") .) }}"
+GTK_DARK="{{ includeTemplate "gtk-theme" (merge (dict "mode" "dark") .) }}"
+ICON_LIGHT="{{ includeTemplate "icon-theme" (merge (dict "mode" "light") .) }}"
+ICON_DARK="{{ includeTemplate "icon-theme" (merge (dict "mode" "dark") .) }}"
+
+iface=org.gnome.desktop.interface
+
+get() {
+    [[ $(gsettings get $iface color-scheme) == "'prefer-light'" ]] && echo light || echo dark
+}
+
+set_mode() {
+    if [[ $1 == light ]]; then
+        gsettings set $iface gtk-theme "$GTK_LIGHT"
+        gsettings set $iface icon-theme "$ICON_LIGHT"
+        gsettings set $iface color-scheme prefer-light
+    else
+        gsettings set $iface gtk-theme "$GTK_DARK"
+        gsettings set $iface icon-theme "$ICON_DARK"
+        gsettings set $iface color-scheme prefer-dark
+    fi
+}
+
+case "${1:-}" in
+    light | dark) set_mode "$1" ;;
+    toggle)
+        if [[ $(get) == dark ]]; then set_mode light; else set_mode dark; fi
+        ;;
+    get) get ;;
+    # re-sync gtk/icon themes with the persisted mode (run at login)
+    apply) set_mode "$(get)" ;;
+    *)
+        echo "usage: ${0##*/} light|dark|toggle|get|apply" >&2
+        exit 2
+        ;;
+esac

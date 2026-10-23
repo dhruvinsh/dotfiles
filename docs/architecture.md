@@ -78,6 +78,10 @@ script's content changes.
   which installs to `/usr/share/sddm/themes/lumen` + writes `/etc/sddm.conf.d/10-theme.conf`
   (re-runs on palette/theme/wallpaper change).
 - `scripts/{download_helpers.sh, service_helpers.sh, gpu_helpers.sh}` — shared script functions.
+- `gtk-theme`, `icon-theme` — theme-name partials: `adw-gtk3` / `adw-gtk3-dark` and
+  `Flat-Remix-<flatRemixColor>-<Light|Dark>`. Mode is an optional `.mode` (pass via
+  `merge (dict "mode" "light") .`), else `colorScheme.variant`. Used by gtk-2.0/3.0, qt6ct,
+  rofi, dunst, and `theme-mode`.
 - `nvidia-mode` — template-time NVIDIA detection: `display` | `compute` | `none`.
 - `python`, `mixture`, `hex2rgb` — helper snippets (e.g. python version resolution).
 - `lazygit.yml.tmpl` — themed config fragment.
@@ -94,8 +98,11 @@ script's content changes.
 
 Excludes by platform: Windows drops non-windows scripts/`.local`/zsh files; non-Windows
 drops `AppData`/`Documents`; non-Linux drops fontconfig/wallpaper/bash; non-macOS drops
-`Library`/darwin; non-Arch drops arch scripts + `hypr`, `uwsm`, `swaync`, `swayosd`, `networkmanager-dmenu`; non-Ubuntu/non-Fedora drop their
-script dirs; `.local/share/**` only kept on Ubuntu desktop.
+`Library`/darwin; non-Arch drops arch scripts + `hypr`, `uwsm`, `swaync`, `swayosd`,
+`waybar`, `wlogout`, and `.local/bin/{__wlogout.sh,waybar-updates.sh,theme-mode}`;
+`networkmanager-dmenu` only kept on Arch or Ubuntu desktop; non-Ubuntu/non-Fedora drop their
+script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
+`.config/teams-for-linux` dropped unless `lookPath "teams-for-linux"` finds it.
 
 ## Managed app configs (`home/private_dot_config/`)
 
@@ -109,7 +116,10 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop.
 - **Git:** git (`config.tmpl`, `delta.tmpl`, `ignore`), lazygit
 - **Files/CLI:** bat, fd, btop, tealdeer
 - **Dev:** mise, direnv, io.datasette.llm, vectorcode
-- **System:** pacman, gtk-2.0/3.0, `dot_Xresources`
+- **System:** pacman, gtk-2.0/3.0 (3.0 omits `gtk-application-prefer-dark-theme` on Arch so
+  `theme-mode` can switch GTK3 apps), `dot_Xresources`
+- **GUI apps:** teams-for-linux (`modify_private_config.json` — jq sets only
+  `appearance.followSystemTheme=true`, rest of the app's config untouched)
 
 ## Key file index
 
@@ -126,3 +136,8 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop.
   `cuda_switch.tmpl` — renders empty, so absent, on non-NVIDIA); fish mirrors these in
   `private_dot_config/fish/functions/*.fish`
 - `home/private_dot_config/git/config.tmpl` — git identity (email templated by machine)
+- `home/private_dot_local/private_bin/executable_theme-mode.tmpl` — Arch-only
+  `~/.local/bin/theme-mode light|dark|toggle|get|apply`: sets gsettings `color-scheme` +
+  `gtk-theme` (adw-gtk3/-dark) + `icon-theme` (Flat Remix Light/Dark); mode persists in
+  dconf. Run with `apply` at Hyprland start (`hypr/execs.lua.tmpl`) and from the swaync
+  "Dark Mode" toggle. Shell (waybar/swaync/rofi/hyprlock) and CLI apps are not switched.

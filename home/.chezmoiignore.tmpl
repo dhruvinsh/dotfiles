@@ -49,6 +49,10 @@ Library/**
 .config/wlogout
 .local/bin/__wlogout.sh
 .local/bin/waybar-updates.sh
+.local/bin/theme-mode
+{{ end -}}
+{{ if not (lookPath "teams-for-linux") -}}
+.config/teams-for-linux
 {{ end -}}
 
 {{ if not .ubuntu -}}

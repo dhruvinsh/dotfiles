@@ -1,2 +1,5 @@
-{{- /* Flat Remix GTK theme name, e.g. Flat-Remix-GTK-Blue-Dark (see .chezmoidata.yaml). */ -}}
-{{- printf "Flat-Remix-GTK-%s-%s" .flatRemixColor (.colorScheme.variant | title) -}}
+{{- /* GTK3 theme name: adw-gtk3 (light) / adw-gtk3-dark, matching GTK4/libadwaita apps.
+       Mode is .mode ("light"/"dark") when given, else colorScheme.variant. */ -}}
+{{- $mode := .colorScheme.variant -}}
+{{- if hasKey . "mode" }}{{ $mode = .mode }}{{ end -}}
+{{- if eq $mode "light" }}adw-gtk3{{ else }}adw-gtk3-dark{{ end -}}

@@ -15,13 +15,15 @@ Owner: Dhruvin Shah (`dhruvinsh`). Deeper reference in [`docs/`](docs/).
 ## Chezmoi naming conventions (in `home/`)
 
 - `dot_foo` → `~/.foo`; `private_` → not world-readable; `empty_` → allow empty file.
+- `modify_foo` → script fed the current target on stdin; its stdout becomes the new file
+  (used to patch one key in app-owned configs, e.g. `teams-for-linux/config.json` via jq).
 - `*.tmpl` → Go-templated. `*.age` → age-encrypted.
 - `.chezmoiscripts/` → `run_once_` / `run_onchange_`, staged `before_`/`after_`,
   numbered (`10_`…`91_`) for ordering. Organized by OS subdir.
 - `.chezmoitemplates/` → reusable snippets (`includeTemplate`).
 - `.chezmoiexternals/` → external assets (git repos, release binaries, archives).
 - `.chezmoidata.yaml` → static data: `openscadVersion`, `workMonitors.{left,right}` (work-PC
-  monitor descriptions used by hypr + waybar).
+  monitor descriptions used by hypr + waybar), `flatRemixColor` (Flat Remix icon accent).
 - `.chezmoiignore.tmpl` → conditional per-OS/per-machine exclusions.
 
 ## Template data (from `home/.chezmoi.toml.tmpl`)
@@ -81,8 +83,14 @@ Derived: `email` = `dhruvin3@gmail.com` if personal else `dshah@evertz.com`.
 - README `chezmoi init` uses `--exclude externals` on first apply (externals pulled after).
 - Two `82_` scripts coexist in `arch/` (docker + eol-packages) — same stage, both run.
 - Hyprland runs a Lua config and reaps its children, so `os.execute()` always fails there (`nil, "No child processes"`) — don't use it for probes; `io.open` is safe.
-- uwsm does not export `UWSM_ACTIVE`; detect it via `UWSM_FINALIZE_VARNAMES` (as `hypr/execs.lua` does), and use `uwsm check is-active` in scripts.
+- uwsm does not export `UWSM_ACTIVE`; detect it via `UWSM_FINALIZE_VARNAMES` (as `hypr/execs.lua.tmpl` does), and use `uwsm check is-active` in scripts.
 - Legacy `hyprctl dispatch <name> args` is rejected in Lua mode — use `hyprctl dispatch 'hl.dsp.x({...})'`; `hl.dsp.dpms()` with a missing/unknown action toggles the display.
 - hyprlang (hyprlock/hypridle/hyprpaper): `#` starts a comment (write `##` for a literal `#`),
   and `{{ ... }}` is parsed as an arithmetic expression — put such commands in a script.
   A hyprlock label whose `text` fails to parse renders "Sample Text".
+- On Arch, GUI light/dark is runtime state, not `colorVariant`: `~/.local/bin/theme-mode`
+  (gsettings/dconf) switches GTK/icon themes + the portal color-scheme. Don't set
+  `gtk-application-prefer-dark-theme=1` in gtk-3.0 `settings.ini` there (pins GTK3 dark).
+  The shell (waybar/swaync/rofi/hyprlock) and CLI apps keep the chezmoi palette.
+- swaync `buttons-grid` toggle `command`/`update-command` strings must not contain double
+  quotes — they silently fail (the toggle state never updates).
