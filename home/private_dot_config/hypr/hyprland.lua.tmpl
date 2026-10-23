@@ -6,12 +6,32 @@
 ------------------
 
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
+-- {{ if .personalmachine }}
 hl.monitor({
   output = "DP-1",
   mode = "2560x1440@143.97",
   position = "0x0",
   scale = 1,
 })
+-- {{ else }}
+-- Work PC: two identical ViewSonic VX3276-QHD side by side, matched by serial
+-- (desc:) so swapping cables/ports doesn't flip them.
+local left = "desc:ViewSonic Corporation VX3276-QHD V9W222140992" -- DP
+local right = "desc:ViewSonic Corporation VX3276-QHD V9W194342016" -- HDMI (60Hz max)
+
+hl.monitor({ output = left, mode = "2560x1440@74.93", position = "0x0", scale = 1 })
+hl.monitor({ output = right, mode = "2560x1440@59.95", position = "2560x0", scale = 1 })
+
+-- Left screen holds workspaces 7-8 (opens on 8); right holds the rest (opens on 1).
+for i = 1, 9 do
+  local on_left = i == 7 or i == 8
+  hl.workspace_rule({
+    workspace = tostring(i),
+    monitor = on_left and left or right,
+    default = i == 8 or i == 1,
+  })
+end
+-- {{ end }}
 
 --------------------------
 ---- EXTERNAL CONFIGS ----
