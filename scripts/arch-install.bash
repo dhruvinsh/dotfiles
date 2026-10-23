@@ -69,7 +69,7 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-[ -n "$DISK" ] && [ -n "$NEW_HOSTNAME" ] || usage
+if [ -z "$DISK" ] || [ -z "$NEW_HOSTNAME" ]; then usage; fi
 
 # partition N of $DISK: /dev/sda -> /dev/sda1, /dev/nvme0n1 -> /dev/nvme0n1p1
 part() {
