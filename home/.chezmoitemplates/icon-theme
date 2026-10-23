@@ -1,0 +1,2 @@
+{{- /* Flat Remix icon theme name, e.g. Flat-Remix-Blue-Dark (see .chezmoidata.yaml). */ -}}
+{{- printf "Flat-Remix-%s-%s" .flatRemixColor (.colorScheme.variant | title) -}}

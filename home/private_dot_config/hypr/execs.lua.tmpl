@@ -45,8 +45,8 @@ hl.on("hyprland.start", function()
   -- GTK4 / libadwaita apps
   hl.exec_cmd('gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"')
   -- GTK3 apps (requires adw-gtk3 theme)
-  hl.exec_cmd('gsettings set org.gnome.desktop.interface gtk-theme "Flat-Remix-GTK-Blue-Dark"')
-  hl.exec_cmd('gsettings set org.gnome.desktop.interface icon-theme "Flat-Remix-Blue-Dark"')
+  hl.exec_cmd('gsettings set org.gnome.desktop.interface gtk-theme "{{ includeTemplate "gtk-theme" . }}"')
+  hl.exec_cmd('gsettings set org.gnome.desktop.interface icon-theme "{{ includeTemplate "icon-theme" . }}"')
 
   -- appearance: top bar, wallpaper
   run("waybar &")

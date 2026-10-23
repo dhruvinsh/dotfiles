@@ -9,3 +9,8 @@ openscadVersion  : "2021.01"
 workMonitors:
   left: "ViewSonic Corporation VX3276-QHD V9W222140992" # DP, holds workspaces 7-8
   right: "ViewSonic Corporation VX3276-QHD V9W194342016" # HDMI, 60Hz max
+
+# Flat Remix accent for the icon + GTK themes (.chezmoitemplates/{icon,gtk}-theme);
+# Dark/Light follows colorScheme.variant. Icon colours: Black Blue Brown Cyan Green
+# Grey Magenta Orange Red Teal Violet Yellow (GTK adds White; no Black-Dark/White-Light).
+flatRemixColor: Blue

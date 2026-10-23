@@ -1,0 +1,2 @@
+{{- /* Flat Remix GTK theme name, e.g. Flat-Remix-GTK-Blue-Dark (see .chezmoidata.yaml). */ -}}
+{{- printf "Flat-Remix-GTK-%s-%s" .flatRemixColor (.colorScheme.variant | title) -}}

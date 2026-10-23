@@ -1,6 +1,6 @@
 [Settings]
-gtk-theme-name=Andromeda-dark
-gtk-icon-theme-name=Papirus-Dark
+gtk-theme-name={{ includeTemplate "gtk-theme" . }}
+gtk-icon-theme-name={{ includeTemplate "icon-theme" . }}
 gtk-font-name={{ .font.regular }} Semi-Bold 10
 gtk-cursor-theme-name=Bibata-Modern-Classic
 gtk-cursor-theme-size=24
