@@ -20,7 +20,8 @@ Owner: Dhruvin Shah (`dhruvinsh`). Deeper reference in [`docs/`](docs/).
   numbered (`10_`…`91_`) for ordering. Organized by OS subdir.
 - `.chezmoitemplates/` → reusable snippets (`includeTemplate`).
 - `.chezmoiexternals/` → external assets (git repos, release binaries, archives).
-- `.chezmoidata.yaml` → static data (currently just `openscadVersion`).
+- `.chezmoidata.yaml` → static data: `openscadVersion`, `workMonitors.{left,right}` (work-PC
+  monitor descriptions used by hypr + waybar).
 - `.chezmoiignore.tmpl` → conditional per-OS/per-machine exclusions.
 
 ## Template data (from `home/.chezmoi.toml.tmpl`)

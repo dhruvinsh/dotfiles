@@ -14,10 +14,10 @@ hl.monitor({
   scale = 1,
 })
 -- {{ else }}
--- Work PC: two identical ViewSonic VX3276-QHD side by side, matched by serial
--- (desc:) so swapping cables/ports doesn't flip them.
-local left = "desc:ViewSonic Corporation VX3276-QHD V9W222140992" -- DP
-local right = "desc:ViewSonic Corporation VX3276-QHD V9W194342016" -- HDMI (60Hz max)
+-- Work PC: two identical monitors side by side, matched by serial (desc:, from
+-- .chezmoidata.yaml workMonitors) so swapping cables/ports doesn't flip them.
+local left = "desc:{{ .workMonitors.left }}"
+local right = "desc:{{ .workMonitors.right }}"
 
 hl.monitor({ output = left, mode = "2560x1440@74.93", position = "0x0", scale = 1 })
 hl.monitor({ output = right, mode = "2560x1440@59.95", position = "2560x0", scale = 1 })
