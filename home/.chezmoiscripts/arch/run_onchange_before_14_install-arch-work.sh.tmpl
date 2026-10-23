@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+# Work-PC-only packages.
+# {{- if not .personalmachine }}
+
+# {{ template "scripts/download_helpers.sh" . }}
+
+packages=(
+    firefox
+    net-snmp
+    wireshark-qt
+
+    # Remote desktop. Passwords go to gnome-keyring through Remmina's Secret plugin
+    # (needs libsecret; keyring + PAM unlock come from the 11_ script and sddm-pam).
+    freerdp      # RDP plugin
+    libvncserver # VNC plugin
+    remmina
+)
+
+aur_pkgs=(
+    teams-for-linux
+)
+
+install_packages_from_arrays
+
+# libsmi (MIB/SMI library + smilint/smidump/smiquery tools). Its AUR PKGBUILD doesn't
+# build with GCC >= 15: C23 by default breaks `extern int smiparse();`, and implicit
+# declarations are errors. Build it as gnu17; the remaining implicit declarations
+# are all void functions, so downgrading that error is safe. If the PKGBUILD changes
+# upstream the sed simply doesn't match and it builds as-is.
+if ! pacman -Q libsmi &>/dev/null; then
+    build_dir=$(mktemp -d)
+    git clone --depth 1 https://aur.archlinux.org/libsmi.git "$build_dir/libsmi"
+    sed -i 's|^\t\./configure --prefix=/usr$|\tCFLAGS+=" -std=gnu17 -D_DEFAULT_SOURCE -Wno-error=implicit-function-declaration" ./configure --prefix=/usr|' \
+        "$build_dir/libsmi/PKGBUILD"
+    (cd "$build_dir/libsmi" && makepkg -si --noconfirm)
+    rm -rf "$build_dir"
+fi
+
+# Capture without root: dumpcap is restricted to the wireshark group.
+if ! id -nG "$(whoami)" | grep -qw wireshark; then
+    echo "Adding $(whoami) to the wireshark group (takes effect on next login)..."
+    sudo usermod -aG wireshark "$(whoami)"
+fi
+# {{- end }}
