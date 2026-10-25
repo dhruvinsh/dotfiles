@@ -55,6 +55,9 @@ Library/**
 {{ if not (lookPath "teams-for-linux") -}}
 .config/teams-for-linux
 {{ end -}}
+{{ if not (lookPath "handy") -}}
+.config/systemd/user/app-Handy@autostart.service.d
+{{ end -}}
 
 {{ if not .ubuntu -}}
 .chezmoiscripts/ubuntu/**
