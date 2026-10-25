@@ -99,7 +99,7 @@ script's content changes.
 Excludes by platform: Windows drops non-windows scripts/`.local`/zsh files; non-Windows
 drops `AppData`/`Documents`; non-Linux drops fontconfig/wallpaper/bash; non-macOS drops
 `Library`/darwin; non-Arch drops arch scripts + `hypr`, `uwsm`, `swaync`, `swayosd`,
-`waybar`, `wlogout`, and `.local/bin/{__wlogout.sh,waybar-updates.sh,theme-mode}`;
+`waybar`, `wlogout`, `yay`, and `.local/bin/{__wlogout.sh,waybar-updates.sh,theme-mode}`;
 `networkmanager-dmenu` only kept on Arch or Ubuntu desktop; non-Ubuntu/non-Fedora drop their
 script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
 `.config/teams-for-linux` dropped unless `lookPath "teams-for-linux"` finds it.
@@ -116,7 +116,8 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
 - **Git:** git (`config.tmpl`, `delta.tmpl`, `ignore`), lazygit
 - **Files/CLI:** bat, fd, btop, tealdeer
 - **Dev:** mise, direnv, io.datasette.llm, vectorcode
-- **System:** pacman, gtk-2.0/3.0 (3.0 omits `gtk-application-prefer-dark-theme` on Arch so
+- **System:** pacman, yay (Lua `init.lua` + `policy.lua` + `hooks/`; state in
+  `~/.local/state/yay`), gtk-2.0/3.0 (3.0 omits `gtk-application-prefer-dark-theme` on Arch so
   `theme-mode` can switch GTK3 apps), `dot_Xresources`
 - **GUI apps:** teams-for-linux (`modify_private_config.json` — jq sets only
   `appearance.followSystemTheme=true`, rest of the app's config untouched)
