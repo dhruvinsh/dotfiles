@@ -80,8 +80,8 @@ hl.config({
     rounding = 10,
     rounding_power = 2,
 
-    active_opacity = 1.0,
-    inactive_opacity = 1.0,
+    active_opacity = 0.95,
+    inactive_opacity = 0.85,
 
     shadow = {
       enabled = true,
@@ -92,10 +92,11 @@ hl.config({
 
     blur = {
       enabled = true,
-      size = 6,
-      passes = 3,
+      size = 5,
+      passes = 4,
       vibrancy = 0.1696,
       popups = true,
+      special = true,
     },
   },
 
@@ -215,7 +216,7 @@ hl.window_rule({
 hl.window_rule({
   name = "popout-player",
   match = { initial_title = [[((?i)(?:[a-z0-9-]+\.)*youtube\.com_/|app\.zoom\.us_/wc/home)]] },
-  opacity = "1.0 1.0",
+  opacity = "1.0 override 1.0 override",
 })
 
 -- Firefox Picture-in-Picture: floating, pinned, no max size, full opacity
@@ -225,7 +226,7 @@ hl.window_rule({
   float = true,
   pin = true,
   no_max_size = true,
-  opacity = "1.0 1.0",
+  opacity = "1.0 override 1.0 override",
 })
 
 -- Thunar rename dialog -> float

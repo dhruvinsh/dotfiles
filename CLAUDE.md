@@ -92,5 +92,9 @@ Derived: `email` = `dhruvin3@gmail.com` if personal else `dshah@evertz.com`.
   (gsettings/dconf) switches GTK/icon themes + the portal color-scheme. Don't set
   `gtk-application-prefer-dark-theme=1` in gtk-3.0 `settings.ini` there (pins GTK3 dark).
   The shell (waybar/swaync/rofi/hyprlock) and CLI apps keep the chezmoi palette.
+- GTK4 ≥ 4.24 attaches `ext-background-effect-v1` to every window with an empty blur
+  region, and Hyprland then skips its own blur for that window (transparent but sharp).
+  `GDK_WAYLAND_DISABLE=ext_background_effect_manager_v1` (set in `uwsm/env` + `hypr/env.lua`)
+  hides the protocol from GTK so the global blur applies again.
 - swaync `buttons-grid` toggle `command`/`update-command` strings must not contain double
   quotes — they silently fail (the toggle state never updates).
