@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Thunar custom actions. Thunar's PATH lacks mise, so nvim is called via its shim. -->
+<actions>
+<action>
+	<icon>utilities-terminal</icon>
+	<name>Open Terminal Here</name>
+	<submenu></submenu>
+	<unique-id>1758162749013903-1</unique-id>
+	<command>ghostty --working-directory=%f</command>
+	<description>Open ghostty in this folder</description>
+	<range></range>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+</action>
+<action>
+	<icon>nvim</icon>
+	<name>Open in Neovim</name>
+	<submenu></submenu>
+	<unique-id>1758162749013903-2</unique-id>
+	<command>ghostty --working-directory=%d -e {{ .chezmoi.homeDir }}/.local/share/mise/shims/nvim %F</command>
+	<description>Edit the selection in Neovim inside ghostty</description>
+	<range></range>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+	<text-files/>
+	<other-files/>
+</action>
+{{- if lookPath "code" }}
+<action>
+	<icon>vscode</icon>
+	<name>Open in VS Code</name>
+	<submenu></submenu>
+	<unique-id>1758162749013903-3</unique-id>
+	<command>code %F</command>
+	<description>Open the selection in VS Code</description>
+	<range></range>
+	<patterns>*</patterns>
+	<directories/>
+	<text-files/>
+	<other-files/>
+</action>
+{{- end }}
+<action>
+	<icon>edit-copy</icon>
+	<name>Copy Path</name>
+	<submenu></submenu>
+	<unique-id>1758162749013903-4</unique-id>
+	<command>wl-copy -n -- %f</command>
+	<description>Copy the full path to the clipboard</description>
+	<range></range>
+	<patterns>*</patterns>
+	<directories/>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
+</action>
+<action>
+	<icon>security-high</icon>
+	<name>Copy SHA-256</name>
+	<submenu></submenu>
+	<unique-id>1758162749013903-5</unique-id>
+	<command>sh -c 'sha256sum -- "$1" | cut -d" " -f1 | wl-copy -n &amp;&amp; notify-send -i security-high "SHA-256 copied" "$(basename -- "$1")"' _ %f</command>
+	<description>Copy the file's SHA-256 checksum to the clipboard</description>
+	<range></range>
+	<patterns>*</patterns>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
+</action>
+<action>
+	<icon>preferences-desktop-wallpaper</icon>
+	<name>Set as Wallpaper</name>
+	<submenu></submenu>
+	<unique-id>1758162749013903-6</unique-id>
+	<command>wallpaper-manager.sh set %f</command>
+	<description>Set this image as the wallpaper on all monitors</description>
+	<range></range>
+	<patterns>*.jpg;*.jpeg;*.png;*.webp;*.JPG;*.JPEG;*.PNG;*.WEBP</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>dialog-password</icon>
+	<name>Open as Root</name>
+	<submenu></submenu>
+	<unique-id>1758162749013903-7</unique-id>
+	<command>thunar admin://%f</command>
+	<description>Browse this folder with root rights (gvfs admin backend, asks via polkit)</description>
+	<range></range>
+	<patterns>*</patterns>
+	<directories/>
+</action>
+</actions>

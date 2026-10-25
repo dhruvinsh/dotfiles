@@ -182,6 +182,11 @@ install_packages_from_arrays
 # Disable multicast dns in resolved. Avahi will provide this for better network printer discovery
 sudo mkdir -p /etc/systemd/resolved.conf.d
 echo -e "[Resolve]\nMulticastDNS=no" | sudo tee /etc/systemd/resolved.conf.d/10-disable-multicast.conf
+# Resolve *.local hosts via Avahi (Thunar "Browse Network" -> smb://host.local, printers).
+# mdns_minimal must come before `resolve`, which answers NOTFOUND for .local with mDNS off
+if ! grep -q 'mdns_minimal' /etc/nsswitch.conf; then
+  sudo sed -i 's/^\(hosts:.*\) resolve/\1 mdns_minimal [NOTFOUND=return] resolve/' /etc/nsswitch.conf
+fi
 # Enable automatically adding remote printers
 if ! grep -q '^CreateRemotePrinters Yes' /etc/cups/cups-browsed.conf; then
   echo 'CreateRemotePrinters Yes' | sudo tee -a /etc/cups/cups-browsed.conf
