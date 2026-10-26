@@ -231,7 +231,8 @@ cat >/mnt/etc/hosts <<EOF
 127.0.1.1     $NEW_HOSTNAME
 EOF
 
-printf '[zram0]\n' >/mnt/etc/systemd/zram-generator.conf
+# zram-generator's default size is min(ram / 2, 4096) MiB; raise the cap to 16 GiB.
+printf '[zram0]\nzram-size = min(ram / 2, 16384)\n' >/mnt/etc/systemd/zram-generator.conf
 
 echo '%wheel ALL=(ALL:ALL) ALL' >/mnt/etc/sudoers.d/10-wheel
 chmod 0440 /mnt/etc/sudoers.d/10-wheel
