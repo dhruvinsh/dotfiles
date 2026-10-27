@@ -49,7 +49,7 @@ hl.on("hyprland.start", function()
   -- appearance: top bar, wallpaper
   run("waybar &")
 
-  -- wallpaper-manager.sh persists the current wallpaper as a hyprpaper config, so
+  -- wallpaper-manager persists the current wallpaper as a hyprpaper config, so
   -- hyprpaper paints it on the first frame (no default-wallpaper flash). The
   -- restore call is a fallback for first boot; it retries until hyprpaper answers.
   local wall_conf = os.getenv("HOME") .. "/.cache/wallpapers/hyprpaper.conf"
@@ -58,7 +58,7 @@ hl.on("hyprland.start", function()
   else
     run("hyprpaper &")
   end
-  hl.exec_cmd("~/.local/bin/wallpaper-manager.sh restore")
+  hl.exec_cmd("~/.local/bin/wallpaper-manager restore")
 
   -- authentication agent (already systemd managed user service)
   hl.exec_cmd("systemctl --user start hyprpolkitagent.service")

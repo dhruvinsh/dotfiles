@@ -22,7 +22,7 @@ hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("sh -c 'cliphist list | rofi -dmenu -p Clipboard | cliphist decode | wl-copy'"))
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw"))
-hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("~/.local/bin/wallpaper-manager.sh select"))
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("~/.local/bin/wallpaper-manager select"))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo()) -- dwindle
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle (replaces removed togglesplit dispatcher)
 

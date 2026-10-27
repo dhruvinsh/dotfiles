@@ -1,0 +1,608 @@
+{{ if lookPath "uv" -}}
+#!/usr/bin/env -S uv run --quiet --script
+{{- else -}}
+#!/usr/bin/env python3
+{{- end }}
+#
+# chezmoi picks the shebang: a uv script where uv is installed (mise; uwsm/env puts
+# it on the session PATH), else plain python3 >= 3.10 -- stdlib only, so a fresh
+# machine without uv still gets wallpapers.
+# /// script
+# requires-python = ">=3.10"
+# dependencies = []
+# ///
+
+"""Wallpaper manager for Hyprland (Quickshell or hyprpaper) and i3/feh.
+
+Keeps the cache layout other configs rely on (rofi, hyprlock, sddm):
+~/.cache/wallpapers/{current.txt,thumbs/,wall.current,wall.thmb,wall.blur,hyprpaper.conf}
+and adds state.json, watched by the Quickshell wallpaper (depth effect).
+"""
+
+import argparse
+import colorsys
+import hashlib
+import json
+import os
+import random
+import re
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+HOME = Path.home()
+WALLPAPER_DIR = Path(os.environ.get("WALLPAPER_DIR", HOME / "Pictures/wallpapers"))
+CACHE_DIR = Path(os.environ.get("XDG_CACHE_HOME", HOME / ".cache")) / "wallpapers"
+THUMB_DIR = CACHE_DIR / "thumbs"
+DEPTH_DIR = CACHE_DIR / "depth"
+CURRENT_WALL = CACHE_DIR / "current.txt"
+STATE_FILE = CACHE_DIR / "state.json"
+HYPRPAPER_CONF = CACHE_DIR / "hyprpaper.conf"
+DEPTH_TOOL = HOME / ".local/bin/wallpaper-depth"
+NO_UV_FLAG = CACHE_DIR / ".no-uv-notified"
+# clock positions you dragged in the picker: user choices, so state, not cache
+CLOCK_OVERRIDES = Path(os.environ.get("XDG_STATE_HOME", HOME / ".local/state")) / "wallpaper-manager/clock.json"
+THUMBNAIL_SIZE = 500
+IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp"}
+ROFI_FONT = "{{ .font.regular }} 10"
+
+
+def notify(title, body=""):
+    if shutil.which("notify-send"):
+        subprocess.run(["notify-send", "-a", "wallpaper", title, body], check=False)
+    else:
+        print(f"{title}: {body}", file=sys.stderr)
+
+
+def die(msg):
+    notify("Wallpaper Error", msg)
+    sys.exit(1)
+
+
+def get_hash(path):
+    # sha256 of the path string, same as the old bash `echo -n | sha256sum`
+    return hashlib.sha256(str(path).encode()).hexdigest()
+
+
+def natural_key(path):
+    return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", path.name)]
+
+
+def list_wallpapers():
+    if not WALLPAPER_DIR.is_dir():
+        die(f"Wallpaper directory not found: {WALLPAPER_DIR}")
+    # resolved like set/depth do, so hashes and current-wallpaper checks match
+    walls = [p.resolve() for p in WALLPAPER_DIR.rglob("*") if p.is_file() and p.suffix.lower() in IMAGE_EXTS]
+    if not walls:
+        die(f"No wallpapers found in {WALLPAPER_DIR}")
+    return sorted(walls, key=natural_key)
+
+
+def current_wallpaper():
+    try:
+        return Path(CURRENT_WALL.read_text().strip())
+    except OSError:
+        return None
+
+
+def image_cmd():
+    for cmd in ("magick", "convert"):
+        if shutil.which(cmd):
+            return cmd
+    return None
+
+
+def generate_cache(wall):
+    """Create the rofi thumbnail and blurred background; return the thumbnail path."""
+    h = get_hash(wall)
+    thumb, blur = THUMB_DIR / f"{h}.thumb", THUMB_DIR / f"{h}.blur"
+    cmd = image_cmd()
+    if cmd is None:
+        print("Error: Neither 'magick' nor 'convert' found.", file=sys.stderr)
+        return thumb
+    size = f"{THUMBNAIL_SIZE}x{THUMBNAIL_SIZE}"
+    if not thumb.exists():
+        subprocess.run(
+            [cmd, str(wall), "-strip", "-thumbnail", f"{size}^", "-gravity", "center", "-extent", size, f"png:{thumb}"],
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+    if not blur.exists():
+        subprocess.run(
+            [cmd, str(wall), "-strip", "-scale", "10%", "-blur", "0x3", "-resize", "100%", f"png:{blur}"],
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+    return thumb
+
+
+def depth_path(wall):
+    return DEPTH_DIR / f"{get_hash(wall)}.png"
+
+
+# --- clock colours from the wallpaper -------------------------------------------
+
+DEFAULT_CLOCK = (0.5, 0.08)  # centre x, top y in screen fractions (Clock.qml)
+
+
+def clock_region(cx, cy):
+    """Screen-fraction box (x, y, w, h) around a clock centred at cx, top at cy;
+    matches Clock.qml's size. Keep in sync with wallpaper-depth."""
+    x, y = min(max(cx - 0.2, 0), 0.6), min(max(cy - 0.02, 0), 0.64)
+    return (x, y, 0.4, 0.36)
+
+
+def region_in_image(region, img_aspect, screen_aspect):
+    """Map a clock region given in screen fractions to image fractions: the
+    wallpaper is shown centred with cover-crop (Image.PreserveAspectCrop)."""
+    x, y, w, h = region
+    if img_aspect > screen_aspect:  # wider image: sides cropped
+        visible = screen_aspect / img_aspect
+        return ((1 - visible) / 2 + x * visible, y, w * visible, h)
+    visible = img_aspect / screen_aspect  # taller image: top/bottom cropped
+    return (x, (1 - visible) / 2 + y * visible, w, h * visible)
+
+
+def screen_aspect():
+    """width/height of the first monitor (rotation aware), 16:9 if unknown."""
+    try:
+        out = subprocess.run(["hyprctl", "-j", "monitors"], capture_output=True, text=True, check=False).stdout
+        m = json.loads(out)[0]
+        w, h = m["width"], m["height"]
+        return h / w if m.get("transform", 0) % 2 else w / h
+    except (OSError, ValueError, KeyError, IndexError):
+        return 16 / 9
+
+
+def clock_overrides():
+    try:
+        return json.loads(CLOCK_OVERRIDES.read_text())
+    except (OSError, ValueError):
+        return {}
+
+
+def clock_position(wall):
+    """Where the clock goes: your dragged position, else wallpaper-depth's guess."""
+    override = clock_overrides().get(str(wall))
+    if override:
+        return tuple(override)
+    try:
+        meta = json.loads(depth_path(wall).with_suffix(".json").read_text())
+        return (meta["x"], meta["y"])
+    except (OSError, ValueError, KeyError):
+        return DEFAULT_CLOCK
+
+
+def save_clock(wall, pos):
+    overrides = clock_overrides()
+    if pos is None:
+        overrides.pop(str(wall), None)
+    else:
+        overrides[str(wall)] = [round(pos[0], 4), round(pos[1], 4)]
+    CLOCK_OVERRIDES.parent.mkdir(parents=True, exist_ok=True)
+    CLOCK_OVERRIDES.write_text(json.dumps(overrides, indent=1))
+
+
+def luminance(rgb):
+    """WCAG relative luminance of an (r, g, b) tuple in 0..1."""
+    lin = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb]
+    return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+
+
+def contrast(a, b):
+    hi, lo = sorted((luminance(a), luminance(b)), reverse=True)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+def to_hex(rgb):
+    return "#" + "".join(f"{round(c * 255):02x}" for c in rgb)
+
+
+def magick_colors(cmd, args):
+    """Run an ImageMagick histogram; return [(count, (r, g, b)), ...] in 0..1."""
+    out = subprocess.run([cmd, *args, "-format", "%c", "histogram:info:"], capture_output=True, text=True).stdout
+    colors = []
+    for line in out.splitlines():
+        # "   1234: (12,34,56) #0C2238 srgb(12,34,56)"
+        m = re.match(r"\s*(\d+):.*#([0-9A-Fa-f]{6})", line)
+        if m:
+            h = m.group(2)
+            colors.append((int(m.group(1)), tuple(int(h[i : i + 2], 16) / 255 for i in (0, 2, 4))))
+    return colors
+
+
+def extract_colors(wall):
+    """Pick clock text/accent colours that match the wallpaper and stay readable
+    over the area behind the clock. Cached next to the thumbnails, per position."""
+    cx, cy = clock_position(wall)
+    cache = THUMB_DIR / f"{get_hash(wall)}.colors-{cx:.3f}-{cy:.3f}.json"
+    try:
+        return json.loads(cache.read_text())
+    except (OSError, ValueError):
+        pass
+    cmd = image_cmd()
+    if cmd is None:
+        return None
+
+    identify = [cmd, "identify"] if cmd == "magick" else ["identify"]  # IM7 vs IM6
+    size = subprocess.run([*identify, "-format", "%w %h", f"{wall}[0]"], capture_output=True, text=True).stdout.split()
+    if len(size) != 2:
+        return None
+    img_w, img_h = map(int, size)
+    x, y, w, h = region_in_image(clock_region(cx, cy), img_w / img_h, screen_aspect())
+    region = [f"{wall}[0]", "-resize", "256x256!", "-crop", f"{w * 256:.0f}x{h * 256:.0f}+{x * 256:.0f}+{y * 256:.0f}"]
+    behind = magick_colors(cmd, region + ["-scale", "1x1!"])
+    palette = magick_colors(cmd, [f"{wall}[0]", "-resize", "128x128", "-colors", "12"])
+    if not behind or not palette:
+        return None
+    bg = behind[0][1]
+    # light text if white reads better than black over what is behind the clock
+    dark_bg = contrast((1, 1, 1), bg) >= contrast((0, 0, 0), bg)
+
+    # accent: frequent *and* vivid; ignore near-black/near-white
+    def score(entry):
+        count, rgb = entry
+        hue, light, sat = colorsys.rgb_to_hls(*rgb)
+        return count * sat * (0.15 < light < 0.9)
+
+    hue, light, sat = colorsys.rgb_to_hls(*max(palette, key=score)[1])
+    sat = max(sat, 0.45)
+    # push the lightness away from the background until the date reads (WCAG 4.5:1)
+    step = 0.03 if dark_bg else -0.03
+    accent = colorsys.hls_to_rgb(hue, light, sat)
+    while contrast(accent, bg) < 4.5 and 0.05 < light < 0.95:
+        light += step
+        accent = colorsys.hls_to_rgb(hue, light, sat)
+
+    # text: almost white/black, tinted with the accent hue
+    text = colorsys.hls_to_rgb(hue, 0.93 if dark_bg else 0.12, 0.35)
+    colors = {"text": to_hex(text), "accent": to_hex(accent), "background": to_hex(bg)}
+    cache.write_text(json.dumps(colors))
+    return colors
+
+
+# --- backends -----------------------------------------------------------------
+
+
+def process_running(*names):
+    for pid in os.listdir("/proc"):
+        if not pid.isdigit():
+            continue
+        try:
+            if Path(f"/proc/{pid}/comm").read_text().strip() in names:
+                return True
+        except OSError:
+            pass
+    return False
+
+
+def backend():
+    if os.environ.get("HYPRLAND_INSTANCE_SIGNATURE"):
+        if process_running("qs", "quickshell"):
+            return "quickshell"
+        # at login qs and `restore` start together: if qs is installed and hyprpaper
+        # isn't running, qs is the backend that is still coming up
+        if shutil.which("qs") and not process_running("hyprpaper"):
+            return "quickshell"
+        return "hyprpaper"
+    return "feh"
+
+
+def focused_monitor():
+    try:
+        out = subprocess.run(["hyprctl", "-j", "monitors"], capture_output=True, text=True, check=False).stdout
+        return next((m["name"] for m in json.loads(out) if m.get("focused")), "")
+    except (OSError, ValueError, KeyError):
+        return ""
+
+
+def hypr_monitors():
+    try:
+        out = subprocess.run(["hyprctl", "-j", "monitors"], capture_output=True, text=True, check=False).stdout
+        return [m["name"] for m in json.loads(out)]
+    except (OSError, ValueError, KeyError):
+        return []
+
+
+def write_hyprpaper_conf(wall):
+    """Persist the wallpaper so hyprpaper paints it on its first frame at login
+    (Hyprland execs: hyprpaper -c "$HYPRPAPER_CONF")."""
+    # One block per output; an empty name (all outputs) only if hyprctl can't list them
+    lines = ["# Generated by wallpaper-manager -- do not edit", "ipc = true", "splash = false"]
+    for mon in hypr_monitors() or [""]:
+        lines += ["", "wallpaper {", f"    monitor = {mon}", f"    path = {wall}", "    fit_mode = cover", "}"]
+    HYPRPAPER_CONF.write_text("\n".join(lines) + "\n")
+
+
+def hyprpaper_set(wall):
+    """Set the wallpaper over hyprpaper IPC; True once every monitor shows it.
+
+    hyprpaper 0.8 silently ignores an empty monitor name (",path": empty reply,
+    exit 0, wallpaper unchanged), so address each monitor and verify the result
+    with listactive instead of trusting the reply.
+    """
+    monitors = hypr_monitors()
+    for mon in monitors:
+        subprocess.run(["hyprctl", "hyprpaper", "wallpaper", f"{mon},{wall},cover"], capture_output=True, check=False)
+    out = subprocess.run(["hyprctl", "hyprpaper", "listactive"], capture_output=True, text=True, check=False).stdout
+    # listactive lines: "<monitor>: <path>"
+    active = dict(line.split(": ", 1) for line in out.splitlines() if ": " in line)
+    return bool(monitors) and all(active.get(mon) == str(wall) for mon in monitors)
+
+
+def foreground_info(wall):
+    """Cutout path (or None) and a revision that changes when it is rebuilt in
+    place, so Quickshell knows to reload the same path."""
+    fg = depth_path(wall)
+    try:
+        return str(fg), fg.stat().st_mtime_ns
+    except OSError:
+        return None, 0
+
+
+def write_state(wall):
+    """Tell the Quickshell wallpaper what to show; foreground only if it matches."""
+    fg, rev = foreground_info(wall)
+    cx, cy = clock_position(wall)
+    state = {
+        "wallpaper": str(wall),
+        "foreground": fg,
+        "foregroundRev": rev,
+        "colors": extract_colors(wall),
+        "clock": {"x": cx, "y": cy},
+    }
+    # Written in place (not rename) so Quickshell's file watcher keeps its inode;
+    # the QML side ignores a half-written read and picks up the next change.
+    with open(STATE_FILE, "w") as f:
+        json.dump(state, f)
+
+
+def link(target, name):
+    tmp = CACHE_DIR / f".{name}.tmp"
+    tmp.unlink(missing_ok=True)
+    tmp.symlink_to(target)
+    tmp.replace(CACHE_DIR / name)
+
+
+# --- depth layer ----------------------------------------------------------------
+
+
+def start_depth(wall):
+    """Generate the foreground cutout in the background, then refresh state.json."""
+    fg = depth_path(wall)
+    # .none: the model found no subject in this wallpaper, don't retry
+    if fg.exists() or fg.with_suffix(".none").exists() or not DEPTH_TOOL.exists():
+        return
+    if not shutil.which("uv"):
+        if not NO_UV_FLAG.exists():
+            notify("Wallpaper depth skipped", "Install uv (mise) to generate the depth layer.")
+            NO_UV_FLAG.touch()
+        return
+    subprocess.Popen(
+        [sys.executable, os.path.abspath(__file__), "_depth", str(wall)],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+
+
+def run_depth(wall, force=False):
+    cmd = ["nice", "-n", "19", str(DEPTH_TOOL), str(wall), "--aspect", f"{screen_aspect():.5f}"]
+    cmd += ["--force"] if force else []
+    override = clock_overrides().get(str(wall))
+    if override:  # keep your position when the layer is rebuilt
+        cmd += ["--clock", f"{override[0]},{override[1]}"]
+    rc = subprocess.run(cmd, check=False).returncode
+    # only refresh if the user hasn't moved on to another wallpaper meanwhile
+    if rc == 0 and current_wallpaper() == wall:
+        write_state(wall)
+    return rc
+
+
+def move_clock(wall, pos):
+    """Save (or with None, forget) the clock position and refit the depth layer
+    to it: only re-thresholds wallpaper-depth's cached maps, no model run."""
+    save_clock(wall, pos)
+    if not DEPTH_TOOL.exists() or not shutil.which("uv"):
+        if current_wallpaper() == wall:
+            write_state(wall)
+        return 0
+    if pos is None:
+        # back to the guess: drop the manual result, keep the cached maps
+        for suffix in (".png", ".none", ".json"):
+            depth_path(wall).with_suffix(suffix).unlink(missing_ok=True)
+    rc = run_depth(wall)
+    if current_wallpaper() == wall:
+        write_state(wall)
+    return rc
+
+
+# --- commands ---------------------------------------------------------------------
+
+
+def set_wallpaper(wall):
+    wall = Path(wall).expanduser().resolve()
+    if not wall.is_file():
+        die(f"File not found: {wall}")
+    generate_cache(wall)
+
+    CURRENT_WALL.write_text(f"{wall}\n")
+    h = get_hash(wall)
+    link(THUMB_DIR / f"{h}.thumb", "wall.thmb")
+    link(THUMB_DIR / f"{h}.blur", "wall.blur")
+    link(wall, "wall.current")
+
+    mode = backend()
+    if mode == "feh":
+        if not shutil.which("feh"):
+            die("feh not found")
+        subprocess.run(["feh", "--no-fehbg", "--bg-fill", str(wall)], check=False)
+    else:
+        # kept current for both: the next login may start either one
+        write_hyprpaper_conf(wall)
+        write_state(wall)
+        if mode == "hyprpaper" and not hyprpaper_set(wall):
+            die(f"hyprpaper rejected {wall.name}")
+        start_depth(wall)
+
+    notify("Wallpaper Changed", wall.name)
+
+
+def restore_wallpaper():
+    wall = current_wallpaper()
+    if wall is None or not wall.is_file():
+        return
+    mode = backend()
+    if mode == "feh":
+        if shutil.which("feh"):
+            subprocess.run(["feh", "--no-fehbg", "--bg-fill", str(wall)], check=False)
+        return
+    write_hyprpaper_conf(wall)
+    write_state(wall)
+    if mode == "hyprpaper":
+        # hyprpaper normally starts with this wallpaper already (see
+        # write_hyprpaper_conf); retry IPC until it answers, as a fallback.
+        for _ in range(50):
+            if hyprpaper_set(wall):
+                break
+            time.sleep(0.1)
+    start_depth(wall)
+
+
+def step_wallpaper(offset):
+    walls = list_wallpapers()
+    cur = current_wallpaper()
+    idx = walls.index(cur) + offset if cur in walls else 0
+    set_wallpaper(walls[idx % len(walls)])
+
+
+def list_json():
+    cur = current_wallpaper()
+    items = []
+    for wall in list_wallpapers():
+        fg = depth_path(wall)
+        fg_path, rev = foreground_info(wall)
+        cx, cy = clock_position(wall)
+        items.append(
+            {
+                "path": str(wall),
+                "name": wall.name,
+                "thumb": str(generate_cache(wall)),
+                "foreground": fg_path,
+                "foregroundRev": rev,
+                # ready | none (no subject found) | pending (made on apply)
+                "depth": "ready" if fg.exists() else "none" if fg.with_suffix(".none").exists() else "pending",
+                "current": wall == cur,
+                "colors": extract_colors(wall),
+                "clock": {"x": cx, "y": cy, "manual": str(wall) in clock_overrides()},
+            }
+        )
+    json.dump(items, sys.stdout)
+
+
+def select_rofi():
+    walls = list_wallpapers()
+    by_name = {}
+    entries = ""
+    for wall in walls:
+        thumb = generate_cache(wall)
+        # Format: display_name\0icon\x1fthumbnail_path
+        entries += f"{wall.name}\0icon\x1f{thumb}\n"
+        by_name[wall.name] = wall
+    override = (
+        "window{width:100%;} listview{columns:5;spacing:5em;} "
+        "element{border-radius:10px; orientation:vertical;} "
+        "element-icon{size:28em;border-radius:0em;} element-text{padding:1em;}"
+    )
+    out = subprocess.run(
+        [
+            "rofi", "-dmenu",
+            "-display-column-separator", ":::",
+            "-display-columns", "1",
+            "-theme-str", f'* {"{"}font: "{ROFI_FONT}";{"}"}',
+            "-theme-str", override,
+            "-theme", "~/.config/rofi/styles/selector.rasi",
+            "-show-icons",
+        ],
+        input=entries,
+        capture_output=True,
+        text=True,
+        check=False,
+    )  # fmt: skip
+    selected = out.stdout.strip()
+    if selected in by_name:
+        set_wallpaper(by_name[selected])
+
+
+def select_wallpaper():
+    if backend() == "quickshell":
+        cmd = ["qs", "ipc", "call", "picker", "toggle", focused_monitor()]
+        rc = subprocess.run(cmd, capture_output=True, check=False).returncode
+        if rc == 0:
+            return
+    select_rofi()
+
+
+def main():
+    THUMB_DIR.mkdir(parents=True, exist_ok=True)
+    DEPTH_DIR.mkdir(parents=True, exist_ok=True)
+
+    aliases = {"s": "select", "n": "next", "p": "prev", "r": "random"}
+    argv = sys.argv[1:] or ["select"]
+    argv[0] = aliases.get(argv[0], argv[0])
+
+    parser = argparse.ArgumentParser(prog="wallpaper-manager", description="Wallpaper manager (Quickshell/hyprpaper/feh)")
+    sub = parser.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("select", help="pick a wallpaper (Quickshell picker, rofi fallback)")
+    sub.add_parser("set", help="set a specific wallpaper").add_argument("path")
+    sub.add_parser("next", help="switch to the next wallpaper")
+    sub.add_parser("prev", help="switch to the previous wallpaper")
+    sub.add_parser("random", help="set a random wallpaper")
+    sub.add_parser("restore", help="restore the last wallpaper (startup)")
+    sub.add_parser("list", help="list wallpapers as JSON (for the picker)").add_argument("--json", action="store_true")
+    depth = sub.add_parser("depth", help="generate the depth cutout (default: current)")
+    depth.add_argument("path", nargs="?")
+    depth.add_argument("--force", action="store_true")
+    clock = sub.add_parser("clock", help="move the clock for a wallpaper (the picker's drag)")
+    clock.add_argument("path")
+    clock.add_argument("position", nargs="+", help="X Y (centre x, top y; screen fractions) or 'reset'")
+    sub.add_parser("_depth").add_argument("path")  # internal: background job
+    args = parser.parse_args(argv)
+
+    match args.cmd:
+        case "select":
+            select_wallpaper()
+        case "set":
+            set_wallpaper(args.path)
+        case "next":
+            step_wallpaper(1)
+        case "prev":
+            step_wallpaper(-1)
+        case "random":
+            set_wallpaper(random.choice(list_wallpapers()))
+        case "restore":
+            restore_wallpaper()
+        case "list":
+            list_json()
+        case "depth":
+            wall = Path(args.path).expanduser().resolve() if args.path else current_wallpaper()
+            if wall is None or not wall.is_file():
+                die("No wallpaper to process")
+            sys.exit(run_depth(wall, args.force))
+        case "clock":
+            wall = Path(args.path).expanduser().resolve()
+            if args.position == ["reset"]:
+                sys.exit(move_clock(wall, None))
+            x, y = (min(max(float(v), 0.0), 1.0) for v in args.position[:2])
+            sys.exit(move_clock(wall, (x, y)))
+        case "_depth":
+            run_depth(Path(args.path))
+
+
+if __name__ == "__main__":
+    main()
+
+{{- /* vim: set filetype=python: */}}
