@@ -1,0 +1,23 @@
+pragma Singleton
+
+import Quickshell
+import QtQuick
+
+// chezmoi palette (.colorScheme) and fonts
+Singleton {
+    readonly property color base: "{{ .colorScheme.base }}"
+    readonly property color crust: "{{ .colorScheme.crust }}"
+    readonly property color surface0: "{{ .colorScheme.surface0 }}"
+    readonly property color surface1: "{{ .colorScheme.surface1 }}"
+    readonly property color overlay1: "{{ .colorScheme.overlay1 }}"
+    readonly property color subtext0: "{{ .colorScheme.subtext0 }}"
+    readonly property color text: "{{ .colorScheme.text }}"
+    readonly property color accent: "{{ .colorScheme.mauve }}"
+
+    readonly property string font: "{{ .font.regular }}"
+    readonly property string fontItalic: "{{ .font.italic }}"
+
+    readonly property string home: Quickshell.env("HOME")
+    readonly property string cacheDir: (Quickshell.env("XDG_CACHE_HOME") || home + "/.cache") + "/wallpapers"
+    readonly property string manager: home + "/.local/bin/wallpaper-manager"
+}

@@ -49,14 +49,20 @@ hl.on("hyprland.start", function()
   -- appearance: top bar, wallpaper
   run("waybar &")
 
-  -- wallpaper-manager persists the current wallpaper as a hyprpaper config, so
-  -- hyprpaper paints it on the first frame (no default-wallpaper flash). The
-  -- restore call is a fallback for first boot; it retries until hyprpaper answers.
-  local wall_conf = os.getenv("HOME") .. "/.cache/wallpapers/hyprpaper.conf"
-  if file_exists(wall_conf) then
-    run("hyprpaper -c " .. wall_conf .. " &")
+  -- Quickshell draws the wallpaper with the depth effect (clock behind the subject)
+  -- and the SUPER+W picker; without it, hyprpaper. wallpaper-manager persists the
+  -- current wallpaper as a hyprpaper config, so hyprpaper paints it on the first
+  -- frame (no default-wallpaper flash). The restore call writes Quickshell's
+  -- state.json, or retries hyprpaper IPC until it answers (first boot).
+  if file_exists("/usr/bin/qs") then
+    run("qs &")
   else
-    run("hyprpaper &")
+    local wall_conf = os.getenv("HOME") .. "/.cache/wallpapers/hyprpaper.conf"
+    if file_exists(wall_conf) then
+      run("hyprpaper -c " .. wall_conf .. " &")
+    else
+      run("hyprpaper &")
+    end
   end
   hl.exec_cmd("~/.local/bin/wallpaper-manager restore")
 

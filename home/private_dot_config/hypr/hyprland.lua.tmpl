@@ -308,7 +308,7 @@ hl.window_rule({
 
 -- Frosted glass behind translucent shells. ignore_alpha keeps fully transparent
 -- regions (e.g. gaps between waybar islands) unblurred.
-for _, ns in ipairs({ "waybar", "swaync-control-center", "swaync-notification-window", "swayosd", "rofi" }) do
+for _, ns in ipairs({ "waybar", "swaync-control-center", "swaync-notification-window", "swayosd", "rofi", "qs-picker" }) do
   hl.layer_rule({
     name = "blur-" .. ns,
     match = { namespace = "^(" .. ns .. ")$" },
