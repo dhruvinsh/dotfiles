@@ -1,0 +1,92 @@
+{{- $c := .colorScheme -}}
+# Default lock layout until wallpaper-manager writes the real one (first wallpaper
+# change or login); it then places these widgets around the clock.
+# Clock
+label {
+    monitor =
+    text = cmd[update:1000] date +"%H:%M"
+    color = {{ includeTemplate "hex2rgb" (list $c.text) }}
+    font_size = 140
+    font_family = {{ .font.regular }} ExtraBold
+    position = 0, 280
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+# Date
+label {
+    monitor =
+    text = cmd[update:60000] date +"%A, %d %B %Y"
+    color = {{ includeTemplate "hex2rgb" (list $c.subtext1) }}
+    font_size = 24
+    font_family = {{ .font.regular }}
+    position = 0, 170
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+# Greeting
+label {
+    monitor =
+    text = Welcome back, $USER
+    color = {{ includeTemplate "hex2rgb" (list $c.mauve) }}
+    font_size = 20
+    font_family = {{ .font.regular }}
+    position = 0, 40
+    halign = center
+    valign = center
+    zindex = 3
+}
+
+input-field {
+    monitor =
+    size = 320, 56
+    outline_thickness = 3
+    dots_size = 0.25
+    dots_spacing = 0.3
+    dots_center = true
+    outer_color = {{ includeTemplate "hex2rgb" (list $c.mauve) }}
+    inner_color = {{ includeTemplate "hex2rgb" (list $c.surface0 0.85) }}
+    font_color = {{ includeTemplate "hex2rgb" (list $c.text) }}
+    check_color = {{ includeTemplate "hex2rgb" (list $c.yellow) }}
+    fail_color = {{ includeTemplate "hex2rgb" (list $c.red) }}
+    capslock_color = {{ includeTemplate "hex2rgb" (list $c.peach) }}
+    fade_on_empty = false
+    rounding = 28
+    # "##" is hyprlang's escape for a literal "#" (a single "#" starts a comment)
+    placeholder_text = <span foreground="##{{ $c.subtext0 | trimPrefix "#" }}">Password</span>
+    fail_text = <i>$FAIL ($ATTEMPTS)</i>
+    position = 0, -60
+    halign = center
+    valign = center
+    zindex = 3
+}
+
+# Now playing (in a script: hyprlang parses playerctl's double-brace format as an expression)
+label {
+    monitor =
+    text = cmd[update:2000] ~/.local/bin/lock-nowplaying.sh
+    color = {{ includeTemplate "hex2rgb" (list $c.subtext1) }}
+    font_size = 16
+    font_family = {{ .font.regular }}
+    position = 0, 60
+    halign = center
+    valign = bottom
+    zindex = 3
+}
+
+# Quote: random from a local cache, refreshed online in the background (lock-quote.sh)
+label {
+    monitor =
+    text = cmd[update:300000] ~/.local/bin/lock-quote.sh
+    color = {{ includeTemplate "hex2rgb" (list $c.subtext0) }}
+    font_size = 15
+    font_family = {{ .font.italic }}
+    text_align = center
+    position = 0, -190
+    halign = center
+    valign = center
+    zindex = 3
+}

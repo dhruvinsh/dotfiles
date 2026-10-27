@@ -47,6 +47,12 @@ CLOCK_OVERRIDES = Path(os.environ.get("XDG_STATE_HOME", HOME / ".local/state")) 
 THUMBNAIL_SIZE = 500
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp"}
 ROFI_FONT = "{{ .font.regular }} 10"
+CLOCK_FONT, DATE_FONT = "{{ .font.regular }} ExtraBold", "{{ .font.italic }} Italic"
+LABEL_FONT, QUOTE_FONT = "{{ .font.regular }}", "{{ .font.italic }}"
+# hyprlock.conf sources this: clock + cutout for the current wallpaper
+LOCK_CONF = HOME / ".config/hypr/hyprlock-depth.conf"
+LOCK_FG = CACHE_DIR / "lock-fg.png"
+LOCK_BRIGHTNESS = 0.7  # hyprlock.conf's background brightness, so the cutout matches
 
 
 def notify(title, body=""):
@@ -213,6 +219,45 @@ def magick_colors(cmd, args):
     return colors
 
 
+def hex_rgb(hex_color):
+    h = hex_color.lstrip("#")
+    return tuple(int(h[i : i + 2], 16) / 255 for i in (0, 2, 4))
+
+
+# The helpers below take one background colour or a list of them (the slices of
+# a mixed background, e.g. half subject, half ground) and satisfy the worst one.
+
+
+def _bgs(bg):
+    return bg if isinstance(bg, list) else [bg]
+
+
+def worst_contrast(fg, bg):
+    return min(contrast(fg, b) for b in _bgs(bg))
+
+
+def light_on(bg):
+    """True if light text reads better than dark over bg."""
+    return worst_contrast((1, 1, 1), bg) >= worst_contrast((0, 0, 0), bg)
+
+
+def readable_text(hue, bg):
+    """Almost white/black, tinted with the wallpaper's hue, whichever reads over bg."""
+    return colorsys.hls_to_rgb(hue, 0.93 if light_on(bg) else 0.12, 0.35)
+
+
+def readable_accent(rgb, bg, ratio=4.5):
+    """The accent with its lightness pushed away from bg until it reaches ratio."""
+    hue, light, sat = colorsys.rgb_to_hls(*rgb)
+    sat = max(sat, 0.45)
+    step = 0.03 if light_on(bg) else -0.03
+    accent = colorsys.hls_to_rgb(hue, light, sat)
+    while worst_contrast(accent, bg) < ratio and 0.05 < light < 0.95:
+        light += step
+        accent = colorsys.hls_to_rgb(hue, light, sat)
+    return accent
+
+
 def extract_colors(wall):
     """Pick clock text/accent colours that match the wallpaper and stay readable
     over the area behind the clock. Cached next to the thumbnails, per position."""
@@ -238,8 +283,6 @@ def extract_colors(wall):
     if not behind or not palette:
         return None
     bg = behind[0][1]
-    # light text if white reads better than black over what is behind the clock
-    dark_bg = contrast((1, 1, 1), bg) >= contrast((0, 0, 0), bg)
 
     # accent: frequent *and* vivid; ignore near-black/near-white
     def score(entry):
@@ -247,18 +290,11 @@ def extract_colors(wall):
         hue, light, sat = colorsys.rgb_to_hls(*rgb)
         return count * sat * (0.15 < light < 0.9)
 
-    hue, light, sat = colorsys.rgb_to_hls(*max(palette, key=score)[1])
-    sat = max(sat, 0.45)
-    # push the lightness away from the background until the date reads (WCAG 4.5:1)
-    step = 0.03 if dark_bg else -0.03
-    accent = colorsys.hls_to_rgb(hue, light, sat)
-    while contrast(accent, bg) < 4.5 and 0.05 < light < 0.95:
-        light += step
-        accent = colorsys.hls_to_rgb(hue, light, sat)
-
-    # text: almost white/black, tinted with the accent hue
-    text = colorsys.hls_to_rgb(hue, 0.93 if dark_bg else 0.12, 0.35)
-    colors = {"text": to_hex(text), "accent": to_hex(accent), "background": to_hex(bg)}
+    vivid = max(palette, key=score)[1]
+    # the date reads at WCAG 4.5:1; the time is near-white/black in the same hue
+    accent = readable_accent(vivid, bg)
+    text = readable_text(colorsys.rgb_to_hls(*vivid)[0], bg)
+    colors = {"text": to_hex(text), "accent": to_hex(accent), "vivid": to_hex(vivid), "background": to_hex(bg)}
     cache.write_text(json.dumps(colors))
     return colors
 
@@ -357,6 +393,233 @@ def write_state(wall):
     # the QML side ignores a half-written read and picks up the next change.
     with open(STATE_FILE, "w") as f:
         json.dump(state, f)
+    write_lock_conf(wall, fg, rev, state["colors"], (cx, cy))
+
+
+def monitor_size():
+    """Pixel size of the first monitor (rotation aware), 1920x1080 if unknown."""
+    try:
+        out = subprocess.run(["hyprctl", "-j", "monitors"], capture_output=True, text=True, check=False).stdout
+        m = json.loads(out)[0]
+        w, h = m["width"], m["height"]
+        return (h, w) if m.get("transform", 0) % 2 else (w, h)
+    except (OSError, ValueError, KeyError, IndexError):
+        return (1920, 1080)
+
+
+def lock_cutout(fg, rev, size):
+    """The cutout cropped to the screen exactly as hyprlock crops its background,
+    and dimmed like it, so hyprlock's image widget can lay it over pixel for pixel."""
+    cmd = image_cmd()
+    if fg is None or cmd is None:
+        return None
+    w, h = size
+    meta = LOCK_FG.with_suffix(".json")
+    key = {"foreground": fg, "rev": rev, "size": [w, h], "brightness": LOCK_BRIGHTNESS}
+    try:
+        if json.loads(meta.read_text()) == key and LOCK_FG.exists():
+            return LOCK_FG
+    except (OSError, ValueError):
+        pass
+    tmp = LOCK_FG.with_suffix(".tmp.png")
+    rc = subprocess.run(
+        [cmd, fg, "-background", "none", "-resize", f"{w}x{h}^", "-gravity", "center", "-extent", f"{w}x{h}",
+         "-channel", "RGB", "-evaluate", "multiply", str(LOCK_BRIGHTNESS), "+channel", f"png:{tmp}"],
+        stderr=subprocess.DEVNULL, check=False,
+    ).returncode  # fmt: skip
+    if rc != 0:
+        return None
+    tmp.replace(LOCK_FG)
+    meta.write_text(json.dumps(key))
+    return LOCK_FG
+
+
+class LockBackdrop:
+    """A small copy of what hyprlock shows behind its widgets -- the background
+    dimmed and blurred like hyprlock.conf does, plus the sharp cutout -- to pick
+    each widget's colour from what is really behind it."""
+
+    SIZE = (256, 144)
+
+    def __init__(self, wall, cutout, screen):
+        self.path = CACHE_DIR / "lock-backdrop.png"
+        self.ok = False
+        cmd = image_cmd()
+        if cmd is None:
+            return
+        w, h = self.SIZE
+        # same cover-crop as the screen, then the screen's aspect squeezed to 256x144
+        crop = f"{screen[0]}x{screen[1]}"
+        args = [cmd, f"{wall}[0]", "-resize", f"{crop}^", "-gravity", "center", "-extent", crop,
+                "-resize", f"{w}x{h}!", "-blur", "0x2", "-evaluate", "multiply", str(LOCK_BRIGHTNESS)]  # fmt: skip
+        if cutout:
+            args += ["(", str(cutout), "-resize", f"{w}x{h}!", ")", "-composite"]
+        self.ok = subprocess.run([*args, f"png:{self.path}"], stderr=subprocess.DEVNULL).returncode == 0
+        self.cmd = cmd
+        self.alpha = CACHE_DIR / "lock-alpha.png"
+        self.has_alpha = bool(cutout) and subprocess.run(
+            [cmd, str(cutout), "-resize", f"{w}x{h}!", "-alpha", "extract", f"png:{self.alpha}"],
+            stderr=subprocess.DEVNULL,
+        ).returncode == 0
+
+    @staticmethod
+    def _crop(box, size):
+        w, h = size
+        x0, y0 = max(box[0], 0) * w, max(box[1], 0) * h
+        x1, y1 = min(box[2], 1) * w, min(box[3], 1) * h
+        return f"{max(x1 - x0, 1):.0f}x{max(y1 - y0, 1):.0f}+{x0:.0f}+{y0:.0f}"
+
+    def coverage(self, box):
+        """How much of a screen-fraction box the cutout covers, 0..1."""
+        if not self.has_alpha:
+            return 0.0
+        out = magick_colors(self.cmd, [str(self.alpha), "-crop", self._crop(box, self.SIZE), "+repage", "-scale", "1x1!"])
+        return out[0][1][0] if out else 0.0
+
+    def colors(self, box, fallback, slices=5):
+        """Average colours of a screen-fraction box (x0, y0, x1, y1), cut into
+        vertical slices: a widget over a mixed background gets every part."""
+        if not self.ok:
+            return [fallback]
+        crop = ["-crop", self._crop(box, self.SIZE), "+repage", "-scale", f"{slices}x1!"]
+        out = subprocess.run([self.cmd, str(self.path), *crop, "txt:-"], capture_output=True, text=True).stdout
+        # txt: lines "x,y: (r,g,b...)  #RRGGBB  ..."
+        found = [hex_rgb(m.group(1)) for m in re.finditer(r"#([0-9A-Fa-f]{6})", out)]
+        return found or [fallback]
+
+
+def hypr_block(kind, props, comment=None):
+    """One hyprlang widget block, e.g. label { ... }."""
+    lines = [f"# {comment}"] if comment else []
+    lines += [kind + " " + "{", *(f"    {k} = {v}" for k, v in props.items()), "}"]
+    return "\n".join(lines)
+
+
+def rgba(rgb, alpha=1.0):
+    return f"rgba({to_hex(rgb).lstrip('#')}{round(alpha * 255):02x})"
+
+
+def write_lock_conf(wall, fg, rev, colors, pos):
+    """hyprlock's half of the depth effect: blurred background (hyprlock.conf) ->
+    clock -> sharp cutout -> greeting, password, quote, now playing. The clock
+    matches the Quickshell one (Clock.qml); the rest follows it: stacked under it
+    on the same centre line (above it when it sits low). Every widget's colour is
+    picked against what is behind it on the lock screen, in the wallpaper's hue."""
+    w, h = monitor_size()
+    s = h / 1440  # the static layout was designed at 1440p
+    colors = colors or {}
+    vivid = hex_rgb(colors.get("vivid", colors.get("accent", "{{ .colorScheme.mauve }}")))
+    hue = colorsys.rgb_to_hls(*vivid)[0]
+    pt = 0.75  # hyprlock font_size is in points at 96 dpi
+
+    # Clock.qml: time 0.26 h px, date 0.045 h px; the time box is ~1.32x its font
+    # size tall and the date tucks 0.02 h into it. Kept on screen (time ~0.42 w).
+    cx = min(max(pos[0], 0.21), 0.79)
+    x = round((cx - 0.5) * w)
+    clock_top = min(max(pos[1], 0.0), 0.6) * h
+    date_top = clock_top + 0.323 * h
+    clock_bottom = date_top + 0.06 * h
+
+    # greeting, password, quote stacked as one column; heights in px
+    greet_h, input_h, quote_h, gap = 0.04 * h, 60 * s, 0.085 * h, 0.03 * h
+    stack_h = greet_h + gap + input_h + gap + quote_h
+    if clock_bottom + 0.04 * h + stack_h <= 0.92 * h:
+        stack_top = clock_bottom + 0.04 * h  # room below the clock
+    else:
+        stack_top = max(clock_top - 0.04 * h - stack_h, 0.03 * h)  # clock sits low: go above
+    greet_top = stack_top
+    input_top = greet_top + greet_h + gap
+    quote_top = input_top + input_h + gap
+    # now playing on the edge the column leaves free
+    music_bottom = quote_top + quote_h < 0.88 * h
+    music_top = 0.93 * h if music_bottom else 0.03 * h
+
+    # what sits behind each widget (screen-fraction boxes around its centre line)
+    cutout = lock_cutout(fg, rev, (w, h))
+    backdrop = LockBackdrop(wall, cutout, (w, h))
+    mid = cx
+
+    def behind(half_w, top, height):
+        return backdrop.colors((mid - half_w, top / h, mid + half_w, (top + height) / h), (0.1, 0.1, 0.1))
+
+    def text_on(bg):
+        return readable_text(hue, bg)
+
+    clock_bg = behind(0.21, clock_top, 0.343 * h)
+    date_bg = behind(0.15, date_top, 0.06 * h)
+    greet_bg = behind(0.10, greet_top, greet_h)
+    input_bg = behind(160 * s / w, input_top, input_h)
+    quote_bg = behind(0.20, quote_top, quote_h)
+    music_bg = behind(0.25, music_top, 0.04 * h)
+
+    # a busy subject behind the column (the sharp cutout under 15%+ of it; calm
+    # scenes measure 0-0.11, subjects 0.28+): give the column a translucent card
+    # and pick its text against that card instead
+    pad = 0.025 * h
+    col_w = 0.40
+    card = None
+    if backdrop.coverage((mid - col_w / 2, stack_top / h, mid + col_w / 2, (stack_top + stack_h) / h)) > 0.15:
+        card_rgb = colorsys.hls_to_rgb(hue, 0.08, 0.3)  # dark glass reads best over busy detail
+        card = {"monitor": "", "size": f"{round(col_w * w)}, {round(stack_h + 2 * pad)}",
+                "color": rgba(card_rgb, 0.55), "rounding": round(28 * s), "border_size": max(1, round(2 * s)),
+                "border_color": rgba(readable_accent(vivid, card_rgb, 3), 0.5),
+                "position": f"{x}, {-round(stack_top - pad)}", "halign": "center", "valign": "top",
+                "zindex": 3}  # fmt: skip
+        greet_bg = input_bg = quote_bg = card_rgb
+
+    def halo(bg):
+        # a soft shadow opposite to the text: dark behind light text, light behind dark
+        return {"shadow_passes": 2, "shadow_size": round(5 * s), "shadow_boost": 1.2,
+                "shadow_color": "rgba(00000099)" if light_on(bg) else "rgba(ffffff99)"}  # fmt: skip
+
+    def label(text_, color, size_px, font, top, bg, extra=None):
+        return {"monitor": "", "text": text_, "color": color, "font_size": round(size_px * pt),
+                "font_family": font, "position": f"{x}, {-round(top)}", "halign": "center",
+                "valign": "top", **(extra or {}), **halo(bg)}  # fmt: skip
+
+    input_text = text_on(input_bg)
+    widgets = [
+        ("label", label('cmd[update:1000] date +"%H:%M"', rgba(text_on(clock_bg)), 0.26 * h, CLOCK_FONT,
+                        clock_top, clock_bg, {"zindex": 1}), "Clock (under the cutout: the depth effect) + date"),
+        # the date is small text to read, not part of the effect: above the cutout
+        ("label", label('cmd[update:60000] date +"%A, %-d %B"', rgba(readable_accent(vivid, date_bg)),
+                        0.045 * h, DATE_FONT, date_top, date_bg, {"zindex": 4}), None),
+        ("label", label("Welcome back, $USER", rgba(text_on(greet_bg), 0.95), 32 * s, LABEL_FONT, greet_top,
+                        greet_bg, {"zindex": 4}), "Greeting, password, quote: one column with the clock"),
+        ("input-field", {
+            "monitor": "", "size": f"{round(340 * s)}, {round(input_h)}", "outline_thickness": max(2, round(3 * s)),
+            "dots_size": 0.25, "dots_spacing": 0.3, "dots_center": "true",
+            "outer_color": rgba(readable_accent(vivid, input_bg, 3)),
+            # the fill contrasts with the text: dark glass for light text, light for dark
+            "inner_color": rgba(colorsys.hls_to_rgb(hue, 0.1 if light_on(input_bg) else 0.92, 0.25), 0.6),
+            "font_color": rgba(input_text), "check_color": rgba(hex_rgb("{{ .colorScheme.yellow }}")),
+            "fail_color": rgba(hex_rgb("{{ .colorScheme.red }}")),
+            "capslock_color": rgba(hex_rgb("{{ .colorScheme.peach }}")),
+            "fade_on_empty": "false", "rounding": round(30 * s),
+            # "##" is hyprlang's escape for a literal "#" (a single "#" starts a comment)
+            "placeholder_text": f'<span foreground="##{to_hex(input_text).lstrip("#")}" fgalpha="60%">Password</span>',
+            "fail_text": "<i>$FAIL ($ATTEMPTS)</i>",
+            "position": f"{x}, {-round(input_top)}", "halign": "center", "valign": "top", "zindex": 4,
+        }, None),  # fmt: skip
+        ("label", label("cmd[update:300000] ~/.local/bin/lock-quote.sh", rgba(text_on(quote_bg), 0.85), 24 * s,
+                        QUOTE_FONT, quote_top, quote_bg, {"text_align": "center", "zindex": 4}), None),
+        ("label", {
+            **label("cmd[update:2000] ~/.local/bin/lock-nowplaying.sh", rgba(text_on(music_bg), 0.85), 22 * s,
+                    LABEL_FONT, 0, music_bg, {"zindex": 4}),
+            "position": f"{x}, {round(0.04 * h) if music_bottom else -round(0.03 * h)}",
+            "valign": "bottom" if music_bottom else "top",
+        }, "Now playing (in a script: hyprlang parses playerctl's double-brace format)"),  # fmt: skip
+    ]
+    if card:
+        widgets.insert(2, ("shape", card, "Card behind the column: the subject behind it is busy"))
+    blocks = ["# Generated by wallpaper-manager -- do not edit (rewritten on every wallpaper change)"]
+    blocks += [hypr_block(kind, props, comment) for kind, props, comment in widgets]
+    if cutout:
+        image = {"monitor": "", "path": cutout, "size": min(w, h), "rounding": 0, "border_size": 0,
+                 "position": "0, 0", "halign": "center", "valign": "center", "zindex": 2}  # fmt: skip
+        blocks.append(hypr_block("image", image, "The depth-effect cutout, pixel-aligned with the background"))
+    LOCK_CONF.parent.mkdir(parents=True, exist_ok=True)
+    LOCK_CONF.write_text("\n\n".join(blocks) + "\n")
 
 
 def link(target, name):
