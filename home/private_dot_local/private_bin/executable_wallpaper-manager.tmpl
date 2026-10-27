@@ -21,6 +21,8 @@ and adds state.json, watched by the Quickshell wallpaper (depth effect).
 
 import argparse
 import colorsys
+import contextlib
+import fcntl
 import hashlib
 import json
 import os
@@ -41,6 +43,11 @@ CURRENT_WALL = CACHE_DIR / "current.txt"
 STATE_FILE = CACHE_DIR / "state.json"
 HYPRPAPER_CONF = CACHE_DIR / "hyprpaper.conf"
 DEPTH_TOOL = HOME / ".local/bin/wallpaper-depth"
+# wallpapers waiting for a depth layer, one path per line; one worker drains it
+DEPTH_QUEUE = DEPTH_DIR / "queue.txt"
+DEPTH_LOG = DEPTH_DIR / "worker.log"
+# written by `wallpaper-depth --prepare`: the sha256 of the script it set up
+DEPTH_PREPARED = DEPTH_DIR / ".prepared"
 NO_UV_FLAG = CACHE_DIR / ".no-uv-notified"
 # clock positions you dragged in the picker: user choices, so state, not cache
 CLOCK_OVERRIDES = Path(os.environ.get("XDG_STATE_HOME", HOME / ".local/state")) / "wallpaper-manager/clock.json"
@@ -643,13 +650,101 @@ def start_depth(wall):
             notify("Wallpaper depth skipped", "Install uv (mise) to generate the depth layer.")
             NO_UV_FLAG.touch()
         return
-    subprocess.Popen(
-        [sys.executable, os.path.abspath(__file__), "_depth", str(wall)],
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        start_new_session=True,
-    )
+    queue_depth(wall)
+
+
+@contextlib.contextmanager
+def depth_queue():
+    """The queue as a list, locked; changes to the list are written back."""
+    with open(DEPTH_DIR / ".queue.lock", "w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        queue = DEPTH_QUEUE.read_text().splitlines() if DEPTH_QUEUE.exists() else []
+        before = list(queue)
+        yield queue
+        if queue != before:
+            DEPTH_QUEUE.write_text("".join(f"{w}\n" for w in queue))
+
+
+def queue_depth(wall):
+    """Queue a depth run and make sure a worker is up. Requests for the same
+    wallpaper collapse into one, and only one worker runs the models at a time:
+    flicking through wallpapers must not start a uv + model run for each."""
+    with depth_queue() as queue:
+        if str(wall) not in queue:
+            queue.append(str(wall))
+    with open(DEPTH_LOG, "a") as log:
+        subprocess.Popen(
+            [sys.executable, os.path.abspath(__file__), "_depth"],
+            stdin=subprocess.DEVNULL,
+            stdout=log,
+            stderr=log,
+            start_new_session=True,
+        )
+
+
+def next_queued():
+    """Take the next request off the queue: the current wallpaper first."""
+    with depth_queue() as queue:
+        if not queue:
+            return None
+        cur = str(current_wallpaper())
+        wall = cur if cur in queue else queue[0]
+        queue.remove(wall)
+    return Path(wall)
+
+
+def depth_prepared():
+    marker = DEPTH_PREPARED.read_text().strip() if DEPTH_PREPARED.exists() else ""
+    return marker == hashlib.sha256(DEPTH_TOOL.read_bytes()).hexdigest()
+
+
+def prepare_depth():
+    """Before the first run (and after chezmoi changes wallpaper-depth): let uv
+    build its environment and fetch the models. On NVIDIA that is a few GB of
+    CUDA wheels; the chezmoi apply script normally does it beforehand."""
+    if depth_prepared():
+        return True
+    proc = subprocess.Popen(["nice", "-n", "19", str(DEPTH_TOOL), "--prepare"])
+    try:
+        proc.wait(timeout=3)
+    except subprocess.TimeoutExpired:  # cached setups finish well within this
+        notify(
+            "Setting up wallpaper depth",
+            "First run: downloading onnxruntime and the models (a few GB). The cutout appears when it's done.",
+        )
+        proc.wait()
+    failed = DEPTH_DIR / ".prepare-failed"  # e.g. offline: say so once, not per wallpaper
+    if proc.returncode != 0:
+        if not failed.exists():
+            notify("Wallpaper depth setup failed", f"See {DEPTH_LOG}; it retries on the next wallpaper change.")
+            failed.touch()
+        return False
+    failed.unlink(missing_ok=True)
+    return True
+
+
+def depth_worker():
+    """The background job: drain the queue one run at a time. A second worker
+    finds the lock taken and leaves its request to the running one."""
+    while True:
+        with open(DEPTH_DIR / ".worker.lock", "w") as lock:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                return
+            if DEPTH_LOG.exists() and DEPTH_LOG.stat().st_size > 1 << 20:
+                os.truncate(DEPTH_LOG, 0)  # opened for append, so writes restart at 0
+            print(time.strftime("%F %T"), "worker started", flush=True)
+            if not prepare_depth():
+                with depth_queue() as queue:
+                    queue.clear()
+                return
+            while (wall := next_queued()) is not None:
+                print(time.strftime("%F %T"), wall, flush=True)
+                run_depth(wall)
+        # a request queued while the lock was being released has no worker yet
+        if not DEPTH_QUEUE.exists() or not DEPTH_QUEUE.read_text().strip():
+            return
 
 
 def run_depth(wall, force=False):
@@ -677,6 +772,12 @@ def move_clock(wall, pos):
         # back to the guess: drop the manual result, keep the cached maps
         for suffix in (".png", ".none", ".json"):
             depth_path(wall).with_suffix(suffix).unlink(missing_ok=True)
+    if not depth_prepared():
+        # still being set up: don't block the picker; the queued run uses the new position
+        queue_depth(wall)
+        if current_wallpaper() == wall:
+            write_state(wall)
+        return 0
     rc = run_depth(wall)
     if current_wallpaper() == wall:
         write_state(wall)
@@ -832,7 +933,7 @@ def main():
     clock = sub.add_parser("clock", help="move the clock for a wallpaper (the picker's drag)")
     clock.add_argument("path")
     clock.add_argument("position", nargs="+", help="X Y (centre x, top y; screen fractions) or 'reset'")
-    sub.add_parser("_depth").add_argument("path")  # internal: background job
+    sub.add_parser("_depth")  # internal: background job, drains the depth queue
     args = parser.parse_args(argv)
 
     match args.cmd:
@@ -862,7 +963,7 @@ def main():
             x, y = (min(max(float(v), 0.0), 1.0) for v in args.position[:2])
             sys.exit(move_clock(wall, (x, y)))
         case "_depth":
-            run_depth(Path(args.path))
+            depth_worker()
 
 
 if __name__ == "__main__":

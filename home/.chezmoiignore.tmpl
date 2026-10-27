@@ -77,3 +77,11 @@ Library/**
 {{ if not (or .archlinux (and .ubuntu .isDesktop)) -}}
 .config/networkmanager-dmenu
 {{ end -}}
+
+{{/* Evertz-only AI bits: AS/400 MCP server, Bitbucket PR review */ -}}
+{{ if .personalmachine -}}
+.claude.json
+.claude/commands/review-pr.md
+.claude/skills/bitbucket-pr-review
+.pi/agent/mcp.json
+{{ end -}}

@@ -41,7 +41,10 @@ script's content changes.
 - `before_10-cleanup`, `before_11_install-arch-packages`, `before_12_install-arch-extra`,
   `before_13_install-arch-nvidia`
 - `after_81_install-arch-geolocation`, `after_82_install-arch-docker`,
-  `after_82_install-arch-eol-packages`, `after_83_install-arch-sddm-theme`, `after_88_install-fonts`
+  `after_82_install-arch-eol-packages`, `after_83_install-arch-sddm-theme`, `after_88_install-fonts`,
+  `after_92_wallpaper-depth` (`wallpaper-depth --prepare`: uv env + models at apply time; its
+  content tracks the script hash, nvidia mode and `lookPath "uv"`, since `arch/` sorts before
+  `non-windows/90_install-mise` and a fresh machine has no uv yet)
 - `run_once_after_bluetooth-setup`, `run_once_after_networking-setup`, `run_once_after_sddm-pam` — one-time system setup
 
 ### `ubuntu/`
@@ -171,4 +174,8 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
   `birefnet-general` subject (CPU fallback: it needs > 8 GB VRAM). Writes
   `~/.cache/wallpapers/depth/<sha256>.png` + `.json` (clock position), caches the raw maps
   (`.depth.png`, `.subject.png`) so `--clock X,Y` refits in < 1 s, or `.none` when nothing
-  overlaps the clock.
+  overlaps the clock. `--prepare` only fetches the models and writes `depth/.prepared` (sha256
+  of the script). wallpaper-manager queues requests in `depth/queue.txt` (deduplicated, current
+  wallpaper first) for a single flock'd `_depth` worker (log: `depth/worker.log`). If
+  `.prepared` doesn't match, the worker runs `--prepare` first and notifies after 3 s (the
+  first uv sync on NVIDIA downloads a few GB of CUDA wheels).

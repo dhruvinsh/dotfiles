@@ -1,0 +1,29 @@
+#!/bin/bash
+# vim: set expandtab ts=4 sw=4 ft=sh:
+#
+# Sets wallpaper-depth up at apply time instead of on the first wallpaper change:
+# uv builds its environment (onnxruntime-gpu + CUDA/cuDNN wheels on NVIDIA, a few
+# GB) and it fetches the depth + subject models. Re-runs when the script changes.
+# wallpaper-depth: {{ include "private_dot_local/private_bin/executable_wallpaper-depth.tmpl" | sha256sum }}
+# nvidia mode: {{ includeTemplate "nvidia-mode" . }}
+# uv: {{ lookPath "uv" }}
+# (arch/ scripts sort before non-windows/90_install-mise, so on a fresh machine uv
+# is missing and this skips; once uv is on PATH the line above changes and it re-runs)
+
+tool="$HOME/.local/bin/wallpaper-depth"
+[ -x "$tool" ] || exit 0
+
+# chezmoi may run outside a mise-activated shell; the tool's shebang needs uv on PATH
+if ! command -v uv >/dev/null 2>&1 && command -v mise >/dev/null 2>&1; then
+    uv_bin="$(mise which uv 2>/dev/null)" && PATH="$(dirname "$uv_bin"):$PATH"
+fi
+if ! command -v uv >/dev/null 2>&1; then
+    echo "wallpaper-depth: uv not found, skipping setup (it runs on the first wallpaper change)"
+    exit 0
+fi
+
+echo "wallpaper-depth: setting up the environment and models (first time: a few GB)..."
+if ! nice -n 19 "$tool" --prepare; then
+    echo "wallpaper-depth: setup failed; wallpaper-manager retries on the next wallpaper change" >&2
+fi
+exit 0
