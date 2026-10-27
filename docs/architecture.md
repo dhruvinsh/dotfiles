@@ -99,7 +99,8 @@ script's content changes.
 Excludes by platform: Windows drops non-windows scripts/`.local`/zsh files; non-Windows
 drops `AppData`/`Documents`; non-Linux drops fontconfig/wallpaper/bash; non-macOS drops
 `Library`/darwin; non-Arch drops arch scripts + `hypr`, `uwsm`, `swaync`, `swayosd`,
-`waybar`, `wlogout`, `yay`, and `.local/bin/{__wlogout.sh,waybar-updates.sh,theme-mode}`;
+`waybar`, `wlogout`, `yay`, `Thunar`, `quickshell`, and
+`.local/bin/{__wlogout.sh,waybar-updates.sh,theme-mode,wallpaper-depth}`;
 `networkmanager-dmenu` only kept on Arch or Ubuntu desktop; non-Ubuntu/non-Fedora drop their
 script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
 `.config/teams-for-linux` dropped unless `lookPath "teams-for-linux"` finds it.
@@ -110,7 +111,12 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
   `private_dot_zsh/{exact_rc.d,exact_functions}`), bash, fish (`config.fish.tmpl` + `functions/`), tmux
 - **Terminals:** kitty, wezterm, ghostty (alacritty removed)
 - **Wayland/WM:** hypr (Hyprland, Lua; `hyprland.lua.tmpl`, plus hyprlock, hypridle, hyprpaper),
-  uwsm, sway, i3; bars: waybar, polybar; notifications/OSD: swaync, swayosd; rofi, dunst,
+  uwsm, quickshell (Arch: depth-effect wallpaper — wallpaper → clock → foreground cutout, clock
+  coloured from the wallpaper — and the SUPER+W picker via `qs ipc call picker toggle <monitor>`,
+  where the clock can be dragged per wallpaper; no `Quickshell.Hyprland` import, which keeps qs
+  idle at ~0% CPU; started by `hypr/execs.lua.tmpl` when
+  `/usr/bin/qs` exists, else hyprpaper), sway, i3; bars: waybar, polybar;
+  notifications/OSD: swaync, swayosd; rofi, dunst,
   picom, wlogout, networkmanager-dmenu
 - **Prompt/history/nav:** starship, atuin, zoxide
 - **Git:** git (`config.tmpl`, `delta.tmpl`, `ignore`), lazygit
@@ -119,12 +125,14 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
 - **System:** pacman, yay (Lua `init.lua` + `policy.lua` + `hooks/`; state in
   `~/.local/state/yay`), gtk-2.0/3.0 (3.0 omits `gtk-application-prefer-dark-theme` on Arch so
   `theme-mode` can switch GTK3 apps), `dot_Xresources`
-- **GUI apps:** teams-for-linux (`modify_private_config.json` — jq sets only
+- **GUI apps:** Thunar (Arch; custom actions in `uca.xml.tmpl`), teams-for-linux
+  (`modify_private_config.json` — jq sets only
   `appearance.followSystemTheme=true`, rest of the app's config untouched)
 
 ## Key file index
 
 - `home/.chezmoi.toml.tmpl` — data/prompts/age/github/diff config
+- `home/.chezmoiremove` — targets removed on apply (old `.local/bin/wallpaper-manager.sh`)
 - `home/private_dot_config/mise/config.toml.tmpl` — the ~70-tool manifest
 - `home/dot_zshenv` — sets `skip_global_compinit=1` (Ubuntu's `/etc/zsh/zshrc` would
   otherwise run its own compinit and clobber `~/.zcompdump`) + sources rustup's `~/.cargo/env`
@@ -142,3 +150,19 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
   `gtk-theme` (adw-gtk3/-dark) + `icon-theme` (Flat Remix Light/Dark); mode persists in
   dconf. Run with `apply` at Hyprland start (`hypr/execs.lua.tmpl`) and from the swaync
   "Dark Mode" toggle. Shell (waybar/swaync/rofi/hyprlock) and CLI apps are not switched.
+- `home/private_dot_local/private_bin/executable_wallpaper-manager.tmpl` —
+  `~/.local/bin/wallpaper-manager {select,set,next,prev,random,restore,list,depth,clock}`: Python
+  uv-script; the template picks the shebang (`lookPath "uv"`: uv, else `python3`; stdlib only).
+  Drives Quickshell or hyprpaper (Hyprland) and feh (i3); writes
+  `~/.cache/wallpapers/state.json` (watched by Quickshell) plus the
+  `current.txt`/`thumbs/`/`wall.*`/`hyprpaper.conf` cache used by rofi, hyprlock, and sddm.
+  Clock colours come from ImageMagick (`thumbs/<sha256>.colors-*.json`); clock positions
+  dragged in the picker persist in `~/.local/state/wallpaper-manager/clock.json`.
+- `home/private_dot_local/private_bin/executable_wallpaper-depth.tmpl` — Arch-only uv script;
+  the template adds `onnxruntime-gpu[cuda,cudnn]` (own CUDA/cuDNN wheels) when
+  `.chezmoitemplates/nvidia-mode` ≠ `none`, else `onnxruntime`.
+  Foreground mask = Depth Anything V2 (nearer than the scene behind the clock) ∪ rembg
+  `birefnet-general` subject (CPU fallback: it needs > 8 GB VRAM). Writes
+  `~/.cache/wallpapers/depth/<sha256>.png` + `.json` (clock position), caches the raw maps
+  (`.depth.png`, `.subject.png`) so `--clock X,Y` refits in < 1 s, or `.none` when nothing
+  overlaps the clock.

@@ -25,6 +25,7 @@ Owner: Dhruvin Shah (`dhruvinsh`). Deeper reference in [`docs/`](docs/).
 - `.chezmoidata.yaml` → static data: `openscadVersion`, `workMonitors.{left,right}` (work-PC
   monitor descriptions used by hypr + waybar), `flatRemixColor` (Flat Remix icon accent).
 - `.chezmoiignore.tmpl` → conditional per-OS/per-machine exclusions.
+- `.chezmoiremove` → targets deleted on apply (e.g. the old `.local/bin/wallpaper-manager.sh`).
 
 ## Template data (from `home/.chezmoi.toml.tmpl`)
 
@@ -96,5 +97,7 @@ Derived: `email` = `dhruvin3@gmail.com` if personal else `dshah@evertz.com`.
   region, and Hyprland then skips its own blur for that window (transparent but sharp).
   `GDK_WAYLAND_DISABLE=ext_background_effect_manager_v1` (set in `uwsm/env` + `hypr/env.lua`)
   hides the protocol from GTK so the global blur applies again.
+- hyprpaper 0.8 silently ignores `hyprctl hyprpaper wallpaper ",path"` (empty monitor) —
+  empty reply, exit 0. Address each monitor explicitly and verify with `listactive`.
 - swaync `buttons-grid` toggle `command`/`update-command` strings must not contain double
   quotes — they silently fail (the toggle state never updates).
