@@ -1,0 +1,232 @@
+#!/usr/bin/env -S uv run --quiet --script
+#
+# chezmoi picks the onnxruntime build per machine (.chezmoitemplates/nvidia-mode):
+# the GPU one brings its own CUDA 12 / cuDNN 9 wheels, so no system CUDA is needed.
+# /// script
+# requires-python = ">=3.12,<3.14"
+# dependencies = [
+#   "rembg",
+#   "pillow",
+#   "numpy",
+#   "huggingface-hub",
+#   "{{ if ne (includeTemplate "nvidia-mode" .) "none" }}onnxruntime-gpu[cuda,cudnn]{{ else }}onnxruntime{{ end }}",
+# ]
+# ///
+
+"""Build the depth layer of a wallpaper: everything that should sit in front of the clock.
+
+Writes ~/.cache/wallpapers/depth/<sha256(path)>.png: the wallpaper's own pixels
+with an alpha mask, at its own resolution, so the Quickshell wallpaper can stack
+it above the clock with the same fill mode and have it line up exactly.
+
+The mask is the union of
+- Depth Anything V2: whatever is nearer than the scene behind the clock (works on
+  landscapes and streets too: trees, lamp posts, buildings);
+- rembg birefnet-general: a crisp outline of the main subject, when there is one.
+
+Both raw maps are cached (<hash>.depth.png, <hash>.subject.png), so moving the
+clock (--clock X,Y, from the picker) only re-thresholds them: no model runs.
+Without --clock the position is guessed: the spot where the foreground covers a
+pleasing part of the clock. <hash>.json records the position for wallpaper-manager.
+If nothing ends up in front of the clock, <hash>.none is written instead.
+
+onnxruntime wheels trail new Python releases, hence the <3.14 cap; uv fetches a
+matching interpreter on its own.
+"""
+
+import argparse
+import fcntl
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+CACHE_DIR = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "wallpapers"
+DEPTH_DIR = CACHE_DIR / "depth"
+# depth-anything-v2-base is CC-BY-NC (personal use); -small is Apache-2.0 and close behind
+DEPTH_MODEL = "onnx-community/depth-anything-v2-base"
+# birefnet-general handles illustrated/anime wallpapers far better than
+# birefnet-portrait, which is tuned for photos of people
+SUBJECT_MODEL = "birefnet-general"
+# clock positions tried when guessing: (centre x, top y) in screen fractions
+AUTO_POSITIONS = [(0.5, 0.08), (0.26, 0.08), (0.74, 0.08)]
+# the share of the clock the foreground should ideally cover, and the most it may
+TARGET_OVERLAP, MAX_OVERLAP = 0.2, 0.45
+# a subject mask covering less than this of the image means "no subject"
+MIN_SUBJECT = 0.005
+# less than this of the clock area covered: no depth effect for this wallpaper
+MIN_OVERLAP = 0.01
+# how much nearer than the scene behind the clock something must be to occlude it,
+# on the normalised 0 (far) .. 1 (near) depth scale; soft edge between the two
+NEAR_FROM, NEAR_TO = 0.06, 0.14
+
+
+def clock_region(cx, cy):
+    """Screen-fraction box (x, y, w, h) around a clock centred at cx, top at cy;
+    matches Clock.qml's size. Keep in sync with wallpaper-manager."""
+    x, y = min(max(cx - 0.2, 0), 0.6), min(max(cy - 0.02, 0), 0.64)
+    return (x, y, 0.4, 0.36)
+
+
+def region_in_image(region, img_aspect, screen_aspect):
+    """Map a clock region given in screen fractions to image fractions: the
+    wallpaper is shown centred with cover-crop (Image.PreserveAspectCrop)."""
+    x, y, w, h = region
+    if img_aspect > screen_aspect:  # wider image: sides cropped
+        visible = screen_aspect / img_aspect
+        return ((1 - visible) / 2 + x * visible, y, w * visible, h)
+    visible = img_aspect / screen_aspect  # taller image: top/bottom cropped
+    return (x, (1 - visible) / 2 + y * visible, w, h * visible)
+
+
+def notify(title, body=""):
+    if shutil.which("notify-send"):
+        subprocess.run(["notify-send", "-a", "wallpaper", title, body], check=False)
+    print(f"{title}: {body}", file=sys.stderr)
+
+
+def providers(ort):
+    available = ort.get_available_providers()
+    return [p for p in ("CUDAExecutionProvider", "CPUExecutionProvider") if p in available]
+
+
+def run_depth_model(np, image):
+    """Relative depth at the image's resolution, normalised to 0 (far) .. 1 (near)."""
+    import onnxruntime as ort
+    from huggingface_hub import hf_hub_download
+    from PIL import Image
+
+    model = hf_hub_download(DEPTH_MODEL, "onnx/model.onnx")
+    session = ort.InferenceSession(model, providers=providers(ort))
+    # long side ~1022 px, both sides multiples of the 14 px ViT patch
+    scale = 1022 / max(image.size)
+    size = (round(image.width * scale / 14) * 14, round(image.height * scale / 14) * 14)
+    x = np.asarray(image.resize(size, Image.BICUBIC), dtype=np.float32) / 255
+    x = (x - [0.485, 0.456, 0.406]) / [0.229, 0.224, 0.225]  # ImageNet normalisation
+    x = x.transpose(2, 0, 1)[None].astype(np.float32)
+    d = session.run(None, {session.get_inputs()[0].name: x})[0][0]
+    lo, hi = np.percentile(d, [2, 98])
+    d = np.clip((d - lo) / (hi - lo + 1e-6), 0, 1).astype(np.float32)
+    return np.asarray(Image.fromarray(d, mode="F").resize(image.size, Image.BICUBIC))
+
+
+def run_subject_model(np, image):
+    """birefnet-general subject mask in 0..1 (zeros when it finds no subject)."""
+    import onnxruntime as ort
+    from rembg import new_session, remove
+
+    try:
+        session = new_session(SUBJECT_MODEL, providers=providers(ort))
+        mask = remove(image, session=session, only_mask=True, post_process_mask=True)
+    except Exception:  # noqa: BLE001 -- e.g. CUDA out of memory: birefnet needs > 8 GB VRAM
+        session = new_session(SUBJECT_MODEL, providers=["CPUExecutionProvider"])
+        mask = remove(image, session=session, only_mask=True, post_process_mask=True)
+    m = np.asarray(mask, dtype=np.float32) / 255
+    return m if m.mean() >= MIN_SUBJECT else np.zeros_like(m)
+
+
+def cached_map(np, path, compute, image):
+    """Load a 0..1 map saved as 16-bit PNG, or compute and save it."""
+    from PIL import Image
+
+    if path.exists():
+        return np.asarray(Image.open(path), dtype=np.float32) / 65535
+    m = compute(np, image)
+    Image.fromarray((m * 65535).astype(np.uint16)).save(path)
+    return m
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Build the depth layer of a wallpaper")
+    parser.add_argument("wallpaper", type=Path)
+    parser.add_argument("--clock", help="clock position 'X,Y' (centre x, top y; screen fractions) instead of guessing")
+    parser.add_argument("--aspect", type=float, default=16 / 9, help="screen width/height (default 16/9)")
+    parser.add_argument("--force", action="store_true", help="re-run the models even if cached")
+    args = parser.parse_args()
+
+    wall = args.wallpaper.expanduser().resolve()
+    if not wall.is_file():
+        sys.exit(f"not a file: {wall}")
+
+    DEPTH_DIR.mkdir(parents=True, exist_ok=True)
+    # same key as wallpaper-manager: sha256 of the path string
+    out = DEPTH_DIR / f"{hashlib.sha256(str(wall).encode()).hexdigest()}.png"
+    none, meta = out.with_suffix(".none"), out.with_suffix(".json")
+    maps = out.with_suffix(".depth.png"), out.with_suffix(".subject.png")
+
+    with open(out.with_suffix(".lock"), "w") as lock:
+        # a second run on the same image waits, then finds the cached result
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        if (out.exists() or none.exists()) and not (args.force or args.clock):
+            print(out if out.exists() else "no subject")
+            return
+        for stale in (out, none, meta, *(maps if args.force else ())):
+            stale.unlink(missing_ok=True)
+
+        import numpy as np
+        from PIL import Image
+
+        try:
+            import onnxruntime as ort
+
+            if hasattr(ort, "preload_dlls"):
+                ort.preload_dlls()  # load the CUDA/cuDNN wheels before creating sessions
+        except ImportError:
+            pass
+
+        image = Image.open(wall).convert("RGB")
+        h, w = image.height, image.width
+        depth = cached_map(np, maps[0], run_depth_model, image)
+        subject = cached_map(np, maps[1], run_subject_model, image)
+
+        def candidate(pos):
+            rx, ry, rw, rh = region_in_image(clock_region(*pos), w / h, args.aspect)
+            clock = (slice(int(ry * h), int((ry + rh) * h)), slice(int(rx * w), int((rx + rw) * w)))
+            plane = float(np.median(depth[clock]))  # the scene the clock sits in
+            t = np.clip((depth - plane - NEAR_FROM) / (NEAR_TO - NEAR_FROM), 0, 1)
+            alpha = np.maximum(t * t * (3 - 2 * t), subject)  # smoothstep, plus the subject
+            return alpha, float(alpha[clock].mean())
+
+        def score(pos):
+            overlap = candidates[pos][1]
+            if overlap < MIN_OVERLAP:
+                return -1.0  # no depth effect there
+            penalty = 3 * max(0.0, overlap - MAX_OVERLAP)  # the time would be hidden
+            return 1 - abs(overlap - TARGET_OVERLAP) - penalty + (0.05 if pos == AUTO_POSITIONS[0] else 0)
+
+        if args.clock:
+            pos = tuple(float(v) for v in args.clock.split(","))
+            candidates = {pos: candidate(pos)}
+        else:
+            candidates = {p: candidate(p) for p in AUTO_POSITIONS}
+            pos = max(candidates, key=score)
+        alpha, overlap = candidates[pos]
+
+        meta_data = {"x": pos[0], "y": pos[1], "overlap": round(overlap, 4), "manual": bool(args.clock)}
+        if overlap < MIN_OVERLAP:
+            # nothing in front of the clock here; a manual position is still kept
+            none.write_text(f"{overlap:.6f}\n")
+            meta.write_text(json.dumps(meta_data))
+            print("no subject")
+            if not args.clock:
+                notify("Wallpaper depth", f"Nothing in front of the clock in {wall.name}; plain wallpaper")
+            return
+
+        cutout = image.convert("RGBA")
+        cutout.putalpha(Image.fromarray((alpha * 255).astype(np.uint8)))
+        tmp = out.with_suffix(".tmp.png")
+        cutout.save(tmp, compress_level=1)
+        tmp.replace(out)  # never expose a half-written cutout
+        meta.write_text(json.dumps(meta_data))
+    print(out, f"{pos[0]:.3f},{pos[1]:.3f}", f"{overlap:.3f}")
+    if not args.clock:
+        notify("Wallpaper depth ready", wall.name)
+
+
+if __name__ == "__main__":
+    main()
+
+{{- /* vim: set filetype=python: */}}
