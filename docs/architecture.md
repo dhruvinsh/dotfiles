@@ -157,7 +157,13 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
   `~/.cache/wallpapers/state.json` (watched by Quickshell) plus the
   `current.txt`/`thumbs/`/`wall.*`/`hyprpaper.conf` cache used by rofi, hyprlock, and sddm.
   Clock colours come from ImageMagick (`thumbs/<sha256>.colors-*.json`); clock positions
-  dragged in the picker persist in `~/.local/state/wallpaper-manager/clock.json`.
+  dragged in the picker persist in `~/.local/state/wallpaper-manager/clock.json`. Also
+  writes `~/.config/hypr/hyprlock-depth.conf` (sourced by `hyprlock.conf`; seeded by a
+  `create_` file): the whole lock layout. The same clock plus the cutout pre-cropped/dimmed
+  to the screen (`~/.cache/wallpapers/lock-fg.png`) over hyprlock's blurred background;
+  greeting/password/quote as a column on the clock's centre line, now playing on the free
+  edge. Colours are picked per widget against a small copy of the lock backdrop
+  (worst of 5 slices). zindex: time 1, cutout 2, card behind a busy column 3, the rest 4.
 - `home/private_dot_local/private_bin/executable_wallpaper-depth.tmpl` — Arch-only uv script;
   the template adds `onnxruntime-gpu[cuda,cudnn]` (own CUDA/cuDNN wheels) when
   `.chezmoitemplates/nvidia-mode` ≠ `none`, else `onnxruntime`.
