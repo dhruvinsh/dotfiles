@@ -14,3 +14,10 @@ workMonitors:
 # colorScheme.variant, or the live mode on Arch (theme-mode). Colours: Black Blue
 # Brown Cyan Green Grey Magenta Orange Red Teal Violet Yellow.
 flatRemixColor: Blue
+
+# Docker bridge subnets (/etc/docker/daemon.json on Arch/Ubuntu/Fedora).
+# The pool's /20 split into /26s gives 64 compose networks of 62 hosts each.
+docker:
+  bip: "192.168.223.1/24"
+  poolBase: "192.168.224.0/20"
+  poolSize: 26

@@ -3,6 +3,8 @@
 set -euo pipefail
 
 # {{ if not .archlinux }}
+# {{ template "scripts/docker_network.sh" . }}
+
 # docker engine installation
 echo "setup docker"
 
@@ -45,4 +47,6 @@ sudo usermod -aG docker "$USER"
 
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
+
+configure_docker_network
 # {{ end }}

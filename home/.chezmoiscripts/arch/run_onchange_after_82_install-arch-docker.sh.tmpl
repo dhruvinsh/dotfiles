@@ -27,7 +27,8 @@ sudo tee "$docker_daemon" >/dev/null <<'EOF'
 {
   "log-driver": "json-file",
   "log-opts": { "max-size": "10m", "max-file": "5" },
-  "bip": "172.17.0.1/16",
+  "bip": "{{ .docker.bip }}",
+  "default-address-pools": [{ "base": "{{ .docker.poolBase }}", "size": {{ .docker.poolSize }} }],
   "runtimes": {
     "nvidia": {
       "path": "/usr/bin/nvidia-container-runtime",
@@ -68,3 +69,5 @@ DefaultDependencies=no
 EOF
 
 sudo systemctl daemon-reload
+# pick up daemon.json changes (subnets) if docker is already running
+sudo systemctl try-restart docker.service

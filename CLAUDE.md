@@ -23,7 +23,9 @@ Owner: Dhruvin Shah (`dhruvinsh`). Deeper reference in [`docs/`](docs/).
 - `.chezmoitemplates/` → reusable snippets (`includeTemplate`).
 - `.chezmoiexternals/` → external assets (git repos, release binaries, archives).
 - `.chezmoidata.yaml` → static data: `openscadVersion`, `workMonitors.{left,right}` (work-PC
-  monitor descriptions used by hypr + waybar), `flatRemixColor` (Flat Remix icon accent).
+  monitor descriptions used by hypr + waybar), `flatRemixColor` (Flat Remix icon accent),
+  `docker.{bip,poolBase,poolSize}` (bridge subnets written to `/etc/docker/daemon.json`;
+  Arch inlines them, Ubuntu/Fedora jq-merge via `.chezmoitemplates/scripts/docker_network.sh`).
 - `.chezmoiignore.tmpl` → conditional per-OS/per-machine exclusions.
 - `.chezmoiremove` → targets deleted on apply (e.g. the old `.local/bin/wallpaper-manager.sh`).
 

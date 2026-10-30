@@ -3,6 +3,8 @@
 # Exit the script on any error
 set -e
 
+# {{ template "scripts/docker_network.sh" . }}
+
 echo "Starting Docker installation process on Fedora..."
 
 # Step 1: Uninstall old versions (if any)
@@ -46,6 +48,8 @@ sudo dnf install -y nvidia-container-toolkit
 echo "Docker NVIDIA runtime configuration..."
 sudo nvidia-ctk runtime configure --runtime=docker
 # {{ end }}
+
+configure_docker_network
 
 # Step 5: Enable and start Docker service
 echo "Enabling and starting Docker service..."
