@@ -163,6 +163,9 @@ packages=(
     tumbler
     xarchiver
 
+    # Office
+    libreoffice
+
     # Printer and discovery
     avahi
     cups
@@ -233,6 +236,29 @@ sudo usermod -aG input "$(whoami)"
 echo "Make Thunar default file manager"
 xdg-mime default thunar.desktop inode/directory
 xdg-mime default thunar.desktop application/x-wayland-gnome-saved-search
+
+# Open Office documents with the matching LibreOffice component.
+echo "Make LibreOffice the default for Office documents"
+for mime in \
+    application/msword \
+    application/vnd.openxmlformats-officedocument.wordprocessingml.document \
+    application/vnd.oasis.opendocument.text \
+    application/rtf; do
+    xdg-mime default libreoffice-writer.desktop "$mime"
+done
+for mime in \
+    application/vnd.ms-excel \
+    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet \
+    application/vnd.oasis.opendocument.spreadsheet \
+    text/csv; do
+    xdg-mime default libreoffice-calc.desktop "$mime"
+done
+for mime in \
+    application/vnd.ms-powerpoint \
+    application/vnd.openxmlformats-officedocument.presentationml.presentation \
+    application/vnd.oasis.opendocument.presentation; do
+    xdg-mime default libreoffice-impress.desktop "$mime"
+done
 
 # some variable
 echo "local bin directory setup"
