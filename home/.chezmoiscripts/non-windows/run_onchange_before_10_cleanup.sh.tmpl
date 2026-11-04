@@ -64,6 +64,12 @@ if [ -f "$HOME/.cargo/bin/ast-grep" ]; then
     echo "Removing cargo ast-grep..."
     "$HOME/.cargo/bin/cargo" uninstall ast-grep
 fi
+
+# remove diffr installed via cargo (now managed by mise)
+if [ -f "$HOME/.cargo/bin/diffr" ]; then
+    echo "Removing cargo diffr..."
+    "$HOME/.cargo/bin/cargo" uninstall diffr
+fi
 {{- end }}
 
 #
