@@ -18,13 +18,6 @@
 
 {{ if eq .chezmoi.os "linux" }}
 
-[".local/bin/atuin"]
-  type = "archive-file"
-  url  = {{ gitHubLatestReleaseAssetURL "atuinsh/atuin" "atuin-x86_64-unknown-linux-musl.tar.gz" | quote }}
-  executable = true
-  stripComponents = 1
-  path = "atuin"
-
 [".local/bin/delta"]
   type = "archive-file"
   url  = {{ gitHubLatestReleaseAssetURL "dandavison/delta" "delta-*-x86_64-unknown-linux-musl.tar.gz" | quote }}

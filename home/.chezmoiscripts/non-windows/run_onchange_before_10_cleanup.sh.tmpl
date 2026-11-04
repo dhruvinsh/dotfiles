@@ -46,6 +46,12 @@ if [ -f "$HOME/.local/bin/starship" ]; then
     echo "Removing starship binary..."
     rm -f "$HOME/.local/bin/starship"
 fi
+
+# remove atuin external binary (now managed by mise)
+if [ -f "$HOME/.local/bin/atuin" ]; then
+    echo "Removing atuin binary..."
+    rm -f "$HOME/.local/bin/atuin"
+fi
 {{- end }}
 
 #
