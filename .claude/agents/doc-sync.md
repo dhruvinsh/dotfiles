@@ -46,7 +46,7 @@ between them.
 3. For each doc claim touching those areas, confirm it still holds:
    - script names / numeric prefixes / stage (`before_`/`after_`) / `run_once` vs `run_onchange`
    - the file/index tables in `docs/architecture.md`
-   - template-data variables and prompt choices in `CLAUDE.md`
+   - template-data variables and prompt choices in `docs/architecture.md`
    - the "Gotchas" list — add or remove as reality changes
 4. Apply minimal edits to fix drift. Keep the two docs mutually consistent.
 5. When enumerating scripts/templates/dirs, use `find`/`ls` for an exact list rather than
