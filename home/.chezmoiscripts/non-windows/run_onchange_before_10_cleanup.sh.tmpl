@@ -52,6 +52,12 @@ if [ -f "$HOME/.local/bin/atuin" ]; then
     echo "Removing atuin binary..."
     rm -f "$HOME/.local/bin/atuin"
 fi
+
+# remove delta external binary (now managed by mise)
+if [ -f "$HOME/.local/bin/delta" ]; then
+    echo "Removing delta binary..."
+    rm -f "$HOME/.local/bin/delta"
+fi
 {{- end }}
 
 #

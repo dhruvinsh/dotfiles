@@ -18,13 +18,6 @@
 
 {{ if eq .chezmoi.os "linux" }}
 
-[".local/bin/delta"]
-  type = "archive-file"
-  url  = {{ gitHubLatestReleaseAssetURL "dandavison/delta" "delta-*-x86_64-unknown-linux-musl.tar.gz" | quote }}
-  executable = true
-  stripComponents = 1
-  path = "delta"
-
 [".local/bin/eza"]
   type = "archive-file"
   url  = {{ gitHubLatestReleaseAssetURL "eza-community/eza" (printf "eza_x86_64-unknown-%s-musl.tar.gz" .chezmoi.os) | quote }}
