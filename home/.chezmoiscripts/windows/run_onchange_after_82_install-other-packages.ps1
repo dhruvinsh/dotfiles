@@ -23,7 +23,6 @@ $apps = @(
     "extras/television"
     "extras/vcredist2022" # ripgrep needs it
     "extras/wezterm"
-    "main/ast-grep"
     "main/bat"
     "main/chafa"
     "main/cmake"
