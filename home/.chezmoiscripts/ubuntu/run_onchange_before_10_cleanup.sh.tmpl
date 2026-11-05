@@ -85,6 +85,9 @@ if [ -x "$(command -v gh)" ]; then
     sudo apt purge -y gh
 fi
 
+echo "Removing television package (mise migrated)..."
+sudo apt purge -y television
+
 echo "Removing mise migrated package..."
 rm -rf "$HOME/.local/bin/atuin" "$HOME/.local/bin/delta" "$HOME/.local/bin/git-cliff" "$HOME/.local/bin/gitleaks" "$HOME/.local/bin/glow" "$HOME/.local/bin/starship"
 
