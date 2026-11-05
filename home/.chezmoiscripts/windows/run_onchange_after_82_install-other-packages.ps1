@@ -32,7 +32,6 @@ $apps = @(
     "main/gcc"
     "main/git"
     "main/hyperfine"
-    "main/just"
     "main/luarocks"
     "main/make"
     "main/mise"

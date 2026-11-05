@@ -72,12 +72,6 @@
   executable = true
   path = "lazysql"
 
-[".local/bin/just"]
-  type = "archive-file"
-  url = {{ gitHubLatestReleaseAssetURL "casey/just" (printf "just-*-x86_64-unknown-%s-musl.tar.gz" .chezmoi.os) | quote }}
-  executable = true
-  path = "just"
-
 [".local/bin/tldr"]
   type = "file"
   url = {{ gitHubLatestReleaseAssetURL "dbrgn/tealdeer" (printf "tealdeer-%s-x86_64-musl" .chezmoi.os) | quote }}

@@ -14,7 +14,7 @@ fi
 
 echo "Removing packages: mise migrated..."
 # one at a time + guarded: pacman aborts the whole removal if any target is missing
-for pkg in atuin glow gitleaks git-delta starship; do
+for pkg in atuin glow gitleaks git-delta just starship; do
     if pacman -Qq "$pkg" &>/dev/null; then
         sudo pacman -Rns --noconfirm "$pkg"
     fi

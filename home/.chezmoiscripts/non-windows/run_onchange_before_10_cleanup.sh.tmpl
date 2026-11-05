@@ -59,6 +59,12 @@ if [ -f "$HOME/.local/bin/delta" ]; then
     rm -f "$HOME/.local/bin/delta"
 fi
 
+# remove just external binary (now managed by mise)
+if [ -f "$HOME/.local/bin/just" ]; then
+    echo "Removing just binary..."
+    rm -f "$HOME/.local/bin/just"
+fi
+
 # remove ast-grep installed via cargo (now managed by mise)
 if [ -f "$HOME/.cargo/bin/ast-grep" ]; then
     echo "Removing cargo ast-grep..."

@@ -41,7 +41,7 @@ Write-Output "Removing direnv package.."
 scoop uninstall direnv
 
 Write-Output "Removing mise migrated packages..."
-foreach ($package in @("ast-grep", "delta", "glow", "gitleaks", "git-cliff", "starship")) {
+foreach ($package in @("ast-grep", "delta", "glow", "gitleaks", "git-cliff", "just", "starship")) {
   if (scoop list | Select-String -Pattern "^$package\s") {
     scoop uninstall "main/$package"
   } else {
