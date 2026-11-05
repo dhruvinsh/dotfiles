@@ -7,12 +7,29 @@
 
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
 -- {{ if .personalmachine }}
-hl.monitor({
-  output = "DP-1",
-  mode = "2560x1440@143.97",
-  position = "0x0",
-  scale = 1,
-})
+local main = { output = "DP-1", mode = "2560x1440@143.97", position = "0x0", scale = 1 }
+hl.monitor(main)
+-- {{ if eq (includeTemplate "nvidia-mode" .) "display" }}
+
+-- Hyprland 0.57 / aquamarine <= 0.16 on NVIDIA: the first modeset carries an
+-- all-zero HDR_OUTPUT_METADATA blob, nvidia-drm rejects it (EINVAL) and aquamarine
+-- retries it forever, leaving the screen on an upscaled fallback mode. Cycling the
+-- output off/on recovers it. Drop once aquamarine#472 (PR #477) is released.
+hl.on("hyprland.start", function()
+  hl.timer(function()
+    hl.monitor({ output = main.output, disabled = true })
+    hl.timer(function()
+      hl.monitor({
+        output = main.output,
+        disabled = false,
+        mode = main.mode,
+        position = main.position,
+        scale = main.scale,
+      })
+    end, { timeout = 500, type = "oneshot" })
+  end, { timeout = 1000, type = "oneshot" })
+end)
+-- {{ end }}
 -- {{ else }}
 -- Work PC: two identical monitors side by side, matched by serial (desc:, from
 -- .chezmoidata.yaml workMonitors) so swapping cables/ports doesn't flip them.
