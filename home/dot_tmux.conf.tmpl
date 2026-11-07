@@ -1,67 +1,120 @@
-set -ogq @thm_bg {{ .colorScheme.base | quote }}
-set -ogq @thm_fg {{ .colorScheme.text | quote }}
+# ~/.tmux.conf · managed by chezmoi · palette: {{ .colorScheme.name }}/{{ .colorScheme.variant }}
+#
+# Load order matters. Everything up to `run tpm` configures tmux and the
+# plugins (they read their options when TPM loads them). The few lines after
+# it override styles that catppuccin sets unconditionally at load time.
 
-# Colors
-set -ogq @thm_rosewater {{ .colorScheme.rosewater | quote }}
-set -ogq @thm_flamingo {{ .colorScheme.flamingo | quote }}
-set -ogq @thm_pink {{ .colorScheme.pink | quote }}
-set -ogq @thm_mauve {{ .colorScheme.mauve | quote }}
-set -ogq @thm_red {{ .colorScheme.red | quote }}
-set -ogq @thm_maroon {{ .colorScheme.maroon | quote }}
-set -ogq @thm_peach {{ .colorScheme.peach | quote }}
-set -ogq @thm_yellow {{ .colorScheme.yellow | quote }}
-set -ogq @thm_green {{ .colorScheme.green | quote }}
-set -ogq @thm_teal {{ .colorScheme.teal | quote }}
-set -ogq @thm_sky {{ .colorScheme.sky | quote }}
-set -ogq @thm_sapphire {{ .colorScheme.sapphire | quote }}
-set -ogq @thm_blue {{ .colorScheme.blue | quote }}
-set -ogq @thm_lavender {{ .colorScheme.lavender | quote }}
+# ── Palette ─────────────────────────────────────────────────────────────────
+# catppuccin/tmux only fills in @thm_* when unset, so seeding them here points
+# the theme at the active chezmoi .colorScheme instead of its built-in flavor.
+# Plain `set` (not `-o`) so `tmux source` picks up a scheme switch.
 
-# Surfaces and overlays
-set -ogq @thm_subtext_1 {{ .colorScheme.subtext1 | quote }}
-set -ogq @thm_subtext_0 {{ .colorScheme.subtext0 | quote }}
-set -ogq @thm_overlay_2 {{ .colorScheme.overlay2 | quote }}
-set -ogq @thm_overlay_1 {{ .colorScheme.overlay1 | quote }}
-set -ogq @thm_overlay_0 {{ .colorScheme.overlay0 | quote }}
-set -ogq @thm_surface_2 {{ .colorScheme.surface2 | quote }}
-set -ogq @thm_surface_1 {{ .colorScheme.surface1 | quote }}
-set -ogq @thm_surface_0 {{ .colorScheme.surface0 | quote }}
-set -ogq @thm_mantle {{ .colorScheme.mantle | quote }}
-set -ogq @thm_crust {{ .colorScheme.crust | quote }}
-set -ogq @thm_text {{ .colorScheme.text | quote }}
+set -g @thm_bg {{ .colorScheme.base | quote }}
+set -g @thm_fg {{ .colorScheme.text | quote }}
+{{- range list
+      "rosewater" "flamingo" "pink" "mauve" "red" "maroon" "peach" "yellow"
+      "green" "teal" "sky" "sapphire" "blue" "lavender"
+      "subtext1" "subtext0" "overlay2" "overlay1" "overlay0"
+      "surface2" "surface1" "surface0" "mantle" "crust" }}
+set -g @thm_{{ regexReplaceAll "([0-9])$" . "_${1}" }} {{ index $.colorScheme . | quote }}
+{{- end }}
 
-#############
+# ── Terminal ────────────────────────────────────────────────────────────────
+# Panes keep TERM=xterm-256color so ssh to hosts without tmux/ghostty
+# terminfo still works; undercurl comes from the ~/.terminfo copy built by
+# run_onchange_after_87_terminfo-undercurl.sh.
 
 set -s default-terminal "xterm-256color"
+set -as terminal-features ",xterm-ghostty:RGB:usstyle"
 set -s extended-keys on
 set -s extended-keys-format csi-u
+set -g allow-passthrough on # zen-mode.nvim
+set -g set-titles on
+set -g set-titles-string "#{session_name} · #{window_name}"
+
+# ── Behaviour ───────────────────────────────────────────────────────────────
+
 set -g mouse on
-set-option -g set-titles on
-set-option -g set-titles-string "#{session_name} · #{window_name}"
+
+# Number windows and panes from 1 (matches the keyboard), and close gaps
+# when a window is killed.
+set -g base-index 1
+set -wg pane-base-index 1
+set -g renumber-windows on
+
+# Killing a session's last window switches to another session instead of
+# dropping out of tmux.
+set -g detach-on-destroy off
+
+bind r source-file ~/.tmux.conf \; display-message "tmux.conf reloaded"
+bind S setw synchronize-panes \; display-message "synchronize-panes #{?synchronize-panes,on,off}"
 
 # New windows and splits open in the current pane's directory instead of
 # the session's original cwd.
-bind c new-window -c "#{pane_current_path}"
-bind '"' split-window -c "#{pane_current_path}"
-bind % split-window -h -c "#{pane_current_path}"
+bind c   new-window      -c "#{pane_current_path}"
+bind '"' split-window    -c "#{pane_current_path}"
+bind %   split-window -h -c "#{pane_current_path}"
 
-# List of plugins
-set -g @plugin 'tmux-plugins/tpm'
-set -g @plugin 'tmux-plugins/tmux-sensible'
-set -g @plugin 'tmux-plugins/tmux-resurrect'
-set -g @plugin 'tmux-plugins/tmux-continuum'
-set -g @plugin 'tmux-plugins/tmux-yank'
-set -g @plugin '27medkamal/tmux-session-wizard'
-set -g @plugin 'sainnhe/tmux-fzf'
-set -g @plugin 'catppuccin/tmux#v2.3.0'
+# Copy mode behaves like Neovim visual mode; tmux-yank owns `y`.
+set -wg mode-keys vi
+bind -T copy-mode-vi v   send-keys -X begin-selection
+bind -T copy-mode-vi C-v send-keys -X rectangle-toggle
 
-set -as terminal-features ',xterm-ghostty:RGB:usstyle'
+# ── Popups ──────────────────────────────────────────────────────────────────
+# Floating tools over the current pane; closing the tool closes the popup.
+# (`prefix g` is tmux 3.8's floating-pane move table, `y` is tmux-yank.)
 
-set-option -g allow-passthrough on # zen-mode.nvim
+bind G display-popup -E -w 90% -h 90% -d "#{pane_current_path}" lazygit
+bind e display-popup -E -w 90% -h 90% -d "#{pane_current_path}" yazi
 
-# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-run '~/.tmux/plugins/tpm/tpm'
+# Persistent scratch shell; `prefix t` again (from inside it) hides it.
+bind t if-shell -F "#{==:#{session_name},scratch}" {
+  detach-client
+} {
+  display-popup -E -w 80% -h 80% -d "#{pane_current_path}" "tmux new-session -A -s scratch"
+}
 
+# ── Status line ─────────────────────────────────────────────────────────────
+
+set -g status-position top
+
+set -g @catppuccin_window_status_style "rounded"
+set -g @catppuccin_window_flags "icon"
+set -g @catppuccin_window_text " #W"
+set -g @catppuccin_window_current_text " #W"
+
+# Modules are expanded at draw time (#{E:…}), so they can be referenced
+# before the plugin loads. status-right must be set before `run tpm` anyway:
+# tmux-continuum prepends its autosave hook to whatever is there at load.
+set -g status-left-length 100
+set -g status-right-length 100
+set -g status-left "#{E:@catppuccin_status_session} "
+set -g status-right "#{E:@catppuccin_status_application}#{E:@catppuccin_status_directory}#{E:@catppuccin_status_date_time}"
+
+# Since tmux 3.8, window-status-current-style defaults to `underscore` (it was
+# `default` through 3.7), which underlines the active window on top of
+# catppuccin's pill highlight. catppuccin/tmux never sets this option, so reset
+# it to `default` to let the pill (window-status-current-format) do the work.
+set -wg window-status-current-style "default"
+
+# ── Plugins ─────────────────────────────────────────────────────────────────
+
+set -g @plugin "tmux-plugins/tpm"
+set -g @plugin "tmux-plugins/tmux-sensible"
+set -g @plugin "tmux-plugins/tmux-resurrect"
+set -g @plugin "tmux-plugins/tmux-continuum"
+set -g @plugin "tmux-plugins/tmux-yank"
+set -g @plugin "27medkamal/tmux-session-wizard"
+set -g @plugin "sainnhe/tmux-fzf"
+set -g @plugin "catppuccin/tmux#v2.3.0"
+
+# Restore the last resurrect snapshot when the tmux server starts
+# (continuum already autosaves every 15 minutes).
+set -g @continuum-restore "on"
+
+run "~/.tmux/plugins/tpm/tpm"
+
+# ── Post-plugin overrides ───────────────────────────────────────────────────
 # Since tmux 3.7, message-style/message-command-style must include `fill` to
 # clear the whole status line width, otherwise `prefix + :` and other prompts
 # draw over the old status bar content instead of replacing it. catppuccin/tmux
@@ -69,13 +122,8 @@ run '~/.tmux/plugins/tpm/tpm'
 # the plugin loads. `align=centre` is dropped: pre-3.7 it was a no-op for the
 # command line, but with `fill` doing real overlay drawing now it would center
 # the prompt instead of the usual left-aligned ":".
-set -gF message-style "fg=#{@thm_text},bg=#{@thm_crust},fill=#{@thm_crust}"
-set -gF message-command-style "fg=#{@thm_text},bg=#{@thm_crust},fill=#{@thm_crust}"
 
-# Since tmux 3.8, window-status-current-style defaults to `underscore` (it was
-# `default` through 3.7), which underlines the active window on top of
-# catppuccin's pill highlight. catppuccin/tmux never sets this option, so reset
-# it to `default` to let the pill (window-status-current-format) do the work.
-set -wgF window-status-current-style "default"
+set -gF message-style         "fg=#{@thm_fg},bg=#{@thm_crust},fill=#{@thm_crust}"
+set -gF message-command-style "fg=#{@thm_fg},bg=#{@thm_crust},fill=#{@thm_crust}"
 
 {{- /* vim: set filetype=tmux: */}}
