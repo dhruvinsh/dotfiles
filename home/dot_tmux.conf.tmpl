@@ -32,9 +32,9 @@ set -ogq @thm_text {{ .colorScheme.text | quote }}
 
 #############
 
-set -g default-terminal "xterm-256color"
-set -g extended-keys on
-set -g extended-keys-format csi-u
+set -s default-terminal "xterm-256color"
+set -s extended-keys on
+set -s extended-keys-format csi-u
 set -g mouse on
 set-option -g set-titles on
 set-option -g set-titles-string "#{session_name} · #{window_name}"
@@ -55,11 +55,7 @@ set -g @plugin '27medkamal/tmux-session-wizard'
 set -g @plugin 'sainnhe/tmux-fzf'
 set -g @plugin 'catppuccin/tmux#v2.3.0'
 
-set -as terminal-overrides ",$TERM:RGB"
-set -ag terminal-features ",$TERM:usstyle"
-{{- if eq .wsl true }}
-set -sg escape-time 10
-{{- end }}
+set -as terminal-features ',xterm-ghostty:RGB:usstyle'
 
 set-option -g allow-passthrough on # zen-mode.nvim
 

@@ -32,6 +32,7 @@ script's content changes.
 - `run_once_before_decrypt-private-key.sh.tmpl` — bootstrap age key
 - `run_onchange_before_10_cleanup.sh.tmpl` — remove stale tool installs
 - `run_onchange_after_86_install-rust.sh.tmpl` — rustup
+- `run_onchange_after_87_terminfo-undercurl.sh` — compiles `~/.terminfo` xterm-256color + `Smulx`/`Setulc` (undercurl in Neovim under tmux)
 - `run_onchange_after_88_install-fonts.sh.tmpl` — Nerd Fonts
 - `run_onchange_after_89_install-zsh.sh.tmpl` — zsh
 - `run_onchange_after_90_install-mise.sh.tmpl` — mise + all managed tools
