@@ -2,6 +2,16 @@
   tree = log --graph --oneline --all
   tree2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
   ct = describe --tags --abbrev=0
+  ; difftastic (structural diff): https://difftastic.wilfred.me.uk/git.html
+  dft = -c diff.external=difft diff
+  dl = -c diff.external=difft log -p --ext-diff
+  ds = -c diff.external=difft show --ext-diff
+
+[branch]
+  sort = -committerdate
+
+[commit]
+  verbose = true
 
 [core]
   editor = nvim
@@ -11,6 +21,13 @@
 [diff]
   algorithm = histogram
   colorMoved = default
+  colorMovedWS = allow-indentation-change
+
+[fetch]
+  prune = true
+
+[help]
+  autocorrect = prompt
 
 [init]
   defaultBranch = main
@@ -19,7 +36,21 @@
   diffFilter = delta --color-only
 
 [merge]
-  conflictstyle = diff3
+  conflictstyle = zdiff3
+
+[push]
+  autoSetupRemote = true
+
+[rebase]
+  autoSquash = true
+  autoStash = true
+  updateRefs = true
+
+[rerere]
+  enabled = true
+
+[tag]
+  sort = version:refname
 
 [user]
   name = Dhruvin Shah
@@ -28,8 +59,11 @@
 [url "git@github.com:dhruvinsh"]
   insteadOf = https://github.com/dhruvinsh
 
-; for work when I work with personal repo
+; for work when I work with personal repo. hasconfig matches the URL as stored
+; in .git/config (before insteadOf rewrites), so cover both forms.
 [includeIf "hasconfig:remote.*.url:git@github.com*/**"]
+  path = public-config
+[includeIf "hasconfig:remote.*.url:https://github.com/dhruvinsh/**"]
   path = public-config
 
 ; Personal repos - alternative locations
