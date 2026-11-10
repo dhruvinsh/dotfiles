@@ -31,6 +31,7 @@ script's content changes.
 ### Cross-OS — `non-windows/`
 - `run_once_before_decrypt-private-key.sh.tmpl` — bootstrap age key
 - `run_onchange_before_10_cleanup.sh.tmpl` — remove stale tool installs
+- `run_onchange_after_85_earlyoom.sh.tmpl` — earlyoom on Arch/Ubuntu/Fedora (not WSL/macOS), args via a systemd drop-in, so runaway processes are killed before swap thrash
 - `run_onchange_after_86_install-rust.sh.tmpl` — rustup
 - `run_onchange_after_87_terminfo-undercurl.sh` — compiles `~/.terminfo` xterm-256color + `Smulx`/`Setulc` (undercurl in Neovim under tmux)
 - `run_onchange_after_88_install-fonts.sh.tmpl` — Nerd Fonts

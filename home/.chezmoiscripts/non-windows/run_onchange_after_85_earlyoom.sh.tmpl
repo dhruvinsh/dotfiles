@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+#
+# earlyoom: kill the biggest runaway process *before* the machine thrashes swap
+# and stops responding. The kernel OOM killer only steps in once memory is
+# completely exhausted, which can take many minutes of a frozen desktop.
+#
+# earlyoom over systemd-oomd: same package and unit on Arch/Ubuntu/Fedora, and
+# it kills one process by oom_score instead of a whole cgroup (oomd would take
+# out an entire tmux server scope). Where a distro already enables oomd
+# (Fedora, Ubuntu desktop) it is left alone; the two coexist.
+#
+# Linux only, and not on WSL (Windows owns the VM's memory; systemd may be absent).
+set -euo pipefail
+
+# {{- if and (eq .chezmoi.os "linux") (ne .wsl true) }}
+
+# {{ template "scripts/service_helpers.sh" . }}
+
+# Thresholds are upstream defaults: act when available RAM AND free swap are
+# both under 10%. -r 3600 logs the memory report hourly instead of constantly.
+# --avoid matches the process name (prefix-anchored, no `$`, no spaces: the
+# value is word-split by systemd) and only de-prioritises, never exempts.
+EARLYOOM_ARGS="-r 3600 --avoid ^(init|systemd|sshd|sddm|gdm|Xorg|Xwayland|Hyprland|gnome-shell|kwin_wayland|pipewire|wireplumber|tmux)"
+
+# {{- if eq .archlinux true }}
+sudo pacman -S --noconfirm --needed earlyoom
+# {{- else if eq .ubuntu true }}
+sudo apt-get install -y earlyoom
+# {{- else if eq .fedora true }}
+sudo dnf install --assumeyes earlyoom
+# {{- else }}
+echo "earlyoom: unsupported distro, skipping"
+exit 0
+# {{- end }}
+
+# Configure via a drop-in instead of /etc/default/earlyoom, which is a package
+# conffile on Debian/Ubuntu (editing it makes upgrades prompt). Clearing
+# EnvironmentFile= matters: its values would otherwise override Environment=.
+dropin=/etc/systemd/system/earlyoom.service.d/10-chezmoi.conf
+wanted="[Service]
+EnvironmentFile=
+Environment=\"EARLYOOM_ARGS=${EARLYOOM_ARGS}\""
+
+current=""
+[ -f "$dropin" ] && current=$(cat "$dropin")
+if [ "$current" != "$wanted" ]; then
+    echo "earlyoom: writing $dropin"
+    sudo mkdir -p "${dropin%/*}"
+    printf '%s\n' "$wanted" | sudo tee "$dropin" >/dev/null
+    sudo systemctl daemon-reload
+    if sudo systemctl is-active --quiet earlyoom.service; then
+        sudo systemctl restart earlyoom.service
+    fi
+fi
+
+enable_system_services earlyoom.service
+
+# {{- end }}
