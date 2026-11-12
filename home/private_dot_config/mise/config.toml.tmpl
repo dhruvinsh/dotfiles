@@ -53,7 +53,7 @@ television                                            = "latest"
 yazi                                                  = "latest"
 
 # LSP, Lint tools for neovim
-"cargo:https://github.com/feel-ix-343/markdown-oxide" = "latest"
+"github:Feel-ix-343/markdown-oxide"                    = "latest"
 "cargo:selene"                                        = "latest"
 "go:github.com/owenrumney/make-ls/cmd/make-ls"        = "latest"
 "go:golang.org/x/tools/cmd/goimports"                 = "latest"
@@ -93,13 +93,13 @@ python                                                = {{ regexReplaceAll "\\.[
 uv                                                    = "latest"
 
 [settings]
-auto_update = true
+self_update.auto = true
 cargo.binstall = true
 cargo.binstall_native = true
 experimental = true
 idiomatic_version_file_enable_tools = ["node", "python"]
 minimum_release_age = "3d"
-pipx.uvx = true
+pypi.uvx = true
 python.uv_venv_auto = false
 
 {{- /* vim: set ft=toml: */}}
