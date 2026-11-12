@@ -71,7 +71,7 @@ script's content changes.
 ## Templates (`home/.chezmoitemplates/`)
 
 - `colors/*.jsonc.tmpl` — palette definitions per scheme; parsed in `.chezmoi.toml.tmpl`
-  into `.colorScheme.*` and re-injected into app configs (kitty, wezterm, lazygit, rofi,
+  into `.colorScheme.*` and re-injected into app configs (ghostty, lazygit, rofi,
   waybar, hypr, …).
 - `gtk-colors.css` — shared GTK `@define-color` palette from `.colorScheme`, included by
   the waybar, swaync, swayosd, and wlogout `style.css.tmpl` files.
@@ -114,7 +114,7 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
 
 - **Shell/mux:** zsh (primary; lives outside `.config` — loader `dot_zshrc` +
   `private_dot_zsh/{exact_rc.d,exact_functions}`), bash, fish (`config.fish.tmpl` + `functions/`), tmux
-- **Terminals:** kitty, wezterm, ghostty (alacritty removed)
+- **Terminals:** ghostty (kitty, wezterm, alacritty removed); Windows Terminal on Windows (no ghostty build)
 - **Wayland/WM:** hypr (Hyprland, Lua; `hyprland.lua.tmpl`, plus hyprlock, hypridle, hyprpaper),
   uwsm, quickshell (Arch: depth-effect wallpaper — wallpaper → clock → foreground cutout, clock
   coloured from the wallpaper — and the SUPER+W picker via `qs ipc call picker toggle <monitor>`,

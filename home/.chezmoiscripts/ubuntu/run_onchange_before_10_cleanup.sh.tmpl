@@ -91,5 +91,16 @@ sudo apt purge -y television
 echo "Removing mise migrated package..."
 rm -rf "$HOME/.local/bin/atuin" "$HOME/.local/bin/delta" "$HOME/.local/bin/git-cliff" "$HOME/.local/bin/gitleaks" "$HOME/.local/bin/glow" "$HOME/.local/bin/starship"
 
+echo "Removing wezterm and kitty (ghostty only)..."
+if dpkg -s wezterm &> /dev/null; then
+    sudo apt purge -y wezterm
+fi
+rm -rf "$HOME/.local/kitty.app"
+rm -f "$HOME/.local/bin/kitty" "$HOME/.local/bin/kitten"
+rm -f "$HOME"/.local/share/applications/kitty*.desktop
+if grep -qx 'kitty.desktop' "$HOME/.config/xdg-terminals.list" 2> /dev/null; then
+    echo 'com.mitchellh.ghostty.desktop' > "$HOME/.config/xdg-terminals.list"
+fi
+
 echo "Clean up finished"
 # {{ end }}

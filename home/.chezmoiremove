@@ -1,2 +1,5 @@
 # renamed to wallpaper-manager (Python) -- drop the old bash script on deployed machines
 .local/bin/wallpaper-manager.sh
+# ghostty only -- drop kitty/wezterm configs on deployed machines
+.config/kitty
+.config/wezterm

@@ -21,7 +21,6 @@ $apps = @(
     "extras/putty"
     "extras/selene"
     "extras/vcredist2022" # ripgrep needs it
-    "extras/wezterm"
     "main/bat"
     "main/chafa"
     "main/cmake"

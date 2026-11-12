@@ -28,13 +28,6 @@ if [ -z "$CLIP_CMD" ]; then
   echo "No clipboard tool found (xsel, wl-copy, pbcopy required for copy support)." >&2
 fi
 
-# Set SSH command based on terminal type
-if [ "$TERM" = "xterm-kitty" ]; then
-  SSH_CMD="kitty +kitten ssh"
-else
-  SSH_CMD="ssh"
-fi
-
 _ping_host() {
   local host="$1"
   echo "Pinging: $host"
@@ -72,4 +65,4 @@ if [ -z "$selected" ]; then
   exit 1
 fi
 
-$SSH_CMD "$selected"
+ssh "$selected"

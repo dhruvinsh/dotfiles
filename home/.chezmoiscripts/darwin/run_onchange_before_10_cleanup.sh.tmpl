@@ -34,4 +34,7 @@ brew uninstall --force just 2> /dev/null || true
 echo "Removing television package (mise migrated)..."
 brew uninstall --force television 2> /dev/null || true
 
+echo "Removing kitty and wezterm (ghostty only)..."
+brew uninstall --cask --force kitty wezterm 2> /dev/null || true
+
 exit 0

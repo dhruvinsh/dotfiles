@@ -20,4 +20,11 @@ for pkg in atuin glow gitleaks git-delta just starship television; do
     fi
 done
 
+echo "Removing terminals: ghostty only..."
+for pkg in kitty wezterm; do
+    if pacman -Qq "$pkg" &>/dev/null; then
+        sudo pacman -Rns --noconfirm "$pkg"
+    fi
+done
+
 # {{- end }}

@@ -7,10 +7,6 @@ set -euo pipefail
 # install on all Ubuntu based PC
 # {{- if (and (.isDesktop) (.ubuntu)) }}
 
-WEZTERM={{ gitHubLatestReleaseAssetURL "wez/wezterm" "wezterm-*.Ubuntu22.04.deb" | quote  }}
-install_deb "$WEZTERM" "wezterm"
-
-
 ########################################################################################################################
 packages+=(
     fonts-symbola
@@ -49,17 +45,6 @@ packages+=(
 sudo apt install -y "${packages[@]}"
 
 ########################################################################################################################
-echo "setup kitty terminal"
-if [ ! "$(command -v kitty)" ]; then
-    curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin launch=n
-    ln -sf ~/.local/kitty.app/bin/kitty ~/.local/kitty.app/bin/kitten ~/.local/bin/
-    cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/
-    cp ~/.local/kitty.app/share/applications/kitty-open.desktop ~/.local/share/applications/
-    sed -i "s|Icon=kitty|Icon=$(readlink -f ~)/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
-    sed -i "s|Exec=kitty|Exec=$(readlink -f ~)/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
-    echo 'kitty.desktop' > ~/.config/xdg-terminals.list
-fi
-
 echo "setup ghostty terminal"
 if [ ! "$(command -v ghostty)" ]; then
     curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh | bash

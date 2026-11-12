@@ -332,14 +332,14 @@ assign [class="(?i)^playwrightchrome$"] $ws6
 exec --no-startup-id "i3-msg 'workspace number 8'; sleep 0.5; teams-for-linux"
 exec --no-startup-id "sleep 2; i3-msg 'workspace number 8'; sleep 0.5; gtk-launch chrome-faolnafnngnfdaknnbpnkhgohbobgegn-Default"
 
-# Start kitty terminals on workspace 9 (primary monitor)
-exec --no-startup-id "sleep 3; i3-msg 'workspace number 9'; sleep 0.5; kitty -e autossh -M 0 -D 4001 jumpserver-labnet"
-exec --no-startup-id "sleep 4; i3-msg 'workspace number 9'; sleep 0.5; kitty -e autossh -M 0 -D 4002 exe-collector"
+# Start ghostty terminals on workspace 9 (primary monitor)
+exec --no-startup-id "sleep 3; i3-msg 'workspace number 9'; sleep 0.5; ghostty -e autossh -M 0 -D 4001 jumpserver-labnet"
+exec --no-startup-id "sleep 4; i3-msg 'workspace number 9'; sleep 0.5; ghostty -e autossh -M 0 -D 4002 exe-collector"
 
-# Scratchpad terminal (dropdown terminal)
-exec --no-startup-id "sleep 7; i3-msg 'workspace number 1'; sleep 0.5; kitty --class dropdown-term"
-for_window [class="dropdown-term"] floating enable, move scratchpad, resize set 1600 900
-bindsym $mod+grave [class="dropdown-term"] scratchpad show, move position center
+# Scratchpad terminal (dropdown terminal); ghostty needs a valid GTK app ID for --class
+exec --no-startup-id "sleep 7; i3-msg 'workspace number 1'; sleep 0.5; ghostty --class=dev.ds.dropdown"
+for_window [class="dev.ds.dropdown"] floating enable, move scratchpad, resize set 1600 900
+bindsym $mod+grave [class="dev.ds.dropdown"] scratchpad show, move position center
 
 
 # Idle (matches Hyprland's hypridle): the X screensaver fires after 5 min and

@@ -40,6 +40,15 @@ rm ~/.gitconfig
 Write-Output "Removing direnv package.."
 scoop uninstall direnv
 
+Write-Output "Removing wezterm (ghostty only).."
+if (scoop list | Select-String -Pattern '^wezterm\s') {
+  scoop uninstall extras/wezterm
+} else {
+  Write-Output "--> wezterm is not installed."
+}
+# cached WSL IP used only by the wezterm ssh domain
+Remove-Item -Force -ErrorAction SilentlyContinue "$HOME/.wsl_ip"
+
 Write-Output "Removing mise migrated packages..."
 foreach ($package in @("ast-grep", "delta", "glow", "gitleaks", "git-cliff", "just", "starship", "television")) {
   if (scoop list | Select-String -Pattern "^$package\s") {

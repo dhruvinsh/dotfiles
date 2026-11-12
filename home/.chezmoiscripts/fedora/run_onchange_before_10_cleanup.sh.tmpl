@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=4 tw=4:
+set -euo pipefail
+
+# residual packages from earlier setups that are no longer wanted
+
+# {{- if .fedora }}
+
+echo "Removing kitty (ghostty only)..."
+if rpm -q kitty &> /dev/null; then
+    sudo dnf remove --assumeyes kitty
+fi
+
+# {{- end }}
