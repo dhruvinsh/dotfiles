@@ -3,3 +3,6 @@
 # ghostty only -- drop kitty/wezterm configs on deployed machines
 .config/kitty
 .config/wezterm
+# semver-tool external and its zsh completion were dropped
+.local/bin/semver
+.zsh/completions/_semver

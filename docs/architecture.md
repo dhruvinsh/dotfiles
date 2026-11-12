@@ -95,7 +95,7 @@ script's content changes.
 
 - `neovim.toml.tmpl` — nvim config as `git-repo` from `dhruvinsh/nvim` (+ `vnvim`
   archive variant, + neovide AppImage on non-Arch Linux desktop).
-- `cli.toml.tmpl` — release binaries (atuin, delta, eza, semver, …) into `.local/bin`
+- `cli.toml.tmpl` — release binaries (atuin, delta, eza, …) into `.local/bin`
   on non-Arch, non-Windows. Uses `gitHubLatestReleaseAssetURL`.
 - `terminal.toml.tmpl`, `zsh.toml.tmpl` — terminal + zsh plugin externals.
 
