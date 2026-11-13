@@ -28,7 +28,11 @@ set -s default-terminal "xterm-256color"
 set -as terminal-features ",xterm-ghostty:RGB:usstyle"
 set -s extended-keys on
 set -s extended-keys-format csi-u
-set -g allow-passthrough on # zen-mode.nvim
+set -g allow-passthrough on # zen-mode.nvim, yazi image previews
+# yazi picks its image protocol from TERM/TERM_PROGRAM of the attaching client.
+# Fixed indexes (not -ga) so reloading the config doesn't append duplicates.
+set -g update-environment[90] TERM
+set -g update-environment[91] TERM_PROGRAM
 set -g set-titles on
 set -g set-titles-string "#{session_name} · #{window_name}"
 

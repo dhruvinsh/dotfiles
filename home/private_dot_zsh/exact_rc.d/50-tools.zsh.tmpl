@@ -44,4 +44,15 @@ export STARSHIP_CONFIG=~/.config/starship/starship.toml
 # Atuin history search
 (( $+commands[atuin] )) && eval "$(atuin init zsh)"
 
+# yazi: `y` changes into the directory yazi was in when it quit
+# (https://yazi-rs.github.io/docs/quick-start#shell-wrapper)
+function y() {
+  local tmp cwd
+  tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+  command yazi "$@" --cwd-file="$tmp"
+  IFS= read -r -d '' cwd < "$tmp"
+  [ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd" || builtin true
+  command rm -f -- "$tmp"
+}
+
 {{- /* vim: set filetype=zsh ts=2 sw=2: */}}

@@ -110,6 +110,16 @@ if status is-interactive
     if type -q zoxide
         zoxide init fish | source
     end
+
+    # yazi: `y` changes into the directory yazi was in when it quit
+    function y
+        set tmp (mktemp -t "yazi-cwd.XXXXXX")
+        command yazi $argv --cwd-file="$tmp"
+        if read -z cwd <"$tmp"; and [ "$cwd" != "$PWD" ]; and test -d "$cwd"
+            builtin cd -- "$cwd"
+        end
+        command rm -f -- "$tmp"
+    end
     if type -q starship
         set -gx STARSHIP_CONFIG ~/.config/starship/starship.toml
         starship init fish | source

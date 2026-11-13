@@ -49,3 +49,15 @@ if (Get-Command eza -errorAction SilentlyContinue)
   function ll { ls -l --git @args }
   function lt { ls --tree --level=2 @args }
 }
+
+# yazi: `y` changes into the directory yazi was in when it quit
+# https://yazi-rs.github.io/docs/quick-start#shell-wrapper
+function y {
+  $tmp = (New-TemporaryFile).FullName
+  yazi.exe @args --cwd-file="$tmp"
+  $cwd = Get-Content -Path $tmp -Encoding UTF8
+  if ($cwd -and $cwd -ne $PWD.Path -and (Test-Path -LiteralPath $cwd -PathType Container)) {
+    Set-Location -LiteralPath (Resolve-Path -LiteralPath $cwd).Path
+  }
+  Remove-Item -Path $tmp
+}
