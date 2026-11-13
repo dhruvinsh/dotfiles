@@ -1,0 +1,48 @@
+#!/bin/bash
+# vim: set expandtab ts=4 sw=4 ft=sh:
+#
+# Generated zsh completions in ~/.zsh/completions (fpath, see ~/.zshrc). Runs
+# after 90_install-mise because most of these tools come from mise. Tools
+# installed by pacman/brew ship their own (site-functions) and aren't listed.
+# The completion dump is dropped at the end so new shells pick them up.
+
+dir="$HOME"/.zsh/completions
+mkdir -p "$dir"
+
+# `t` attaches to a tmux session: complete existing session names.
+echo "Setting up zsh completion for t..."
+cat >"$dir"/_t <<'COMP'
+#compdef t
+local -a sessions=(${(f)"$(tmux list-sessions -F '#{session_name}' 2>/dev/null)"})
+compadd -a sessions
+COMP
+
+mise="$HOME"/.local/bin/mise
+
+# gen <file> <tool> <args...>: write the tool's zsh completion, found on PATH or
+# via mise (most of these are mise-managed). Optional: a tool that's missing or
+# can't generate leaves no file behind and never fails the apply.
+gen() {
+    local file=$1 tool=$2 bin
+    shift 2
+    bin=$(command -v "$tool" || "$mise" which "$tool" 2>/dev/null || true)
+    rm -f "$dir/$file"
+    if [ -n "$bin" ] && "$bin" "$@" >"$dir/$file.tmp" 2>/dev/null && [ -s "$dir/$file.tmp" ]; then
+        echo "Setting up zsh completion for $tool..."
+        mv "$dir/$file.tmp" "$dir/$file"
+    else
+        rm -f "$dir/$file.tmp"
+    fi
+}
+
+gen _mise mise completion zsh
+gen _atuin atuin gen-completions --shell zsh
+gen _starship starship completions zsh
+gen _just just --completions zsh
+gen _gh gh completion -s zsh
+# acli dropped its `completion` command in 1.3.x; picked up again if it returns.
+gen _acli acli completion zsh
+
+# rc.d/30-completion trusts its dump for 24h; drop it so new shells rescan.
+rm -f "${ZDOTDIR:-$HOME}"/.zcompdump "${ZDOTDIR:-$HOME}"/.zcompdump.zwc
+exit 0
