@@ -39,6 +39,10 @@ set -gx FZF_DEFAULT_OPTS '
   --color=selected-bg:{{ .colorScheme.surface1 }}
   --color=spinner:{{ .colorScheme.rosewater }}
 '
+# CTRL-T / ALT-C via fd like bare `fzf`; CTRL-R belongs to atuin.
+set -gx FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
+set -gx FZF_ALT_C_COMMAND 'fd --type d --strip-cwd-prefix --hidden --follow --exclude .git'
+set -gx FZF_CTRL_R_COMMAND ''
 {{- if .wsl }}
 
 # ── WSL ─────────────────────────────────────────────────────────────────────

@@ -27,6 +27,11 @@ export FZF_DEFAULT_OPTS=" \
   --color=selected-bg:{{ .colorScheme.surface1 | quote }} \
   --color=spinner:{{ .colorScheme.rosewater | quote }} \
 "
+# CTRL-T / ALT-C default to fzf's built-in walker (ignores .gitignore); use fd
+# like bare `fzf`. CTRL-R belongs to atuin: an empty command stops fzf binding it.
+export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
+export FZF_ALT_C_COMMAND='fd --type d --strip-cwd-prefix --hidden --follow --exclude .git'
+export FZF_CTRL_R_COMMAND=
 (( $+commands[fzf] )) && eval "$(fzf --zsh)"
 
 # zoxide: jump between folders efficiently
