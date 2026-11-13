@@ -1,5 +1,5 @@
 $Env:Path = "$Env:USERPROFILE\.local\bin;$env:Path"
-$Env:NVIM_COLORSCHEME = "catppuccin"
+$Env:NVIM_COLORSCHEME = {{ .colorScheme.name | quote }}
 
 # zoxide
 if (Get-Command zoxide -errorAction SilentlyContinue)
