@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# vim: set expandtab ft=bash ts=2 sw=2:
+#
+# TPM installs a pinned plugin (`owner/repo#tag`) once and never moves it to a
+# new pin, so bumping the tag in ~/.tmux.conf alone changes nothing. Re-clone
+# pinned plugins whose checkout doesn't match. Plugins not installed yet are
+# left to TPM (`prefix I`). Re-runs when a pin changes:
+{{- range regexFindAll "(?m)^set -g @plugin \"[^\"#]+#[^\"]+\"" (include "dot_tmux.conf.tmpl") -1 }}
+#   {{ . }}
+{{- end }}
+
+set -uo pipefail
+
+plugins="$HOME/.tmux/plugins"
+changed=0
+
+while read -r spec; do
+  repo=${spec%%#*}
+  tag=${spec#*#}
+  dir="$plugins/${repo##*/}"
+  [[ -d $dir/.git ]] || continue
+  # --points-at, not describe: upstream also has moving tags (e.g. `latest`)
+  git -C "$dir" tag --points-at HEAD 2>/dev/null | grep -qxF "$tag" && continue
+  have=$(git -C "$dir" describe --tags --always 2>/dev/null || echo "?")
+
+  echo "tmux: $repo $have -> $tag"
+  tmp=$(mktemp -d)
+  if git -c advice.detachedHead=false clone --quiet --depth 1 --single-branch --branch "$tag" \
+    "https://github.com/$repo" "$tmp/plugin"; then
+    rm -rf "$dir" && mv "$tmp/plugin" "$dir" && changed=1
+  else
+    echo "tmux: could not fetch $repo@$tag; keeping $have" >&2
+  fi
+  rm -rf "$tmp"
+done < <(sed -n 's/^set -g @plugin "\([^"#]*#[^"]*\)".*/\1/p' "$HOME/.tmux.conf")
+
+if ((changed)) && command -v tmux >/dev/null 2>&1 && tmux info >/dev/null 2>&1; then
+  tmux source-file "$HOME/.tmux.conf" >/dev/null 2>&1 || true
+fi
+exit 0

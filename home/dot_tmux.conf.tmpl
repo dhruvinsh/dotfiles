@@ -1,8 +1,7 @@
 # ~/.tmux.conf · managed by chezmoi · palette: {{ .colorScheme.name }}/{{ .colorScheme.variant }}
 #
-# Load order matters. Everything up to `run tpm` configures tmux and the
-# plugins (they read their options when TPM loads them). The few lines after
-# it override styles that catppuccin sets unconditionally at load time.
+# Load order matters: everything up to `run tpm` configures tmux and the
+# plugins (they read their options when TPM loads them).
 
 # ── Palette ─────────────────────────────────────────────────────────────────
 # catppuccin/tmux only fills in @thm_* when unset, so seeding them here points
@@ -41,9 +40,9 @@ set -g set-titles-string "#{session_name} · #{window_name}"
 # ── Behaviour ───────────────────────────────────────────────────────────────
 
 set -g mouse on
+
 # tmux 3.8: scrollbar overlays the pane while scrolling / in copy mode, then hides.
 set -wg pane-scrollbars auto-hide
-
 
 # Number windows and panes from 1 (matches the keyboard), and close gaps
 # when a window is killed.
@@ -115,24 +114,14 @@ set -g @plugin "tmux-plugins/tmux-continuum"
 set -g @plugin "tmux-plugins/tmux-yank"
 set -g @plugin "27medkamal/tmux-session-wizard"
 set -g @plugin "sainnhe/tmux-fzf"
-set -g @plugin "catppuccin/tmux#v2.3.0"
+# Pinned; run_onchange_after_94_tmux-plugin-pins checks out a new pin (TPM
+# never re-checks-out an installed plugin).
+set -g @plugin "catppuccin/tmux#v2.3.2"
 
 # Restore the last resurrect snapshot when the tmux server starts
 # (continuum already autosaves every 15 minutes).
 set -g @continuum-restore "on"
 
 run "~/.tmux/plugins/tpm/tpm"
-
-# ── Post-plugin overrides ───────────────────────────────────────────────────
-# Since tmux 3.7, message-style/message-command-style must include `fill` to
-# clear the whole status line width, otherwise `prefix + :` and other prompts
-# draw over the old status bar content instead of replacing it. catppuccin/tmux
-# v2.3.0 doesn't set `fill` yet (catppuccin/tmux#600), so override here after
-# the plugin loads. `align=centre` is dropped: pre-3.7 it was a no-op for the
-# command line, but with `fill` doing real overlay drawing now it would center
-# the prompt instead of the usual left-aligned ":".
-
-set -gF message-style         "fg=#{@thm_fg},bg=#{@thm_crust},fill=#{@thm_crust}"
-set -gF message-command-style "fg=#{@thm_fg},bg=#{@thm_crust},fill=#{@thm_crust}"
 
 {{- /* vim: set filetype=tmux: */}}
