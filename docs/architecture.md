@@ -35,9 +35,11 @@ script's content changes.
 - `run_onchange_after_86_install-rust.sh.tmpl` — rustup
 - `run_onchange_after_87_terminfo-undercurl.sh` — compiles `~/.terminfo` xterm-256color + `Smulx`/`Setulc` (undercurl in Neovim under tmux)
 - `run_onchange_after_88_install-fonts.sh.tmpl` — Nerd Fonts
-- `run_onchange_after_89_install-zsh.sh.tmpl` — zsh
 - `run_onchange_after_90_install-mise.sh.tmpl` — mise + all managed tools
 - `run_onchange_after_91_install-ai.sh.tmpl` — AI CLIs
+- `run_onchange_after_91_zsh-completions.sh.tmpl` — generated zsh completions in `~/.zsh/completions` for mise-managed tools (`_mise _atuin _starship _just _gh`, `_t`; `_acli` only if acli still has `completion zsh`, dropped in 1.3.x), then drops `~/.zcompdump`
+- `run_onchange_after_94_tmux-plugin-pins.sh.tmpl` — re-clones TPM plugins pinned as `owner/repo#tag` in `~/.tmux.conf` when the checkout doesn't match (TPM never moves an installed plugin to a new pin)
+- `run_onchange_after_95_gh-config.sh` — `gh config set git_protocol ssh` + `telemetry disabled` (gh owns its `config.yml`)
 
 ### `arch/`
 - `before_10-cleanup`, `before_11_install-arch-packages`, `before_12_install-arch-extra`,
@@ -124,8 +126,11 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
   notifications/OSD: swaync, swayosd; rofi, dunst,
   picom, wlogout, networkmanager-dmenu
 - **Prompt/history/nav:** starship, atuin, zoxide
-- **Git:** git (`config.tmpl`, `delta.tmpl`, `ignore`), lazygit
-- **Files/CLI:** bat, fd, btop, tealdeer
+- **Git:** git (`config.tmpl`: modern defaults — zdiff3, autoSetupRemote, rebase
+  autoStash/updateRefs/autoSquash, rerere, difftastic aliases `dft`/`dl`/`ds`; `delta.tmpl`;
+  `ignore`), lazygit, gh (script 95)
+- **Files/CLI:** bat, fd, btop, eza (aliases only, in `60-aliases`/bash/fish/PowerShell; no
+  config dir), tealdeer, yazi (`y` cd-on-quit wrapper only; no config dir)
 - **Dev:** mise, direnv, io.datasette.llm, vectorcode
 - **System:** pacman, yay (Lua `init.lua` + `policy.lua` + `hooks/`; state in
   `~/.local/state/yay`), gtk-2.0/3.0 (3.0 omits `gtk-application-prefer-dark-theme` on Arch so
@@ -143,8 +148,10 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
   otherwise run its own compinit and clobber `~/.zcompdump`) + sources rustup's `~/.cargo/env`
 - `home/dot_zshrc` — thin non-templated loader: autoloads `~/.zsh/functions/*`, sources
   `~/.zsh/rc.d/*.zsh` in numeric order
-- `home/private_dot_zsh/exact_rc.d/` — zsh config snippets `10-env` … `60-aliases`; tool init
-  (mise, fzf, zoxide, starship, atuin) in `50-tools.zsh.tmpl`; jira secret decrypt in
+- `home/private_dot_zsh/exact_rc.d/` — zsh config snippets `10-env` … `90-syntax-highlighting`
+  (sourced last, after everything that creates ZLE widgets); key bindings in `20-options`,
+  completion zstyles in `30-completion`; tool init (mise, fzf, zoxide, starship, atuin) and
+  the yazi `y` wrapper in `50-tools.zsh.tmpl`; jira secret decrypt in
   `private_70-secrets.zsh.tmpl` (0600)
 - `home/private_dot_zsh/exact_functions/` — autoloaded zsh functions (`csv`, `llm`, `f`, `t`,
   `cuda_switch.tmpl` — renders empty, so absent, on non-NVIDIA); fish mirrors these in
