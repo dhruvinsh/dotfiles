@@ -1,14 +1,14 @@
 adjust-cell-height         = 20%
 background-blur            = true
 background-opacity         = 0.85
-cursor-invert-fg-bg        = true
+cursor-color               = cell-foreground
+cursor-text                = cell-background
 font-family                = {{ .font.regular | quote }}
 font-family-italic         = {{ .font.italic | quote }}
 font-family-bold-italic    = {{ .font.italic | quote }}
 font-size                  = 13
 font-style                 = SemiBold
 mouse-hide-while-typing    = true
-scrollback-limit           = 1000000
 shell-integration          = zsh
 shell-integration-features = ssh-env,ssh-terminfo
 theme                      = "custom-ghostty.conf"

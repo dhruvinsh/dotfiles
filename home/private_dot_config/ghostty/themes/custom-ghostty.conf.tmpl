@@ -16,7 +16,5 @@ palette = 14={{ .colorScheme.teal | trimPrefix "#" }}
 palette = 15={{ .colorScheme.subtext1 | trimPrefix "#" }}
 background = {{ .colorScheme.base | trimPrefix "#" }}
 foreground = {{ .colorScheme.text | trimPrefix "#" }}
-cursor-color = {{ .colorScheme.rosewater | trimPrefix "#" }}
-cursor-text = {{ .colorScheme.base | trimPrefix "#" }}
 selection-background = {{ includeTemplate "mixture" (list .colorScheme.base .colorScheme.overlay2 0.2) | trimPrefix "#" }}
 selection-foreground = {{ .colorScheme.text | trimPrefix "#" }}

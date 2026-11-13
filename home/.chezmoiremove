@@ -6,3 +6,5 @@
 # semver-tool external and its zsh completion were dropped
 .local/bin/semver
 .zsh/completions/_semver
+# direnv dropped (cleanup scripts uninstall it; mise handles env + venvs)
+.config/direnv/direnvrc

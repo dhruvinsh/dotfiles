@@ -40,6 +40,7 @@ script's content changes.
 - `run_onchange_after_91_zsh-completions.sh.tmpl` — generated zsh completions in `~/.zsh/completions` for mise-managed tools (`_mise _atuin _starship _just _gh`, `_t`; `_acli` only if acli still has `completion zsh`, dropped in 1.3.x), then drops `~/.zcompdump`
 - `run_onchange_after_94_tmux-plugin-pins.sh.tmpl` — re-clones TPM plugins pinned as `owner/repo#tag` in `~/.tmux.conf` when the checkout doesn't match (TPM never moves an installed plugin to a new pin)
 - `run_onchange_after_95_gh-config.sh` — `gh config set git_protocol ssh` + `telemetry disabled` (gh owns its `config.yml`)
+- `run_onchange_after_96_bat-cache.sh.tmpl` — `bat cache --build` so bat sees the `custom-bat` theme; re-runs when the theme source, `.colorScheme` or `bat --version` changes (a cache from another bat version breaks bat and delta) (skips if bat is absent)
 
 ### `arch/`
 - `before_10-cleanup`, `before_11_install-arch-packages`, `before_12_install-arch-extra`,
@@ -97,13 +98,13 @@ script's content changes.
 
 - `neovim.toml.tmpl` — nvim config as `git-repo` from `dhruvinsh/nvim` (+ `vnvim`
   archive variant, + neovide AppImage on non-Arch Linux desktop).
-- `cli.toml.tmpl` — release binaries (atuin, delta, eza, …) into `.local/bin`
-  on non-Arch, non-Windows. Uses `gitHubLatestReleaseAssetURL`.
+- `cli.toml.tmpl` — release binaries (eza, fzf, lazygit, zoxide, …) into `.local/bin`
+  on non-Arch Linux. Uses `gitHubLatestReleaseAssetURL`.
 - `terminal.toml.tmpl`, `zsh.toml.tmpl` — terminal + zsh plugin externals.
 
 ## Conditional ignores (`home/.chezmoiignore.tmpl`)
 
-Excludes by platform: Windows drops non-windows scripts/`.local`/zsh files; non-Windows
+Excludes by platform: Windows drops non-windows scripts/`.local`/zsh files/`.config/btop`/`.config/fzf`; non-Windows
 drops `AppData`/`Documents`; non-Linux drops fontconfig/wallpaper/bash; non-macOS drops
 `Library`/darwin; non-Arch drops arch scripts + `hypr`, `uwsm`, `swaync`, `swayosd`,
 `waybar`, `wlogout`, `yay`, `Thunar`, `quickshell`, and
@@ -129,9 +130,12 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
 - **Git:** git (`config.tmpl`: modern defaults — zdiff3, autoSetupRemote, rebase
   autoStash/updateRefs/autoSquash, rerere, difftastic aliases `dft`/`dl`/`ds`; `delta.tmpl`;
   `ignore`), lazygit, gh (script 95)
-- **Files/CLI:** bat, fd, btop, eza (aliases only, in `60-aliases`/bash/fish/PowerShell; no
+- **Files/CLI:** bat (cache rebuilt by script 96), fd, btop (`modify_btop.conf` — sh+awk pins
+  only `color_theme` + `theme_background`, rest of btop's self-rewritten file passes through),
+  fzf (`fzfrc.tmpl` options/theme, read via `FZF_DEFAULT_OPTS_FILE` from zsh `50-tools` and fish
+  `config.fish.tmpl`), eza (aliases only, in `60-aliases`/bash/fish/PowerShell; no
   config dir), tealdeer, yazi (`y` cd-on-quit wrapper only; no config dir)
-- **Dev:** mise, direnv, io.datasette.llm, vectorcode
+- **Dev:** mise, io.datasette.llm, vectorcode
 - **System:** pacman, yay (Lua `init.lua` + `policy.lua` + `hooks/`; state in
   `~/.local/state/yay`), gtk-2.0/3.0 (3.0 omits `gtk-application-prefer-dark-theme` on Arch so
   `theme-mode` can switch GTK3 apps), `dot_Xresources`
@@ -142,7 +146,8 @@ script dirs; `.local/share/**` only kept on Ubuntu desktop. Per-machine:
 ## Key file index
 
 - `home/.chezmoi.toml.tmpl` — data/prompts/age/github/diff config
-- `home/.chezmoiremove` — targets removed on apply (old `.local/bin/wallpaper-manager.sh`)
+- `home/.chezmoiremove` — targets removed on apply (old `.local/bin/wallpaper-manager.sh`,
+  kitty/wezterm configs, `semver` + `_semver`, `.config/direnv/direnvrc`)
 - `home/private_dot_config/mise/config.toml.tmpl` — the ~70-tool manifest
 - `home/dot_zshenv` — sets `skip_global_compinit=1` (Ubuntu's `/etc/zsh/zshrc` would
   otherwise run its own compinit and clobber `~/.zcompdump`) + sources rustup's `~/.cargo/env`

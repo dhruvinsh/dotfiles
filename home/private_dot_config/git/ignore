@@ -3,11 +3,11 @@
 .envrc
 .mypy_cache
 .ruff_cache
-.venv/**
-.vite/**
+.venv/
+.vite/
 __mypy__
 __pycache__
-node_modules/**
+node_modules/
 
 **/.claude/settings.local.json
 

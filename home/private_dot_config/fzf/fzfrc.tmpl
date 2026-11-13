@@ -1,0 +1,25 @@
+{{- /*
+  fzf default options, read via FZF_DEFAULT_OPTS_FILE (exported by zsh 50-tools
+  and fish config.fish). Shared by every shell, so the theme lives in one place.
+  No `#` comment lines in the rendered file: fish's CTRL-T/ALT-C joins it into one
+  line and everything after a `#` would be dropped. Use template comments only.
+*/ -}}
+--highlight-line
+--info=inline-right
+--ansi
+--layout=reverse
+--border=none
+--multi
+--color=bg+:-1
+--color=bg:-1
+--color=fg+:{{ .colorScheme.text }}
+--color=fg:{{ .colorScheme.text }}
+--color=header:{{ .colorScheme.red }}
+--color=hl+:{{ .colorScheme.red }}
+--color=hl:{{ .colorScheme.red }}
+--color=info:{{ .colorScheme.mauve }}
+--color=marker:{{ .colorScheme.lavender }}
+--color=pointer:{{ .colorScheme.rosewater }}
+--color=prompt:{{ .colorScheme.mauve }}
+--color=selected-bg:{{ .colorScheme.surface1 }}
+--color=spinner:{{ .colorScheme.rosewater }}

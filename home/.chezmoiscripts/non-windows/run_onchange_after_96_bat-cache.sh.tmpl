@@ -1,0 +1,9 @@
+#!/bin/sh
+# bat only sees custom themes (custom-bat, from .colorScheme) after `bat cache
+# --build`, and a cache from another bat version makes bat (and delta) error out.
+# Re-runs when the theme source, the palette or the bat version changes.
+# theme: {{ include "private_dot_config/bat/themes/custom-bat.tmTheme.tmpl" | sha256sum }}
+# palette: {{ .colorScheme | toJson | sha256sum }}
+# bat: {{ if lookPath "bat" }}{{ output "bat" "--version" | trim }}{{ end }}
+command -v bat >/dev/null 2>&1 || exit 0
+bat cache --build >/dev/null

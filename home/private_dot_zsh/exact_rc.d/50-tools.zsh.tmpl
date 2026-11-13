@@ -4,29 +4,10 @@
 # binaries (e.g. starship) are already on PATH for the inits below.
 [[ -x ~/.local/bin/mise ]] && eval "$(~/.local/bin/mise activate zsh)"
 
-# fzf: source command, theme, key bindings and fuzzy completion
+# fzf: source command, options/theme (shared ~/.config/fzf/fzfrc), key bindings
+# and fuzzy completion
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
-export FZF_DEFAULT_OPTS=" \
-  --highlight-line \
-  --info=inline-right \
-  --ansi \
-  --layout=reverse \
-  --border=none \
-  --multi \
-  --color=bg+:-1 \
-  --color=bg:-1 \
-  --color=fg+:{{ .colorScheme.text | quote }} \
-  --color=fg:{{ .colorScheme.text | quote }} \
-  --color=header:{{ .colorScheme.red | quote }} \
-  --color=hl+:{{ .colorScheme.red | quote }} \
-  --color=hl:{{ .colorScheme.red | quote }} \
-  --color=info:{{ .colorScheme.mauve | quote }} \
-  --color=marker:{{ .colorScheme.lavender | quote }} \
-  --color=pointer:{{ .colorScheme.rosewater | quote }} \
-  --color=prompt:{{ .colorScheme.mauve | quote }} \
-  --color=selected-bg:{{ .colorScheme.surface1 | quote }} \
-  --color=spinner:{{ .colorScheme.rosewater | quote }} \
-"
+export FZF_DEFAULT_OPTS_FILE=~/.config/fzf/fzfrc
 # CTRL-T / ALT-C default to fzf's built-in walker (ignores .gitignore); use fd
 # like bare `fzf`. CTRL-R belongs to atuin: an empty command stops fzf binding it.
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND

@@ -15,30 +15,9 @@ set -gx NVIM_COLORSCHEME {{ .colorScheme.name }}
 set -gx HOMEBREW_NO_AUTO_UPDATE 1
 {{- end }}
 
-# fzf source command + theme. Single-quoted so the '#' in hex colours is never
-# read as a fish comment; fish and fzf both split the value on whitespace.
+# fzf source command; options + theme live in ~/.config/fzf/fzfrc (shared with zsh).
 set -gx FZF_DEFAULT_COMMAND 'fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
-set -gx FZF_DEFAULT_OPTS '
-  --highlight-line
-  --info=inline-right
-  --ansi
-  --layout=reverse
-  --border=none
-  --multi
-  --color=bg+:-1
-  --color=bg:-1
-  --color=fg+:{{ .colorScheme.text }}
-  --color=fg:{{ .colorScheme.text }}
-  --color=header:{{ .colorScheme.red }}
-  --color=hl+:{{ .colorScheme.red }}
-  --color=hl:{{ .colorScheme.red }}
-  --color=info:{{ .colorScheme.mauve }}
-  --color=marker:{{ .colorScheme.lavender }}
-  --color=pointer:{{ .colorScheme.rosewater }}
-  --color=prompt:{{ .colorScheme.mauve }}
-  --color=selected-bg:{{ .colorScheme.surface1 }}
-  --color=spinner:{{ .colorScheme.rosewater }}
-'
+set -gx FZF_DEFAULT_OPTS_FILE $HOME/.config/fzf/fzfrc
 # CTRL-T / ALT-C via fd like bare `fzf`; CTRL-R belongs to atuin.
 set -gx FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set -gx FZF_ALT_C_COMMAND 'fd --type d --strip-cwd-prefix --hidden --follow --exclude .git'
