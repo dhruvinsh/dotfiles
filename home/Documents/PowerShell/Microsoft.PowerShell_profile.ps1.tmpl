@@ -37,3 +37,15 @@ if (Get-Command starship -errorAction SilentlyContinue)
   $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
   Invoke-Expression (&starship init powershell)
 }
+
+# eza listing (PowerShell aliases can't take arguments, so these are functions;
+# the built-in `ls` alias for Get-ChildItem is removed first)
+if (Get-Command eza -errorAction SilentlyContinue)
+{
+  Remove-Item Alias:ls -Force -ErrorAction SilentlyContinue
+  function ls { eza --group-directories-first --icons=auto --hyperlink=auto @args }
+  function l { ls -la --git @args }
+  function la { ls -la --git @args }
+  function ll { ls -l --git @args }
+  function lt { ls --tree --level=2 @args }
+}

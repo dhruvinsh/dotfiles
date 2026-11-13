@@ -78,14 +78,24 @@ if status is-interactive
         end
     end
 
-    # Aliases. `ls` is a function using `command` so it doesn't recurse into itself.
-    function ls --description 'ls with colour'
-        command ls {{ if eq .chezmoi.os "darwin" }}-G{{ else }}--color=auto{{ end }} $argv
+    # Aliases. Listing: eza when installed (icons, git status, dirs first).
+    if type -q eza
+        alias ls 'eza --group-directories-first --icons=auto --hyperlink=auto'
+        alias l 'ls -la --git'
+        alias la 'ls -la --git'
+        alias ll 'ls -l --git'
+        alias lsa 'ls -la --git'
+        alias lt 'ls --tree --level=2'
+    else
+        # a function using `command` so it doesn't recurse into itself
+        function ls --description 'ls with colour'
+            command ls {{ if eq .chezmoi.os "darwin" }}-G{{ else }}--color=auto{{ end }} $argv
+        end
+        alias l 'ls -lah'
+        alias la 'ls -lAh'
+        alias ll 'ls -lh'
+        alias lsa 'ls -lah'
     end
-    alias l 'ls -lah'
-    alias la 'ls -lAh'
-    alias ll 'ls -lh'
-    alias lsa 'ls -lah'
     alias vim nvim
     alias lg lazygit
 

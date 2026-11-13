@@ -1,10 +1,19 @@
-# The most important aliases ever (the only thing I borrowed from OMZ)
-alias l='ls -lah'
-alias la='ls -lAh'
-alias ll='ls -lh'
-# Colour flag differs: BSD ls uses -G, while on GNU ls -G means --no-group.
-alias ls='ls {{ if eq .chezmoi.os "darwin" }}-G{{ else }}--color=auto{{ end }}'
-alias lsa='ls -lah'
+# Listing: eza when installed (icons, git status, dirs first), plain ls otherwise.
+if (( $+commands[eza] )); then
+  alias ls='eza --group-directories-first --icons=auto --hyperlink=auto'
+  alias l='ls -la --git'
+  alias la='ls -la --git'
+  alias ll='ls -l --git'
+  alias lsa='ls -la --git'
+  alias lt='ls --tree --level=2'
+else
+  # Colour flag differs: BSD ls uses -G, while on GNU ls -G means --no-group.
+  alias ls='ls {{ if eq .chezmoi.os "darwin" }}-G{{ else }}--color=auto{{ end }}'
+  alias l='ls -lah'
+  alias la='ls -lAh'
+  alias ll='ls -lh'
+  alias lsa='ls -lah'
+fi
 alias vim=nvim
 alias lg=lazygit
 

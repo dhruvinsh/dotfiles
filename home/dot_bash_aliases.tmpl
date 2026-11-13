@@ -3,4 +3,14 @@ alias vim=nvim
 alias lg=lazygit
 {{ end -}}
 
+# Listing: eza when installed (icons, git status, dirs first).
+if command -v eza >/dev/null 2>&1; then
+  alias ls='eza --group-directories-first --icons=auto --hyperlink=auto'
+  alias l='ls -la --git'
+  alias la='ls -la --git'
+  alias ll='ls -l --git'
+  alias lsa='ls -la --git'
+  alias lt='ls --tree --level=2'
+fi
+
 {{/* vim: set filetype=bash: */}}
