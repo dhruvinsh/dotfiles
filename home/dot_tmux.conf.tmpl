@@ -41,6 +41,9 @@ set -g set-titles-string "#{session_name} · #{window_name}"
 # ── Behaviour ───────────────────────────────────────────────────────────────
 
 set -g mouse on
+# tmux 3.8: scrollbar overlays the pane while scrolling / in copy mode, then hides.
+set -wg pane-scrollbars auto-hide
+
 
 # Number windows and panes from 1 (matches the keyboard), and close gaps
 # when a window is killed.
