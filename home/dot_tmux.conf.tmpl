@@ -25,7 +25,9 @@ set -g @thm_{{ regexReplaceAll "([0-9])$" . "_${1}" }} {{ index $.colorScheme . 
 # run_onchange_after_87_terminfo-undercurl.sh.
 
 set -s default-terminal "xterm-256color"
-set -as terminal-features ",xterm-ghostty:RGB:usstyle"
+# Fixed indexes (not -as) so re-sourcing this file doesn't pile up duplicates.
+set -s terminal-features[90] "xterm-ghostty:RGB:usstyle"
+set -s terminal-features[91] "*:hyperlinks" # OSC 8 links (delta, eza, ls --hyperlink)
 set -s extended-keys on
 set -s extended-keys-format csi-u
 set -g allow-passthrough on # zen-mode.nvim, yazi image previews
