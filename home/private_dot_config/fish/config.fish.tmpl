@@ -9,7 +9,6 @@
 fish_add_path -gP $HOME/bin $HOME/go/bin $HOME/.cargo/bin $HOME/.local/bin
 
 set -gx LANG en_US.UTF-8
-set -gx LC_ALL en_US.UTF-8
 set -gx EDITOR nvim
 set -gx NVIM_COLORSCHEME {{ .colorScheme.name }}
 {{- if eq .chezmoi.os "darwin" }}
