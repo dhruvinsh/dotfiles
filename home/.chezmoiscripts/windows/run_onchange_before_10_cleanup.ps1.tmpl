@@ -40,6 +40,13 @@ rm ~/.gitconfig
 Write-Output "Removing direnv package.."
 scoop uninstall direnv
 
+Write-Output "Removing kanata (unused).."
+if (scoop list | Select-String -Pattern '^kanata\s') {
+  scoop uninstall extras/kanata
+} else {
+  Write-Output "--> kanata is not installed."
+}
+
 Write-Output "Removing wezterm (ghostty only).."
 if (scoop list | Select-String -Pattern '^wezterm\s') {
   scoop uninstall extras/wezterm
