@@ -5,6 +5,15 @@
 # at most once a day and trust the cached dump otherwise. New completion files
 # are therefore picked up within 24h — or immediately after `rm ~/.zcompdump`.
 
+# Behaviour oh-my-zsh used to provide: arrow-key menu, case-insensitive and
+# partial-word matching (`f-b<Tab>` -> foo-bar), coloured lists, and a cache
+# for slow completers (package managers, …).
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' 'r:|[._-]=* r:|=*'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
+
 autoload -Uz compinit
 () {
   local dump=${ZDOTDIR:-$HOME}/.zcompdump
