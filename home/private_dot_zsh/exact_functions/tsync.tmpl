@@ -1,0 +1,97 @@
+{{- if not .personalmachine -}}
+# tsync — run the Obsidian /teamsync pipeline (team sync notes → items, tasks, boards) headlessly.
+# macOS and Linux. Autoloaded from ~/.zsh/functions.
+#
+#   tsync                  clipboard → TeamSync/Syncs/<date> Team Sync.md → process
+#                          (pbpaste on macOS; wl-paste on Wayland; xclip or xsel on X11)
+#   tsync file <path>      read the notes from a file;  tsync - < notes.txt  reads stdin
+#   tsync notes            (macOS) newest "Team Sync: <date>" note in Apple Notes → save → process
+#   tsync notes <date>     that date's Apple Note (YYYY-MM-DD)
+#   tsync notes --list     matching Apple Notes, and whether each is already in the vault
+#   tsync latest | <YYYY-MM-DD> | backfill | board     process notes already in the vault
+#   tsync -- <args>        pass anything straight to /teamsync (e.g. tsync -- --audit latest)
+#
+# The text must start with a dated header ("Team Sync: 16th Nov 2026"). If that date was already
+# saved with different text (you edited the Apple Note), it shows the diff and asks before replacing.
+# Vault: $TSYNC_VAULT (default ~/obsidian/vault/EXE); the pipeline lives in <vault>/.claude/skills/teamsync.
+
+(
+  setopt local_options pipe_fail
+  local vault=${TSYNC_VAULT:-$HOME/obsidian/vault/EXE}
+  local S=.claude/skills/teamsync/scripts txt out date rc mode=${1:-paste}
+  local srcfile=${2:+${2:a}}   # absolute path before we cd (for: tsync file <path>)
+  cd "$vault" 2>/dev/null || { print -u2 "tsync: vault not found at $vault (set TSYNC_VAULT)"; return 1 }
+  [[ -f $S/teamsync.py ]] || { print -u2 "tsync: teamsync skill not found under $vault"; return 1 }
+
+  # print the clipboard (macOS / Wayland / X11)
+  _tsync_clip() {
+    if (( $+commands[pbpaste] )); then pbpaste
+    elif [[ -n $WAYLAND_DISPLAY ]] && (( $+commands[wl-paste] )); then wl-paste --no-newline
+    elif [[ -n $DISPLAY ]] && (( $+commands[xclip] )); then xclip -selection clipboard -o
+    elif [[ -n $DISPLAY ]] && (( $+commands[xsel] )); then xsel --clipboard --output
+    else
+      print -u2 "tsync: no clipboard tool found (install wl-clipboard or xclip), or use: tsync file <path>  /  tsync - < notes.txt"
+      return 1
+    fi
+  }
+
+  # save $1 as raw sync notes; sets $date
+  _tsync_ingest() {
+    out=$(print -r -- "$1" | python3 $S/teamsync.py ingest --require-header --show-diff); rc=$?
+    if (( rc == 3 )); then
+      read -q "?tsync: replace the saved raw notes with this version and reprocess? [y/N] " || { print; return 3 }
+      print
+      python3 $S/snapshot.py take --label before-replace >/dev/null || return 1
+      out=$(print -r -- "$1" | python3 $S/teamsync.py ingest --require-header --replace) || return $?
+    elif (( rc )); then
+      return $rc
+    fi
+    local action
+    date=$(python3 -c 'import json,sys; print(json.load(sys.stdin)["date"])' <<<"$out") || return 1
+    action=$(python3 -c 'import json,sys; print(json.load(sys.stdin)["action"])' <<<"$out")
+    case $action in
+      identical|equivalent) print -r -- "tsync: $date already saved (same notes)" ;;
+      *) print -r -- "tsync: saved TeamSync/Syncs/$date Team Sync.md ($action)" ;;
+    esac
+  }
+
+  case $mode in
+    paste)
+      txt=$(_tsync_clip) || return 1
+      _tsync_ingest "$txt" || return $? ;;
+    file)
+      [[ -r $srcfile ]] || { print -u2 "tsync: can't read '$2'"; return 1 }
+      txt=$(<$srcfile)
+      _tsync_ingest "$txt" || return $? ;;
+    -)
+      txt=$(cat)
+      _tsync_ingest "$txt" || return $? ;;
+    notes)
+      shift
+      if [[ $OSTYPE != darwin* ]]; then
+        print -u2 "tsync: 'tsync notes' reads Apple Notes and only works on macOS. Here: copy the note, then run tsync (or tsync file <path>)."
+        return 1
+      fi
+      if [[ $1 == (--list|-l) ]]; then
+        python3 $S/applenotes.py list --table
+        return
+      fi
+      txt=$(python3 $S/applenotes.py get ${1:+--date $1}) || return $?
+      _tsync_ingest "$txt" || return $? ;;
+    board) date=latest ;;
+    --) shift; date="$*" ;;
+    *) date="$*" ;;
+  esac
+
+  # skip starting Claude when there is nothing to do (fast path)
+  if [[ $date == (latest|<->-<->-<->) ]]; then
+    out=$(python3 $S/teamsync.py status $date) || return $?
+    if python3 -c 'import json,sys; sys.exit(0 if json.load(sys.stdin)["work"] else 1)' <<<"$out"; then :; else
+      print -r -- "tsync: nothing to do — ${date} is already processed and no board cards moved."
+      return 0
+    fi
+  fi
+  print -r -- "tsync: processing /teamsync $date (a new sync takes a few minutes: Fellow + matching)…"
+  claude -p "/teamsync $date" < /dev/null
+)
+{{- end }}
